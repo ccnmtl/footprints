@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load markup %}
+
+{% block title %}{{ flatpage.title }}{% endblock %}
+
+
+{% block pagetitle %}
+<h1 class="pageheader">{{ flatpage.title }}</h1>
+{% endblock %}
+
+{% block content %}
+{{ flatpage.content|markdown}}
+{% endblock %}
