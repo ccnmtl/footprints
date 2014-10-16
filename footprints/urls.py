@@ -1,34 +1,37 @@
+from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
-from django.contrib.auth.decorators import login_required
-from django.conf import settings
+from django.contrib.auth.views import password_change, password_change_done
 from django.views.generic import TemplateView
-from pagetree.generic.views import PageView, EditView, InstructorView
+
 from footprints.main import views
-import os.path
+from footprints.main.views import LoginView, LogoutView
+from footprints.mixins import is_staff
+
+
 admin.autodiscover()
 
-site_media_root = os.path.join(os.path.dirname(__file__), "../media")
-
-redirect_after_logout = getattr(settings, 'LOGOUT_REDIRECT_URL', None)
 auth_urls = (r'^accounts/', include('django.contrib.auth.urls'))
-logout_page = (
-    r'^accounts/logout/$',
-    'django.contrib.auth.views.logout',
-    {'next_page': redirect_after_logout})
 if hasattr(settings, 'WIND_BASE'):
     auth_urls = (r'^accounts/', include('djangowind.urls'))
-    logout_page = (
-        r'^accounts/logout/$',
-        'djangowind.views.logout',
-        {'next_page': redirect_after_logout})
 
 urlpatterns = patterns(
     '',
-    auth_urls,
-    logout_page,
-    (r'^registration/', include('registration.backends.default.urls')),
     (r'^$', views.IndexView.as_view()),
+
+    (r'^accounts/login/$', LoginView.as_view()),
+    (r'^accounts/logout/$', LogoutView.as_view()),
+
+    # password change & reset. overriding to gate them.
+    url(r'^accounts/password_change/$',
+        is_staff(password_change),
+        name='password_change'),
+    url(r'^accounts/password_change/done/$',
+        is_staff(password_change_done),
+        name='password_change_done'),
+
+    auth_urls,
+
     (r'^admin/', include(admin.site.urls)),
     url(r'^_impersonate/', include('impersonate.urls')),
     (r'^stats/$', TemplateView.as_view(template_name="stats.html")),
@@ -36,19 +39,6 @@ urlpatterns = patterns(
     (r'infranil/', include('infranil.urls')),
     (r'^uploads/(?P<path>.*)$',
      'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
-    (r'^pagetree/', include('pagetree.urls')),
-    (r'^quizblock/', include('quizblock.urls')),
-    (r'^pages/edit/(?P<path>.*)$', login_required(EditView.as_view(
-        hierarchy_name="main",
-        hierarchy_base="/pages/")),
-     {}, 'edit-page'),
-    (r'^pages/instructor/(?P<path>.*)$',
-        login_required(InstructorView.as_view(
-            hierarchy_name="main",
-            hierarchy_base="/pages/"))),
-    (r'^pages/(?P<path>.*)$', PageView.as_view(
-        hierarchy_name="main",
-        hierarchy_base="/pages/")),
 )
 
 if settings.DEBUG:

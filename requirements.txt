@@ -34,7 +34,7 @@ factory_boy==2.1.1
 python-ldap==2.4.13
 sqlparse==0.1.11
 
-djangowind==0.12.1
+djangowind==0.12.2
 sorl==3.1
 tagging==0.3-pre
 typogrify==2.0.0
@@ -58,13 +58,8 @@ django-stagingcontext==0.1.0
 django-ga-context==0.1.0
 django-impersonate==0.8.0
 django-registration==1.0
-django-treebeard==2.0b2
-django-pagetree==0.14.2
-django-pageblocks==0.5.11
-django-quizblock==0.6.15
 django-markwhat==1.0
 gunicorn==0.17.4
 django-infranil==0.1.0
-django-flatblocks==0.9
 
 django-haystack==2.3.1

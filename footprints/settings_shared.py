@@ -120,25 +120,11 @@ INSTALLED_APPS = [
     'django_jenkins',
     'smoketest',
     'infranil',
-    'flatblocks',
     'django_extensions',
     'impersonate',
-    'registration',
-    'pagetree',
-    'pageblocks',
-    'quizblock',
     'gunicorn',
     'footprints.main',
 ]
-
-PAGEBLOCKS = ['pageblocks.TextBlock',
-              'pageblocks.HTMLBlock',
-              'pageblocks.PullQuoteBlock',
-              'pageblocks.ImageBlock',
-              'pageblocks.ImagePullQuoteBlock',
-              'quizblock.Quiz',
-              ]
-
 
 INTERNAL_IPS = ('127.0.0.1', )
 DEBUG_TOOLBAR_PANELS = (
