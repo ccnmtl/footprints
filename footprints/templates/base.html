@@ -156,15 +156,14 @@
                     </div>
                     <div style="clear: both"></div>
                  {% endif %}                  
-                 {% if WIND_BASE %}
-                    <form method="get" action="{{ WIND_BASE }}login">
-                        {% csrf_token %}
-                        <input type="hidden" name="service" value="{{ WIND_SERVICE }}" />
-                        <input type="hidden" name="destination" value="http://{{ request.get_host }}/accounts/windlogin/?next=/" />
+                 {% if CAS_BASE %}
+                    <form method="get" action="{{ CAS_BASE }}login">
+                        <input type="hidden" name="destination"
+                        value="http{% if request.is_secure %}s{% endif %}://{{ request.get_host }}/accounts/caslogin/?next=/" />
                         <input class="btn btn-default btn-small login-uni-form" type="submit" value="Columbia University Network ID (UNI)" />
                         <div style="clear: both;"></div>
                     </form>
-                 {% endif %}<!-- WIND -->
+                 {% endif %}<!-- CAS -->
             </div><!-- /.modal-body -->
            </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
