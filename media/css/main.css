@@ -20,7 +20,13 @@ body > .container {
 /* LOGIN PAGE */
 .btn-log-in {
     font-size: 13px;
-} 
+}
+
+.login-uni-button {
+    border: 0;
+    padding-right: 0;
+    color: #999;
+}
 
 .login-description {
     margin: 30px 30px 15px 30px;

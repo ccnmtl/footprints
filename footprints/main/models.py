@@ -1,1 +1,288 @@
-# from django.db import models
+from django.db import models
+
+CONTINENTS = (
+    ('AF', 'Africa'),
+    ('AS', 'Asia'),
+    ('EU', 'Europe'),
+    ('NA', 'North America'),
+    ('SA', 'South America'),
+    ('OC', 'Oceania'),
+    ('AN', 'Antarctica'))
+
+
+IDENTIFIER_TYPES = (
+    ('LOC', 'Library of Congress'),
+    ('BHB', 'Bibliography of the Hebrew Book'),
+    ('WLD', 'WorldCat (OCLC)'),
+    ('VIAF', 'Virtual International Authority File')
+)
+
+
+class ExtendedDateFormat(models.Model):
+    edtf_format = models.CharField(max_length=256)
+
+    def __unicode__(self):
+        return self.edtf_format
+
+
+class Role(models.Model):
+    name = models.CharField(max_length=256, unique=True)
+
+    class Meta:
+        ordering = ['name']
+
+    def __unicode__(self):
+        return self.name
+
+
+class Name(models.Model):
+    last_name = models.CharField(max_length=256)
+    first_name = models.CharField(max_length=256, null=True, blank=True)
+    middle_name = models.CharField(max_length=256, null=True, blank=True)
+    suffix = models.CharField(max_length=256, null=True, blank=True)
+
+    class Meta:
+        ordering = ['last_name']
+
+    def __unicode__(self):
+        name = self.last_name
+
+        if self.first_name or self.middle_name or self.suffix:
+            name = name + ','
+
+        if self.first_name:
+            name = name + ' ' + self.first_name
+
+        if self.middle_name:
+            name = name + ' ' + self.middle_name
+
+        if self.suffix:
+            name = name + ' ' + self.suffix
+
+        return name
+
+
+class Language(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    class Meta:
+        ordering = ['name']
+
+    def __unicode__(self):
+        return self.name
+
+
+class DigitalFormat(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    class Meta:
+        ordering = ['name']
+
+    def __unicode__(self):
+        return self.name
+
+
+class DigitalObject(models.Model):
+    name = models.CharField(max_length=500)
+    digital_format = models.ForeignKey(DigitalFormat)
+    file = models.FileField(upload_to="/%Y/%m/%d/")
+
+    source_url = models.URLField(null=True, blank=True)
+    notes = models.TextField(null=True, blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Digital Object"
+        ordering = ['name']
+
+    def __unicode__(self):
+        return self.name
+
+
+class StandardizedIdentification(models.Model):
+    identifier = models.CharField(max_length=512)
+    identifier_type = models.CharField(max_length=5, choices=IDENTIFIER_TYPES)
+    identifier_text = models.TextField(null=True, blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+
+    def __unicode__(self):
+        type_description = dict(IDENTIFIER_TYPES)[self.identifier_type]
+
+        return '%s [%s] %s' % (
+            self.identifier,
+            type_description,
+            self.identifier_text or '')
+
+
+class Person(models.Model):
+    name = models.ForeignKey(Name)
+    date_of_birth = models.ForeignKey(ExtendedDateFormat,
+                                      null=True, blank=True)
+
+    standardized_identifier = models.ForeignKey(StandardizedIdentification,
+                                                null=True, blank=True)
+    digital_object = models.ManyToManyField(
+        DigitalObject, null=True, blank=True)
+
+    notes = models.TextField(null=True, blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['name']
+
+    def __unicode__(self):
+        return self.name.__unicode__()
+
+
+class Contributor(models.Model):
+    person = models.ForeignKey(Person)
+    role = models.ForeignKey(Role)
+    alternate_name = models.ForeignKey(Name, null=True, blank=True)
+
+    def __unicode__(self):
+        return "%s (%s)" % (self.alternate_name or self.person.__unicode__(),
+                            self.role)
+
+
+class Place(models.Model):
+    continent = models.CharField(max_length=2, choices=CONTINENTS)
+    region = models.CharField(max_length=256, null=True, blank=True)
+    country = models.CharField(max_length=256, null=True, blank=True)
+    city = models.CharField(max_length=256, null=True, blank=True)
+
+    digital_object = models.ManyToManyField(
+        DigitalObject, null=True, blank=True)
+
+    notes = models.TextField(null=True, blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['continent', 'region', 'country', 'city']
+
+    def __unicode__(self):
+        label = dict(CONTINENTS)[self.continent]
+        if self.region:
+            label += ', ' + self.region
+        if self.country:
+            label += ', ' + self.country
+        if self.city:
+            label += ', ' + self.city
+
+        return label
+
+
+class Collection(models.Model):
+    name = models.CharField(max_length=512, unique=True)
+    contributor = models.ManyToManyField(Contributor, null=True, blank=True)
+
+    notes = models.TextField(null=True, blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['name']
+
+    def __unicode__(self):
+        return self.name
+
+
+class WrittenWork(models.Model):
+    standardized_title = models.TextField()
+    author = models.ManyToManyField(Contributor, null=True, blank=True)
+    notes = models.TextField(null=True, blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['standardized_title']
+
+    def __unicode__(self):
+        return self.standardized_title
+
+
+class Imprint(models.Model):
+    work = models.ForeignKey(WrittenWork)
+
+    title = models.TextField(null=True, blank=True)
+    language = models.ForeignKey(Language, null=True, blank=True)
+    publication_date = models.ForeignKey(ExtendedDateFormat,
+                                         null=True, blank=True)
+    place = models.ForeignKey(Place, null=True, blank=True)
+
+    contributor = models.ManyToManyField(Contributor,
+                                         null=True, blank=True)
+
+    standardized_identifier = models.ManyToManyField(
+        StandardizedIdentification, null=True, blank=True)
+
+    digital_object = models.ManyToManyField(
+        DigitalObject, null=True, blank=True)
+
+    notes = models.TextField(null=True, blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['work']
+
+    def __unicode__(self):
+        return self.title or self.work.__unicode__()
+
+
+class BookCopy(models.Model):
+    imprint = models.ForeignKey(Imprint)
+
+    digital_object = models.ManyToManyField(
+        DigitalObject, null=True, blank=True)
+
+    notes = models.TextField(null=True, blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['imprint']
+
+    def __unicode__(self):
+        return self.imprint.__unicode__()
+
+
+class Footprint(models.Model):
+    book_copy = models.ForeignKey(BookCopy)
+    medium = models.CharField(max_length=256)
+    provenance = models.CharField(max_length=256)
+
+    title = models.TextField()
+    language = models.ForeignKey(Language, null=True, blank=True)
+    place = models.ForeignKey(Place, null=True, blank=True)
+
+    recorded_date = models.ForeignKey(ExtendedDateFormat,
+                                      null=True, blank=True)
+
+    call_number = models.CharField(max_length=256, null=True, blank=True)
+    collection = models.ForeignKey(Collection, null=True, blank=True)
+
+    digital_object = models.ManyToManyField(
+        DigitalObject, null=True, blank=True)
+
+    notes = models.TextField(null=True, blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['title']
+
+    def __unicode__(self):
+        return self.title or self.book_copy.__unicode__()
