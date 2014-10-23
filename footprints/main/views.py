@@ -22,14 +22,14 @@ class LoginView(JSONResponseMixin, View):
             if request.user is not None:
                 next_url = request.POST.get('next', '/')
                 return self.render_to_json_response({'next': next_url})
-        else:
-            return self.render_to_json_response({'error': True})
+
+        return self.render_to_json_response({'error': True})
 
 
 class LogoutView(LoggedInMixin, View):
 
     def get(self, request):
-        if hasattr(settings, 'WIND_BASE'):
+        if hasattr(settings, 'WIND_BASE') or hasattr(settings, 'CAS_BASE'):
             return wind_logout_view(request, next_page="/")
         else:
             return auth_logout_view(request, "/")
