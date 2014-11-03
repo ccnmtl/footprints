@@ -1,0 +1,8 @@
+<h3>{{model_display_name}}</h3>
+<br />
+<form action="{{action}}" method="POST" class="dynamic-form">
+  {% csrf_token %}
+  {{ the_form }}
+  <input type='hidden' name='model-name' value='{{model_name}}' />
+  <button type="input" name='save'>Save</button> {% if instance %}<button type="input" name='delete'>Delete</button>{% endif %}
+</form>

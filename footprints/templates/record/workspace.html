@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Record Data{% endblock %}
+
+{% block compressjs %}
+    <script src="{{STATIC_URL}}js/app/record.js"></script>
+    
+    <script type="text/javascript"> 
+       jQuery(document).ready(function() {
+          var view = new RecordWorkspaceView({
+             el: jQuery("div.record.container"),
+             base_url: '/record/form/?model='
+          });
+       });
+    </script>
+{% endblock %}
+    
+{% block js %}
+    
+{% endblock %}
+
+
+{% block content %}
+<div class="record container">
+    <h1>Record Data</h1>
+    <p>Sed vehicula eu ante sed dapibus. Integer dui ante, porta eget purus nec, porta tempus nulla. Interdum et malesuada fames ac ante ipsum primis in faucibus. Vivamus quis euismod turpis, a scelerisque orci. Morbi venenatis in nunc ac eleifend. Nunc sit amet finibus diam, ut gravida tortor. Nam vitae ex augue.</p>
+    <hr/><br /><br />
+    <div class="row">
+        <div class="col-md-2">
+            <div class="list-group">
+                <a href="#bookcopy" class="list-group-item">Book Copy</a>
+                <a href="#collection" class="list-group-item">Collection</a>
+                <a href="#contributor" class="list-group-item">Contributor</a>
+                <a href="#digitalformat" class="list-group-item">Digital Format</a>
+                <a href="#footprint" class="list-group-item">Footprint</a>
+                <a href="#imprint" class="list-group-item">Imprint</a>
+                <a href="#language" class="list-group-item">Language</a>
+                <a href="#person" class="list-group-item">Person</a>
+                <a href="#place" class="list-group-item">Place</a>
+                <a href="#role" class="list-group-item">Role</a>
+                <a href="#standardizedidentification" class="list-group-item">Standardized Identification</a>
+                <a href="#writtenwork" class="list-group-item">Written Work</a>
+            </div>
+        </div>
+        <div class="col-md-10">
+            <!--  Model form -->
+            <div class='model-form'></div>
+
+            <!--  Model list -->
+            <div class='model-list'></div>
+        </div>
+    </div>
+</div>
+{% endblock %}

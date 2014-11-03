@@ -57,13 +57,14 @@ class LoggedInMixin(object):
         return super(LoggedInMixin, self).dispatch(*args, **kwargs)
 
 
-class LoggedInStaff(object):
+class LoggedInStaffMixin(object):
     @method_decorator(is_staff)
     def dispatch(self, *args, **kwargs):
-        return super(LoggedInStaff, self).dispatch(*args, **kwargs)
+        return super(LoggedInStaffMixin, self).dispatch(*args, **kwargs)
 
 
-class LoggedInMixinSuperuser(object):
+class LoggedInMixinSuperuserMixin(object):
     @method_decorator(user_passes_test(lambda u: u.is_superuser))
     def dispatch(self, *args, **kwargs):
-        return super(LoggedInMixinSuperuser, self).dispatch(*args, **kwargs)
+        return super(LoggedInMixinSuperuserMixin,
+                     self).dispatch(*args, **kwargs)

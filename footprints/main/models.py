@@ -1,5 +1,6 @@
 from django.db import models
 
+
 CONTINENTS = (
     ('AF', 'Africa'),
     ('AS', 'Asia'),
@@ -21,6 +22,9 @@ IDENTIFIER_TYPES = (
 class ExtendedDateFormat(models.Model):
     edtf_format = models.CharField(max_length=256)
 
+    class Meta:
+        verbose_name = 'Extended Date Format'
+
     def __unicode__(self):
         return self.edtf_format
 
@@ -30,6 +34,7 @@ class Role(models.Model):
 
     class Meta:
         ordering = ['name']
+        verbose_name = 'Role'
 
     def __unicode__(self):
         return self.name
@@ -43,6 +48,7 @@ class Name(models.Model):
 
     class Meta:
         ordering = ['last_name']
+        verbose_name = 'Name'
 
     def __unicode__(self):
         name = self.last_name
@@ -67,6 +73,7 @@ class Language(models.Model):
 
     class Meta:
         ordering = ['name']
+        verbose_name = 'Language'
 
     def __unicode__(self):
         return self.name
@@ -77,6 +84,7 @@ class DigitalFormat(models.Model):
 
     class Meta:
         ordering = ['name']
+        verbose_name = "Digital Format"
 
     def __unicode__(self):
         return self.name
@@ -109,6 +117,9 @@ class StandardizedIdentification(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        verbose_name = "Standardized Identification"
+
     def __unicode__(self):
         type_description = dict(IDENTIFIER_TYPES)[self.identifier_type]
 
@@ -134,6 +145,7 @@ class Person(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
 
     class Meta:
+        verbose_name = "Person"
         ordering = ['name']
 
     def __unicode__(self):
@@ -144,6 +156,9 @@ class Contributor(models.Model):
     person = models.ForeignKey(Person)
     role = models.ForeignKey(Role)
     alternate_name = models.ForeignKey(Name, null=True, blank=True)
+
+    class Meta:
+        verbose_name = "Contributor"
 
     def __unicode__(self):
         return "%s (%s)" % (self.alternate_name or self.person.__unicode__(),
@@ -166,6 +181,7 @@ class Place(models.Model):
 
     class Meta:
         ordering = ['continent', 'region', 'country', 'city']
+        verbose_name = "Place"
 
     def __unicode__(self):
         label = dict(CONTINENTS)[self.continent]
@@ -190,6 +206,7 @@ class Collection(models.Model):
 
     class Meta:
         ordering = ['name']
+        verbose_name = "Collection"
 
     def __unicode__(self):
         return self.name
@@ -205,6 +222,7 @@ class WrittenWork(models.Model):
 
     class Meta:
         ordering = ['standardized_title']
+        verbose_name = "Written Work"
 
     def __unicode__(self):
         return self.standardized_title
@@ -235,6 +253,7 @@ class Imprint(models.Model):
 
     class Meta:
         ordering = ['work']
+        verbose_name = "Imprint"
 
     def __unicode__(self):
         return self.title or self.work.__unicode__()
@@ -253,6 +272,7 @@ class BookCopy(models.Model):
 
     class Meta:
         ordering = ['imprint']
+        verbose_name = "Book Copy"
 
     def __unicode__(self):
         return self.imprint.__unicode__()
@@ -283,6 +303,7 @@ class Footprint(models.Model):
 
     class Meta:
         ordering = ['title']
+        verbose_name = "Footprint"
 
     def __unicode__(self):
         return self.title or self.book_copy.__unicode__()
