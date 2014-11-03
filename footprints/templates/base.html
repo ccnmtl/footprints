@@ -157,7 +157,7 @@
                     <div style="clear: both"></div>
                  {% endif %}                  
                  {% if CAS_BASE %}
-                    <form method="get" action="{{ CAS_BASE }}login" style="float: right">
+                    <form method="get" action="{{ CAS_BASE }}cas/login" style="float: right">
                         <input type="hidden" name="destination"
                         value="http{% if request.is_secure %}s{% endif %}://{{ request.get_host }}/accounts/caslogin/?next=/" />
                         <input class="btn btn-default btn-small login-uni-button" type="submit" value="Columbia University Network ID (UNI)" />

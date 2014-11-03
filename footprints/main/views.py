@@ -29,7 +29,7 @@ class LoginView(JSONResponseMixin, View):
 class LogoutView(LoggedInMixin, View):
 
     def get(self, request):
-        if hasattr(settings, 'WIND_BASE') or hasattr(settings, 'CAS_BASE'):
+        if hasattr(settings, 'CAS_BASE'):
             return wind_logout_view(request, next_page="/")
         else:
             return auth_logout_view(request, "/")

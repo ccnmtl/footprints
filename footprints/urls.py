@@ -1,7 +1,8 @@
 from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
-from django.contrib.auth.views import password_change, password_change_done
+from django.contrib.auth.views import password_change, password_change_done, \
+    password_reset_done, password_reset_confirm, password_reset_complete
 from django.views.generic import TemplateView
 
 from footprints.main import views
@@ -12,7 +13,7 @@ from footprints.mixins import is_staff
 admin.autodiscover()
 
 auth_urls = (r'^accounts/', include('django.contrib.auth.urls'))
-if hasattr(settings, 'WIND_BASE'):
+if hasattr(settings, 'CAS_BASE'):
     auth_urls = (r'^accounts/', include('djangowind.urls'))
 
 urlpatterns = patterns(
@@ -29,6 +30,13 @@ urlpatterns = patterns(
     url(r'^accounts/password_change/done/$',
         is_staff(password_change_done),
         name='password_change_done'),
+    url(r'^password/reset/done/$', password_reset_done,
+        name='password_reset_done'),
+    url(r'^password/reset/confirm/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$',
+        password_reset_confirm,
+        name='password_reset_confirm'),
+    url(r'^password/reset/complete/$',
+        password_reset_complete, name='password_reset_complete'),
 
     auth_urls,
 
