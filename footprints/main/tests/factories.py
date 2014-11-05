@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 import factory
 
 from footprints.main.models import Language, ExtendedDateFormat, Role, Name, \
-    DigitalFormat, StandardizedIdentification, Person, \
+    DigitalFormat, StandardizedIdentification, Person, DigitalObject, \
     Contributor, Place, Collection, WrittenWork, Imprint, BookCopy, Footprint
 
 
@@ -55,6 +55,12 @@ class PersonFactory(factory.DjangoModelFactory):
     date_of_birth = factory.SubFactory(ExtendedDateFormatFactory)
     standardized_identifier = factory.SubFactory(
         StandardizedIdentificationFactory)
+
+
+class DigitalObjectFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = DigitalObject
+    name = "Test Digital Object"
+    digital_format = factory.SubFactory(DigitalFormatFactory)
 
 
 class ContributorFactory(factory.DjangoModelFactory):

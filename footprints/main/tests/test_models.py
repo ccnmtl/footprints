@@ -6,7 +6,8 @@ from footprints.main.models import Language, DigitalFormat, \
     Contributor, Place, Imprint, Footprint
 from footprints.main.tests.factories import NameFactory, RoleFactory, \
     ContributorFactory, PlaceFactory, CollectionFactory, \
-    WrittenWorkFactory, ImprintFactory, BookCopyFactory, FootprintFactory
+    WrittenWorkFactory, ImprintFactory, BookCopyFactory, FootprintFactory, \
+    DigitalObjectFactory
 
 
 class BasicModelTest(TestCase):
@@ -63,6 +64,10 @@ class BasicModelTest(TestCase):
         name = NameFactory()
         person = Person.objects.create(name=name)
         self.assertEquals(person.__unicode__(), 'Last, First Middle Esq')
+
+    def test_digital_object(self):
+        digobj = DigitalObjectFactory()
+        self.assertEquals(str(digobj), "Test Digital Object")
 
     def test_contributor(self):
         name = NameFactory()
