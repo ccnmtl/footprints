@@ -18,6 +18,13 @@ IDENTIFIER_TYPES = (
     ('VIAF', 'Virtual International Authority File')
 )
 
+HIDDEN_FIELDS = ['id']
+
+
+def get_model_fields(the_model):
+    return [field.name for field in the_model._meta.fields
+            if field.name not in HIDDEN_FIELDS]
+
 
 class ExtendedDateFormat(models.Model):
     edtf_format = models.CharField(max_length=256)

@@ -38,6 +38,7 @@ def is_staff(func):
 
 
 class JSONResponseMixin(object):
+
     @method_decorator(ajax_required)
     def dispatch(self, *args, **kwargs):
         return super(JSONResponseMixin, self).dispatch(*args, **kwargs)

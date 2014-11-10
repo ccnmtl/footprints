@@ -7,7 +7,7 @@ from django.views.generic import TemplateView
 
 from footprints.main import views
 from footprints.main.views import LoginView, LogoutView, RecordWorkspaceView, \
-    RecordFormView
+    RecordFormView, RecordListView
 from footprints.mixins import is_staff
 
 
@@ -43,6 +43,7 @@ urlpatterns = patterns(
 
     (r'^record/$', RecordWorkspaceView.as_view()),
     (r'^record/form/$', RecordFormView.as_view()),
+    (r'^record/list/$', RecordListView.as_view()),
 
     (r'^admin/', include(admin.site.urls)),
     url(r'^_impersonate/', include('impersonate.urls')),

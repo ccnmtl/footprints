@@ -1,9 +1,9 @@
 from django.contrib import admin
 
-from footprints.main.models import Footprint, DigitalFormat, Role, Name, \
-    ExtendedDateFormat, Contributor, Language, DigitalObject, \
-    StandardizedIdentification, Person, Place, Collection, WrittenWork, Imprint, \
-    BookCopy
+from footprints.main.models import Footprint, DigitalFormat, Role, \
+    Name, ExtendedDateFormat, Contributor, Language, DigitalObject, \
+    StandardizedIdentification, Person, Place, Collection, WrittenWork, \
+    Imprint, BookCopy
 
 
 admin.site.register(ExtendedDateFormat)

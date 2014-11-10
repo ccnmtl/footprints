@@ -1,8 +1,16 @@
-<h3>{{model_display_name}}</h3>
-<br />
-<form action="{{action}}" method="POST" class="dynamic-form">
-  {% csrf_token %}
-  {{ the_form }}
-  <input type='hidden' name='model-name' value='{{model_name}}' />
-  <button type="input" name='save'>Save</button> {% if instance %}<button type="input" name='delete'>Delete</button>{% endif %}
-</form>
+<div class="dynamic-form-container panel panel-default" style="display: none">
+    <div class="panel-body">
+        <form action="/record/form/" method="POST" class="dynamic-form">
+            {% csrf_token %}
+            <table>
+                {{ the_form.as_table }}
+            </table>
+            <input type='hidden' name='model' value='{{model_name}}' />
+            <button class="btn btn=primary pull-right" type="input" name='save' data-loading-text="Saving...">
+                Save
+            </button>
+
+            {% if instance %}<button type="input" name='delete'>Delete</button>{% endif %}
+        </form>
+    </div>
+</div>

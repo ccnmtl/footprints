@@ -167,3 +167,31 @@ body > .container {
     -webkit-border-radius: 3px;
     line-height: 140%;
 }
+
+/** Record Entry **/
+.record.container .result-total {
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.record.container ul.pagination {
+    margin-top: 0px;
+    margin-right: 10px;
+}
+
+.record.container .dynamic-form ul.errorlist {
+    float: right;
+    list-style-type: none;
+    padding-left: 18px;
+    margin-top: 5px;
+    color: #c7254e;
+}
+
+.record.container .dynamic-form td input {
+    float: left;
+}
+
+.record.container .dynamic-form th label {
+    margin-right: 5px;
+} 
+
