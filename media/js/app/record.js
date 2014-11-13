@@ -127,7 +127,13 @@
                 jQuery(this).after(html);
             });
             
-            tinymce.init({selector:'textarea.wsywig'});
+            if (jQuery(elt).find('input.geoposition')) {
+                jQuery(document).trigger('loadmap');
+            }
+            
+            jQuery("select").select2();
+            
+            tinymce.init({selector:'textarea'});
         },
         showForm: function() {
             if (this.modal) {
@@ -249,7 +255,7 @@
                 this.listView.refresh();
             }
             return false;
-        },        
+        },    
         onView: function(evt) {
             jQuery(this.formView.el).show();
             jQuery(this.listView.el).hide();
