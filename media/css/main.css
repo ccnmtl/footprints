@@ -239,5 +239,18 @@ body > .container {
 
 .record.container .dynamic-form th label {
     margin-right: 5px;
-} 
+}
+
+.record.container .dynamic-form         
+
+.mce-container,.mce-container *,.mce-widget,.mce-widget *,.mce-reset,mce-content-body {
+    font-size: 12px !important;
+}
+div.select2-container {
+    width: 300px;
+    font-size: 12px;
+}
+.select2-container-multi .select2-choices .select2-search-field input {
+    font-size: 12px;
+}
 

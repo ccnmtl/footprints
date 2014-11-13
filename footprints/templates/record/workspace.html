@@ -23,9 +23,11 @@
 {% endblock %}
     
 {% block extrahead %}
-    <link href="/media/geoposition/geoposition.css" type="text/css" media="all" rel="stylesheet" />
+    <link href="{{STATIC_URL}}geoposition/geoposition.css" type="text/css" media="all" rel="stylesheet" />
     <script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false"></script>
     <script type="text/javascript" src="/media/geoposition/geoposition.js"></script>
+    <link href="{{STATIC_URL}}select2-3.5.2/select2.css" rel="stylesheet"/>
+    <script src="{{STATIC_URL}}select2-3.5.2/select2.js"></script>
 {% endblock %}
 
 {% block js %}

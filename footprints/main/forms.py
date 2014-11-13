@@ -52,8 +52,6 @@ class PersonForm(ModelForm):
     date_of_birth = forms.CharField(widget=forms.TextInput(),
                                     max_length=256)
 
-    notes = forms.CharField(widget=forms.Textarea(attrs={'class': 'wsywig'}))
-
     class Meta:
         model = Person
         fields = ['last_name', 'first_name', 'middle_name', 'suffix',
@@ -82,29 +80,21 @@ class ContributorForm(ModelForm):
 
 
 class PlaceForm(ModelForm):
-    notes = forms.CharField(widget=forms.Textarea(attrs={'class': 'wsywig'}))
-
     class Meta:
         model = Place
 
 
 class CollectionForm(ModelForm):
-    notes = forms.CharField(widget=forms.Textarea(attrs={'class': 'wsywig'}))
-
     class Meta:
         model = Collection
 
 
 class WrittenWorkForm(ModelForm):
-    notes = forms.CharField(widget=forms.Textarea(attrs={'class': 'wsywig'}))
-
     class Meta:
         model = WrittenWork
 
 
 class ImprintForm(ModelForm):
-    notes = forms.CharField(widget=forms.Textarea(attrs={'class': 'wsywig'}))
-
     publication_date = forms.CharField(widget=forms.TextInput(),
                                        max_length=256)
 
@@ -113,8 +103,6 @@ class ImprintForm(ModelForm):
 
 
 class BookCopyForm(ModelForm):
-    notes = forms.CharField(widget=forms.Textarea(attrs={'class': 'wsywig'}))
-
     class Meta:
         model = BookCopy
 
@@ -122,7 +110,6 @@ class BookCopyForm(ModelForm):
 class FootprintForm(ModelForm):
     recorded_date = forms.CharField(widget=forms.TextInput(),
                                     max_length=256)
-    notes = forms.CharField(widget=forms.Textarea(attrs={'class': 'wsywig'}))
 
     class Meta:
         model = Footprint
