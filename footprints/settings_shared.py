@@ -124,6 +124,7 @@ INSTALLED_APPS = [
     'impersonate',
     'gunicorn',
     'footprints.main',
+    'geoposition'
 ]
 
 INTERNAL_IPS = ('127.0.0.1', )

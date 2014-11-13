@@ -7,7 +7,7 @@ from django.views.generic import TemplateView
 
 from footprints.main import views
 from footprints.main.views import LoginView, LogoutView, RecordWorkspaceView, \
-    RecordFormView, RecordListView
+    RecordFormView, RecordListView, RecordDeleteView
 from footprints.mixins import is_staff
 
 
@@ -42,7 +42,8 @@ urlpatterns = patterns(
     auth_urls,
 
     (r'^record/$', RecordWorkspaceView.as_view()),
-    (r'^record/form/$', RecordFormView.as_view()),
+    (r'^record/view/$', RecordFormView.as_view()),
+    (r'^record/delete/$', RecordDeleteView.as_view()),
     (r'^record/list/$', RecordListView.as_view()),
 
     (r'^admin/', include(admin.site.urls)),

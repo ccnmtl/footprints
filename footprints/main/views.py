@@ -67,7 +67,7 @@ class BaseRecordView(LoggedInStaffMixin, JSONResponseMixin, View):
     def get_model_instance(self, the_model, pk):
         instance = None
         if pk is not None:
-            instance = get_object_or_404(the_model.objects.get(pk=pk))
+            instance = get_object_or_404(the_model, pk=pk)
         return instance
 
 
@@ -75,15 +75,14 @@ class RecordFormView(BaseRecordView):
 
     template_name = 'record/model-form.html'
 
-    def get_context_data(self, request, the_model):
-        the_instance = self.get_model_instance(
-            the_model, self.request.GET.get('pk', None))
+    def get_context_data(self, request, the_model, pk):
+        the_instance = self.get_model_instance(the_model, pk)
 
         form_class_name = '%sForm' % the_model._meta.object_name
         form_class = getattr(model_forms, form_class_name)
 
         if request.method == 'POST':
-            the_form = form_class(self.request.POST)
+            the_form = form_class(self.request.POST, instance=the_instance)
         else:
             the_form = form_class(instance=the_instance)
 
@@ -93,21 +92,26 @@ class RecordFormView(BaseRecordView):
                 'the_form': the_form}
 
     def get(self, request, *args, **kwargs):
-        the_model = self.get_model(request.GET.get('model', None))
-        ctx = self.get_context_data(request, the_model)
+        ctx = self.get_context_data(
+            request, self.get_model(request.GET.get('model', None)),
+            request.GET.get('pk', None))
+
         html = render_to_string(self.template_name, ctx)
         return self.render_to_json_response({'html': html, 'state': 'view'})
 
     def post(self, request, *args, **kwargs):
-        state = 'saving'
-        the_model = self.get_model(request.POST.get('model', None))
-        ctx = self.get_context_data(request, the_model)
-        html = render_to_string(self.template_name, ctx)
+        ctx = self.get_context_data(
+            request, self.get_model(request.POST.get('model', None)),
+            request.POST.get('pk', None))
 
-        # check whether it's valid:
+        # check whether it's valid
         if ctx['the_form'].is_valid():
             ctx['the_form'].save()
             state = 'saved'
+            html = ''
+        else:
+            state = 'saving'
+            html = render_to_string(self.template_name, ctx)
 
         return self.render_to_json_response({'state': state, 'html': html})
 
@@ -128,8 +132,9 @@ class RecordListView(BaseRecordView):
         count = len(subset)
 
         pages = [1]
-        if count > self.MAX_RECORDS:
-            pages = range(1, int(ceil(total / self.MAX_RECORDS)))
+        if total > self.MAX_RECORDS:
+            end = ceil(total / self.MAX_RECORDS) + 1
+            pages = range(1, int(end) + 1)
 
         return {
             'model_display_name': the_model._meta.verbose_name,
@@ -147,3 +152,18 @@ class RecordListView(BaseRecordView):
         ctx = RequestContext(request, self.get_context_data(request))
         html = render_to_string(self.template_name, ctx)
         return HttpResponse(html)
+
+
+class RecordDeleteView(BaseRecordView):
+
+    def post(self, request, *args, **kwargs):
+        the_model = self.get_model(request.POST.get('model', None))
+        the_instance = self.get_model_instance(
+            the_model, self.request.POST.get('pk', None))
+
+        if the_instance is None:
+            raise Http404
+
+        the_instance.delete()
+        return self.render_to_json_response({'state': 'deleted',
+                                             'html': ''})

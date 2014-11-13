@@ -1,3 +1,4 @@
+from django import forms
 from django.forms.models import ModelForm
 
 from footprints.main.models import Footprint, Role, DigitalObject, \
@@ -42,40 +43,86 @@ class StandardizedIdentificationForm(ModelForm):
 
 
 class PersonForm(ModelForm):
+
+    last_name = forms.CharField(max_length=256)
+    first_name = forms.CharField(max_length=256)
+    middle_name = forms.CharField(max_length=256)
+    suffix = forms.CharField(max_length=256)
+
+    date_of_birth = forms.CharField(widget=forms.TextInput(),
+                                    max_length=256)
+
+    notes = forms.CharField(widget=forms.Textarea(attrs={'class': 'wsywig'}))
+
     class Meta:
         model = Person
+        fields = ['last_name', 'first_name', 'middle_name', 'suffix',
+                  'date_of_birth', 'standardized_identifier',
+                  'digital_object', 'notes']
 
 
 class ContributorForm(ModelForm):
+    role = forms.ModelChoiceField(
+        queryset=Role.objects.all(),
+        widget=forms.Select(attrs={'class': 'add-another'}))
+
+    person = forms.ModelChoiceField(
+        queryset=Person.objects.all(),
+        widget=forms.Select(attrs={'class': 'add-another'}))
+
+    last_name = forms.CharField(max_length=256)
+    first_name = forms.CharField(max_length=256)
+    middle_name = forms.CharField(max_length=256)
+    suffix = forms.CharField(max_length=256)
+
     class Meta:
         model = Contributor
+        fields = ['person', 'role', 'last_name', 'first_name',
+                  'middle_name', 'suffix']
 
 
 class PlaceForm(ModelForm):
+    notes = forms.CharField(widget=forms.Textarea(attrs={'class': 'wsywig'}))
+
     class Meta:
         model = Place
 
 
 class CollectionForm(ModelForm):
+    notes = forms.CharField(widget=forms.Textarea(attrs={'class': 'wsywig'}))
+
     class Meta:
         model = Collection
 
 
 class WrittenWorkForm(ModelForm):
+    notes = forms.CharField(widget=forms.Textarea(attrs={'class': 'wsywig'}))
+
     class Meta:
         model = WrittenWork
 
 
 class ImprintForm(ModelForm):
+    notes = forms.CharField(widget=forms.Textarea(attrs={'class': 'wsywig'}))
+
+    publication_date = forms.CharField(widget=forms.TextInput(),
+                                       max_length=256)
+
     class Meta:
         model = Imprint
 
 
 class BookCopyForm(ModelForm):
+    notes = forms.CharField(widget=forms.Textarea(attrs={'class': 'wsywig'}))
+
     class Meta:
         model = BookCopy
 
 
 class FootprintForm(ModelForm):
+    recorded_date = forms.CharField(widget=forms.TextInput(),
+                                    max_length=256)
+    notes = forms.CharField(widget=forms.Textarea(attrs={'class': 'wsywig'}))
+
     class Meta:
         model = Footprint

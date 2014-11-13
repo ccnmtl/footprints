@@ -179,12 +179,58 @@ body > .container {
     margin-right: 10px;
 }
 
+.record.container .panel {
+    padding: 10px;
+}
+
+.record.container button[name='cancel'] {
+    margin-top: -7px;
+}
+
+.foreign-key-modal .modal-header {
+    border: 0;
+}
+
+.foreign-key-modal .modal-body .dynamic-form-container button[name='cancel'] {
+    display: none;
+}
+
+.foreign-key-modal .dynamic-form ul.errorlist {
+    float: none !important;
+    margin-top: -25px !important;
+    padding-left: 0 !important;
+}
+
 .record.container .dynamic-form ul.errorlist {
     float: right;
     list-style-type: none;
     padding-left: 18px;
     margin-top: 5px;
     color: #c7254e;
+}
+
+.record.container .dynamic-form table {
+    margin-bottom: 30px;
+    width: 100%;
+}
+
+.record.container .dynamic-form td span.helptext {
+    display: block;
+    font-size: 80%;
+    float: left;
+    margin-left: 10px;
+    margin-top: -11px;
+}
+
+.record.container .dynamic-form td input,
+.record.container .dynamic-form td textarea,
+.record.container .dynamic-form td select {
+    margin-bottom: 15px;
+    width: 250px;
+}
+
+.record.container .dynamic-form td .mce-tinymce {
+    margin-top: 40px;
 }
 
 .record.container .dynamic-form td input {

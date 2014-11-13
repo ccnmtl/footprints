@@ -1,5 +1,5 @@
 from django.db import models
-
+from geoposition.fields import GeopositionField
 
 CONTINENTS = (
     ('AF', 'Africa'),
@@ -177,6 +177,8 @@ class Place(models.Model):
     region = models.CharField(max_length=256, null=True, blank=True)
     country = models.CharField(max_length=256, null=True, blank=True)
     city = models.CharField(max_length=256, null=True, blank=True)
+
+    position = GeopositionField(null=True, blank=True)
 
     digital_object = models.ManyToManyField(
         DigitalObject, null=True, blank=True)

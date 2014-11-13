@@ -27,7 +27,6 @@
                         <th>{{header|capfirst}}</th>
                     {% endfor %}
                     <th>Edit</th>
-                    <th>Delete</th>
                 </tr>
             </thead>
             <tbody>
@@ -37,8 +36,7 @@
                         {% for field in fields %}
                             <td>{{field}}</td>
                         {% endfor %}
-                        <td>Edit</td>
-                        <td>Delete</td>
+                        <td><a class="edit" href="/record/edit/" data-pk="{{object.pk}}">Edit</td>
                     </tr>
                 {% endfor %}
             </tbody>

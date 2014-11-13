@@ -1,0 +1,43 @@
+{% extends "admin/change_form.html" %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <script src="{{STATIC_URL}}jquery/js/jquery-1.10.1.min.js"></script>
+    <script src="{{STATIC_URL}}tinymce/tinymce.min.js"></script>
+    <link href="{{STATIC_URL}}/select2-3.5.2/select2.css" rel="stylesheet"/>
+    <script src="{{STATIC_URL}}/select2-3.5.2/select2.js"></script>
+     
+    <script type="text/javascript"> 
+       jQuery(document).ready(function() {
+           tinymce.init({selector: 'textarea'});
+           jQuery("select").select2();
+       });
+    </script>
+
+    <style media="screen" type="text/css">
+        div.field-notes label {
+            float: none !important;
+            width: 15em !important;
+            margin-bottom: 14px !important;
+        }
+        .mce-container,.mce-container *,.mce-widget,.mce-widget *,.mce-reset,mce-content-body {
+            font-size: 12px !important;
+        }
+        div.select2-container {
+            width: 300px;
+            font-size: 12px;
+        }
+        .select2-container-multi .select2-choices .select2-search-field input {
+            font-size: 12px;
+        }
+        input.vTextField, input.vURLField {
+            display: block;
+            width: 281px;
+            height: 14px;
+            padding: 6px 12px 6px 5px;
+            font-size: 12px;
+            line-height: 1.42857143;
+            color: #555;
+         }
+    </style>
+{% endblock %}
