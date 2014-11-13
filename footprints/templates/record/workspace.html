@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}Record Data{% endblock %}
+
+{% block compressjs %}
+    <script src="{{STATIC_URL}}js/app/record.js"></script>
+    
+    <script type="text/javascript"> 
+       jQuery(document).ready(function() {
+          var view = new RecordWorkspaceView({
+             el: jQuery("div.record.container"),
+             base_url: '/record/form/?model='
+          });
+          tinymce.init({selector:'textarea.wsywig'});
+       });
+    </script>
+    
+    <script id="add-another-template" type="text/template">
+        <a href="#" class="add-another btn">
+            <span class="glyphicon glyphicon-plus"></span>
+        </a>
+    </script>
+{% endblock %}
+    
+{% block extrahead %}
+    <link href="/media/geoposition/geoposition.css" type="text/css" media="all" rel="stylesheet" />
+    <script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false"></script>
+    <script type="text/javascript" src="/media/geoposition/geoposition.js"></script>
+{% endblock %}
+
+{% block js %}
+{% endblock %}
+
+{% block content %}
+<div class="record container">
+    <h1>Record Data</h1>
+    <p>Sed vehicula eu ante sed dapibus. Integer dui ante, porta eget purus nec, porta tempus nulla. Interdum et malesuada fames ac ante ipsum primis in faucibus. Vivamus quis euismod turpis, a scelerisque orci. Morbi venenatis in nunc ac eleifend. Nunc sit amet finibus diam, ut gravida tortor. Nam vitae ex augue.</p>
+    <hr />
+    <div class="row">
+        <div class="col-md-2">
+            <div class="list-group">
+                <a href="#digitalformat" class="list-group-item">Digital Format</a>
+                <a href="#language" class="list-group-item">Language</a>
+                <a href="#person" class="list-group-item">Person</a>
+                <a href="#role" class="list-group-item">Role</a>
+                <hr/>
+                <a href="#contributor" class="list-group-item">Contributor</a>
+                <a href="#collection" class="list-group-item">Collection</a>
+                <a href="#place" class="list-group-item">Place</a>
+                <hr/>
+                <a href="#writtenwork" class="list-group-item">Written Work</a>
+                <a href="#imprint" class="list-group-item">Imprint</a>
+                <a href="#bookcopy" class="list-group-item">Book Copy</a>
+                <a href="#footprint" class="list-group-item">Footprint</a>
+            </div>
+        </div>
+        <div class="col-md-10">
+            <!--  NavBar -->
+            <nav class="navbar navbar-default" role="navigation" style="display: none">
+                <div class="container-fluid">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="#"></a>
+                    </div>
+                    
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav navbar-right">
+                            <li><a href="#" class="create">Create</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <!--  Model form -->
+            <div class='model-form' style="display: none"></div>
+
+            <!--  Model list -->
+            <div class='model-list'></div>
+            
+            <!-- Confirm Delete Modal -->
+            <div class="modal foreign-key-modal" id="foreign-key-model-form" tabindex="-1" role="dialog" aria-labelledby="Add Another" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        </div>
+                        <div class="modal-body"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

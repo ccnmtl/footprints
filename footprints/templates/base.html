@@ -3,9 +3,7 @@
 <!DOCTYPE html>
 
 <html lang="en">
-
     <head>
-      
         <title>Footprints: {% block title %}{% endblock %}</title>
         
         <meta charset="utf-8" />
@@ -16,15 +14,15 @@
         <!-- Bootstrap CSS: -->
         <link href="{{STATIC_URL}}bootstrap/css/bootstrap.min.css" rel="stylesheet">
         {% compress css %}
-        <link href="{{STATIC_URL}}bootstrap/css/bootstrap-glyphicons.css" rel="stylesheet">
-        <!-- Application CSS: -->
-        <link href="{{STATIC_URL}}css/main.css" rel="stylesheet">
-        {% block css %}{% endblock %}
+            <link href="{{STATIC_URL}}bootstrap/css/bootstrap-glyphicons.css" rel="stylesheet">
+            <!-- Application CSS: -->
+            <link href="{{STATIC_URL}}css/main.css" rel="stylesheet">
+            {% block css %}{% endblock %}
         {% endcompress %}
         <link rel="shortcut icon" href="{{STATIC_URL}}img/favicon.ico" type="image/x-icon" /> 
       
         <script src="{{STATIC_URL}}jquery/js/jquery-1.10.1.min.js"></script>
-        <!--https://github.com/imsky/holder-->
+        <script src="{{STATIC_URL}}tinymce/tinymce.min.js"></script>
 
         {% block extrahead %}{% endblock %}
         {% block feeds %}{% endblock %}
@@ -46,7 +44,8 @@
                     <span class="icon-bar"></span>
                  </button>
                  
-                 {% if request.user.is_anonymous or not request.user.profile.is_participant %}
+                 {% comment %}
+                 {% if request.user.is_anonymous %}
                     <a class="navbar-brand" href="/" title="Footprints">
                         <img class="img-responsive" style="display: inline-block;" src="{{STATIC_URL}}img/logo_footprints.png" alt="Footprints" />
                     </a>
@@ -55,44 +54,36 @@
                         <img class="img-responsive" style="display: inline-block;" src="{{STATIC_URL}}img/logo_footprints.png" alt="Footprints" />
                     </span>
                  {% endif %}
+                 {% endcomment %}
                  
                  <a class="navbar-brand" href="/"><span class="glyphicon glyphicon-home"></span></a>
             </div>
-    
+
             <!--/.navbar-header -->
             <div class="collapse navbar-collapse" id="navbar-collapse-pl">
                 <ul class="nav navbar-nav navbar-right navbar-nav-pl">
                     {% block usernav %}
-                    
-                    {% if request.user.is_anonymous %}
-                        <li><a href="#" data-toggle="modal" data-target="#login-modal" class="btn-log-in btn btn-sm">Log In</a></li>
-                    {% else %}
-                        <li class="logged-in-greeting">
-                            <a href="/accounts/logout/?next=/"><span title="Log Out">Log Out</span></a>
-                        </li>
-                        {% if user.has_usable_password %}
-                        <li><a href="/accounts/password_change/">Change Password</a></li>
-                        {% endif %}
+                        {% if request.user.is_anonymous %}
+                            <li><a href="#" data-toggle="modal" data-target="#login-modal" class="btn-log-in btn btn-sm">Log In</a></li>
+                        {% else %}
+                            <li class="logged-in-greeting">
+                                <a href="/accounts/logout/?next=/"><span title="Log Out">Log Out</span></a>
+                            </li>
 
-                        {% if user.is_superuser %}
-                        <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Content <b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="/pages/en/edit/">English</a></li>
-                                <li><a href="/pages/es/edit/">Spanish</a></li>
-                            </ul>
-                        </li>
+                            {% if user.has_usable_password %}
+                                <li><a href="/accounts/password_change/">Change Password</a></li>
+                            {% endif %}
+                            
+                            {% if user.is_staff %}
+                                <li><a href="/create/">Data</a></li>
+                            {% endif %}
                         {% endif %}
-                    {% endif %}
-                    <li><a href="/about/">About</a></li>
-                    <li><a href="/credits/">Credits</a></li>
-                    <li><a href="/contact/">Contact</a></li>
-                    <li><a href="/help/">Help</a></li>
-                    
+                        <li><a href="/about/">About</a></li>
+                        <li><a href="/credits/">Credits</a></li>
+                        <li><a href="/contact/">Contact</a></li>
+                        <li><a href="/help/">Help</a></li>
                     {% endblock %}
-                 
                  </ul>
-            
             </div>
             <!--/.nav-collapse -->
               
@@ -102,7 +93,7 @@
     </nav><!--/.navbar-pl -->
     {% endblock %}
     
-    {% if request.user.is_anonymous or request.user.profile.is_participant %}
+    {% if request.user.is_anonymous %}
     <!-- Login Modal -->
     <div class="modal" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="loginLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -176,7 +167,7 @@
         <div class="banner-pl-bg">
          <div class="logo-pl">
            {% comment %}
-              <a href="/"><span>Meaningful Consent</span></a>
+              <a href="/"><span>Footprints</span></a>
            {% endcomment %}
          </div>
         </div><!--/ .banner-pl-bg -->
@@ -214,7 +205,7 @@
     <script src="{{STATIC_URL}}js/backbone-min.js"></script>
     <script src="{{STATIC_URL}}bootstrap/js/bootstrap.min.js"></script>
     
-    {% if request.user.is_anonymous or request.user.profile.is_participant %}
+    {% if request.user.is_anonymous %}
         <script src="{{STATIC_URL}}js/app/login.js"></script>
     
         <script type="text/javascript"> 
@@ -237,6 +228,9 @@
         });
     </script>
     
+    {% compress js %}
+        {% block compressjs %}{% endblock %}
+    {% endcompress %}
     
     {% block js %}{% endblock %}
     

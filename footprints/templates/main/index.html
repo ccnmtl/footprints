@@ -1,8 +1,62 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div class="container">
+    <div class="jumbotron">
+        <h1>Footprints</h1>
+    </div>
+    <div class="row">
+        <div class="col-md-9">
+            <h3>Search</h3>
+            <p>Praesent vel lorem quis dui sodales hendrerit.</p>
+            <form role="form">
+                <div class="form-group">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="search-text" placeholder="Enter search terms">
+                        <div class="input-group-btn">
+                            <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-search"></span></button>
+                        </div>
+                    </div>
+                    <p class="help-block pull-right"><a href="/search/">Advanced Search</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+    <br /><br /><br />
+    <div class="row">
+        <div class="col-md-9">
+            <h3>Browse</h3>
+            <p>Sed posuere facilisis quam, eget ultricies justo sodales vitae. Nulla vestibulum nec dolor sed tincidunt. Pellentesque feugiat, metus non sodales vehicula, arcu nibh varius urna, at porttitor nunc orci eget odio. </p>
+            
+            <div class="row">
+            <div class="col-sm-4">
+              <h3><a href="/browse/footprints/">Footprints</a></h3>
+              <p>Compiled and minified CSS, JavaScript, and fonts. No docs or original source files are included.</p>
+            </div>
+            <div class="col-sm-4">
+              <h3><a href="/browse/places/">Places</a></h3>
+              <p>Fusce eu nibh id felis sollicitudin tempor rutrum vel sem.</p>
+            </div>
+            <div class="col-sm-4">
+              <h3><a href="/browse/people/">People</a></h3>
+              <p>Morbi urna enim, varius aliquet est sed, rhoncus viverra nibh.</p>
+            </div>
+          </div>
+        </div>
+    </div>
+    <br /><br /><br />
 
-<div class="jumbotron">
-    <h1>Footprints</h1>
+    {% if not request.user.is_anonymous %}
+        <div class="row">
+            <div class="col-md-9">
+                <h3>Record</h3>
+                <p>Donec nibh nibh, gravida id aliquam et, molestie eu est. 
+                Donec rhoncus, sem id ultrices bibendum, 
+                lacus risus efficitur enim, in vulputate orci lacus vitae purus.
+                <a href="/record/">Get Started...</a>
+                </p>
+            </div>
+        </div>
+    {% endif %}
 </div>
 {% endblock %}
