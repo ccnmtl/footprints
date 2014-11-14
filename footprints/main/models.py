@@ -28,6 +28,24 @@ def get_model_fields(the_model):
             if field.name not in HIDDEN_FIELDS]
 
 
+def format_name(last_name, first_name, middle_name, suffix):
+    name = last_name
+
+    if first_name or middle_name or suffix:
+        name = name + ','
+
+    if first_name:
+        name = name + ' ' + first_name
+
+    if middle_name:
+        name = name + ' ' + middle_name
+
+    if suffix:
+        name = name + ' ' + suffix
+
+    return name
+
+
 class ExtendedDateFormat(models.Model):
     edtf_format = models.CharField(max_length=256)
 
@@ -151,9 +169,13 @@ class StandardizedIdentification(models.Model):
 
 
 class Person(models.Model):
-    name = models.ForeignKey(Name)
-    date_of_birth = models.ForeignKey(ExtendedDateFormat,
-                                      null=True, blank=True)
+    last_name = models.CharField(max_length=256)
+    first_name = models.CharField(max_length=256, null=True, blank=True)
+    middle_name = models.CharField(max_length=256, null=True, blank=True)
+    suffix = models.CharField(max_length=256, null=True, blank=True)
+
+    date_of_birth = models.CharField(max_length=256, null=True, blank=True)
+    date_of_death = models.CharField(max_length=256, null=True, blank=True)
 
     standardized_identifier = models.ForeignKey(StandardizedIdentification,
                                                 null=True, blank=True)
@@ -170,27 +192,41 @@ class Person(models.Model):
 
     class Meta:
         verbose_name = "Person"
-        ordering = ['name']
+        ordering = ['last_name', 'first_name']
 
     def __unicode__(self):
-        return self.name.__unicode__()
+        return format_name(self.last_name, self.first_name,
+                           self.middle_name, self.suffix)
 
 
-class Contributor(models.Model):
+class Actor(models.Model):
     person = models.ForeignKey(Person)
     role = models.ForeignKey(Role)
-    alternate_name = models.ForeignKey(Name, null=True, blank=True)
+
+    alternate_last_name = models.CharField(max_length=256,
+                                           null=True, blank=True)
+    alternate_first_name = models.CharField(max_length=256,
+                                            null=True, blank=True)
+    alternate_middle_name = models.CharField(max_length=256,
+                                             null=True, blank=True)
+    alternate_suffix = models.CharField(max_length=256,
+                                        null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
-    created_by = CreatingUserField(related_name='contributor_created_by')
+    created_by = CreatingUserField(related_name='actor_created_by')
     last_modified_by = LastUserField(
-        related_name='contributor_last_modified_by')
+        related_name='actor_last_modified_by')
 
     def __unicode__(self):
-        return "%s (%s)" % (self.alternate_name or self.person.__unicode__(),
-                            self.role)
+        last_name = self.alternate_last_name or self.person.last_name
+        first_name = self.alternate_first_name or self.person.first_name
+        middle_name = self.alternate_middle_name or self.person.middle_name
+        suffix = self.alternate_suffix or self.person.suffix
+
+        name = format_name(last_name, first_name, middle_name, suffix)
+        return "%s (%s)" % (name, self.role)
 
 
 class Place(models.Model):
@@ -230,7 +266,7 @@ class Place(models.Model):
 
 class Collection(models.Model):
     name = models.CharField(max_length=512, unique=True)
-    contributor = models.ManyToManyField(Contributor, null=True, blank=True)
+    actor = models.ManyToManyField(Actor, null=True, blank=True)
 
     notes = models.TextField(null=True, blank=True)
 
@@ -251,7 +287,9 @@ class Collection(models.Model):
 
 class WrittenWork(models.Model):
     standardized_title = models.TextField()
-    author = models.ManyToManyField(Contributor, null=True, blank=True)
+    actor = models.ManyToManyField(
+        Actor, null=True, blank=True,
+        help_text="The author or creator of the work. ")
     notes = models.TextField(null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -274,11 +312,10 @@ class Imprint(models.Model):
 
     title = models.TextField(null=True, blank=True)
     language = models.ForeignKey(Language, null=True, blank=True)
-    publication_date = models.ForeignKey(ExtendedDateFormat,
-                                         null=True, blank=True)
+    publication_date = models.CharField(max_length=256, null=True, blank=True)
     place = models.ForeignKey(Place, null=True, blank=True)
 
-    contributor = models.ManyToManyField(Contributor, null=True, blank=True)
+    actor = models.ManyToManyField(Actor, null=True, blank=True)
 
     standardized_identifier = models.ManyToManyField(
         StandardizedIdentification, null=True, blank=True)
@@ -333,8 +370,7 @@ class Footprint(models.Model):
     language = models.ForeignKey(Language, null=True, blank=True)
     place = models.ForeignKey(Place, null=True, blank=True)
 
-    recorded_date = models.ForeignKey(ExtendedDateFormat,
-                                      null=True, blank=True)
+    recorded_date = models.CharField(max_length=256, null=True, blank=True)
 
     call_number = models.CharField(max_length=256, null=True, blank=True)
     collection = models.ForeignKey(Collection, null=True, blank=True)
