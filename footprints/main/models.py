@@ -368,8 +368,14 @@ class BookCopy(models.Model):
 
 class Footprint(models.Model):
     book_copy = models.ForeignKey(BookCopy)
-    medium = models.CharField(max_length=256)
-    provenance = models.CharField(max_length=256)
+    medium = models.CharField(
+        "Medium of Evidence", max_length=256,
+        help_text='''Where the footprint is derived or deduced from, e.g.
+            an extant copy with an owner's signature''')
+    provenance = models.CharField(
+        "Provenance of Evidence", max_length=256,
+        help_text='''Where can one find the evidence now: a particular
+        library, archive, a printed book, a journal article etc.''')
 
     title = models.TextField()
     language = models.ForeignKey(Language, null=True, blank=True)
@@ -385,7 +391,7 @@ class Footprint(models.Model):
 
     actor = models.ManyToManyField(
         Actor, null=True, blank=True,
-        help_text="An owner or other person related to this footprint")
+        help_text="An owner or other person related to this footprint. ")
 
     notes = models.TextField(null=True, blank=True)
 
