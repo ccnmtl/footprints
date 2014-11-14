@@ -406,4 +406,4 @@ class Footprint(models.Model):
         verbose_name = "Footprint"
 
     def __unicode__(self):
-        return self.title or self.book_copy.__unicode__()
+        return self.provenance

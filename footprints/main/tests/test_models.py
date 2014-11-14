@@ -3,7 +3,7 @@ from django.test import TestCase
 
 from footprints.main.models import Language, DigitalFormat, \
     ExtendedDateFormat, Name, StandardizedIdentification, \
-    Actor, Place, Imprint, Footprint
+    Actor, Place, Imprint
 from footprints.main.tests.factories import RoleFactory, \
     ActorFactory, PlaceFactory, CollectionFactory, \
     WrittenWorkFactory, ImprintFactory, BookCopyFactory, FootprintFactory, \
@@ -108,8 +108,4 @@ class BasicModelTest(TestCase):
 
     def test_footprint(self):
         footprint = FootprintFactory()
-        self.assertEquals(footprint.__unicode__(), 'Odyssey')
-
-        footprint = Footprint.objects.create(book_copy=BookCopyFactory())
-        self.assertEquals(footprint.__unicode__(),
-                          'The Odyssey, Edition 1 (1984~)')
+        self.assertEquals(footprint.__unicode__(), 'Provenance')
