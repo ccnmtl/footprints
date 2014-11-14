@@ -9,14 +9,18 @@
      
     <script type="text/javascript"> 
        jQuery(document).ready(function() {
-           tinymce.init({selector: 'textarea'});
+           tinymce.init({selector: 'div.field-notes textarea'});
            jQuery("select").select2();
        });
     </script>
     
     <style media="screen" type="text/css">
-        div.field-notes label,
-        div.field-title label {
+        div.field-title textarea {
+            height: 2em;
+            width: 300px !important;     
+        }
+        
+        div.field-notes label {
             float: none !important;
             width: 15em !important;
             margin-bottom: 14px !important;

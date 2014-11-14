@@ -3,7 +3,7 @@ from django.forms.models import ModelForm
 
 from footprints.main.models import Footprint, Role, DigitalObject, \
     ExtendedDateFormat, Name, Language, DigitalFormat, \
-    StandardizedIdentification, Person, Contributor, Place, Collection, \
+    StandardizedIdentification, Person, Actor, Place, Collection, \
     WrittenWork, Imprint, BookCopy
 
 
@@ -59,7 +59,7 @@ class PersonForm(ModelForm):
                   'digital_object', 'notes']
 
 
-class ContributorForm(ModelForm):
+class ActorForm(ModelForm):
     role = forms.ModelChoiceField(
         queryset=Role.objects.all(),
         widget=forms.Select(attrs={'class': 'add-another'}))
@@ -74,7 +74,7 @@ class ContributorForm(ModelForm):
     suffix = forms.CharField(max_length=256)
 
     class Meta:
-        model = Contributor
+        model = Actor
         fields = ['person', 'role', 'last_name', 'first_name',
                   'middle_name', 'suffix']
 

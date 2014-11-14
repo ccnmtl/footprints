@@ -1,9 +1,9 @@
 from django.contrib.auth.models import User
 import factory
 
-from footprints.main.models import Language, ExtendedDateFormat, Role, Name, \
+from footprints.main.models import Language, ExtendedDateFormat, Role, \
     DigitalFormat, StandardizedIdentification, Person, \
-    Contributor, Place, Collection, WrittenWork, Imprint, BookCopy, Footprint
+    Actor, Place, Collection, WrittenWork, Imprint, BookCopy, Footprint
 
 
 class UserFactory(factory.DjangoModelFactory):
@@ -20,14 +20,6 @@ class ExtendedDateFormatFactory(factory.DjangoModelFactory):
 class RoleFactory(factory.DjangoModelFactory):
     FACTORY_FOR = Role
     name = factory.Sequence(lambda n: "Author%03d" % n)
-
-
-class NameFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = Name
-    last_name = 'Last'
-    first_name = 'First'
-    middle_name = 'Middle'
-    suffix = 'Esq'
 
 
 class LanguageFactory(factory.DjangoModelFactory):
@@ -51,20 +43,21 @@ class StandardizedIdentificationFactory(factory.DjangoModelFactory):
 class PersonFactory(factory.DjangoModelFactory):
     FACTORY_FOR = Person
 
-    name = factory.SubFactory(NameFactory)
+    last_name = 'Last'
+    first_name = 'First'
+    middle_name = 'Middle'
+    suffix = 'Esq'
     date_of_birth = factory.SubFactory(ExtendedDateFormatFactory)
     standardized_identifier = factory.SubFactory(
         StandardizedIdentificationFactory)
 
 
-class ContributorFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = Contributor
+class ActorFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = Actor
 
     person = factory.SubFactory(PersonFactory)
     role = factory.SubFactory(RoleFactory)
-    alternate_name = factory.SubFactory(NameFactory,
-                                        last_name='Homer', first_name='',
-                                        middle_name='', suffix='')
+    alternate_last_name = 'Homer'
 
 
 class PlaceFactory(factory.DjangoModelFactory):
@@ -82,10 +75,10 @@ class CollectionFactory(factory.DjangoModelFactory):
     name = 'Judaica Collection'
 
     @factory.post_generation
-    def contributors(self, create, extracted, **kwargs):
+    def actors(self, create, extracted, **kwargs):
         if create:
             role = Role.objects.create(name='Caretaker')
-            self.contributor.add(ContributorFactory(role=role))
+            self.actor.add(ActorFactory(role=role))
 
 
 class WrittenWorkFactory(factory.DjangoModelFactory):
@@ -94,10 +87,10 @@ class WrittenWorkFactory(factory.DjangoModelFactory):
     standardized_title = 'The Odyssey'
 
     @factory.post_generation
-    def authors(self, create, extracted, **kwargs):
+    def actors(self, create, extracted, **kwargs):
         if create:
             role = RoleFactory()
-            self.author.add(ContributorFactory(role=role))
+            self.actor.add(ActorFactory(role=role))
 
 
 class ImprintFactory(factory.DjangoModelFactory):
@@ -110,10 +103,10 @@ class ImprintFactory(factory.DjangoModelFactory):
     place = factory.SubFactory(PlaceFactory)
 
     @factory.post_generation
-    def contributors(self, create, extracted, **kwargs):
+    def actors(self, create, extracted, **kwargs):
         if create:
             role = RoleFactory()
-            self.contributor.add(ContributorFactory.create(role=role))
+            self.actor.add(ActorFactory.create(role=role))
 
     @factory.post_generation
     def standardized_identification(self, create, extracted, **kwargs):

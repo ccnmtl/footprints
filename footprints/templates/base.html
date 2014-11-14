@@ -10,15 +10,16 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="Precision in Pediatric Sequencing">
         <meta name="author" content="CCNMTL">
+        <meta name="robots" content="noindex">
       
         <!-- Bootstrap CSS: -->
         <link href="{{STATIC_URL}}bootstrap/css/bootstrap.min.css" rel="stylesheet">
-        {% compress css %}
+        {% comment %}{% compress css %}{% endcomment %}
             <link href="{{STATIC_URL}}bootstrap/css/bootstrap-glyphicons.css" rel="stylesheet">
             <!-- Application CSS: -->
             <link href="{{STATIC_URL}}css/main.css" rel="stylesheet">
             {% block css %}{% endblock %}
-        {% endcompress %}
+        {% comment %}{% endcompress %}{% endcomment %}
         <link rel="shortcut icon" href="{{STATIC_URL}}img/favicon.ico" type="image/x-icon" /> 
       
         <script src="{{STATIC_URL}}jquery/js/jquery-1.10.1.min.js"></script>
@@ -75,7 +76,7 @@
                             {% endif %}
                             
                             {% if user.is_staff %}
-                                <li><a href="/create/">Data</a></li>
+                                <li><a href="/admin/">Record</a></li>
                             {% endif %}
                         {% endif %}
                         <li><a href="/about/">About</a></li>
@@ -228,9 +229,9 @@
         });
     </script>
     
-    {% compress js %}
+    {% comment %}{% compress js %}{% endcomment %}
         {% block compressjs %}{% endblock %}
-    {% endcompress %}
+    {% comment %}{% endcompress %}{% endcomment %}
     
     {% block js %}{% endblock %}
     

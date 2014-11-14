@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from footprints.main.models import Footprint, DigitalFormat, Role, \
-    Name, ExtendedDateFormat, Contributor, Language, DigitalObject, \
+    Name, ExtendedDateFormat, Actor, Language, DigitalObject, \
     StandardizedIdentification, Person, Place, Collection, WrittenWork, \
     Imprint, BookCopy
 
@@ -14,7 +14,7 @@ admin.site.register(DigitalFormat)
 admin.site.register(DigitalObject)
 admin.site.register(StandardizedIdentification)
 admin.site.register(Person)
-admin.site.register(Contributor)
+admin.site.register(Actor)
 admin.site.register(Place)
 admin.site.register(Collection)
 admin.site.register(WrittenWork)

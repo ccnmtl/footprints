@@ -2,11 +2,12 @@ from django.db.utils import IntegrityError
 from django.test import TestCase
 
 from footprints.main.models import Language, DigitalFormat, \
-    ExtendedDateFormat, Name, StandardizedIdentification, Person, \
-    Contributor, Place, Imprint, Footprint
-from footprints.main.tests.factories import NameFactory, RoleFactory, \
-    ContributorFactory, PlaceFactory, CollectionFactory, \
-    WrittenWorkFactory, ImprintFactory, BookCopyFactory, FootprintFactory
+    ExtendedDateFormat, Name, StandardizedIdentification, \
+    Actor, Place, Imprint, Footprint
+from footprints.main.tests.factories import RoleFactory, \
+    ActorFactory, PlaceFactory, CollectionFactory, \
+    WrittenWorkFactory, ImprintFactory, BookCopyFactory, FootprintFactory, \
+    PersonFactory
 
 
 class BasicModelTest(TestCase):
@@ -60,24 +61,22 @@ class BasicModelTest(TestCase):
                           'bar [Bibliography of the Hebrew Book] Barish')
 
     def test_person(self):
-        name = NameFactory()
-        person = Person.objects.create(name=name)
+        person = PersonFactory()
         self.assertEquals(person.__unicode__(), 'Last, First Middle Esq')
 
-    def test_contributor(self):
-        name = NameFactory()
-        person = Person.objects.create(name=name)
+    def test_actor(self):
+        person = PersonFactory()
         role = RoleFactory()
-        contributor = Contributor.objects.create(person=person, role=role)
+        actor = Actor.objects.create(person=person, role=role)
 
         # No Alternate Name
-        self.assertEquals(contributor.__unicode__(),
+        self.assertEquals(actor.__unicode__(),
                           'Last, First Middle Esq (%s)' % role.name)
 
         # With Alternate Name
-        contributor = ContributorFactory()
-        self.assertEquals(contributor.__unicode__(),
-                          'Homer (%s)' % contributor.role.name)
+        actor = ActorFactory()
+        self.assertEquals(actor.__unicode__(),
+                          'Homer, First Middle Esq (%s)' % actor.role.name)
 
     def test_place(self):
         place = Place.objects.create(continent='EU')
