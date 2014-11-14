@@ -337,7 +337,10 @@ class Imprint(models.Model):
         verbose_name = "Imprint"
 
     def __unicode__(self):
-        return self.title or self.work.__unicode__()
+        label = self.title or self.work.__unicode__()
+        if self.publication_date:
+            label += " (%s)" % self.publication_date
+        return label
 
 
 class BookCopy(models.Model):
@@ -357,6 +360,7 @@ class BookCopy(models.Model):
     class Meta:
         ordering = ['imprint']
         verbose_name = "Book Copy"
+        verbose_name_plural = "Book Copies"
 
     def __unicode__(self):
         return self.imprint.__unicode__()
@@ -378,6 +382,10 @@ class Footprint(models.Model):
 
     digital_object = models.ManyToManyField(
         DigitalObject, null=True, blank=True)
+
+    actor = models.ManyToManyField(
+        Actor, null=True, blank=True,
+        help_text="An owner or other person related to this footprint")
 
     notes = models.TextField(null=True, blank=True)
 
