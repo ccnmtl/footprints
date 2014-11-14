@@ -253,15 +253,16 @@ class Place(models.Model):
         verbose_name = "Place"
 
     def __unicode__(self):
-        label = dict(CONTINENTS)[self.continent]
-        if self.region:
-            label += ', ' + self.region
-        if self.country:
-            label += ', ' + self.country
+        parts = []
         if self.city:
-            label += ', ' + self.city
+            parts.append(self.city)
+        if self.country:
+            parts.append(self.country)
+        if self.region:
+            parts.append(self.region)
+        parts.append(dict(CONTINENTS)[self.continent])
 
-        return label
+        return ', '.join(parts)
 
 
 class Collection(models.Model):
