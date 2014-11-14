@@ -61,6 +61,6 @@ django-registration==1.0
 django-markwhat==1.0
 gunicorn==0.17.4
 django-infranil==0.1.0
-
 django-haystack==2.3.1
 django-geoposition==0.2.2
+django-audit-log==0.5.0

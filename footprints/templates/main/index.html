@@ -5,6 +5,19 @@
     <div class="jumbotron">
         <h1>Footprints</h1>
     </div>
+    
+    {% if not request.user.is_anonymous %}
+        <div class="row">
+            <div class="col-md-9">
+                <h3>Record</h3>
+                <p>Sed posuere facilisis quam, eget ultricies justo sodales vitae. Nulla vestibulum nec dolor sed tincidunt. Pellentesque feugiat, metus non sodales vehicula, arcu nibh varius urna, at porttitor nunc orci eget odio. </p>
+                <a href="/admin/" class="btn btn-primary">Get Started</a>
+                </p>
+            </div>
+        </div>
+    {% endif %}
+
+    {% comment %}
     <div class="row">
         <div class="col-md-9">
             <h3>Search</h3>
@@ -45,18 +58,6 @@
         </div>
     </div>
     <br /><br /><br />
-
-    {% if not request.user.is_anonymous %}
-        <div class="row">
-            <div class="col-md-9">
-                <h3>Record</h3>
-                <p>Donec nibh nibh, gravida id aliquam et, molestie eu est. 
-                Donec rhoncus, sem id ultrices bibendum, 
-                lacus risus efficitur enim, in vulputate orci lacus vitae purus.
-                <a href="/record/">Get Started...</a>
-                </p>
-            </div>
-        </div>
-    {% endif %}
+    {% endcomment %}
 </div>
 {% endblock %}

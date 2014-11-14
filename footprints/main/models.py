@@ -1,5 +1,7 @@
 from django.db import models
 from geoposition.fields import GeopositionField
+from audit_log.models.fields import LastUserField, CreatingUserField
+
 
 CONTINENTS = (
     ('AF', 'Africa'),
@@ -52,6 +54,9 @@ class Name(models.Model):
     first_name = models.CharField(max_length=256, null=True, blank=True)
     middle_name = models.CharField(max_length=256, null=True, blank=True)
     suffix = models.CharField(max_length=256, null=True, blank=True)
+
+    created_by = CreatingUserField(related_name="name_created_by")
+    last_modified_by = LastUserField(related_name="name_last_modified_by")
 
     class Meta:
         ordering = ['last_name']
@@ -108,6 +113,10 @@ class DigitalObject(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
+    created_by = CreatingUserField(related_name="digitalobject_created_by")
+    last_modified_by = LastUserField(
+        related_name="digitalobject_last_modified_by")
+
     class Meta:
         verbose_name = "Digital Object"
         ordering = ['name']
@@ -123,6 +132,11 @@ class StandardizedIdentification(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
+
+    created_by = CreatingUserField(
+        related_name='standardizedidentification_created_by')
+    last_modified_by = LastUserField(
+        related_name='standardizedidentification_last_modified_by')
 
     class Meta:
         verbose_name = "Standardized Identification"
@@ -151,6 +165,9 @@ class Person(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
+    created_by = CreatingUserField(related_name='person_created_by')
+    last_modified_by = LastUserField(related_name='person_last_modified_by')
+
     class Meta:
         verbose_name = "Person"
         ordering = ['name']
@@ -164,8 +181,12 @@ class Contributor(models.Model):
     role = models.ForeignKey(Role)
     alternate_name = models.ForeignKey(Name, null=True, blank=True)
 
-    class Meta:
-        verbose_name = "Contributor"
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+
+    created_by = CreatingUserField(related_name='contributor_created_by')
+    last_modified_by = LastUserField(
+        related_name='contributor_last_modified_by')
 
     def __unicode__(self):
         return "%s (%s)" % (self.alternate_name or self.person.__unicode__(),
@@ -187,6 +208,9 @@ class Place(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
+
+    created_by = CreatingUserField(related_name='place_created_by')
+    last_modified_by = LastUserField(related_name='place_last_modified_by')
 
     class Meta:
         ordering = ['continent', 'region', 'country', 'city']
@@ -213,6 +237,10 @@ class Collection(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
+    created_by = CreatingUserField(related_name='collection_created_by')
+    last_modified_by = LastUserField(
+        related_name='collection_last_modified_by')
+
     class Meta:
         ordering = ['name']
         verbose_name = "Collection"
@@ -228,6 +256,10 @@ class WrittenWork(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
+
+    created_by = CreatingUserField(related_name='writtenwork_created_by')
+    last_modified_by = LastUserField(
+        related_name='writtenwork_last_modified_by')
 
     class Meta:
         ordering = ['standardized_title']
@@ -246,8 +278,7 @@ class Imprint(models.Model):
                                          null=True, blank=True)
     place = models.ForeignKey(Place, null=True, blank=True)
 
-    contributor = models.ManyToManyField(Contributor,
-                                         null=True, blank=True)
+    contributor = models.ManyToManyField(Contributor, null=True, blank=True)
 
     standardized_identifier = models.ManyToManyField(
         StandardizedIdentification, null=True, blank=True)
@@ -259,6 +290,9 @@ class Imprint(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
+
+    created_by = CreatingUserField(related_name='imprint_created_by')
+    last_modified_by = LastUserField(related_name='imprint_last_modified_by')
 
     class Meta:
         ordering = ['work']
@@ -278,6 +312,9 @@ class BookCopy(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
+
+    created_by = CreatingUserField(related_name='bookcopy_created_by')
+    last_modified_by = LastUserField(related_name='bookcopy_last_modified_by')
 
     class Meta:
         ordering = ['imprint']
@@ -309,6 +346,9 @@ class Footprint(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
+
+    created_by = CreatingUserField(related_name='footprint_created_by')
+    last_modified_by = LastUserField(related_name='footprint_last_modified_by')
 
     class Meta:
         ordering = ['title']
