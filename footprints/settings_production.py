@@ -27,7 +27,7 @@ DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 if 'migrate' not in sys.argv:
-    INSTALLED_APPS.append('raven.contrib.django.raven_compat')				
+    INSTALLED_APPS.append('raven.contrib.django.raven_compat')
 
 try:
     from local_settings import *

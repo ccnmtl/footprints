@@ -99,15 +99,17 @@ class BasicModelTest(TestCase):
         self.assertEquals(imprint.__unicode__(), 'The Odyssey')
 
         imprint = ImprintFactory()
-        self.assertEquals(imprint.__unicode__(), 'The Odyssey, Edition 1')
+        self.assertEquals(imprint.__unicode__(),
+                          'The Odyssey, Edition 1 (1984~)')
 
     def test_book_copy(self):
         copy = BookCopyFactory()
-        self.assertEquals(copy.__unicode__(), 'The Odyssey, Edition 1')
+        self.assertEquals(copy.__unicode__(), 'The Odyssey, Edition 1 (1984~)')
 
     def test_footprint(self):
         footprint = FootprintFactory()
         self.assertEquals(footprint.__unicode__(), 'Odyssey')
 
         footprint = Footprint.objects.create(book_copy=BookCopyFactory())
-        self.assertEquals(footprint.__unicode__(), 'The Odyssey, Edition 1')
+        self.assertEquals(footprint.__unicode__(),
+                          'The Odyssey, Edition 1 (1984~)')
