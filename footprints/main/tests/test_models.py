@@ -37,15 +37,8 @@ class BasicModelTest(TestCase):
             pass  # expected
 
     def test_name(self):
-        name = Name.objects.create(last_name='Last')
-        self.assertEquals(name.__unicode__(), 'Last')
-
-        name = Name.objects.create(last_name='Last',
-                                   first_name='First',
-                                   middle_name='Middle',
-                                   suffix='Esq')
-
-        self.assertEquals(name.__unicode__(), 'Last, First Middle Esq')
+        name = Name.objects.create(name='Prince')
+        self.assertEquals(name.__unicode__(), 'Prince')
 
     def test_standardized_identification(self):
         si = StandardizedIdentification.objects.create(identifier='foo',

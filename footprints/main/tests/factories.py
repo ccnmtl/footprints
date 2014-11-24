@@ -3,7 +3,7 @@ import factory
 
 from footprints.main.models import Language, ExtendedDateFormat, Role, \
     DigitalFormat, StandardizedIdentification, Person, \
-    Actor, Place, Collection, WrittenWork, Imprint, BookCopy, Footprint
+    Actor, Place, Collection, WrittenWork, Imprint, BookCopy, Footprint, Name
 
 
 class UserFactory(factory.DjangoModelFactory):
@@ -20,6 +20,11 @@ class ExtendedDateFormatFactory(factory.DjangoModelFactory):
 class RoleFactory(factory.DjangoModelFactory):
     FACTORY_FOR = Role
     name = factory.Sequence(lambda n: "Author%03d" % n)
+
+
+class NameFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = Name
+    name = factory.Sequence(lambda n: "Name%03d" % n)
 
 
 class LanguageFactory(factory.DjangoModelFactory):
@@ -47,6 +52,7 @@ class PersonFactory(factory.DjangoModelFactory):
     first_name = 'First'
     middle_name = 'Middle'
     suffix = 'Esq'
+    name = factory.SubFactory(NameFactory)
     date_of_birth = factory.SubFactory(ExtendedDateFormatFactory)
     standardized_identifier = factory.SubFactory(
         StandardizedIdentificationFactory)

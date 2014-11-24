@@ -17,7 +17,8 @@ IDENTIFIER_TYPES = (
     ('LOC', 'Library of Congress'),
     ('BHB', 'Bibliography of the Hebrew Book'),
     ('WLD', 'WorldCat (OCLC)'),
-    ('VIAF', 'Virtual International Authority File')
+    ('VIAF', 'Virtual International Authority File'),
+    ('GETT', 'The Getty Thesaurus of Geographic Names')
 )
 
 HIDDEN_FIELDS = ['id']
@@ -68,34 +69,23 @@ class Role(models.Model):
 
 
 class Name(models.Model):
-    last_name = models.CharField(max_length=256)
-    first_name = models.CharField(max_length=256, null=True, blank=True)
-    middle_name = models.CharField(max_length=256, null=True, blank=True)
-    suffix = models.CharField(max_length=256, null=True, blank=True)
+    name = models.TextField()
+    sort_by = models.TextField()
 
     created_by = CreatingUserField(related_name="name_created_by")
     last_modified_by = LastUserField(related_name="name_last_modified_by")
 
     class Meta:
-        ordering = ['last_name']
+        ordering = ['sort_by', 'name']
         verbose_name = 'Name'
 
     def __unicode__(self):
-        name = self.last_name
+        return self.name
 
-        if self.first_name or self.middle_name or self.suffix:
-            name = name + ','
-
-        if self.first_name:
-            name = name + ' ' + self.first_name
-
-        if self.middle_name:
-            name = name + ' ' + self.middle_name
-
-        if self.suffix:
-            name = name + ' ' + self.suffix
-
-        return name
+    def save(self, *args, **kwargs):
+        if self.sort_by is None or len(self.sort_by) < 1:
+            self.sort_by = self.name
+        super(Name, self).save(*args, **kwargs)
 
 
 class Language(models.Model):
@@ -174,8 +164,19 @@ class Person(models.Model):
     middle_name = models.CharField(max_length=256, null=True, blank=True)
     suffix = models.CharField(max_length=256, null=True, blank=True)
 
+    name = models.ForeignKey(Name, related_name="person_name")
+    alternate_spellings = models.ForeignKey(
+        Name, related_name="person_alternate_spellings", null=True, blank=True)
+
     date_of_birth = models.CharField(max_length=256, null=True, blank=True)
     date_of_death = models.CharField(max_length=256, null=True, blank=True)
+
+    birth_date = models.ForeignKey(ExtendedDateFormat,
+                                   null=True, blank=True,
+                                   related_name="birth_date")
+    death_date = models.ForeignKey(ExtendedDateFormat,
+                                   null=True, blank=True,
+                                   related_name="death_date")
 
     standardized_identifier = models.ForeignKey(StandardizedIdentification,
                                                 null=True, blank=True)
@@ -212,6 +213,9 @@ class Actor(models.Model):
     alternate_suffix = models.CharField(max_length=256,
                                         null=True, blank=True)
 
+    actor_alternate_name = models.ForeignKey(Name, null=True, blank=True,
+                                             related_name="actor_name")
+
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
@@ -241,6 +245,10 @@ class Place(models.Model):
         DigitalObject, null=True, blank=True)
 
     notes = models.TextField(null=True, blank=True)
+
+    standardized_identification = models.ForeignKey(StandardizedIdentification,
+                                                    null=True,
+                                                    blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
@@ -314,6 +322,8 @@ class Imprint(models.Model):
     title = models.TextField(null=True, blank=True)
     language = models.ForeignKey(Language, null=True, blank=True)
     publication_date = models.CharField(max_length=256, null=True, blank=True)
+    date_of_publication = models.ForeignKey(ExtendedDateFormat, null=True,
+                                            blank=True)
     place = models.ForeignKey(Place, null=True, blank=True)
 
     actor = models.ManyToManyField(Actor, null=True, blank=True)
@@ -379,9 +389,12 @@ class Footprint(models.Model):
 
     title = models.TextField()
     language = models.ForeignKey(Language, null=True, blank=True)
+    document_type = models.CharField(max_length=256, null=True, blank=True)
     place = models.ForeignKey(Place, null=True, blank=True)
 
     recorded_date = models.CharField(max_length=256, null=True, blank=True)
+    associated_date = models.ForeignKey(ExtendedDateFormat,
+                                        null=True, blank=True)
 
     call_number = models.CharField(max_length=256, null=True, blank=True)
     collection = models.ForeignKey(Collection, null=True, blank=True)
