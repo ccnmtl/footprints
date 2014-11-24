@@ -141,16 +141,16 @@ class StandardizedIdentification(models.Model):
 
 
 class Person(models.Model):
-    name = models.ForeignKey(Name, related_name="person_name")
-    alternate_spellings = models.ForeignKey(
+    name = models.OneToOneField(Name, related_name="person_name")
+    alternate_spellings = models.ManyToManyField(
         Name, related_name="person_alternate_spellings", null=True, blank=True)
 
-    birth_date = models.ForeignKey(ExtendedDateFormat,
-                                   null=True, blank=True,
-                                   related_name="birth_date")
-    death_date = models.ForeignKey(ExtendedDateFormat,
-                                   null=True, blank=True,
-                                   related_name="death_date")
+    birth_date = models.OneToOneField(ExtendedDateFormat,
+                                      null=True, blank=True,
+                                      related_name="birth_date")
+    death_date = models.OneToOneField(ExtendedDateFormat,
+                                      null=True, blank=True,
+                                      related_name="death_date")
 
     standardized_identifier = models.ForeignKey(StandardizedIdentification,
                                                 null=True, blank=True)
@@ -177,8 +177,7 @@ class Actor(models.Model):
     person = models.ForeignKey(Person)
     role = models.ForeignKey(Role)
 
-    actor_alternate_name = models.ForeignKey(Name, null=True, blank=True,
-                                             related_name="actor_name")
+    actor_alternate_name = models.TextField(null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
@@ -284,8 +283,8 @@ class Imprint(models.Model):
 
     title = models.TextField(null=True, blank=True)
     language = models.ForeignKey(Language, null=True, blank=True)
-    date_of_publication = models.ForeignKey(ExtendedDateFormat, null=True,
-                                            blank=True)
+    date_of_publication = models.OneToOneField(ExtendedDateFormat, null=True,
+                                               blank=True)
     place = models.ForeignKey(Place, null=True, blank=True)
 
     actor = models.ManyToManyField(Actor, null=True, blank=True)
@@ -354,8 +353,8 @@ class Footprint(models.Model):
     document_type = models.CharField(max_length=256, null=True, blank=True)
     place = models.ForeignKey(Place, null=True, blank=True)
 
-    associated_date = models.ForeignKey(ExtendedDateFormat,
-                                        null=True, blank=True)
+    associated_date = models.OneToOneField(ExtendedDateFormat,
+                                           null=True, blank=True)
 
     call_number = models.CharField(max_length=256, null=True, blank=True)
     collection = models.ForeignKey(Collection, null=True, blank=True)
