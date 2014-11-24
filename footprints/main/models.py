@@ -29,24 +29,6 @@ def get_model_fields(the_model):
             if field.name not in HIDDEN_FIELDS]
 
 
-def format_name(last_name, first_name, middle_name, suffix):
-    name = last_name
-
-    if first_name or middle_name or suffix:
-        name = name + ','
-
-    if first_name:
-        name = name + ' ' + first_name
-
-    if middle_name:
-        name = name + ' ' + middle_name
-
-    if suffix:
-        name = name + ' ' + suffix
-
-    return name
-
-
 class ExtendedDateFormat(models.Model):
     edtf_format = models.CharField(max_length=256)
 
@@ -159,17 +141,9 @@ class StandardizedIdentification(models.Model):
 
 
 class Person(models.Model):
-    last_name = models.CharField(max_length=256)
-    first_name = models.CharField(max_length=256, null=True, blank=True)
-    middle_name = models.CharField(max_length=256, null=True, blank=True)
-    suffix = models.CharField(max_length=256, null=True, blank=True)
-
     name = models.ForeignKey(Name, related_name="person_name")
     alternate_spellings = models.ForeignKey(
         Name, related_name="person_alternate_spellings", null=True, blank=True)
-
-    date_of_birth = models.CharField(max_length=256, null=True, blank=True)
-    date_of_death = models.CharField(max_length=256, null=True, blank=True)
 
     birth_date = models.ForeignKey(ExtendedDateFormat,
                                    null=True, blank=True,
@@ -193,25 +167,15 @@ class Person(models.Model):
 
     class Meta:
         verbose_name = "Person"
-        ordering = ['last_name', 'first_name']
+        ordering = ['name']
 
     def __unicode__(self):
-        return format_name(self.last_name, self.first_name,
-                           self.middle_name, self.suffix)
+        return self.name.__unicode__()
 
 
 class Actor(models.Model):
     person = models.ForeignKey(Person)
     role = models.ForeignKey(Role)
-
-    alternate_last_name = models.CharField(max_length=256,
-                                           null=True, blank=True)
-    alternate_first_name = models.CharField(max_length=256,
-                                            null=True, blank=True)
-    alternate_middle_name = models.CharField(max_length=256,
-                                             null=True, blank=True)
-    alternate_suffix = models.CharField(max_length=256,
-                                        null=True, blank=True)
 
     actor_alternate_name = models.ForeignKey(Name, null=True, blank=True,
                                              related_name="actor_name")
@@ -224,12 +188,11 @@ class Actor(models.Model):
         related_name='actor_last_modified_by')
 
     def __unicode__(self):
-        last_name = self.alternate_last_name or self.person.last_name
-        first_name = self.alternate_first_name or self.person.first_name
-        middle_name = self.alternate_middle_name or self.person.middle_name
-        suffix = self.alternate_suffix or self.person.suffix
+        if self.actor_alternate_name:
+            name = self.actor_alternate_name.__unicode__()
+        else:
+            name = self.person.__unicode__()
 
-        name = format_name(last_name, first_name, middle_name, suffix)
         return "%s (%s)" % (name, self.role)
 
 
@@ -321,7 +284,6 @@ class Imprint(models.Model):
 
     title = models.TextField(null=True, blank=True)
     language = models.ForeignKey(Language, null=True, blank=True)
-    publication_date = models.CharField(max_length=256, null=True, blank=True)
     date_of_publication = models.ForeignKey(ExtendedDateFormat, null=True,
                                             blank=True)
     place = models.ForeignKey(Place, null=True, blank=True)
@@ -348,8 +310,8 @@ class Imprint(models.Model):
 
     def __unicode__(self):
         label = self.title or self.work.__unicode__()
-        if self.publication_date:
-            label += " (%s)" % self.publication_date
+        if self.date_of_publication:
+            label += " (%s)" % self.date_of_publication
         return label
 
 
@@ -392,7 +354,6 @@ class Footprint(models.Model):
     document_type = models.CharField(max_length=256, null=True, blank=True)
     place = models.ForeignKey(Place, null=True, blank=True)
 
-    recorded_date = models.CharField(max_length=256, null=True, blank=True)
     associated_date = models.ForeignKey(ExtendedDateFormat,
                                         null=True, blank=True)
 

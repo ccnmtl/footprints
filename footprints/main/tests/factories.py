@@ -48,12 +48,9 @@ class StandardizedIdentificationFactory(factory.DjangoModelFactory):
 class PersonFactory(factory.DjangoModelFactory):
     FACTORY_FOR = Person
 
-    last_name = 'Last'
-    first_name = 'First'
-    middle_name = 'Middle'
-    suffix = 'Esq'
     name = factory.SubFactory(NameFactory)
-    date_of_birth = factory.SubFactory(ExtendedDateFormatFactory)
+    birth_date = factory.SubFactory(ExtendedDateFormatFactory)
+    death_date = factory.SubFactory(ExtendedDateFormatFactory)
     standardized_identifier = factory.SubFactory(
         StandardizedIdentificationFactory)
 
@@ -63,7 +60,7 @@ class ActorFactory(factory.DjangoModelFactory):
 
     person = factory.SubFactory(PersonFactory)
     role = factory.SubFactory(RoleFactory)
-    alternate_last_name = 'Homer'
+    actor_alternate_name = factory.SubFactory(NameFactory)
 
 
 class PlaceFactory(factory.DjangoModelFactory):
@@ -105,7 +102,7 @@ class ImprintFactory(factory.DjangoModelFactory):
     work = factory.SubFactory(WrittenWorkFactory)
     title = 'The Odyssey, Edition 1'
     language = factory.SubFactory(LanguageFactory)
-    publication_date = factory.SubFactory(ExtendedDateFormatFactory)
+    date_of_publication = factory.SubFactory(ExtendedDateFormatFactory)
     place = factory.SubFactory(PlaceFactory)
 
     @factory.post_generation
@@ -138,7 +135,7 @@ class FootprintFactory(factory.DjangoModelFactory):
     language = factory.SubFactory(LanguageFactory)
     place = factory.SubFactory(PlaceFactory)
 
-    recorded_date = factory.SubFactory(ExtendedDateFormatFactory)
+    associated_date = factory.SubFactory(ExtendedDateFormatFactory)
 
     call_number = 'call number'
     collection = factory.SubFactory(CollectionFactory)

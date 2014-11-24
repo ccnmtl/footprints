@@ -55,7 +55,7 @@ class BasicModelTest(TestCase):
 
     def test_person(self):
         person = PersonFactory()
-        self.assertEquals(person.__unicode__(), 'Last, First Middle Esq')
+        self.assertEquals(person.__unicode__(), person.name.__unicode__())
 
     def test_actor(self):
         person = PersonFactory()
@@ -63,13 +63,15 @@ class BasicModelTest(TestCase):
         actor = Actor.objects.create(person=person, role=role)
 
         # No Alternate Name
-        self.assertEquals(actor.__unicode__(),
-                          'Last, First Middle Esq (%s)' % role.name)
+        self.assertEquals(
+            actor.__unicode__(),
+            '%s (%s)' % (actor.person.name.__unicode__(), role.name))
 
         # With Alternate Name
-        actor = ActorFactory()
-        self.assertEquals(actor.__unicode__(),
-                          'Homer, First Middle Esq (%s)' % actor.role.name)
+        actor = ActorFactory(role=role)
+        self.assertEquals(
+            actor.__unicode__(),
+            '%s (%s)' % (actor.actor_alternate_name.__unicode__(), role.name))
 
     def test_place(self):
         place = Place.objects.create(continent='EU')
