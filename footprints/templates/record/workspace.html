@@ -2,6 +2,19 @@
 
 {% block title %}Record{% endblock %}
 
+{% block css %}
+    <link href="{{STATIC_URL}}jquery-ui-1.11.2/jquery-ui.css" rel="stylesheet">
+{% endblock %}
+
+{% block extrahead %}
+    
+{% endblock %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}jquery-ui-1.11.2/jquery-ui.js"></script>
+    <script src="{{STATIC_URL}}js/app/record.js"></script>
+{% endblock %}
+
 {% block content %}
     <div class="row">
         <div class="col-md-9">
@@ -18,12 +31,68 @@
             
             <div class="well">
                 <h4>What do you know about this footprint?</h4>
-    
+                <p>All data entered here is related to the footprint level. @todo friendly help text.
+                Donec ac consequat leo, nec sagittis orci. Etiam molestie sem nec est efficitur laoreet. Curabitur elit ex, volutpat quis vestibulum et, congue et dolor. </p>
+                <br />
                 <form class="footprint-form" role="form">
                     <div class="form-group">
-                        <label for="title">Footprint Title</label>
-                        <input type="input" class="form-control" id="footprint-title" placeholder="">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div>
+                                    <label for="footprint-title">Title</label>
+                                    <button type="button" class="btn btn-image-only pull-right"
+                                        data-placement="bottom" 
+                                        data-toggle="popover" title="Footprint Title"
+                                        data-content="The written work's title as it appears in the medium of evidence. Abbreviations and alternate spellings are expected.">
+                                            <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                                    </button>         
+                                </div>
+                                <input type="text" class="form-control" name="footprint-title" />
+                            </div>
+                            <div class="col-md-6">
+                                <div>
+                                    <label for="footprint-author">Author</label>
+                                    <button type="button" class="btn btn-image-only pull-right"
+                                        data-placement="bottom" 
+                                        data-toggle="popover" title="Footprint Author"
+                                        data-content="The written work's author as it appears in the medium of evidence.">
+                                            <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                                    </button>
+                                </div>
+                                <input type="text" class="form-control" name="footprint-author" />
+                            </div>
+                        </div>
                     </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div>
+                                    <label for="footprint-title">Date</label>
+                                    <button type="button" class="btn btn-image-only pull-right"
+                                        data-placement="bottom" 
+                                        data-toggle="popover" title="Footprint Date"
+                                        data-content="This footprint's associated date, e.g. the date on a bookseller's list.">
+                                            <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                                    </button>         
+                                </div>
+                                <input type="input" class="form-control" name="footprint-date" placeholder="">
+                            </div>
+                            <div class="col-md-6">
+                                <div>
+                                    <label for="footprint-author">Place</label>
+                                    <button type="button" class="btn btn-image-only pull-right"
+                                        data-placement="bottom" 
+                                        data-toggle="popover" title="Footprint Place"
+                                        data-content="Where this footprint occurred, e.g. Venice, Italy">
+                                            <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                                    </button>
+                                </div>
+                                <input type="input" class="form-control" name="footprint-place" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary pull-right">Continue</button>
+                    <div class="clearfix"></div>
                 </form>
             </div>                
         </div>

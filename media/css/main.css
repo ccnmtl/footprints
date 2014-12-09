@@ -24,6 +24,12 @@ body > .container {
     line-height: 1.25;
 }
 
+.btn-image-only {
+    border: 0;
+    background-color: transparent;
+    margin-top: -6px;
+}
+
 /* LOGIN PAGE */
 .login-uni-button {
     border: 0;
@@ -35,10 +41,10 @@ body > .container {
 .mce-container,.mce-container *,.mce-widget,.mce-widget *,.mce-reset,mce-content-body {
     font-size: 12px !important;
 }
-div.select2-container {
+.change-form div.select2-container {
     width: 300px;
     font-size: 12px;
 }
-.select2-container-multi .select2-choices .select2-search-field input {
+.change-form .select2-container-multi .select2-choices .select2-search-field input {
     font-size: 12px;
 }

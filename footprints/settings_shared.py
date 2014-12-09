@@ -124,8 +124,10 @@ INSTALLED_APPS = [
     'django_extensions',
     'impersonate',
     'gunicorn',
+    'haystack',
     'footprints.main',
-    'geoposition'
+    'geoposition',
+    'rest_framework',
 ]
 
 INTERNAL_IPS = ('127.0.0.1', )
@@ -191,3 +193,12 @@ LOGGING = {
 }
 
 ACCOUNT_ACTIVATION_DAYS = 7
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ],
+    'PAGINATE_BY': 30
+}

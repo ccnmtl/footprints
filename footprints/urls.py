@@ -4,9 +4,11 @@ from django.contrib import admin
 from django.contrib.auth.views import password_change, password_change_done, \
     password_reset_done, password_reset_confirm, password_reset_complete
 from django.views.generic import TemplateView
+from rest_framework import routers
 
 from footprints.main import views
-from footprints.main.views import LoginView, LogoutView, RecordWorkspaceView
+from footprints.main.views import LoginView, LogoutView, RecordWorkspaceView, \
+    TitleListView
 from footprints.mixins import is_staff
 
 
@@ -15,6 +17,11 @@ admin.autodiscover()
 auth_urls = (r'^accounts/', include('django.contrib.auth.urls'))
 if hasattr(settings, 'CAS_BASE'):
     auth_urls = (r'^accounts/', include('djangowind.urls'))
+
+
+router = routers.DefaultRouter()
+# router.register(r'titles', views.TitleViewSet)
+router.register(r'actors', views.ActorViewSet)
 
 urlpatterns = patterns(
     '',
@@ -41,6 +48,13 @@ urlpatterns = patterns(
     auth_urls,
 
     (r'^record/$', RecordWorkspaceView.as_view()),
+
+    (r'^search/', include('haystack.urls')),
+
+    url(r'^api-auth/', include('rest_framework.urls',
+                               namespace='rest_framework')),
+    url(r'^api/', include(router.urls)),
+    url(r'^api/titles/$', TitleListView.as_view()),
 
     (r'^admin/', include(admin.site.urls)),
     url(r'^_impersonate/', include('impersonate.urls')),
