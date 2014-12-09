@@ -6,8 +6,7 @@ from django.contrib.auth.views import password_change, password_change_done, \
 from django.views.generic import TemplateView
 
 from footprints.main import views
-from footprints.main.views import LoginView, LogoutView, RecordWorkspaceView, \
-    RecordFormView, RecordListView, RecordDeleteView
+from footprints.main.views import LoginView, LogoutView, RecordWorkspaceView
 from footprints.mixins import is_staff
 
 
@@ -42,9 +41,6 @@ urlpatterns = patterns(
     auth_urls,
 
     (r'^record/$', RecordWorkspaceView.as_view()),
-    (r'^record/view/$', RecordFormView.as_view()),
-    (r'^record/delete/$', RecordDeleteView.as_view()),
-    (r'^record/list/$', RecordListView.as_view()),
 
     (r'^admin/', include(admin.site.urls)),
     url(r'^_impersonate/', include('impersonate.urls')),
