@@ -1,5 +1,3 @@
-from itertools import chain
-
 from django.conf import settings
 from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
@@ -13,10 +11,10 @@ from rest_framework.renderers import JSONPRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from footprints.main.models import Actor, Footprint, Imprint, WrittenWork
+from footprints.main.models import Actor
 from footprints.main.serializers import ActorSerializer, TitleSerializer
-from footprints.mixins import JSONResponseMixin, LoggedInMixin, \
-    LoggedInStaffMixin
+from footprints.mixins import (JSONResponseMixin, LoggedInMixin,
+                               LoggedInStaffMixin)
 
 
 class IndexView(TemplateView):
