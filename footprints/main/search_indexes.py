@@ -15,9 +15,7 @@ class BaseIndex(indexes.SearchIndex):
         abstract = True
 
     def prepare_title(self, obj):
-        if getattr(obj, 'title'):
-            return obj.title
-        return ''
+        return getattr(obj, 'title', '')
 
 
 class WrittenWorkIndex(BaseIndex, indexes.Indexable):
