@@ -202,3 +202,13 @@ REST_FRAMEWORK = {
     ],
     'PAGINATE_BY': 30
 }
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
+        'URL': 'http://localhost:8080/solr/footprints',
+        'TIMEOUT': 60 * 5,
+        'INCLUDE_SPELLING': False,
+        'BATCH_SIZE': 10,
+    },
+}
