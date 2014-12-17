@@ -87,7 +87,7 @@ class CollectionFactory(factory.DjangoModelFactory):
 class WrittenWorkFactory(factory.DjangoModelFactory):
     FACTORY_FOR = WrittenWork
 
-    standardized_title = 'The Odyssey'
+    title = 'The Odyssey'
 
     @factory.post_generation
     def actors(self, create, extracted, **kwargs):

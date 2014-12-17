@@ -179,6 +179,8 @@ class Actor(models.Model):
 
     actor_alternate_name = models.TextField(null=True, blank=True)
 
+    notes = models.TextField(null=True, blank=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
@@ -257,7 +259,7 @@ class Collection(models.Model):
 
 
 class WrittenWork(models.Model):
-    standardized_title = models.TextField()
+    title = models.TextField()
     actor = models.ManyToManyField(
         Actor, null=True, blank=True,
         help_text="The author or creator of the work. ")
@@ -271,11 +273,11 @@ class WrittenWork(models.Model):
         related_name='writtenwork_last_modified_by')
 
     class Meta:
-        ordering = ['standardized_title']
+        ordering = ['title']
         verbose_name = "Written Work"
 
     def __unicode__(self):
-        return self.standardized_title
+        return self.title
 
 
 class Imprint(models.Model):

@@ -14,12 +14,12 @@
       
         <!-- Bootstrap CSS: -->
         <link href="{{STATIC_URL}}bootstrap/css/bootstrap.min.css" rel="stylesheet">
-        {% comment %}{% compress css %}{% endcomment %}
+        {% compress css %}
             <link href="{{STATIC_URL}}bootstrap/css/bootstrap-glyphicons.css" rel="stylesheet">
             <!-- Application CSS: -->
             <link href="{{STATIC_URL}}css/main.css" rel="stylesheet">
             {% block css %}{% endblock %}
-        {% comment %}{% endcompress %}{% endcomment %}
+        {% endcompress %}
         <link rel="shortcut icon" href="{{STATIC_URL}}img/favicon.ico" type="image/x-icon" /> 
       
         <script src="{{STATIC_URL}}jquery/js/jquery-1.10.1.min.js"></script>
@@ -76,7 +76,7 @@
                             {% endif %}
                             
                             {% if user.is_staff %}
-                                <li><a href="/admin/">Record</a></li>
+                                <li><a href="/record/">Record</a></li>
                             {% endif %}
                         {% endif %}
                         <li><a href="/about/">About</a></li>
@@ -229,11 +229,11 @@
         });
     </script>
     
-    {% comment %}{% compress js %}{% endcomment %}
-        {% block compressjs %}{% endblock %}
-    {% comment %}{% endcompress %}{% endcomment %}
+    {% compress js %}
+        {% block js %}{% endblock %}
+    {% endcompress %}
     
-    {% block js %}{% endblock %}
+    {% block extrajs %}{% endblock %}
     
     {% if STAGING_ENV %}
         <div class="alert alert-danger alert-dismissable" style="position: fixed; bottom: 0px;">

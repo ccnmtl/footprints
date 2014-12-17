@@ -1,105 +1,100 @@
 {% extends 'base.html' %}
 
-{% block title %}Record Data{% endblock %}
+{% block title %}Record{% endblock %}
 
-{% block compressjs %}
-    <script src="{{STATIC_URL}}js/app/record.js"></script>
-    
-    <script type="text/javascript"> 
-       jQuery(document).ready(function() {
-          var view = new RecordWorkspaceView({
-             el: jQuery("div.record.container"),
-             base_url: '/record/form/?model='
-          });
-          tinymce.init({selector:'textarea.wsywig'});
-       });
-    </script>
-    
-    <script id="add-another-template" type="text/template">
-        <a href="#" class="add-another btn">
-            <span class="glyphicon glyphicon-plus"></span>
-        </a>
-    </script>
+{% block css %}
+    <link href="{{STATIC_URL}}jquery-ui-1.11.2/jquery-ui.css" rel="stylesheet">
 {% endblock %}
-    
+
 {% block extrahead %}
-    <link href="{{STATIC_URL}}geoposition/geoposition.css" type="text/css" media="all" rel="stylesheet" />
-    <script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false"></script>
-    <script type="text/javascript" src="/media/geoposition/geoposition.js"></script>
-    <link href="{{STATIC_URL}}select2-3.5.2/select2.css" rel="stylesheet"/>
-    <script src="{{STATIC_URL}}select2-3.5.2/select2.js"></script>
+    
 {% endblock %}
 
 {% block js %}
+    <script src="{{STATIC_URL}}jquery-ui-1.11.2/jquery-ui.js"></script>
+    <script src="{{STATIC_URL}}js/app/record.js"></script>
 {% endblock %}
 
 {% block content %}
-<div class="record container">
-    <h1>Record Data</h1>
-    <p>Sed vehicula eu ante sed dapibus. Integer dui ante, porta eget purus nec, porta tempus nulla. Interdum et malesuada fames ac ante ipsum primis in faucibus. Vivamus quis euismod turpis, a scelerisque orci. Morbi venenatis in nunc ac eleifend. Nunc sit amet finibus diam, ut gravida tortor. Nam vitae ex augue.</p>
-    <hr />
     <div class="row">
-        <div class="col-md-2">
-            <div class="list-group">
-                <a href="#digitalformat" class="list-group-item">Digital Format</a>
-                <a href="#language" class="list-group-item">Language</a>
-                <a href="#person" class="list-group-item">Person</a>
-                <a href="#role" class="list-group-item">Role</a>
-                <hr/>
-                <a href="#contributor" class="list-group-item">Contributor</a>
-                <a href="#collection" class="list-group-item">Collection</a>
-                <a href="#place" class="list-group-item">Place</a>
-                <hr/>
-                <a href="#writtenwork" class="list-group-item">Written Work</a>
-                <a href="#imprint" class="list-group-item">Imprint</a>
-                <a href="#bookcopy" class="list-group-item">Book Copy</a>
-                <a href="#footprint" class="list-group-item">Footprint</a>
-            </div>
-        </div>
-        <div class="col-md-10">
-            <!--  NavBar -->
-            <nav class="navbar navbar-default" role="navigation" style="display: none">
-                <div class="container-fluid">
-                    <!-- Brand and toggle get grouped for better mobile display -->
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                            <span class="sr-only">Toggle navigation</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                        <a class="navbar-brand" href="#"></a>
-                    </div>
-                    
-                    <!-- Collect the nav links, forms, and other content for toggling -->
-                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                        <ul class="nav navbar-nav navbar-right">
-                            <li><a href="#" class="create">Create</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-
-            <!--  Model form -->
-            <div class='model-form' style="display: none"></div>
-
-            <!--  Model list -->
-            <div class='model-list'></div>
+        <div class="col-md-9">
+            <h3>Record a footprint</h3>
+            <blockquote>
+                <p>A footprint is evidence of a book copy at a moment in time and space, e.g.</p>
+                <ol class="blockquote-list">
+                    <li>a particular copy of an imprint that is now extant</li>
+                    <li>a particular manuscript now extant</li>
+                    <li>an unspecified or unknown copy of an edition  (imprint), including a copy or an imprint no longer extant</li>
+                    <li>a literary work but where the imprint is not known and/or not known whether in manuscript or print</li>
+                </ol> 
+            </blockquote>
             
-            <!-- Confirm Delete Modal -->
-            <div class="modal foreign-key-modal" id="foreign-key-model-form" tabindex="-1" role="dialog" aria-labelledby="Add Another" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <div class="well">
+                <h4>What do you know about this footprint?</h4>
+                <p>All data entered here is related to the footprint level. @todo friendly help text.
+                Donec ac consequat leo, nec sagittis orci. Etiam molestie sem nec est efficitur laoreet. Curabitur elit ex, volutpat quis vestibulum et, congue et dolor. </p>
+                <br />
+                <form class="footprint-form" role="form">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div>
+                                    <label for="footprint-title">Title</label>
+                                    <button type="button" class="btn btn-image-only pull-right"
+                                        data-placement="bottom" 
+                                        data-toggle="popover" title="Footprint Title"
+                                        data-content="The written work's title as it appears in the medium of evidence. Abbreviations and alternate spellings are expected.">
+                                            <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                                    </button>         
+                                </div>
+                                <input type="text" class="form-control" name="footprint-title" />
+                            </div>
+                            <div class="col-md-6">
+                                <div>
+                                    <label for="footprint-author">Author</label>
+                                    <button type="button" class="btn btn-image-only pull-right"
+                                        data-placement="bottom" 
+                                        data-toggle="popover" title="Footprint Author"
+                                        data-content="The written work's author as it appears in the medium of evidence.">
+                                            <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                                    </button>
+                                </div>
+                                <input type="text" class="form-control" name="footprint-author" />
+                            </div>
                         </div>
-                        <div class="modal-body"></div>
                     </div>
-                </div>
-            </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div>
+                                    <label for="footprint-title">Date</label>
+                                    <button type="button" class="btn btn-image-only pull-right"
+                                        data-placement="bottom" 
+                                        data-toggle="popover" title="Footprint Date"
+                                        data-content="This footprint's associated date, e.g. the date on a bookseller's list.">
+                                            <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                                    </button>         
+                                </div>
+                                <input type="input" class="form-control" name="footprint-date" placeholder="">
+                            </div>
+                            <div class="col-md-6">
+                                <div>
+                                    <label for="footprint-author">Place</label>
+                                    <button type="button" class="btn btn-image-only pull-right"
+                                        data-placement="bottom" 
+                                        data-toggle="popover" title="Footprint Place"
+                                        data-content="Where this footprint occurred, e.g. Venice, Italy">
+                                            <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                                    </button>
+                                </div>
+                                <input type="input" class="form-control" name="footprint-place" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary pull-right">Continue</button>
+                    <div class="clearfix"></div>
+                </form>
+            </div>                
         </div>
     </div>
-</div>
-
-
 {% endblock %}
