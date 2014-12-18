@@ -15,7 +15,6 @@
         <!-- Bootstrap CSS: -->
         <link href="{{STATIC_URL}}bootstrap/css/bootstrap.min.css" rel="stylesheet">
         {% compress css %}
-            <link href="{{STATIC_URL}}bootstrap/css/bootstrap-glyphicons.css" rel="stylesheet">
             <!-- Application CSS: -->
             <link href="{{STATIC_URL}}css/main.css" rel="stylesheet">
             {% block css %}{% endblock %}
@@ -28,7 +27,7 @@
         {% block extrahead %}{% endblock %}
         {% block feeds %}{% endblock %}
     </head>
-    
+
     <body class="{% block bodyclass %}{% endblock %}" id="{% block bodyid %}{% endblock %}">
     
     {% block topnavbar %}
