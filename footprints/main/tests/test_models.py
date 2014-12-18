@@ -7,7 +7,7 @@ from footprints.main.models import Language, DigitalFormat, \
 from footprints.main.tests.factories import RoleFactory, \
     ActorFactory, PlaceFactory, CollectionFactory, \
     WrittenWorkFactory, ImprintFactory, BookCopyFactory, FootprintFactory, \
-    PersonFactory
+    PersonFactory, NameFactory
 
 
 class BasicModelTest(TestCase):
@@ -54,8 +54,9 @@ class BasicModelTest(TestCase):
                           'bar [Bibliography of the Hebrew Book] Barish')
 
     def test_person(self):
-        person = PersonFactory()
-        self.assertEquals(person.__unicode__(), person.name.__unicode__())
+        name = NameFactory(name="Cicero")
+        person = PersonFactory(name=name)
+        self.assertEquals(person.__unicode__(), "Cicero (standardized)")
 
     def test_actor(self):
         person = PersonFactory()
@@ -71,7 +72,7 @@ class BasicModelTest(TestCase):
         actor = ActorFactory(role=role)
         self.assertEquals(
             actor.__unicode__(),
-            '%s (%s)' % (actor.actor_alternate_name.__unicode__(), role.name))
+            '%s (%s)' % (actor.actor_name.__unicode__(), role.name))
 
     def test_place(self):
         place = Place.objects.create(continent='EU')
@@ -87,11 +88,11 @@ class BasicModelTest(TestCase):
 
     def test_written_work(self):
         work = WrittenWorkFactory()
-        self.assertEquals(work.__unicode__(), 'The Odyssey')
+        self.assertEquals(work.__unicode__(), 'The Odyssey (standardized)')
 
     def test_imprint(self):
         imprint = Imprint.objects.create(work=WrittenWorkFactory())
-        self.assertEquals(imprint.__unicode__(), 'The Odyssey')
+        self.assertEquals(imprint.__unicode__(), 'The Odyssey (standardized)')
 
         imprint = ImprintFactory()
         self.assertEquals(imprint.__unicode__(),

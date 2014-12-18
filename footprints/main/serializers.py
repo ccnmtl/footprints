@@ -1,12 +1,10 @@
 from rest_framework import serializers
 
-from footprints.main.models import Actor
-
 
 class TitleSerializer(serializers.Serializer):
     title = serializers.CharField(max_length=None, min_length=1)
 
 
-class ActorSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Actor
+class PersonSerializer(serializers.Serializer):
+    object_id = serializers.CharField()
+    name = serializers.CharField(max_length=None, min_length=1)

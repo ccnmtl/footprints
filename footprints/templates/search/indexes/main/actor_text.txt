@@ -1,0 +1,2 @@
+{{object.actor_name.name}}
+{{object.notes}}

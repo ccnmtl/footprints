@@ -7,12 +7,34 @@
 {% endblock %}
 
 {% block extrahead %}
-    
+    <script type="text/template" id="author-list-template">
+        <li>
+            <input type="hidden" name="author_<%=ui.object_id%>" value="<%=ui.label%>" />
+            <span><%= ui.label %></span>
+            <span class="glyphicon glyphicon-remove author-delete pull-right" aria-hidden="true"></span> 
+        </li>
+    </script> 
 {% endblock %}
 
 {% block js %}
     <script src="{{STATIC_URL}}jquery-ui-1.11.2/jquery-ui.js"></script>
+    <script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false"></script>
     <script src="{{STATIC_URL}}js/app/record.js"></script>
+
+    <script type="text/javascript">
+        jQuery(document).ready(function() {
+            var view = new RecordFootprintView({
+                el: jQuery("#footprint-form")
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block extrajs %}
+    {% comment %}assets that do not need to be compressed{% endcomment %}
+    <script src="{{STATIC_URL}}js/underscore-min.js"></script>
+    <script src="{{STATIC_URL}}js/backbone-min.js"></script>
+
 {% endblock %}
 
 {% block content %}
@@ -28,18 +50,24 @@
                     <li>a literary work but where the imprint is not known and/or not known whether in manuscript or print</li>
                 </ol> 
             </blockquote>
-            
+
             <div class="well">
                 <h4>What do you know about this footprint?</h4>
-                <p>All data entered here is related to the footprint level. @todo friendly help text.
+                <p>@todo friendly help text. Donec ac consequat leo, nec sagittis orci. Donec ac consequat leo. 
                 Donec ac consequat leo, nec sagittis orci. Etiam molestie sem nec est efficitur laoreet. Curabitur elit ex, volutpat quis vestibulum et, congue et dolor. </p>
                 <br />
-                <form class="footprint-form" role="form">
+                <form id="footprint-form" class="footprint-form" role="form">
                     <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-6"></div>
+                            <div class="col-md-6">
+                                <ul class="authors"></ul>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div>
-                                    <label for="footprint-title">Title</label>
+                                    <label for="footprint-title">What is the title from the source material?</label>
                                     <button type="button" class="btn btn-image-only pull-right"
                                         data-placement="bottom" 
                                         data-toggle="popover" title="Footprint Title"
@@ -47,27 +75,28 @@
                                             <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
                                     </button>         
                                 </div>
-                                <input type="text" class="form-control" name="footprint-title" />
+                                <input type="text" class="form-control" name="footprint-title" placeholder=""/>
                             </div>
                             <div class="col-md-6">
                                 <div>
-                                    <label for="footprint-author">Author</label>
+                                    <label for="footprint-author">Can you identify the work's authors?</label>
                                     <button type="button" class="btn btn-image-only pull-right"
                                         data-placement="bottom" 
-                                        data-toggle="popover" title="Footprint Author"
-                                        data-content="The written work's author as it appears in the medium of evidence.">
+                                        data-toggle="popover" title="Footprint Authors"
+                                        data-content="The written work's authors.">
                                             <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
                                     </button>
                                 </div>
-                                <input type="text" class="form-control" name="footprint-author" />
+                                <input type="text" class="form-control" name="footprint-author" placeholder="Type in an author's name"/>
                             </div>
-                        </div>
+                        </div>                    
+
                     </div>
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-6">
                                 <div>
-                                    <label for="footprint-title">Date</label>
+                                    <label for="footprint-title">When did this footprint occur?</label>
                                     <button type="button" class="btn btn-image-only pull-right"
                                         data-placement="bottom" 
                                         data-toggle="popover" title="Footprint Date"
@@ -79,7 +108,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div>
-                                    <label for="footprint-author">Place</label>
+                                    <label for="footprint-author">Where did this footprint occur?</label>
                                     <button type="button" class="btn btn-image-only pull-right"
                                         data-placement="bottom" 
                                         data-toggle="popover" title="Footprint Place"
@@ -87,7 +116,32 @@
                                             <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
                                     </button>
                                 </div>
-                                <input type="input" class="form-control" name="footprint-place" placeholder="">
+                                <div>
+                                    <input type="input" class="form-control" name="footprint-place" placeholder="Describe the location">
+                                </div>
+                                <button title="Pinpoint your location" type="button" class="btn btn-default btn-geoposition">
+                                    <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
+                                    <span class="pinpoint-location">Pinpoint the location on a map</span>
+                                </button>
+                            </div>
+                            <div class="modal fade" id="geoposition-modal">
+                                  <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                          <h4 class="modal-title">Pinpoint the location, then click Save</h4>
+                                          <p>Move the cursor to your location</p>
+                                      </div>
+                                      <div class="modal-body">
+                                          <div id="mapCanvas" style="width: 100%; height: 400px"></div>
+                                      </div>
+                                      <div class="modal-footer">
+                                          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                          <button type="button" class="btn btn-primary save-geoposition">Save</button>
+                                      </div>
+                                    </div><!-- /.modal-content -->
+                                  </div><!-- /.modal-dialog -->
+                                </div><!-- /.modal -->                                
                             </div>
                         </div>
                     </div>

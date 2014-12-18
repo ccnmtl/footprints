@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% block title %}Search{% endblock %}
+
 {% block content %}
     <h2>Search</h2>
 
@@ -19,7 +21,11 @@
 
             {% for result in page.object_list %}
                 <p>
-                    <a href="{{ result.object.get_absolute_url }}">{{ result.object.title }}</a>
+                    {% if result.object.title %}
+                        <a href="{{ result.object.get_absolute_url }}">{{ result.object.title }}</a>
+                    {% else %}{% if result.object.name %}
+                        <a href="{{ result.object.get_absolute_url }}">{{ result.object.name }}</a>
+                    {% endif %}{% endif %}
                 </p>
             {% empty %}
                 <p>No results found.</p>
