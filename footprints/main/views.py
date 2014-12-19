@@ -5,14 +5,13 @@ from django.contrib.auth.views import logout as auth_logout_view
 from django.views.generic.base import TemplateView, View
 from djangowind.views import logout as wind_logout_view
 from haystack.query import SearchQuerySet
-from rest_framework import viewsets
 from rest_framework.permissions import AllowAny
 from rest_framework.renderers import JSONPRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from footprints.main.models import Actor
-from footprints.main.serializers import ActorSerializer, TitleSerializer
+from footprints.main.forms import PlaceForm
+from footprints.main.serializers import TitleSerializer, PersonSerializer
 from footprints.mixins import (JSONResponseMixin, LoggedInMixin,
                                LoggedInStaffMixin)
 
@@ -48,12 +47,9 @@ class RecordWorkspaceView(LoggedInStaffMixin, TemplateView):
     template_name = "record/workspace.html"
 
     def get_context_data(self, **kwargs):
-        return {}
-
-
-class ActorViewSet(viewsets.ModelViewSet):
-    queryset = Actor.objects.all()
-    serializer_class = ActorSerializer
+        return {
+            'place_form': PlaceForm()
+        }
 
 
 class TitleListView(APIView):
@@ -62,6 +58,17 @@ class TitleListView(APIView):
 
     def get(self, request, format=None):
         sqs = SearchQuerySet().autocomplete(
-            title_auto=request.GET.get('q', ''))
+            title=request.GET.get('q', ''))
         serializer = TitleSerializer(sqs, many=True)
+        return Response(serializer.data)
+
+
+class PersonListView(APIView):
+    renderer_classes = (JSONPRenderer,)
+    permission_classes = (AllowAny,)
+
+    def get(self, request, format=None):
+        sqs = SearchQuerySet().autocomplete(
+            name=request.GET.get('q', ''))
+        serializer = PersonSerializer(sqs, many=True)
         return Response(serializer.data)

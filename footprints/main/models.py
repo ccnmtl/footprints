@@ -142,8 +142,6 @@ class StandardizedIdentification(models.Model):
 
 class Person(models.Model):
     name = models.OneToOneField(Name, related_name="person_name")
-    alternate_spellings = models.ManyToManyField(
-        Name, related_name="person_alternate_spellings", null=True, blank=True)
 
     birth_date = models.OneToOneField(ExtendedDateFormat,
                                       null=True, blank=True,
@@ -170,14 +168,15 @@ class Person(models.Model):
         ordering = ['name']
 
     def __unicode__(self):
-        return self.name.__unicode__()
+        return "%s (standardized)" % self.name.__unicode__()
 
 
 class Actor(models.Model):
     person = models.ForeignKey(Person)
     role = models.ForeignKey(Role)
-
-    actor_alternate_name = models.TextField(null=True, blank=True)
+    actor_name = models.OneToOneField(Name,
+                                      related_name="actor_name",
+                                      null=True, blank=True)
 
     notes = models.TextField(null=True, blank=True)
 
@@ -188,13 +187,14 @@ class Actor(models.Model):
     last_modified_by = LastUserField(
         related_name='actor_last_modified_by')
 
-    def __unicode__(self):
-        if self.actor_alternate_name:
-            name = self.actor_alternate_name.__unicode__()
+    def display_name(self):
+        if self.actor_name:
+            return self.actor_name.__unicode__()
         else:
-            name = self.person.__unicode__()
+            return self.person.name.__unicode__()
 
-        return "%s (%s)" % (name, self.role)
+    def __unicode__(self):
+        return "%s (%s)" % (self.display_name(), self.role)
 
 
 class Place(models.Model):
@@ -277,7 +277,7 @@ class WrittenWork(models.Model):
         verbose_name = "Written Work"
 
     def __unicode__(self):
-        return self.title
+        return "%s (standardized)" % self.title
 
 
 class Imprint(models.Model):
