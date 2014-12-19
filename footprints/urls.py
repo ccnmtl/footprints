@@ -7,8 +7,8 @@ from django.views.generic import TemplateView
 from rest_framework import routers
 
 from footprints.main import views
-from footprints.main.views import LoginView, LogoutView, RecordWorkspaceView, \
-    TitleListView
+from footprints.main.views import (LoginView, LogoutView, RecordWorkspaceView,
+                                   TitleListView, PersonListView)
 from footprints.mixins import is_staff
 
 
@@ -18,10 +18,7 @@ auth_urls = (r'^accounts/', include('django.contrib.auth.urls'))
 if hasattr(settings, 'CAS_BASE'):
     auth_urls = (r'^accounts/', include('djangowind.urls'))
 
-
 router = routers.DefaultRouter()
-# router.register(r'titles', views.TitleViewSet)
-router.register(r'actors', views.ActorViewSet)
 
 urlpatterns = patterns(
     '',
@@ -54,7 +51,8 @@ urlpatterns = patterns(
     url(r'^api-auth/', include('rest_framework.urls',
                                namespace='rest_framework')),
     url(r'^api/', include(router.urls)),
-    url(r'^api/titles/$', TitleListView.as_view()),
+    url(r'^api/title/$', TitleListView.as_view()),
+    url(r'^api/person/$', PersonListView.as_view()),
 
     (r'^admin/', include(admin.site.urls)),
     url(r'^_impersonate/', include('impersonate.urls')),

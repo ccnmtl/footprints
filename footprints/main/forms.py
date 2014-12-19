@@ -82,6 +82,7 @@ class ActorForm(ModelForm):
 class PlaceForm(ModelForm):
     class Meta:
         model = Place
+        fields = ['position']
 
 
 class CollectionForm(ModelForm):

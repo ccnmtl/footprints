@@ -60,7 +60,7 @@ class ActorFactory(factory.DjangoModelFactory):
 
     person = factory.SubFactory(PersonFactory)
     role = factory.SubFactory(RoleFactory)
-    actor_alternate_name = factory.SubFactory(NameFactory)
+    actor_name = factory.SubFactory(NameFactory)
 
 
 class PlaceFactory(factory.DjangoModelFactory):

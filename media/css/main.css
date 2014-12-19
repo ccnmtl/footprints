@@ -30,6 +30,23 @@ body > .container {
     margin-top: -6px;
 }
 
+ul.authors {
+    list-style: none;
+    padding: 5px 10px 5px 0;
+}
+
+ul.authors li {
+    padding: 5px 10px 5px 5px;
+    color: #563d7c;
+    text-decoration: none;
+    background-color: #fff;
+    border: 1px solid #ddd;
+}
+
+.author-delete {
+    cursor: pointer;
+}
+
 /* LOGIN PAGE */
 .login-uni-button {
     border: 0;
