@@ -17,6 +17,7 @@ body > .container {
   min-height: 100%;
 }
 
+
 /* Record Entry */
 .blockquote-list {
     font-size: 15.5px;
@@ -30,12 +31,13 @@ body > .container {
     margin-top: -6px;
 }
 
-ul.authors {
+/* Author autocomplete */
+ul.selected-authors {
     list-style: none;
     padding: 5px 10px 5px 0;
 }
 
-ul.authors li {
+ul.selected-authors li {
     padding: 5px 10px 5px 5px;
     color: #563d7c;
     text-decoration: none;
@@ -45,6 +47,32 @@ ul.authors li {
 
 .author-delete {
     cursor: pointer;
+}
+
+.footprint-form .form-content {
+    height: 425px;
+}
+
+.footprint-form .form-content h3 {
+    margin-top: 10px;
+}
+
+ul.wizard-tabs.has-error li.active a {
+    background-color: #a94442;
+}
+
+.form-group .error-block {
+    display: none;
+    color: #a94442;
+    margin: 10px;
+}
+
+.form-group.has-error .error-block {
+    display: block;
+}
+
+.form-group.has-error .help-block {
+    color: #737373;
 }
 
 /* LOGIN PAGE */

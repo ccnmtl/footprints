@@ -1,0 +1,87 @@
+.wizard-tabs {
+  margin-bottom: 15px;
+}
+.wizard-tabs > li {
+  float: left;
+  margin-bottom: -1px;
+  line-height: 1.5em;
+}
+.wizard-tabs > li > a {
+  margin-right: 10px;
+  line-height: 1.42857143;
+  border-radius: 4px;
+  width: 200px;
+  color: #555;
+  cursor: pointer;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  padding: 15px;
+  font-size: 1.1em;  
+}
+
+.wizard-tabs > li.disabled > a,
+.wizard-tabs > li.disabled > a:hover,
+.wizard-tabs > li.disabled > a:focus {
+    background: #eee;
+    color: #aaa;
+    cursor: not-allowed;
+    border: 0;
+}
+
+.wizard-tabs > li > a span.step-number {
+    font-size: 1.429em; 
+}
+.wizard-tabs > li > a:hover {
+  border-color: #eee #eee #ddd;
+}
+.wizard-tabs > li.active > a,
+.wizard-tabs > li.active > a:hover,
+.wizard-tabs > li.active > a:focus {
+    background: #2184be;
+    color: #fff;
+    cursor: default;
+}
+.wizard-tabs.nav-justified {
+  width: 100%;
+  border-bottom: 0;
+}
+.wizard-tabs.nav-justified > li {
+  float: none;
+}
+.wizard-tabs.nav-justified > li > a {
+  margin-bottom: 5px;
+  text-align: center;
+}
+.wizard-tabs.nav-justified > .dropdown .dropdown-menu {
+  top: auto;
+  left: auto;
+}
+@media (min-width: 768px) {
+  .wizard-tabs.nav-justified > li {
+    display: table-cell;
+    width: 1%;
+  }
+  .wizard-tabs.nav-justified > li > a {
+    margin-bottom: 0;
+  }
+}
+.wizard-tabs.nav-justified > li > a {
+  margin-right: 0;
+  border-radius: 4px;
+}
+.wizard-tabs.nav-justified > .active > a,
+.wizard-tabs.nav-justified > .active > a:hover,
+.wizard-tabs.nav-justified > .active > a:focus {
+  border: 1px solid #ddd;
+}
+@media (min-width: 768px) {
+  .wizard-tabs.nav-justified > li > a {
+    border-bottom: 1px solid #ddd;
+    border-radius: 4px 4px 0 0;
+  }
+  .wizard-tabs.nav-justified > .active > a,
+  .wizard-tabs.nav-justified > .active > a:hover,
+  .wizard-tabs.nav-justified > .active > a:focus {
+    border-bottom-color: #fff;
+  }
+}

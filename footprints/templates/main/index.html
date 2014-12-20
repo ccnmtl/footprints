@@ -1,20 +1,32 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container">
+<div class="row">
+    <div class="col-md-12">
     <div class="jumbotron">
         <h1>Footprints</h1>
     </div>
+
+    <blockquote>
+        <p>A footprint is evidence of a book copy at a moment in time and space, e.g.</p>
+        <ol class="blockquote-list">
+            <li>a particular copy of an imprint that is now extant</li>
+            <li>a particular manuscript now extant</li>
+            <li>an unspecified or unknown copy of an edition  (imprint), including a copy or an imprint no longer extant</li>
+            <li>a literary work but where the imprint is not known and/or not known whether in manuscript or print</li>
+        </ol> 
+    </blockquote>
     
     {% if not request.user.is_anonymous %}
         <div class="row">
             <div class="col-md-9">
                 <h3>Record</h3>
                 <p>Sed posuere facilisis quam, eget ultricies justo sodales vitae. Nulla vestibulum nec dolor sed tincidunt. Pellentesque feugiat, metus non sodales vehicula, arcu nibh varius urna, at porttitor nunc orci eget odio. </p>
-                <a href="/record/" class="btn btn-primary">Get Started</a>
+                <a href="/footprint/create/" class="btn btn-primary">Get Started</a>
                 </p>
             </div>
         </div>
     {% endif %}
+    </div>
 </div>
 {% endblock %}

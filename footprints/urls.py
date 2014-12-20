@@ -7,8 +7,9 @@ from django.views.generic import TemplateView
 from rest_framework import routers
 
 from footprints.main import views
-from footprints.main.views import (LoginView, LogoutView, RecordWorkspaceView,
-                                   TitleListView, PersonListView)
+from footprints.main.views import (LoginView, LogoutView,
+                                   TitleListView, PersonListView,
+                                   CreateFootprintView, FootprintWorkspaceView)
 from footprints.mixins import is_staff
 
 
@@ -44,7 +45,8 @@ urlpatterns = patterns(
 
     auth_urls,
 
-    (r'^record/$', RecordWorkspaceView.as_view()),
+    (r'^footprint/create/$', CreateFootprintView.as_view()),
+    (r'^footprint/$', FootprintWorkspaceView.as_view()),
 
     (r'^search/', include('haystack.urls')),
 
