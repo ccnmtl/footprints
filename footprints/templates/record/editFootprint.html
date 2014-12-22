@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}Record{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}jquery-ui-1.11.2/jquery-ui.css" rel="stylesheet">
+{% endblock %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}jquery-ui-1.11.2/jquery-ui.js"></script>
+    <script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false"></script>
+    <script src="{{STATIC_URL}}js/app/editFootprint.js"></script>
+
+    <script type="text/javascript">
+        jQuery(document).ready(function() {
+            var view = new FootprintEditView({
+                el: jQuery("#footprint-form")
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block extrajs %}
+    {% comment %}assets that do not need to be compressed{% endcomment %}
+    <script src="{{STATIC_URL}}js/underscore-min.js"></script>
+    <script src="{{STATIC_URL}}js/backbone-min.js"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-9">
+            <h2>Edit Footprint</h2>
+            <dl class="dl-horizontal">
+                <dt>Recorded Title</dt><dd>{{footprint.title}}</dd>
+                <dt>Medium of Evidence</dt><dd>{{footprint.medium}}</dd>
+                <dt>Provenance of Evidence</dt><dd>{{footprint.provenance}}</dd>
+
+                {% if footprint.associated_date %}
+                    <dt>Footprint Date</dt><dd>{{footprint.associated_date}}</dd>
+                {% endif %}
+                {% if footprint.place %}
+                    <dt>Footprint Place</dt><dd>{{footprint.place}}</dd>
+                {% endif %}
+            </dl>
+
+            <h3>Add more details about this footprint. Do you know...</h3>
+            {% if not footprint.associated_date %}
+                <div>when this footprint occurred?</div>
+            {% endif %}
+            
+            {% if not footprint.place %}
+                <div>where this footprint occurred?</div>
+            {% endif %}
+            
+            {% if not footprint.language %}
+            <div>in what language this footprint was recorded?</div>
+            {% endif %}
+        </div>
+        <div class="col-md-3">
+            <h4>Similar Records</h4>
+            <p>Further describe your footprint by connecting similar records.</p>
+            {% for record in records %}
+                {{record}}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
