@@ -10,7 +10,6 @@ from rest_framework.renderers import JSONPRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from footprints.main.forms import PlaceForm
 from footprints.main.serializers import TitleSerializer, PersonSerializer
 from footprints.mixins import (JSONResponseMixin, LoggedInMixin,
                                LoggedInStaffMixin)
@@ -43,13 +42,18 @@ class LogoutView(LoggedInMixin, View):
             return auth_logout_view(request, "/")
 
 
-class RecordWorkspaceView(LoggedInStaffMixin, TemplateView):
+class FootprintWorkspaceView(LoggedInStaffMixin, TemplateView):
     template_name = "record/workspace.html"
 
     def get_context_data(self, **kwargs):
-        return {
-            'place_form': PlaceForm()
-        }
+        return {}
+
+
+class CreateFootprintView(LoggedInStaffMixin, TemplateView):
+    template_name = "record/createFootprint.html"
+
+    def get_context_data(self, **kwargs):
+        return {}
 
 
 class TitleListView(APIView):
