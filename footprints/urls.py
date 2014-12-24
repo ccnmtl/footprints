@@ -4,12 +4,15 @@ from django.contrib import admin
 from django.contrib.auth.views import password_change, password_change_done, \
     password_reset_done, password_reset_confirm, password_reset_complete
 from django.views.generic import TemplateView
+from haystack.views import SearchView
 from rest_framework import routers
 
 from footprints.main import views
-from footprints.main.views import (LoginView, LogoutView,
-                                   TitleListView, PersonListView,
-                                   CreateFootprintView, FootprintWorkspaceView)
+from footprints.main.forms import FootprintSearchForm
+from footprints.main.views import (LoginView, LogoutView, TitleListView,
+                                   CreateFootprintView, NameListView,
+                                   WrittenWorkDetailView, FootprintDetailView,
+                                   PersonDetailView, PlaceDetailView)
 from footprints.mixins import is_staff
 
 
@@ -44,17 +47,26 @@ urlpatterns = patterns(
         password_reset_complete, name='password_reset_complete'),
 
     auth_urls,
-
     (r'^footprint/create/$', CreateFootprintView.as_view()),
-    (r'^footprint/$', FootprintWorkspaceView.as_view()),
+    url(r'^footprint/(?P<pk>\d+)/$',
+        FootprintDetailView.as_view(), name='footprint-detail'),
+    url(r'^person/(?P<pk>\d+)/$',
+        PersonDetailView.as_view(), name='person-detail'),
+    url(r'^place/(?P<pk>\d+)/$',
+        PlaceDetailView.as_view(), name='place-detail'),
+    url(r'^work/(?P<pk>[-_\w]+)/$',
+        WrittenWorkDetailView.as_view(), name='writtenwork-detail'),
 
-    (r'^search/', include('haystack.urls')),
+    url(r'^search/',
+        SearchView(template="search/search.html",
+                   form_class=FootprintSearchForm),
+        name='search'),
 
     url(r'^api-auth/', include('rest_framework.urls',
                                namespace='rest_framework')),
     url(r'^api/', include(router.urls)),
     url(r'^api/title/$', TitleListView.as_view()),
-    url(r'^api/person/$', PersonListView.as_view()),
+    url(r'^api/name/$', NameListView.as_view()),
 
     (r'^admin/', include(admin.site.urls)),
     url(r'^_impersonate/', include('impersonate.urls')),

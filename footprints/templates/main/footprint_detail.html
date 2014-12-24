@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{% block title %}Footprint{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}jquery-ui-1.11.2/jquery-ui.css" rel="stylesheet">
+{% endblock %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}jquery-ui-1.11.2/jquery-ui.js"></script>
+    <script src="{{STATIC_URL}}js/app/footprint.js"></script>
+
+    <script type="text/javascript">
+        jQuery(document).ready(function() {
+            var view = new FootprintEditView({
+                el: jQuery(".object-detail.footprint")
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block extrajs %}
+    {% comment %}assets that do not need to be compressed{% endcomment %}
+    <script src="{{STATIC_URL}}js/underscore-min.js"></script>
+    <script src="{{STATIC_URL}}js/backbone-min.js"></script>
+    <script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false"></script>
+{% endblock %}
+
+{% block content %}
+{% with footprint=object book=object.book_copy imprint=object.book_copy.imprint work=object.book_copy.imprint.work %}
+
+    <div class="object-detail footprint">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="breadcrumb">FOOTPRINT</div>
+                <h2>
+                    <img class="pull-left" src="{{STATIC_URL}}img/footprint.png" />
+                    <span class="pull-left object-title">
+                        {% if work %}{{work.title}}{% else %}{{footprint.title}}{% endif %}</span>
+                    <div class="clearfix"></div>
+                </h2>
+                {% for media in footprint.digital_object.all %}
+                    <img src="{{media.file.url}}"></img>
+                {% endfor %}
+                
+                <h3>Evidence</h3>
+                <dl class="dl-horizontal">
+                    <dt>Title</dt><dd>{{footprint.title}}
+                    <dt>Medium</dt><dd>{{footprint.medium}}</dd>
+                    <dt>Provenance</dt><dd>{{footprint.provenance}}</dd>
+                    {% if footprint.language %}
+                        <dt>Language</dt><dd>{{footprint.language}}</dd>
+                    {% endif %}
+                    {% if footprint.associated_date %}
+                        <dd>{{footprint.associated_date}}</dd>
+                    {% endif %}
+                    {% if footprint.place %}
+                        <dt>Place</dt>
+                        <dd><a href="/place/{{footprint.place.id}}/">{{footprint.place}}</a></dd>
+                    {% endif %}
+                
+                    {% if footprint.actor.count > 0 %}
+                        {% for actor in footprint.actor.all %}
+                            <dt>{{actor.role.name}}</dt>
+                            <dd><a href="/person/{{actor.person.id}}/">{{actor}}</a></dd>
+                        {% endfor %}
+                    {% endif %}
+    
+                    {% if footprint.notes %}
+                        <dt>Notes</dt>
+                        <dd>{{footprint.notes|safe}}</dd>
+                    {% endif %}
+
+                    {% if not book.is_empty %}
+                        <h3>Copy</h3>
+                    {% endif %}
+                
+                    {% if not imprint.is_empty %}
+                        <h3>Imprint</h3>
+                        {% if imprint.title %}
+                            <dt>Title</dt><dd>{{imprint.title}}</dd>
+                        {% endif %}
+                        {% if imprint.language %}
+                            <dt>Language</dt><dd>{{imprint.language}}</dd>
+                        {% endif %}
+                        {% if imprint.date_of_publication %}
+                            <dt>Date of Publication</dt><dd>{{imprint.date_of_publication}}</dd>
+                        {% endif %}
+                        {% if imprint.place %}
+                            <dt>Place</dt><dd><a href="/place/{{imprint.place.id}}/">{{imprint.place}}</a></dd>
+                        {% endif %}
+                    {% endif %}
+        
+                    {% if work %}
+                        <h3>The Written Work</h3>
+                        <dt>Standardized Title</dt><dd><a href="/work/{{work.id}}/">{{work.title}}</a></dd>
+                        
+                        {% for actor in work.actor.all %}
+                            <dt>{{actor.role.name}}</dt><dd><a href="/person/{{actor.person.id}}/">{{actor}}</a></dd>
+                        {% endfor %}
+                        {% if work.notes %}
+                            <dt>Notes</dt><div>{{work.notes}}</div>
+                        {% endif %}
+                    {% endif %}
+                </dl>
+
+            </div>
+            <div class="col-md-3">
+                <div class="progress">
+                    {% with complete=footprint.percent_complete %}
+                        <div class="progress-bar" role="progressbar"
+                            aria-valuenow="{{complete}}" aria-valuemin="0"
+                            aria-valuemax="100" style="width: {{complete}}%;">
+                            {{complete}}%
+                        </div>
+                    {% endwith %}
+                </div>
+                <h3>Do you know...</h3>
+                {% if not footprint.associated_date %}
+                    <div>when this footprint occurred?</div>
+                {% endif %}
+                
+                {% if not footprint.place %}
+                    <div>where this footprint occurred?</div>
+                {% endif %}
+    
+                {% if not footprint.language %}
+                <div>in what language this footprint was recorded?</div>
+                {% endif %}
+                            
+                <h3>Related?</h3>
+                <p>Further describe your footprint by connecting similar records.</p>
+                {% for record in records %}
+                    {{record}}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endwith %} 
+{% endblock %}

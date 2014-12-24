@@ -49,6 +49,7 @@ ul.selected-authors li {
     cursor: pointer;
 }
 
+/* Create Footprint */
 .footprint-form .form-content {
     height: 425px;
 }
@@ -73,6 +74,36 @@ ul.wizard-tabs.has-error li.active a {
 
 .form-group.has-error .help-block {
     color: #737373;
+}
+
+/* Object detail pages */
+.object-detail .breadcrumb {
+    margin-bottom: 0;
+    background: #f6f7f8; 
+    color: #666;
+    font: bold 12px "Helvetica Neue", "Helvetica Narrow", Arial, sans-serif;
+    text-transform: uppercase;
+}
+
+.object-detail h2 {
+    background: #f6f7f8;
+    padding: 10px;
+    color: #373e4d;
+    vertical-align: middle;
+    font-size: 25px;
+    margin-top: 0;
+}
+
+.object-detail h2 .object-title {
+    width: 85%;
+    margin-left: 20px;
+}
+
+.object-detail h3 {
+    text-transform: uppercase;
+    border-bottom: 1px solid #dcdee3;
+    line-height: 30px;
+    font-size: 18px;
 }
 
 /* LOGIN PAGE */

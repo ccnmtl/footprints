@@ -43,7 +43,7 @@
             return valid;
         },
         show: function() {
-            jQuery(this.el).find('a[href="#evidence"]').tab('show');
+            jQuery('a[href="#evidence"]').tab('show');
         }
     });
     
@@ -102,12 +102,17 @@
                 }
             });
         },
+        validates: function() {
+            return true;
+        },
         show: function() {
-            jQuery(this.el).find('a[href="#author"]').tab('show');
+            var elt = jQuery('a[href="#author"]');
+            jQuery(elt).parent('li').removeClass('disabled');
+            jQuery(elt).tab('show');
         },
         dataSource: function(request, response) {
             jQuery.ajax({
-                url: "/api/person/",
+                url: "/api/name/",
                 dataType: "jsonp",
                 data: {
                     q: request.term
@@ -133,17 +138,20 @@
         },
         onNewAuthor: function(event, ui) {
             if (event.keyCode == 13) {
+                event.preventDefault();
                 var author = jQuery(event.currentTarget).val().trim();
                 if (author.length > 0) {
                     var markup = this.authorTemplate({'ui': {label: author}});
                     jQuery(this.elAuthors).append(markup);
                     jQuery(this.elInput).val('');
                 }
+                return false;
             }
+            return true;
         },
         onRemoveAuthor: function(evt) {
             jQuery(evt.currentTarget).parent('li').remove();
-        }        
+        }
     });
     
     var evidenceView = new CreateFootprintWizard.Views.EvidenceView({
@@ -168,7 +176,6 @@
         },
         initialize: function () {
             var self = this;
-            this.currentView = evidenceView;
             
             jQuery(".btn-next").click(function(evt) {
                 evt.preventDefault();

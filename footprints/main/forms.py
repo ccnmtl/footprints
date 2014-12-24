@@ -1,5 +1,8 @@
 from django import forms
 from django.forms.models import ModelForm
+from django.utils.translation import ugettext_lazy as _
+from haystack.forms import ModelSearchForm
+from haystack.utils import get_model_ct
 
 from footprints.main.models import Footprint, Role, DigitalObject, \
     ExtendedDateFormat, Name, Language, DigitalFormat, \
@@ -114,3 +117,34 @@ class FootprintForm(ModelForm):
 
     class Meta:
         model = Footprint
+
+
+class FootprintSearchForm(ModelSearchForm):
+    def __init__(self, *args, **kwargs):
+        super(FootprintSearchForm, self).__init__(*args, **kwargs)
+
+        choices = [
+            (get_model_ct(Footprint), 'Footprint'),
+            (get_model_ct(Imprint), 'Imprint'),
+            (get_model_ct(Person), 'Person'),
+            (get_model_ct(WrittenWork), 'Written Work'),
+        ]
+        self.fields['models'] = forms.MultipleChoiceField(
+            choices=choices, required=False, label=_('Search In'),
+            widget=forms.CheckboxSelectMultiple)
+
+    def search(self):
+        if not self.is_valid():
+            return self.no_query_found()
+
+        if not self.cleaned_data.get('q'):
+            sqs = self.searchqueryset.all()
+        else:
+            sqs = self.searchqueryset.auto_query(self.cleaned_data['q'])
+
+        sqs = sqs.exclude(django_ct__in=["main.name", "main.actor"])
+
+        if self.load_all:
+            sqs = sqs.load_all()
+
+        return sqs.models(*self.get_models())

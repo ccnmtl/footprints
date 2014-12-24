@@ -20,6 +20,16 @@ DATABASES = {
     }
 }
 
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
+        'URL': 'http://localhost:8080/solr/footprints',
+        'TIMEOUT': 60 * 5,
+        'INCLUDE_SPELLING': False,
+        'BATCH_SIZE': 10,
+    },
+}
+
 if 'test' in sys.argv or 'jenkins' in sys.argv:
     DATABASES = {
         'default': {
@@ -30,6 +40,11 @@ if 'test' in sys.argv or 'jenkins' in sys.argv:
             'USER': '',
             'PASSWORD': '',
         }
+    }
+    HAYSTACK_CONNECTIONS = {
+        'default': {
+            'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
+        },
     }
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
@@ -201,14 +216,4 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ],
     'PAGINATE_BY': 30
-}
-
-HAYSTACK_CONNECTIONS = {
-    'default': {
-        'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
-        'URL': 'http://localhost:8080/solr/footprints',
-        'TIMEOUT': 60 * 5,
-        'INCLUDE_SPELLING': False,
-        'BATCH_SIZE': 10,
-    },
 }

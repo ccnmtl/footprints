@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}Written Work{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block js %}
+{% endblock %}
+
+{% block extrajs %}
+    {% comment %}assets that do not need to be compressed{% endcomment %}
+{% endblock %}
+
+{% block content %}
+{% with work=object %}
+
+    <div class="object-detail writtenwork">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="breadcrumb">WRITTEN WORK</div>
+                <h2>
+                    <span class="glyphicon glyphicon-user pull-left" aria-hidden="true"></span>
+                    <span class="pull-left object-title">{{work}}</span>
+                    <div class="clearfix"></div>
+                </h2>
+
+                {% if work.actor.count > 0 %}
+                <h3>People</h3>
+                <dl class="dl-horizontal">
+                    {% for actor in work.actor.all %}
+                        <dt>{{actor.role}}</dt><dd><a href="/person/{{actor.person.id}}/">{{actor}}</a></dd>
+                    {% endfor %}
+                </dl>
+                {% endif %}
+                
+                {% if work.notes %}
+                    <h3>Notes</h3>
+                    {{work.notes|safe}}
+                {% endif %}
+
+                <h3>Imprints</h3>
+                <ul>
+                {% for imprint in work.imprint_set.all %}
+                    <li>
+                        <a href="/imprint/{{imprint.id}}/">{{imprint}}</a>
+                    
+                        {% if imprint.bookcopy_set.count > 0 %}
+                            <h5>Book Copies ({{imprint.bookcopy_set.count}})</h5>
+                            <ol>
+                            {% for copy in imprint.bookcopy_set.all %}
+                                <li><a href="/book/{{copy.id}}/">{{copy}}</a></li>
+                            {% endfor %}
+                            </ol>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+                </ul>
+            </div>
+            <div class="col-md-3">
+                <div class="progress">
+                    {% with complete=work.percent_complete %}
+                        <div class="progress-bar" role="progressbar"
+                            aria-valuenow="{{complete}}" aria-valuemin="0"
+                            aria-valuemax="100" style="width: {{complete}}%;">
+                            {{complete}}%
+                        </div>
+                    {% endwith %}
+                </div>
+
+                <h3>Do you know...</h3>
+                <h3>Related?</h3>
+                <p>Further describe your footprint by connecting similar records.</p>
+                {% for record in records %}
+                    {{record}}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endwith %} 
+{% endblock %}
