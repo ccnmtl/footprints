@@ -51,7 +51,7 @@ ul.selected-authors li {
 
 /* Create Footprint */
 .footprint-form .form-content {
-    height: 425px;
+    height: 525px;
 }
 
 .footprint-form .form-content h3 {
@@ -70,6 +70,7 @@ ul.wizard-tabs.has-error li.active a {
 
 .form-group.has-error .error-block {
     display: block;
+    float: right;
 }
 
 .form-group.has-error .help-block {
@@ -101,9 +102,100 @@ ul.wizard-tabs.has-error li.active a {
 
 .object-detail h3 {
     text-transform: uppercase;
-    border-bottom: 1px solid #dcdee3;
-    line-height: 30px;
-    font-size: 18px;
+    /* border-bottom: 1px solid #dcdee3; */
+    line-height: 20px;
+    font-size: 16px;
+    margin-bottom: 16px;
+}
+
+.object-detail dl dt {
+    padding-top: 5px;
+    padding-bottom: 2px;
+}
+
+.object-detail dl dd {
+    margin-left: 0;
+    padding-left: 180px;
+    padding-top: 5px;
+    padding-bottom: 2px;
+}
+
+.object-detail dl dd.border-bottom {
+    border-bottom: dotted black 1px;
+}
+
+.object-detail .sidebar-box {
+    border: 1px solid #e9eaed;
+    padding: 10px 20px;
+    margin-bottom: 20px;
+}
+
+.object-detail .progress {
+    height: 10px;
+    width: 65%;
+}
+
+.object-detail .progress-report {
+    color: #9197a3;
+    font-size: 12px;
+    line-height: 16px;
+    margin-top: -3px;
+}
+
+.object-detail .editable,
+.object-detail .editable-click {
+    text-decoration: none;
+    cursor: pointer;
+    border-bottom: 0;
+    color: #333;
+}
+
+.object-detail .editable:hover {
+    border-bottom: dashed 1px #333;
+}
+
+.object-detail .editable-inline,
+.object-detail .form-inline,
+.object-detail .form-group {
+    width: 94% !important;
+}
+
+.object-detail .editable-input {
+    width: 85%;
+}
+
+.object-detail .editable-input input[type='text'],
+.object-detail .editable-input textarea {
+    width: 100%;
+}
+
+.object-detail .remove-footprint-actor {
+    cursor: pointer;
+}
+
+.object-detail .do-you-know {
+    color: #337ab7;
+    text-decoration: none;
+}
+
+.object-detail .do-you-know:hover {
+    text-decoration: underline;
+    border-bottom: 0;
+}
+
+.object-detail .glyphicon-question-sign {
+    vertical-align: top;
+}
+
+
+/* Additional Information */
+ul.additional-questions {
+    list-style: none;
+    padding-left: 0px;
+}
+
+ul.additional-questions li {
+    margin-bottom: 10px;
 }
 
 /* LOGIN PAGE */

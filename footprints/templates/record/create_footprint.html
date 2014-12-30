@@ -29,10 +29,10 @@
 {% endblock %}
 
 {% block content %}
-<h2>Create Footprint</h2>
 <div class="row">
     <div class="col-md-9">
         <form id="footprint-form" class="footprint-form" role="form" method="post">
+        {% csrf_token %}
         <div role="tabpanel">
             <ul class="nav wizard-tabs" role="tablist">
                 <li role="presentation">
@@ -60,10 +60,10 @@
                             <label>What is the medium of evidence?</label>
                             <div class="help-block">
                                 The medium of evidence is where the footprint is derived or deduced from, e.g.,
-                                an extant copy with an owner’s signature, a library mark, a booklist/catalog/inventory, 
+                                an extant copy with an owner’s signature, a library mark, a book list or catalog, 
                                 a reference to a book coming into someone’s possession in a paratext to another work.
                             </div>
-                            <textarea class="form-control" name="footprint-medium"></textarea>
+                            <textarea class="form-control required" name="footprint-medium"></textarea>
                             <div class="error-block">This field is required.</div>
                         </div>
                         <br />
@@ -71,10 +71,16 @@
                             <label>What is the provenance of evidence?</label>
                             <div class="help-block">
                                 The provenance of evidence describes where can one find the evidence now, e.g.,
-                                a particular library, archive, a printed book, a journal article.
+                                a particular library, archive, a printed book, a journal article, a collection.
                             </div>
-                            <textarea class="form-control" name="footprint-provenance"></textarea>
+                            <textarea class="form-control required" name="footprint-provenance"></textarea>
                             <div class="error-block">This field is required.</div>
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label>Notes</label>
+                            <div class="help-block">Add additional notes, clarifications, deductions and oddities here. (optional)</div>
+                            <textarea class="form-control" name="footprint-notes"></textarea>
                         </div>
                     </div>
                     <div class="clearfix"></div>

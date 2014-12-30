@@ -64,7 +64,7 @@
                 <ul class="nav navbar-nav navbar-right navbar-nav-pl">
                     {% block usernav %}
                         {% if request.user.is_anonymous %}
-                            <li><a href="#" data-toggle="modal" data-target="#login-modal" class="btn-log-in btn btn-sm">Log In</a></li>
+                            <li><a id="login-link" href="#" data-toggle="modal" data-target="#login-modal">Log In</a></li>
                         {% else %}
                             <li class="logged-in-greeting">
                                 <a href="/accounts/logout/?next=/"><span title="Log Out">Log Out</span></a>
@@ -73,10 +73,8 @@
                             {% if user.has_usable_password %}
                                 <li><a href="/accounts/password_change/">Change Password</a></li>
                             {% endif %}
-                            
-                            {% if user.is_staff %}
-                                <li><a href="/record/">Record</a></li>
-                            {% endif %}
+
+                            <li><a href="/footprint/create/">Record</a></li>
                             
                             <li><a href="/search/">Search</a></li>
                         {% endif %}

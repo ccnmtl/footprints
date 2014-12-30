@@ -52,6 +52,16 @@ class JSONResponseMixin(object):
                             **response_kwargs)
 
 
+class EditableMixin(object):
+
+    def has_edit_permission(self, user, the_object):
+        if user.is_staff:
+            return True
+
+        return (hasattr(the_object, 'created_by') and
+                the_object.created_by == user)
+
+
 class LoggedInMixin(object):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):

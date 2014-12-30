@@ -9,16 +9,20 @@ from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
 from djangowind.views import logout as wind_logout_view
 from haystack.query import SearchQuerySet
+from rest_framework import viewsets
 from rest_framework.permissions import AllowAny
 from rest_framework.renderers import JSONPRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from footprints.main.models import (Footprint, Imprint, BookCopy,
-                                    Actor, Person, Name, Role, WrittenWork)
-from footprints.main.serializers import TitleSerializer, NameSerializer
+                                    Actor, Person, Name, Role, WrittenWork,
+                                    Language)
+from footprints.main.permissions import IsOwnerOrReadOnly
+from footprints.main.serializers import TitleSerializer, NameSerializer, \
+    FootprintSerializer
 from footprints.mixins import (JSONResponseMixin, LoggedInMixin,
-                               LoggedInStaffMixin)
+                               EditableMixin)
 
 
 class IndexView(TemplateView):
@@ -48,7 +52,7 @@ class LogoutView(LoggedInMixin, View):
             return auth_logout_view(request, "/")
 
 
-class PersonDetailView(DetailView):
+class PersonDetailView(EditableMixin, DetailView):
 
     model = Person
 
@@ -60,27 +64,28 @@ class PersonDetailView(DetailView):
         return context
 
 
-class FootprintDetailView(LoggedInStaffMixin, DetailView):
+class FootprintDetailView(EditableMixin, DetailView):
 
     model = Footprint
 
     def get_context_data(self, **kwargs):
         context = super(FootprintDetailView, self).get_context_data(**kwargs)
 
-        footprint = self.object
-
         related = []
-        if footprint.book_copy.imprint.work is None:
+        if self.object.book_copy.imprint.work is None:
             # written works, imprints & footprints with similar titles
-            sqs = SearchQuerySet().autocomplete(title=footprint.title)
+            sqs = SearchQuerySet().autocomplete(title=self.object.title)
             serializer = TitleSerializer(sqs, many=True)
             related.extend(serializer.data)
 
         context['related'] = related
+        context['editable'] = self.has_edit_permission(self.request.user,
+                                                       self.object)
+        context['languages'] = Language.objects.all().order_by('name')
         return context
 
 
-class PlaceDetailView(DetailView):
+class PlaceDetailView(EditableMixin, DetailView):
 
     model = Actor
 
@@ -89,10 +94,12 @@ class PlaceDetailView(DetailView):
 
         related = []
         context['related'] = related
+        context['editable'] = self.has_edit_permission(self.request.user,
+                                                       self.object)
         return context
 
 
-class WrittenWorkDetailView(DetailView):
+class WrittenWorkDetailView(EditableMixin, DetailView):
 
     model = WrittenWork
 
@@ -101,11 +108,13 @@ class WrittenWorkDetailView(DetailView):
 
         related = []
         context['related'] = related
+        context['editable'] = self.has_edit_permission(self.request.user,
+                                                       self.object)
         return context
 
 
-class CreateFootprintView(LoggedInStaffMixin, TemplateView):
-    template_name = "record/createFootprint.html"
+class CreateFootprintView(LoggedInMixin, TemplateView):
+    template_name = "record/create_footprint.html"
 
     def get_or_create_author(self, name_id, full_name):
         author_role = Role.objects.get_author_role()
@@ -136,7 +145,7 @@ class CreateFootprintView(LoggedInStaffMixin, TemplateView):
         for key, value in self.request.POST.items():
             if key.startswith(prefix):
                 names.append((key[len(prefix):], value))
-        return names
+        return sorted(names)
 
     def post(self, *args, **kwargs):
         # Create stub objects for the footprint
@@ -150,9 +159,11 @@ class CreateFootprintView(LoggedInStaffMixin, TemplateView):
         title = self.request.POST.get('footprint-title')
         provenance = self.request.POST.get('footprint-provenance')
         medium = self.request.POST.get('footprint-medium')
+        notes = self.request.POST.get('footprint-notes', '')
         fp = Footprint.objects.create(title=title, medium=medium,
                                       provenance=provenance,
-                                      book_copy=book_copy)
+                                      book_copy=book_copy,
+                                      notes=notes)
 
         return HttpResponseRedirect(reverse('footprint-detail',
                                             kwargs={'pk': fp.pk}))
@@ -178,3 +189,9 @@ class NameListView(APIView):
             name=request.GET.get('q', ''))
         serializer = NameSerializer(sqs, many=True)
         return Response(serializer.data)
+
+
+class FootprintViewSet(viewsets.ModelViewSet):
+    queryset = Footprint.objects.all()
+    serializer_class = FootprintSerializer
+    permission_classes = (IsOwnerOrReadOnly,)

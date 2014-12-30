@@ -192,7 +192,7 @@ class CreateFootprintViewTest(TestCase):
 
     def test_get_names(self):
         person = PersonFactory()
-        data = {'author_': 'New Name',
+        data = {'author_': 'Alpha',
                 'author_%s' % person.name.id: person.name}
 
         request = RequestFactory().post('/footprint/create/', data)
@@ -200,14 +200,15 @@ class CreateFootprintViewTest(TestCase):
         view.request = request
 
         names = view.get_names()
-        self.assertEquals(names[0], ('', 'New Name'))
+        self.assertEquals(names[0], ('', 'Alpha'))
         self.assertEquals(names[1], (str(person.name.id), person.name.name))
 
     def test_post(self):
         data = {'author_': 'New Name',
                 'footprint-title': 'New Title',
                 'footprint-medium': 'New Medium',
-                'footprint-provenance': 'New Provenance'}
+                'footprint-provenance': 'New Provenance',
+                'footprint-notes': 'Some notes'}
 
         request = RequestFactory().post('/footprint/create/', data)
         view = CreateFootprintView()
@@ -222,3 +223,4 @@ class CreateFootprintViewTest(TestCase):
         self.assertEquals(fp.title, 'New Title')
         self.assertEquals(fp.medium, 'New Medium')
         self.assertEquals(fp.provenance, 'New Provenance')
+        self.assertEquals(fp.notes, 'Some notes')

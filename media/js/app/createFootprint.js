@@ -3,7 +3,6 @@
         Models: {},
         Views: {},
         Router: {},
-        Math: {},
         inst: {},
 
         initialize: function() {
@@ -25,7 +24,7 @@
         validates: function() {
             var self = this;
             var valid = true;
-            jQuery("#evidence").find('textarea').each(function() {
+            jQuery("#evidence").find('textarea.required').each(function() {
                 var group = jQuery(this).parents('.form-group');
                 if (jQuery(this).val().length < 1) {
                     jQuery(group).addClass('has-error');

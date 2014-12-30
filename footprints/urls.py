@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import password_change, password_change_done, \
     password_reset_done, password_reset_confirm, password_reset_complete
 from django.views.generic import TemplateView
@@ -12,7 +13,8 @@ from footprints.main.forms import FootprintSearchForm
 from footprints.main.views import (LoginView, LogoutView, TitleListView,
                                    CreateFootprintView, NameListView,
                                    WrittenWorkDetailView, FootprintDetailView,
-                                   PersonDetailView, PlaceDetailView)
+                                   PersonDetailView, PlaceDetailView,
+                                   FootprintViewSet)
 from footprints.mixins import is_staff
 
 
@@ -23,6 +25,7 @@ if hasattr(settings, 'CAS_BASE'):
     auth_urls = (r'^accounts/', include('djangowind.urls'))
 
 router = routers.DefaultRouter()
+router.register(r'footprint', FootprintViewSet)
 
 urlpatterns = patterns(
     '',
@@ -58,8 +61,8 @@ urlpatterns = patterns(
         WrittenWorkDetailView.as_view(), name='writtenwork-detail'),
 
     url(r'^search/',
-        SearchView(template="search/search.html",
-                   form_class=FootprintSearchForm),
+        login_required(SearchView(template="search/search.html",
+                                  form_class=FootprintSearchForm)),
         name='search'),
 
     url(r'^api-auth/', include('rest_framework.urls',

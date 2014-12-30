@@ -69,10 +69,13 @@ class Role(models.Model):
     def __unicode__(self):
         return self.name
 
+    def is_author(self):
+        return Role.objects.get_author_role() == self
+
 
 class Name(models.Model):
     name = models.TextField()
-    sort_by = models.TextField()
+    sort_by = models.TextField(null=True, blank=True)
 
     created_by = CreatingUserField(related_name="name_created_by")
     last_modified_by = LastUserField(related_name="name_last_modified_by")
@@ -117,8 +120,8 @@ class DigitalObject(models.Model):
     digital_format = models.ForeignKey(DigitalFormat)
     file = models.FileField(upload_to="digitalobjects/%Y/%m/%d/")
 
-    source_url = models.URLField(null=True)
-    notes = models.TextField(null=True)
+    source_url = models.URLField(null=True, blank=True)
+    notes = models.TextField(null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
@@ -138,7 +141,7 @@ class DigitalObject(models.Model):
 class StandardizedIdentification(models.Model):
     identifier = models.CharField(max_length=512)
     identifier_type = models.CharField(max_length=5, choices=IDENTIFIER_TYPES)
-    identifier_text = models.TextField(null=True)
+    identifier_text = models.TextField(null=True, blank=True)
     permalink = models.URLField(null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -163,18 +166,18 @@ class Person(models.Model):
     name = models.OneToOneField(Name, related_name="person_name")
 
     birth_date = models.OneToOneField(ExtendedDateFormat,
-                                      null=True,
+                                      null=True, blank=True,
                                       related_name="birth_date")
     death_date = models.OneToOneField(ExtendedDateFormat,
-                                      null=True,
+                                      null=True, blank=True,
                                       related_name="death_date")
 
     standardized_identifier = models.ForeignKey(StandardizedIdentification,
-                                                null=True)
+                                                null=True, blank=True)
     digital_object = models.ManyToManyField(
-        DigitalObject, null=True)
+        DigitalObject, null=True, blank=True)
 
-    notes = models.TextField(null=True)
+    notes = models.TextField(null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
@@ -211,9 +214,9 @@ class Actor(models.Model):
     role = models.ForeignKey(Role)
     actor_name = models.OneToOneField(Name,
                                       related_name="actor_name",
-                                      null=True)
+                                      null=True, blank=True)
 
-    notes = models.TextField(null=True)
+    notes = models.TextField(null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
@@ -234,19 +237,19 @@ class Actor(models.Model):
 
 class Place(models.Model):
     continent = models.CharField(max_length=2, choices=CONTINENTS)
-    region = models.CharField(max_length=256, null=True)
-    country = models.CharField(max_length=256, null=True)
-    city = models.CharField(max_length=256, null=True)
+    region = models.CharField(max_length=256, null=True, blank=True)
+    country = models.CharField(max_length=256, null=True, blank=True)
+    city = models.CharField(max_length=256, null=True, blank=True)
 
-    position = GeopositionField(null=True)
+    position = GeopositionField()
 
     digital_object = models.ManyToManyField(
-        DigitalObject, null=True)
+        DigitalObject, null=True, blank=True)
 
-    notes = models.TextField(null=True)
+    notes = models.TextField(null=True, blank=True)
 
     standardized_identification = models.ForeignKey(StandardizedIdentification,
-                                                    null=True)
+                                                    null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
@@ -273,9 +276,9 @@ class Place(models.Model):
 
 class Collection(models.Model):
     name = models.CharField(max_length=512, unique=True)
-    actor = models.ManyToManyField(Actor, null=True)
+    actor = models.ManyToManyField(Actor, null=True, blank=True)
 
-    notes = models.TextField(null=True)
+    notes = models.TextField(null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
@@ -295,9 +298,9 @@ class Collection(models.Model):
 class WrittenWork(models.Model):
     title = models.TextField()
     actor = models.ManyToManyField(
-        Actor, null=True,
+        Actor, null=True, blank=True,
         help_text="The author or creator of the work. ")
-    notes = models.TextField(null=True)
+    notes = models.TextField(null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
@@ -325,22 +328,23 @@ class WrittenWork(models.Model):
 
 
 class Imprint(models.Model):
-    work = models.ForeignKey(WrittenWork, null=True)
+    work = models.ForeignKey(WrittenWork, null=True, blank=True)
 
-    title = models.TextField(null=True)
-    language = models.ForeignKey(Language, null=True)
-    date_of_publication = models.OneToOneField(ExtendedDateFormat, null=True)
-    place = models.ForeignKey(Place, null=True)
+    title = models.TextField(null=True, blank=True)
+    language = models.ForeignKey(Language, null=True, blank=True)
+    date_of_publication = models.OneToOneField(ExtendedDateFormat,
+                                               null=True, blank=True)
+    place = models.ForeignKey(Place, null=True, blank=True)
 
-    actor = models.ManyToManyField(Actor, null=True)
+    actor = models.ManyToManyField(Actor, null=True, blank=True)
 
     standardized_identifier = models.ManyToManyField(
-        StandardizedIdentification, null=True)
+        StandardizedIdentification, null=True, blank=True)
 
     digital_object = models.ManyToManyField(
-        DigitalObject, null=True)
+        DigitalObject, null=True, blank=True)
 
-    notes = models.TextField(null=True)
+    notes = models.TextField(null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
@@ -363,14 +367,38 @@ class Imprint(models.Model):
             label = "%s (%s)" % (label, self.date_of_publication)
         return label
 
+    def percent_complete(self):
+        required = 9.0
+        completed = 0
+
+        if self.work is not None:
+            completed += 1
+        if self.title is not None:
+            completed += 1
+        if self.language is not None:
+            completed += 1
+        if self.date_of_publication is not None:
+            completed += 1
+        if self.place is not None:
+            completed += 1
+        if self.actor.count() > 0:
+            completed += 1
+        if self.standardized_identifier is not None:
+            completed += 1
+        if self.digital_object.count() > 0:
+            completed += 1
+        if self.notes is not None:
+            completed += 1
+        return int(completed/required * 100)
+
 
 class BookCopy(models.Model):
     imprint = models.ForeignKey(Imprint)
 
     digital_object = models.ManyToManyField(
-        DigitalObject, null=True)
+        DigitalObject, null=True, blank=True)
 
-    notes = models.TextField(null=True)
+    notes = models.TextField(null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
@@ -386,6 +414,16 @@ class BookCopy(models.Model):
     def __unicode__(self):
         return self.imprint.__unicode__()
 
+    def percent_complete(self):
+        required = 3.0
+        completed = 1  # imprint is required
+
+        if self.digital_object.count() > 0:
+            completed += 1
+        if self.notes is not None:
+            completed += 1
+        return int(completed/required * 100)
+
 
 class Footprint(models.Model):
     book_copy = models.ForeignKey(BookCopy)
@@ -399,24 +437,24 @@ class Footprint(models.Model):
         library, archive, a printed book, a journal article etc.''')
 
     title = models.TextField()
-    language = models.ForeignKey(Language, null=True)
-    document_type = models.CharField(max_length=256, null=True)
-    place = models.ForeignKey(Place, null=True)
+    language = models.ForeignKey(Language, null=True, blank=True)
+    document_type = models.CharField(max_length=256, null=True, blank=True)
+    place = models.ForeignKey(Place, null=True, blank=True)
 
     associated_date = models.OneToOneField(ExtendedDateFormat,
-                                           null=True)
+                                           null=True, blank=True)
 
-    call_number = models.CharField(max_length=256, null=True)
-    collection = models.ForeignKey(Collection, null=True)
+    call_number = models.CharField(max_length=256, null=True, blank=True)
+    collection = models.ForeignKey(Collection, null=True, blank=True)
 
     digital_object = models.ManyToManyField(
-        DigitalObject, null=True)
+        DigitalObject, null=True, blank=True)
 
     actor = models.ManyToManyField(
-        Actor, null=True,
+        Actor, null=True, blank=True,
         help_text="An owner or other person related to this footprint. ")
 
-    notes = models.TextField(null=True)
+    notes = models.TextField(null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
@@ -433,20 +471,20 @@ class Footprint(models.Model):
 
     def percent_complete(self):
         required = 11.0  # not including call_number & collection
-        complete = 4  # book copy, title, medium & provenance are required
+        completed = 4  # book copy, title, medium & provenance are required
 
         if self.language is not None:
-            complete += 1
+            completed += 1
         if self.document_type is not None:
-            complete += 1
+            completed += 1
         if self.place is not None:
-            complete += 1
+            completed += 1
         if self.associated_date is not None:
-            complete += 1
+            completed += 1
         if self.digital_object.count() > 0:
-            complete += 1
+            completed += 1
         if self.actor.count() > 0:
-            complete += 1
+            completed += 1
         if self.notes is not None and len(self.notes) > 0:
-            complete += 1
-        return int(complete/required * 100)
+            completed += 1
+        return int(completed/required * 100)
