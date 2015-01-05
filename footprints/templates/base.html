@@ -64,7 +64,7 @@
                 <ul class="nav navbar-nav navbar-right navbar-nav-pl">
                     {% block usernav %}
                         {% if request.user.is_anonymous %}
-                            <li><a href="#" data-toggle="modal" data-target="#login-modal" class="btn-log-in btn btn-sm">Log In</a></li>
+                            <li><a id="login-link" href="#" data-toggle="modal" data-target="#login-modal">Log In</a></li>
                         {% else %}
                             <li class="logged-in-greeting">
                                 <a href="/accounts/logout/?next=/"><span title="Log Out">Log Out</span></a>
@@ -73,10 +73,10 @@
                             {% if user.has_usable_password %}
                                 <li><a href="/accounts/password_change/">Change Password</a></li>
                             {% endif %}
+
+                            <li><a href="/footprint/create/">Record</a></li>
                             
-                            {% if user.is_staff %}
-                                <li><a href="/record/">Record</a></li>
-                            {% endif %}
+                            <li><a href="/search/">Search</a></li>
                         {% endif %}
                         <li><a href="/about/">About</a></li>
                         <li><a href="/credits/">Credits</a></li>
@@ -228,11 +228,7 @@
         });
     </script>
     
-    {% block extrajs %}{% endblock %}
-    
-    {% compress js %}
-        {% block js %}{% endblock %}
-    {% endcompress %}
+    {% block js %}{% endblock %}
     
     {% if STAGING_ENV %}
         <div class="alert alert-danger alert-dismissable" style="position: fixed; bottom: 0px;">

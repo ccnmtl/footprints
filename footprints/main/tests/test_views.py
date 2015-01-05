@@ -1,9 +1,14 @@
 import json
 
 from django.test import TestCase
-from django.test.client import Client
+from django.test.client import Client, RequestFactory
 
-from footprints.main.tests.factories import UserFactory
+from footprints.main.models import Role, Footprint
+from footprints.main.tests.factories import (UserFactory, RoleFactory,
+                                             PersonFactory, ActorFactory,
+                                             NameFactory, WrittenWorkFactory,
+                                             ImprintFactory, FootprintFactory)
+from footprints.main.views import CreateFootprintView
 
 
 class BasicTest(TestCase):
@@ -116,3 +121,106 @@ class LogoutTest(TestCase):
         self.assertEquals(response.status_code, 200)
         self.assertTrue('Log In' in response.content)
         self.assertFalse('Log Out' in response.content)
+
+
+class ListViewTests(TestCase):
+    def test_title_listview(self):
+        WrittenWorkFactory(title='Alpha')
+        ImprintFactory(title='Beta')
+        FootprintFactory(title='Gamma')
+
+        response = self.client.get('/api/title/', {'q': 'Foo'},
+                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(len(response.data), 0)
+
+        response = self.client.get('/api/title/', {'q': 'Alp'},
+                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(len(response.data), 1)
+        self.assertEquals(response.data[0]['title'], 'Alpha')
+
+    def test_name_listview(self):
+        NameFactory(name="Alpha")
+
+        response = self.client.get('/api/name/', {'q': 'Foo'},
+                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(len(response.data), 0)
+
+        response = self.client.get('/api/name/', {'q': 'Alp'},
+                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(len(response.data), 1)
+        self.assertEquals(response.data[0]['name'], 'Alpha')
+
+
+class CreateFootprintViewTest(TestCase):
+
+    def test_get_or_create_author_new_actor(self):
+        # No associated id indicates a new actor
+        actor = CreateFootprintView().get_or_create_author('', 'New Actor')
+        self.assertEquals(actor.person.name.name, 'New Actor')
+
+    def test_get_or_create_author_existing_actor(self):
+        # a person with multiple roles
+        author_role = Role.objects.get_author_role()
+        publisher_role = RoleFactory(name='Publisher')
+        person = PersonFactory()
+
+        author = ActorFactory(role=author_role, person=person)
+        ActorFactory(role=publisher_role, person=person)
+
+        actor = CreateFootprintView().get_or_create_author(
+            str(author.actor_name.id), author.actor_name.name)
+        self.assertEquals(author, actor)
+
+        actor = CreateFootprintView().get_or_create_author(
+            str(author.person.name.id), author.person.name.name)
+        self.assertEquals(author, actor)
+
+    def test_get_or_create_author_existing_person(self):
+        # a Person with no roles
+        person = PersonFactory()
+        author_role = Role.objects.get_author_role()
+
+        # Existing Actor with role author
+        actor = CreateFootprintView().get_or_create_author(str(person.name.id),
+                                                           person.name.name)
+        self.assertEquals(actor.person, person)
+        self.assertEquals(actor.role, author_role)
+
+    def test_get_names(self):
+        person = PersonFactory()
+        data = {'author_': 'Alpha',
+                'author_%s' % person.name.id: person.name}
+
+        request = RequestFactory().post('/footprint/create/', data)
+        view = CreateFootprintView()
+        view.request = request
+
+        names = view.get_names()
+        self.assertEquals(names[0], ('', 'Alpha'))
+        self.assertEquals(names[1], (str(person.name.id), person.name.name))
+
+    def test_post(self):
+        data = {'author_': 'New Name',
+                'footprint-title': 'New Title',
+                'footprint-medium': 'New Medium',
+                'footprint-provenance': 'New Provenance',
+                'footprint-notes': 'Some notes'}
+
+        request = RequestFactory().post('/footprint/create/', data)
+        view = CreateFootprintView()
+        view.request = request
+
+        response = view.post()
+        self.assertEquals(response.status_code, 302)
+
+        # there's only one in the system
+        fp = Footprint.objects.all()[0]
+        self.assertEquals(fp.book_copy.imprint.actor.count(), 1)
+        self.assertEquals(fp.title, 'New Title')
+        self.assertEquals(fp.medium, 'New Medium')
+        self.assertEquals(fp.provenance, 'New Provenance')
+        self.assertEquals(fp.notes, 'Some notes')

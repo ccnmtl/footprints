@@ -1,0 +1,297 @@
+{% extends 'base.html' %}
+{% load compress %}
+
+{% block title %}Footprint{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}jquery-ui-1.11.2/jquery-ui.css" rel="stylesheet" />
+    <link href="{{STATIC_URL}}bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet" />
+    <link href="{{STATIC_URL}}/select2-3.5.2/select2.css" rel="stylesheet" />
+{% endblock %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}js/underscore-min.js"></script>
+    <script src="{{STATIC_URL}}js/backbone-min.js"></script>
+    <script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false"></script>
+    <script src="{{STATIC_URL}}tinymce/tinymce.min.js"></script>
+
+
+    {% compress js %}
+        <script src="{{STATIC_URL}}/select2-3.5.2/select2.js"></script>
+        <script src="{{STATIC_URL}}jquery-ui-1.11.2/jquery-ui.js"></script>
+        <script src="{{STATIC_URL}}bootstrap3-editable/js/bootstrap-editable.js"></script>
+        {% comment %}<script src="{{STATIC_URL}}js/app/objectDetail.js"></script>{% endcomment %}
+    {% endcompress %}
+    
+    <script type="text/javascript">
+        jQuery(document).ready(function() {
+            jQuery.fn.editable.defaults.mode = 'inline';
+            jQuery.fn.editable.defaults.ajaxOptions = {
+               headers: {'X-HTTP-Method-Override': 'PATCH'}
+            };
+            jQuery('.editable').editable({namedParams: true});
+            jQuery('.editable-language').editable({
+                namedParams: true,
+                source: [{% for language in languages %}
+                    {value: '{{language.id}}', text: "{{language.name}}"}{% if not forloop.last %},{% endif %}
+                    {% endfor %}],
+                select2: {
+                    multiple: true,
+                    width: 200,
+                    placeholder: 'Select language',
+                    allowClear: true
+                }
+            });
+            jQuery('.do-you-know').on('save', function(e, params) {
+                var dataName = jQuery(e.currentTarget).data('name');
+                var elts = jQuery('[data-name="' + dataName + '"]').not(e.currentTarget);
+                jQuery(elts).each(function(index) {
+                    if (jQuery(this).is('.editable, .editable-language')) {
+                        jQuery(this).editable('setValue', params.newValue, true);
+                    } else {
+                        jQuery(this).html(params.newValue);
+                    }
+                    jQuery(this).parents('div.description-list').show();
+                });
+                jQuery(e.currentTarget).parents('li').fadeOut(function() {
+                    jQuery(this).remove();
+                });
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
+    {% with footprint=object book=object.book_copy imprint=object.book_copy.imprint work=object.book_copy.imprint.work %}
+    <div class="object-detail footprint">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-8">
+                <div class="breadcrumb">FOOTPRINT</div>
+                <h2>
+                    <img class="pull-left" src="{{STATIC_URL}}img/footprint.png" />
+                    <span class="pull-left object-title" data-name='title'>{{footprint.title}}</span>
+                    <div class="clearfix"></div>
+                </h2>
+                {% for media in footprint.digital_object.all %}
+                    <img src="{{media.file.url}}"></img>
+                {% endfor %}
+
+                <h3>Evidence</h3>
+                <div class="evidence-container">
+                    <dl class="dl-horizontal">
+                        <dt>Evidence Title</dt>
+                        <dd class="border-bottom">
+                            <a href="#" class="{% if editable %}editable{% else %}readonly{% endif %}" data-name="title"
+                                data-type="text" data-pk="{{footprint.id}}"
+                                data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
+                                data-url="/api/footprint/{{footprint.id}}/"
+                                data-title="Edit Evidence Title">{{footprint.title}}</a>
+                        </dd>
+
+                        <dt>Medium</dt>
+                        <dd class="border-bottom">
+                            <a href="#" class="{% if editable %}editable{% else %}readonly{% endif %}" data-name="medium"
+                                data-type="text" data-pk="{{footprint.id}}"
+                                data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
+                                data-url="/api/footprint/{{footprint.id}}/" data-title="Edit Medium of Evidence">{{footprint.medium}}</a>
+                        </dd>
+
+                        <dt>Provenance</dt>
+                        <dd class="border-bottom">
+                            <a href="#" class="{% if editable %}editable{% else %}readonly{% endif %}" data-name="provenance"
+                                data-type="text" data-pk="{{footprint.id}}"
+                                data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
+                                data-url="/api/footprint/{{footprint.id}}/"
+                                data-title="Edit Provenance of Evidence">{{footprint.provenance}}</a>
+                        </dd>
+
+                        <div class="description-list" {% if footprint.language.count < 1 %}style="display: none"{% endif %}>
+                            <dt>Recorded in</dt>
+                            <dd class="border-bottom">
+                                <a href="#" class="{% if editable %}editable-language{% else %}readonly{% endif %}" data-name="language"
+                                    data-type="select2" data-pk="{{footprint.id}}"
+                                    data-value="[{% for language in footprint.language.all %}{{language.id}}{% if not forloop.last %},{% endif %}{% endfor %}]"
+                                    data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                    data-url="/api/footprint/{{footprint.id}}/" data-title="Edit Language of Evidence">
+                                    {% for language in footprint.language.all %}
+                                        {{language.name}}{% if not forloop.last %}, {% endif %}
+                                    {% endfor %}
+                                </a>
+                            </dd>
+                        </div>
+
+                        {% if footprint.associated_date %}
+                            <dt>Date</dt>
+                            <dd class="border-bottom">
+                                <a href="#" class="{% if editable %}editable{% else %}readonly{% endif %}" data-name="associated_date"
+                                    data-type="text" data-pk="{{footprint.id}}"
+                                    data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
+                                    data-url="/api/footprint/{{footprint.id}}/" data-title="Edit Date of Evidence">{{footprint.associated_date}}</a>
+                            </dd>
+                        {% endif %}
+
+                        {% if footprint.place %}
+                            <dt>Place</dt>
+                            <dd class="border-bottom">
+                                <!-- a href="#" class="{% if editable %}editable{% else %}readonly{% endif %}" data-name="place"
+                                    data-type="location" data-pk="{{footprint.id}}"
+                                    data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
+                                    data-url="/api/footprint/{{footprint.id}}/" data-title="Edit Place of Evidence"></a-->
+                                    {{footprint.place}}
+                            </dd>
+                        {% endif %}
+
+                        {% if footprint.actor.count > 0 %}
+                            {% for actor in footprint.actor.all %}
+                                <dt>{{actor.role.name}}</dt>
+                                <dd class="border-bottom">
+                                    {{actor}} 
+                                    <div class="pull-right">
+                                        {% if editable %}
+                                        <a href="#" class="remove-footprint-actor" data-footprint-pk="{{footprint.id}}" data-actor-pk="{{actor.id}}"
+                                            data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" title="remove person">
+                                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+                                        {% endif %}
+                                        &nbsp;
+                                        <a href="/person/{{actor.person.id}}/" title="see details" class="foreign-key"><span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
+                                    </div>
+                                </dd>
+                            {% endfor %}
+                        {% endif %}
+
+                        <div class="description-list" {% if not footprint.notes %}style="display: none"{% endif %}>
+                            <dt>Notes</dt>
+                            <dd class="border-bottom">
+                                <a href="#" class="{% if editable %}editable{% else %}readonly{% endif %}" data-name="notes" data-type="textarea" data-pk="{{footprint.id}}"
+                                    data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
+                                    data-url="/api/footprint/{{footprint.id}}/" data-title="Edit Notes">{{footprint.notes|safe}}</a>
+                            </dd>
+                        </div>
+                    </dl>
+                    {% if editable %}
+                    <dl class="dl-horizontal">
+                        <dt>Do you know...</dt>
+                        <dd>    
+                            <ul class="additional-questions">
+                                <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> <a href="#">other people related to this evidence, e.g. sellers, owners, curators?</a></li>
+                                {% if not footprint.place %}
+                                    <li>
+                                        <span class="inline-value">
+                                            <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> <a href="#">the place cited in the evidence?</a>
+                                        </span>
+                                        <span class="inline-form">
+                                            
+                                        </span>
+                                    </li>
+                                {% endif %}
+                                {% if not footprint.associated_date %}
+                                    <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> <a href="#">the date cited in the evidence?</a></li>
+                                {% endif %}
+                                {% if footprint.language.count < 1 %}
+                                    <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                                    <a href="#" class="{% if editable %}editable-language{% endif %} do-you-know" data-name="language"
+                                        data-type="select2" data-pk="{{footprint.id}}" data-value=""
+                                        data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
+                                        data-url="/api/footprint/{{footprint.id}}/">in which language this evidence was recorded?</a>
+                                {% endif %}
+                                {% if not footprint.notes %}
+                                    <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                                        <a href="#" class="editable do-you-know" data-name="notes"
+                                           data-type="textarea" data-pk="{{footprint.id}}" data-value=""
+                                           data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                           data-url="/api/footprint/{{footprint.id}}/" data-title="Edit Notes">any additional notes, clarifications, deductions or oddities?</a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </dd>
+                    </dl>
+                    {% endif %}
+                </div>
+                
+                {% if book.percent_complete > 0 or imprint.percent_complete > 0 %}
+                    <dl class="dl-horizontal">
+                        <h3>Related Work</h3>
+                        {% if work %}
+                            <dt>Title</dt><dd class="border-bottom"><a href="/work/{{work.id}}/">{{work.title}}</a></dd>
+                            
+                            {% for actor in work.actor.all %}
+                                <dt>{{actor.role.name}}</dt><dd class="border-bottom"><a href="/person/{{actor.person.id}}/">{{actor}}</a></dd>
+                            {% endfor %}
+                            {% if work.notes %}
+                                <dt>Notes</dt><dd class="border-bottom">{{work.notes}}</dd>
+                            {% endif %}
+                        {% endif %}
+                                                    
+                        {% if book.percent_complete > 0 %}
+
+                        {% endif %}
+    
+                        {% if imprint.percent_complete > 0 %}
+                            {% if imprint.title %}
+                                <dt>Imprint Title</dt><dd class="border-bottom">{{imprint.title}}</dd>
+                            {% endif %}
+                            {% if imprint.language %}
+                                <dt>Imprint Language</dt><dd class="border-bottom">{{imprint.language}}</dd>
+                            {% endif %}
+                            {% if imprint.date_of_publication %}
+                                <dt>Publication Date</dt><dd class="border-bottom">{{imprint.date_of_publication}}</dd>
+                            {% endif %}
+                            {% if imprint.place %}
+                                <dt>Publication Place</dt><dd class="border-bottom"><a href="/place/{{imprint.place.id}}/">{{imprint.place}}</a></dd>
+                            {% endif %}
+                            {% if imprint.actor.count > 0 %}
+                                {% for actor in imprint.actor.all %}
+                                    {% if not actor.role.is_author %}
+                                        <dt>{{actor.role.name}}</dt>
+                                        <dd class="border-bottom"><a href="/person/{{actor.person.id}}/">{{actor}}</a></dd>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        {% endif %}
+                    </dl>
+                {% endif %}
+            </div>
+            <div class="col-md-4">
+                <div class="sidebar-box">
+                    {% with complete=footprint.percent_complete %}
+                        <h4>Record Progress</h4>
+                        <div>
+                            <div class="progress pull-left">
+                                <div class="progress-bar" role="progressbar"
+                                    aria-valuenow="{{complete}}" aria-valuemin="0"
+                                    aria-valuemax="100" style="width: {{complete}}%;">
+                                </div>
+                            </div>
+                            <div class="progress-report pull-right">{{complete}}% complete</div>
+                        </div>
+                        <div class="clearfix"></div>
+                        {% if editable %}
+                        <div>
+                            <strong>Do you know something important?</strong>
+                            <p>Praesent fringilla sit amet dolor at congue. Fusce pretium neque rutrum luctus dictum.</p>
+                            <button class="btn btn-sm btn-primary pull-right">Save</button>&nbsp;
+                            <button class="btn btn-sm btn-default pull-right" style="margin-right: 6px;">Skip</button>
+                        </div>
+                        {% endif %}
+                    {% endwith %}
+                    <div class="clearfix"></div>
+                </div>
+
+                {% if editable %}
+                <div class="sidebar-box">
+                    <h4>Can you connect this record?</h4>
+                    <p>Further describe your footprint by connecting similar records.</p>
+                    {% for record in records %}
+                        {{record}}
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endwith %} 
+{% endblock %}

@@ -20,6 +20,16 @@ DATABASES = {
     }
 }
 
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
+        'URL': 'http://localhost:8080/solr/footprints',
+        'TIMEOUT': 60 * 5,
+        'INCLUDE_SPELLING': False,
+        'BATCH_SIZE': 10,
+    },
+}
+
 if 'test' in sys.argv or 'jenkins' in sys.argv:
     DATABASES = {
         'default': {
@@ -30,6 +40,11 @@ if 'test' in sys.argv or 'jenkins' in sys.argv:
             'USER': '',
             'PASSWORD': '',
         }
+    }
+    HAYSTACK_CONNECTIONS = {
+        'default': {
+            'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
+        },
     }
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
@@ -74,11 +89,13 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'gacontext.ga_processor',
     'djangowind.context.context_processor',
     'django.core.context_processors.static',
+    'django.core.context_processors.csrf'
 )
 
 MIDDLEWARE_CLASSES = [
     'django_statsd.middleware.GraphiteRequestTimingMiddleware',
     'django_statsd.middleware.GraphiteMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -184,6 +201,7 @@ SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 SESSION_COOKIE_HTTPONLY = True
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 LOGIN_REDIRECT_URL = "/"
+LOGIN_URL = '/'
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
 
@@ -198,17 +216,7 @@ REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+        'footprints.main.permissions.IsOwnerOrReadOnly'
     ],
     'PAGINATE_BY': 30
-}
-
-HAYSTACK_CONNECTIONS = {
-    'default': {
-        'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
-        'URL': 'http://localhost:8080/solr/footprints',
-        'TIMEOUT': 60 * 5,
-        'INCLUDE_SPELLING': False,
-        'BATCH_SIZE': 10,
-    },
 }

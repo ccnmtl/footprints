@@ -17,7 +17,7 @@ IDENTIFIER_TYPES = (
     ('LOC', 'Library of Congress'),
     ('BHB', 'Bibliography of the Hebrew Book'),
     ('WLD', 'WorldCat (OCLC)'),
-    ('VIAF', 'Virtual International Authority File'),
+    ('VIAF', 'VIAF Identifier'),
     ('GETT', 'The Getty Thesaurus of Geographic Names')
 )
 
@@ -39,7 +39,27 @@ class ExtendedDateFormat(models.Model):
         return self.edtf_format
 
 
+class RoleQuerySet(models.query.QuerySet):
+    def get_author_role(self):
+        role, created = self.get_or_create(name='Author')
+        return role
+
+
+class RoleManager(models.Manager):
+    def __init__(self, fields=None, *args, **kwargs):
+        super(RoleManager, self).__init__(*args, **kwargs)
+        self._fields = fields
+
+    def get_query_set(self):
+        return RoleQuerySet(self.model, self._fields)
+
+    def get_author_role(self):
+        return self.get_query_set().get_author_role()
+
+
 class Role(models.Model):
+    objects = RoleManager()
+
     name = models.CharField(max_length=256, unique=True)
 
     class Meta:
@@ -49,10 +69,13 @@ class Role(models.Model):
     def __unicode__(self):
         return self.name
 
+    def is_author(self):
+        return Role.objects.get_author_role() == self
+
 
 class Name(models.Model):
     name = models.TextField()
-    sort_by = models.TextField()
+    sort_by = models.TextField(null=True, blank=True)
 
     created_by = CreatingUserField(related_name="name_created_by")
     last_modified_by = LastUserField(related_name="name_last_modified_by")
@@ -119,6 +142,7 @@ class StandardizedIdentification(models.Model):
     identifier = models.CharField(max_length=512)
     identifier_type = models.CharField(max_length=5, choices=IDENTIFIER_TYPES)
     identifier_text = models.TextField(null=True, blank=True)
+    permalink = models.URLField(null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
@@ -132,12 +156,10 @@ class StandardizedIdentification(models.Model):
         verbose_name = "Standardized Identification"
 
     def __unicode__(self):
-        type_description = dict(IDENTIFIER_TYPES)[self.identifier_type]
+        return self.identifier
 
-        return '%s [%s] %s' % (
-            self.identifier,
-            type_description,
-            self.identifier_text or '')
+    def authority(self):
+        return dict(IDENTIFIER_TYPES)[self.identifier_type]
 
 
 class Person(models.Model):
@@ -168,7 +190,23 @@ class Person(models.Model):
         ordering = ['name']
 
     def __unicode__(self):
-        return "%s (standardized)" % self.name.__unicode__()
+        return "%s" % self.name.__unicode__()
+
+    def percent_complete(self):
+        required = 6.0
+        complete = 1  # name is required
+
+        if self.birth_date is not None:
+            complete += 1
+        if self.death_date is not None:
+            complete += 1
+        if self.standardized_identifier is not None:
+            complete += 1
+        if self.digital_object.count() > 0:
+            complete += 1
+        if self.notes is not None and len(self.notes) > 0:
+            complete += 1
+        return int(complete/required * 100)
 
 
 class Actor(models.Model):
@@ -211,8 +249,7 @@ class Place(models.Model):
     notes = models.TextField(null=True, blank=True)
 
     standardized_identification = models.ForeignKey(StandardizedIdentification,
-                                                    null=True,
-                                                    blank=True)
+                                                    null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
@@ -277,16 +314,26 @@ class WrittenWork(models.Model):
         verbose_name = "Written Work"
 
     def __unicode__(self):
-        return "%s (standardized)" % self.title
+        return self.title
+
+    def percent_complete(self):
+        required = 3.0
+        complete = 1  # title is required
+
+        if self.actor.count() > 0:
+            complete += 1
+        if self.notes is not None and len(self.notes) > 0:
+            complete += 1
+        return int(complete/required * 100)
 
 
 class Imprint(models.Model):
-    work = models.ForeignKey(WrittenWork)
+    work = models.ForeignKey(WrittenWork, null=True, blank=True)
 
     title = models.TextField(null=True, blank=True)
-    language = models.ForeignKey(Language, null=True, blank=True)
-    date_of_publication = models.OneToOneField(ExtendedDateFormat, null=True,
-                                               blank=True)
+    language = models.ManyToManyField(Language, null=True, blank=True)
+    date_of_publication = models.OneToOneField(ExtendedDateFormat,
+                                               null=True, blank=True)
     place = models.ForeignKey(Place, null=True, blank=True)
 
     actor = models.ManyToManyField(Actor, null=True, blank=True)
@@ -310,10 +357,39 @@ class Imprint(models.Model):
         verbose_name = "Imprint"
 
     def __unicode__(self):
-        label = self.title or self.work.__unicode__()
+        label = 'Imprint'
+        if self.title:
+            label = self.title
+        elif self.work:
+            label = self.work.title
+
         if self.date_of_publication:
-            label += " (%s)" % self.date_of_publication
+            label = "%s (%s)" % (label, self.date_of_publication)
         return label
+
+    def percent_complete(self):
+        required = 9.0
+        completed = 0
+
+        if self.work is not None:
+            completed += 1
+        if self.title is not None:
+            completed += 1
+        if self.language is not None:
+            completed += 1
+        if self.date_of_publication is not None:
+            completed += 1
+        if self.place is not None:
+            completed += 1
+        if self.actor.count() > 0:
+            completed += 1
+        if self.standardized_identifier is not None:
+            completed += 1
+        if self.digital_object.count() > 0:
+            completed += 1
+        if self.notes is not None:
+            completed += 1
+        return int(completed/required * 100)
 
 
 class BookCopy(models.Model):
@@ -338,6 +414,16 @@ class BookCopy(models.Model):
     def __unicode__(self):
         return self.imprint.__unicode__()
 
+    def percent_complete(self):
+        required = 3.0
+        completed = 1  # imprint is required
+
+        if self.digital_object.count() > 0:
+            completed += 1
+        if self.notes is not None:
+            completed += 1
+        return int(completed/required * 100)
+
 
 class Footprint(models.Model):
     book_copy = models.ForeignKey(BookCopy)
@@ -351,7 +437,7 @@ class Footprint(models.Model):
         library, archive, a printed book, a journal article etc.''')
 
     title = models.TextField()
-    language = models.ForeignKey(Language, null=True, blank=True)
+    language = models.ManyToManyField(Language, null=True, blank=True)
     document_type = models.CharField(max_length=256, null=True, blank=True)
     place = models.ForeignKey(Place, null=True, blank=True)
 
@@ -382,3 +468,23 @@ class Footprint(models.Model):
 
     def __unicode__(self):
         return self.provenance
+
+    def percent_complete(self):
+        required = 11.0  # not including call_number & collection
+        completed = 4  # book copy, title, medium & provenance are required
+
+        if self.language is not None:
+            completed += 1
+        if self.document_type is not None:
+            completed += 1
+        if self.place is not None:
+            completed += 1
+        if self.associated_date is not None:
+            completed += 1
+        if self.digital_object.count() > 0:
+            completed += 1
+        if self.actor.count() > 0:
+            completed += 1
+        if self.notes is not None and len(self.notes) > 0:
+            completed += 1
+        return int(completed/required * 100)

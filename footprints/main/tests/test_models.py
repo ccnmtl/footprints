@@ -44,19 +44,19 @@ class BasicModelTest(TestCase):
         si = StandardizedIdentification.objects.create(identifier='foo',
                                                        identifier_type='LOC')
 
-        self.assertEquals(si.__unicode__(), 'foo [Library of Congress] ')
+        self.assertEquals(si.__unicode__(), 'foo')
 
         si = StandardizedIdentification.objects.create(
             identifier='bar', identifier_type='BHB',
             identifier_text='Barish')
 
         self.assertEquals(si.__unicode__(),
-                          'bar [Bibliography of the Hebrew Book] Barish')
+                          'bar')
 
     def test_person(self):
         name = NameFactory(name="Cicero")
         person = PersonFactory(name=name)
-        self.assertEquals(person.__unicode__(), "Cicero (standardized)")
+        self.assertEquals(person.__unicode__(), "Cicero")
 
     def test_actor(self):
         person = PersonFactory()
@@ -88,11 +88,11 @@ class BasicModelTest(TestCase):
 
     def test_written_work(self):
         work = WrittenWorkFactory()
-        self.assertEquals(work.__unicode__(), 'The Odyssey (standardized)')
+        self.assertEquals(work.__unicode__(), 'The Odyssey')
 
     def test_imprint(self):
         imprint = Imprint.objects.create(work=WrittenWorkFactory())
-        self.assertEquals(imprint.__unicode__(), 'The Odyssey (standardized)')
+        self.assertEquals(imprint.__unicode__(), 'The Odyssey')
 
         imprint = ImprintFactory()
         self.assertEquals(imprint.__unicode__(),

@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block title %}Person{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block js %}
+{% endblock %}
+
+{% block extrajs %}
+    {% comment %}assets that do not need to be compressed{% endcomment %}
+{% endblock %}
+
+{% block content %}
+{% with person=object %}
+
+    <div class="object-detail person">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="breadcrumb">PERSON</div>
+                <h2>
+                    <span class="glyphicon glyphicon-user pull-left" aria-hidden="true"></span>
+                    <span class="pull-left object-title">{{person}}</span>
+                    <div class="clearfix"></div>
+                </h2>
+
+                <h3>Details</h3>
+                {% for media in person.digital_object.all %}
+                    <img src="{{media.file.url}}"></img>
+                {% endfor %}
+
+                <dl class="dl-horizontal">
+                    {% if person.birth_date %}
+                        <dt>Born</dt><dd>{{person.birth_date}}</dd>
+                    {% endif %}
+                    {% if person.death_date %}
+                        <dt>Died</dt><dd>{{person.death_date}}</dd>
+                    {% endif %}
+                    {% if person.standardized_identifier %}
+                        <dt>{{person.standardized_identifier.authority}}</dt>
+                        <dd>
+                            {% if person.standardized_identifier.permalink %}
+                                <a href="{{person.standardized_identifier.permalink}}">{{person.standardized_identifier}}</a> 
+                            {% else %}
+                                {{person.standardized_identifier}}
+                            {% endif %}
+                        </dd>
+                    {% endif %}
+                    {% if person.notes %}
+                        <dt>Notes</dt><dd>{{person.notes|safe}}</dd>
+                    {% endif %}
+                </dl>
+
+                <h3>Roles</h3>
+                {% for actor in person.actor_set.all %}
+                    <dl class="dl-horizontal">
+                        {% for work in actor.writtenwork_set.all %}
+                            <dt>as {{actor.role.name}}</dt><dd><a href="/writtenwork/{{work.id}}/">{{work}}</a></dd>
+                            {% if actor.actor_name %}
+                                <dt>known as</dt><dd>{{actor.actor_name}}</dd>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% for imprint in actor.imprint_set.all %}
+                            <dt>as {{actor.role.name}}</dt><dd><a href="/imprint/{{imprint.id}}/">{{imprint}}</a></dd>
+                            {% if actor.actor_name %}
+                                <dt>known as</dt><dd>{{actor.actor_name}}</dd>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% for footprint in actor.footprint_set.all %}
+                            <dt><img src="{{STATIC_URL}}img/footprint.png" /> {{actor.role.name}}</dt><dd><a href="/footprint/{{footprint.id}}/">{{footprint}}</a></dd>
+                            {% if actor.actor_name %}
+                                <dt>known as</dt><dd>{{actor.actor_name}}</dd>
+                            {% endif %}
+                        {% endfor %}
+                    </dl>
+                {% endfor %}
+             </div>
+            <div class="col-md-3">
+                <div class="progress">
+                  <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+                    60%
+                  </div>
+                </div>
+                <h3>Do you know...</h3>
+                {% if not person.birth_date %}
+                    <div>when {{person.name}} was born?</div>
+                {% endif %}
+                {% if not person.death_date %}
+                    <div>when {{person.name}} died?</div>
+                {% endif %}
+                {% if not person.standardized_identifier %}
+                    <div>if {{person.name}} can be identifier in WorldCat?</div>
+                {% endif %}
+                            
+                <h3>Related?</h3>
+                <p>Further describe your footprint by connecting similar records.</p>
+                {% for record in records %}
+                    {{record}}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endwith %} 
+{% endblock %}
