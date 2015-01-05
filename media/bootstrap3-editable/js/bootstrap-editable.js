@@ -344,6 +344,7 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
                     return $.ajax($.extend({
                         url     : this.options.url,
                         data    : params,
+                        traditional: true,
                         type    : 'POST'
                     }, this.options.ajaxOptions));
                 }

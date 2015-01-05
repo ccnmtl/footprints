@@ -228,11 +228,7 @@
         });
     </script>
     
-    {% block extrajs %}{% endblock %}
-    
-    {% compress js %}
-        {% block js %}{% endblock %}
-    {% endcompress %}
+    {% block js %}{% endblock %}
     
     {% if STAGING_ENV %}
         <div class="alert alert-danger alert-dismissable" style="position: fixed; bottom: 0px;">

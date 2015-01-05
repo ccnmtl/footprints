@@ -241,7 +241,7 @@ class Place(models.Model):
     country = models.CharField(max_length=256, null=True, blank=True)
     city = models.CharField(max_length=256, null=True, blank=True)
 
-    position = GeopositionField()
+    position = GeopositionField(null=True, blank=True)
 
     digital_object = models.ManyToManyField(
         DigitalObject, null=True, blank=True)
@@ -331,7 +331,7 @@ class Imprint(models.Model):
     work = models.ForeignKey(WrittenWork, null=True, blank=True)
 
     title = models.TextField(null=True, blank=True)
-    language = models.ForeignKey(Language, null=True, blank=True)
+    language = models.ManyToManyField(Language, null=True, blank=True)
     date_of_publication = models.OneToOneField(ExtendedDateFormat,
                                                null=True, blank=True)
     place = models.ForeignKey(Place, null=True, blank=True)
@@ -437,7 +437,7 @@ class Footprint(models.Model):
         library, archive, a printed book, a journal article etc.''')
 
     title = models.TextField()
-    language = models.ForeignKey(Language, null=True, blank=True)
+    language = models.ManyToManyField(Language, null=True, blank=True)
     document_type = models.CharField(max_length=256, null=True, blank=True)
     place = models.ForeignKey(Place, null=True, blank=True)
 

@@ -14,7 +14,7 @@ from footprints.main.views import (LoginView, LogoutView, TitleListView,
                                    CreateFootprintView, NameListView,
                                    WrittenWorkDetailView, FootprintDetailView,
                                    PersonDetailView, PlaceDetailView,
-                                   FootprintViewSet)
+                                   FootprintViewSet, LanguageViewSet)
 from footprints.mixins import is_staff
 
 
@@ -26,6 +26,7 @@ if hasattr(settings, 'CAS_BASE'):
 
 router = routers.DefaultRouter()
 router.register(r'footprint', FootprintViewSet)
+router.register(r'language', LanguageViewSet)
 
 urlpatterns = patterns(
     '',
@@ -52,13 +53,13 @@ urlpatterns = patterns(
     auth_urls,
     (r'^footprint/create/$', CreateFootprintView.as_view()),
     url(r'^footprint/(?P<pk>\d+)/$',
-        FootprintDetailView.as_view(), name='footprint-detail'),
+        FootprintDetailView.as_view(), name='footprint-detail-view'),
     url(r'^person/(?P<pk>\d+)/$',
-        PersonDetailView.as_view(), name='person-detail'),
+        PersonDetailView.as_view(), name='person-detail-view'),
     url(r'^place/(?P<pk>\d+)/$',
-        PlaceDetailView.as_view(), name='place-detail'),
+        PlaceDetailView.as_view(), name='place-detail-view'),
     url(r'^work/(?P<pk>[-_\w]+)/$',
-        WrittenWorkDetailView.as_view(), name='writtenwork-detail'),
+        WrittenWorkDetailView.as_view(), name='writtenwork-detail-view'),
 
     url(r'^search/',
         login_required(SearchView(template="search/search.html",

@@ -18,9 +18,9 @@ from rest_framework.views import APIView
 from footprints.main.models import (Footprint, Imprint, BookCopy,
                                     Actor, Person, Name, Role, WrittenWork,
                                     Language)
-from footprints.main.permissions import IsOwnerOrReadOnly
+from footprints.main.permissions import IsOwnerOrReadOnly, IsStaffOrReadOnly
 from footprints.main.serializers import TitleSerializer, NameSerializer, \
-    FootprintSerializer
+    FootprintSerializer, LanguageSerializer
 from footprints.mixins import (JSONResponseMixin, LoggedInMixin,
                                EditableMixin)
 
@@ -64,7 +64,7 @@ class PersonDetailView(EditableMixin, DetailView):
         return context
 
 
-class FootprintDetailView(EditableMixin, DetailView):
+class FootprintDetailView(EditableMixin, LoggedInMixin, DetailView):
 
     model = Footprint
 
@@ -165,8 +165,8 @@ class CreateFootprintView(LoggedInMixin, TemplateView):
                                       book_copy=book_copy,
                                       notes=notes)
 
-        return HttpResponseRedirect(reverse('footprint-detail',
-                                            kwargs={'pk': fp.pk}))
+        url = reverse('footprint-detail-view', kwargs={'pk': fp.pk})
+        return HttpResponseRedirect(url)
 
 
 class TitleListView(APIView):
@@ -195,3 +195,9 @@ class FootprintViewSet(viewsets.ModelViewSet):
     queryset = Footprint.objects.all()
     serializer_class = FootprintSerializer
     permission_classes = (IsOwnerOrReadOnly,)
+
+
+class LanguageViewSet(viewsets.ModelViewSet):
+    queryset = Language.objects.all()
+    serializer_class = LanguageSerializer
+    permission_classes = (IsStaffOrReadOnly,)

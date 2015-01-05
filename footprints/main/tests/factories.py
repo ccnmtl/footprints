@@ -101,7 +101,6 @@ class ImprintFactory(factory.DjangoModelFactory):
 
     work = factory.SubFactory(WrittenWorkFactory)
     title = 'The Odyssey, Edition 1'
-    language = factory.SubFactory(LanguageFactory)
     date_of_publication = factory.SubFactory(ExtendedDateFormatFactory)
     place = factory.SubFactory(PlaceFactory)
 
@@ -116,6 +115,11 @@ class ImprintFactory(factory.DjangoModelFactory):
         if create:
             identifier = StandardizedIdentificationFactory()
             self.standardized_identifier.add(identifier)
+
+    @factory.post_generation
+    def language(self, create, extracted, **kwargs):
+        if create:
+            self.language.add(LanguageFactory())
 
 
 class BookCopyFactory(factory.DjangoModelFactory):
@@ -132,10 +136,14 @@ class FootprintFactory(factory.DjangoModelFactory):
     provenance = 'Provenance'
 
     title = 'Odyssey'
-    language = factory.SubFactory(LanguageFactory)
     place = factory.SubFactory(PlaceFactory)
 
     associated_date = factory.SubFactory(ExtendedDateFormatFactory)
 
     call_number = 'call number'
     collection = factory.SubFactory(CollectionFactory)
+
+    @factory.post_generation
+    def language(self, create, extracted, **kwargs):
+        if create:
+            self.language.add(LanguageFactory())
