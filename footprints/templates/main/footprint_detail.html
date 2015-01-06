@@ -33,13 +33,6 @@
                headers: {'X-HTTP-Method-Override': 'PATCH'}
             };
             jQuery('.editable').editable({namedParams: true});
-            jQuery('.editable').on('save', function(e, params) {
-                var dataName = jQuery(e.currentTarget).data('name');
-                var elts = jQuery('[data-name="' + dataName + '"]').not(e.currentTarget);
-                jQuery(elts).each(function(index) {
-                    jQuery(this).html(params.newValue);
-                });
-            });
             jQuery('.editable-language').editable({
                 namedParams: true,
                 source: [{% for language in languages %}
@@ -75,29 +68,19 @@
         {% csrf_token %}
         <div class="row">
             <div class="col-md-8">
-                <div class="breadcrumb">FOOTPRINT</div>
                 <h2>
                     <img class="pull-left" src="{{STATIC_URL}}img/footprint.png" />
-                    <span class="pull-left object-title" data-name='title'>{{footprint.title}}</span>
+                    <span class="pull-left object-title" data-name='display-title'>{{footprint.display_title}}</span>
                     <div class="clearfix"></div>
                 </h2>
                 {% for media in footprint.digital_object.all %}
                     <img src="{{media.file.url}}"></img>
                 {% endfor %}
 
-                <h3>Evidence</h3>
+                <h3>Footprint</h3>
                 <div class="evidence-container">
                     <dl class="dl-horizontal">
-                        <dt>Evidence Title</dt>
-                        <dd class="border-bottom">
-                            <a href="#" class="{% if editable %}editable{% else %}readonly{% endif %}" data-name="title"
-                                data-type="text" data-pk="{{footprint.id}}"
-                                data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
-                                data-url="/api/footprint/{{footprint.id}}/"
-                                data-title="Edit Evidence Title">{{footprint.title}}</a>
-                        </dd>
-
-                        <dt>Medium</dt>
+                        <dt>Evidence Type</dt>
                         <dd class="border-bottom">
                             <a href="#" class="{% if editable %}editable{% else %}readonly{% endif %}" data-name="medium"
                                 data-type="text" data-pk="{{footprint.id}}"
@@ -105,7 +88,7 @@
                                 data-url="/api/footprint/{{footprint.id}}/" data-title="Edit Medium of Evidence">{{footprint.medium}}</a>
                         </dd>
 
-                        <dt>Provenance</dt>
+                        <dt>Evidence Location</dt>
                         <dd class="border-bottom">
                             <a href="#" class="{% if editable %}editable{% else %}readonly{% endif %}" data-name="provenance"
                                 data-type="text" data-pk="{{footprint.id}}"
@@ -113,9 +96,8 @@
                                 data-url="/api/footprint/{{footprint.id}}/"
                                 data-title="Edit Provenance of Evidence">{{footprint.provenance}}</a>
                         </dd>
-
                         <div class="description-list" {% if footprint.language.count < 1 %}style="display: none"{% endif %}>
-                            <dt>Recorded in</dt>
+                            <dt>Evidence Language</dt>
                             <dd class="border-bottom">
                                 <a href="#" class="{% if editable %}editable-language{% else %}readonly{% endif %}" data-name="language"
                                     data-type="select2" data-pk="{{footprint.id}}"
@@ -128,7 +110,15 @@
                                 </a>
                             </dd>
                         </div>
-
+                        
+                        <dt>Title in evidence</dt>
+                        <dd class="border-bottom">
+                            <a href="#" class="{% if editable %}editable{% else %}readonly{% endif %}" data-name="title"
+                                data-type="text" data-pk="{{footprint.id}}"
+                                data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
+                                data-url="/api/footprint/{{footprint.id}}/"
+                                data-title="Edit Evidence Title">{{footprint.title}}</a>
+                        </dd>
                         <div class="description-list" {% if not footprint.associated_date %}style="display: none"{% endif %}>
                             <dt>Date</dt>
                             <dd class="border-bottom">
@@ -139,7 +129,6 @@
                                     data-title="Edit Date of Evidence">{{footprint.associated_date}}</a>
                             </dd>
                         </div>
-
                         {% if footprint.place %}
                             <dt>Place</dt>
                             <dd class="border-bottom">
@@ -155,7 +144,7 @@
                             {% for actor in footprint.actor.all %}
                                 <dt>{{actor.role.name}}</dt>
                                 <dd class="border-bottom">
-                                    {{actor}} 
+                                    {{actor.display_name}} 
                                     <div class="pull-right">
                                         {% if editable %}
                                         <a href="#" class="remove-footprint-actor" data-footprint-pk="{{footprint.id}}" data-actor-pk="{{actor.id}}"
@@ -185,8 +174,6 @@
                             <ul class="additional-questions">
                                 <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
                                     <a href="#">other people related to this evidence, e.g. sellers, owners, curators?</a>
-                                    
-                                    
                                 </li>
 
                                 {% if not footprint.place %}

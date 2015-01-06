@@ -488,3 +488,9 @@ class Footprint(models.Model):
         if self.notes is not None and len(self.notes) > 0:
             completed += 1
         return int(completed/required * 100)
+
+    def display_title(self):
+        if self.book_copy.imprint.work:
+            return self.book_copy.imprint.work.title
+        else:
+            return self.title
