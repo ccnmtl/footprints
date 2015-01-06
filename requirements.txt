@@ -66,3 +66,5 @@ django-haystack==2.3.1
 django-geoposition==0.2.2
 django-audit-log==0.5.0
 djangorestframework==3.0.2
+ply==3.4
+PyZ3950==2.04
