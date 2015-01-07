@@ -51,8 +51,6 @@
                 jQuery(elts).each(function(index) {
                     if (jQuery(this).is('.editable, .editable-language')) {
                         jQuery(this).editable('setValue', params.newValue, true);
-                    } else {
-                        jQuery(this).html(params.newValue);
                     }
                     jQuery(this).parents('div.description-list').show();
                 });
@@ -73,26 +71,21 @@
                 <div class="breadcrumb">FOOTPRINT</div>
                 <h2>
                     <img class="pull-left" src="{{STATIC_URL}}img/footprint.png" />
-                    <span class="pull-left object-title" data-name='title'>{{footprint.title}}</span>
+                    <span class="pull-left object-title" data-name='display-title'>{{footprint.display_title}}</span>
                     <div class="clearfix"></div>
                 </h2>
                 {% for media in footprint.digital_object.all %}
                     <img src="{{media.file.url}}"></img>
                 {% endfor %}
-
-                <h3>Evidence</h3>
+                {% if footprint.narrative %}
+                    <blockquote class="blockquote">
+                    {{footprint.narrative}}
+                    </blockquote>
+                {% endif %}
+                <br />
                 <div class="evidence-container">
                     <dl class="dl-horizontal">
-                        <dt>Evidence Title</dt>
-                        <dd class="border-bottom">
-                            <a href="#" class="{% if editable %}editable{% else %}readonly{% endif %}" data-name="title"
-                                data-type="text" data-pk="{{footprint.id}}"
-                                data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
-                                data-url="/api/footprint/{{footprint.id}}/"
-                                data-title="Edit Evidence Title">{{footprint.title}}</a>
-                        </dd>
-
-                        <dt>Medium</dt>
+                        <dt>Evidence Type</dt>
                         <dd class="border-bottom">
                             <a href="#" class="{% if editable %}editable{% else %}readonly{% endif %}" data-name="medium"
                                 data-type="text" data-pk="{{footprint.id}}"
@@ -100,7 +93,7 @@
                                 data-url="/api/footprint/{{footprint.id}}/" data-title="Edit Medium of Evidence">{{footprint.medium}}</a>
                         </dd>
 
-                        <dt>Provenance</dt>
+                        <dt>Evidence Location</dt>
                         <dd class="border-bottom">
                             <a href="#" class="{% if editable %}editable{% else %}readonly{% endif %}" data-name="provenance"
                                 data-type="text" data-pk="{{footprint.id}}"
@@ -108,9 +101,8 @@
                                 data-url="/api/footprint/{{footprint.id}}/"
                                 data-title="Edit Provenance of Evidence">{{footprint.provenance}}</a>
                         </dd>
-
                         <div class="description-list" {% if footprint.language.count < 1 %}style="display: none"{% endif %}>
-                            <dt>Recorded in</dt>
+                            <dt>Evidence Language</dt>
                             <dd class="border-bottom">
                                 <a href="#" class="{% if editable %}editable-language{% else %}readonly{% endif %}" data-name="language"
                                     data-type="select2" data-pk="{{footprint.id}}"
@@ -123,17 +115,25 @@
                                 </a>
                             </dd>
                         </div>
-
-                        {% if footprint.associated_date %}
+                        
+                        <dt>Title in evidence</dt>
+                        <dd class="border-bottom">
+                            <a href="#" class="{% if editable %}editable{% else %}readonly{% endif %}" data-name="title"
+                                data-type="text" data-pk="{{footprint.id}}"
+                                data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
+                                data-url="/api/footprint/{{footprint.id}}/"
+                                data-title="Edit Evidence Title">{{footprint.title}}</a>
+                        </dd>
+                        <div class="description-list" {% if not footprint.associated_date %}style="display: none"{% endif %}>
                             <dt>Date</dt>
                             <dd class="border-bottom">
                                 <a href="#" class="{% if editable %}editable{% else %}readonly{% endif %}" data-name="associated_date"
                                     data-type="text" data-pk="{{footprint.id}}"
                                     data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
-                                    data-url="/api/footprint/{{footprint.id}}/" data-title="Edit Date of Evidence">{{footprint.associated_date}}</a>
+                                    data-url="/api/footprint/{{footprint.id}}/"
+                                    data-title="Edit Date of Evidence">{{footprint.associated_date}}</a>
                             </dd>
-                        {% endif %}
-
+                        </div>
                         {% if footprint.place %}
                             <dt>Place</dt>
                             <dd class="border-bottom">
@@ -149,7 +149,7 @@
                             {% for actor in footprint.actor.all %}
                                 <dt>{{actor.role.name}}</dt>
                                 <dd class="border-bottom">
-                                    {{actor}} 
+                                    {{actor.display_name}} 
                                     <div class="pull-right">
                                         {% if editable %}
                                         <a href="#" class="remove-footprint-actor" data-footprint-pk="{{footprint.id}}" data-actor-pk="{{actor.id}}"
@@ -177,26 +177,33 @@
                         <dt>Do you know...</dt>
                         <dd>    
                             <ul class="additional-questions">
-                                <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> <a href="#">other people related to this evidence, e.g. sellers, owners, curators?</a></li>
+                                <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                                    <a href="#">other people related to this evidence, e.g. sellers, owners, curators?</a>
+                                </li>
+
                                 {% if not footprint.place %}
                                     <li>
-                                        <span class="inline-value">
-                                            <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> <a href="#">the place cited in the evidence?</a>
-                                        </span>
-                                        <span class="inline-form">
-                                            
+                                        <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                                        <a href="#">the place cited in the evidence?</a>
                                         </span>
                                     </li>
                                 {% endif %}
                                 {% if not footprint.associated_date %}
-                                    <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> <a href="#">the date cited in the evidence?</a></li>
+                                    <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                                    <a href="#" class="{% if editable %}editable{% endif %} do-you-know" data-name="associated_date"
+                                        data-type="text" data-pk="{{footprint.id}}"
+                                        data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
+                                        data-value=""
+                                        data-url="/api/footprint/{{footprint.id}}/">the date cited in the evidence?</a>
+                                    </li>
                                 {% endif %}
                                 {% if footprint.language.count < 1 %}
                                     <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
-                                    <a href="#" class="{% if editable %}editable-language{% endif %} do-you-know" data-name="language"
-                                        data-type="select2" data-pk="{{footprint.id}}" data-value=""
-                                        data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
-                                        data-url="/api/footprint/{{footprint.id}}/">in which language this evidence was recorded?</a>
+                                        <a href="#" class="{% if editable %}editable-language{% endif %} do-you-know" data-name="language"
+                                            data-type="select2" data-pk="{{footprint.id}}" data-value=""
+                                            data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
+                                            data-url="/api/footprint/{{footprint.id}}/">in which language this evidence was recorded?</a>
+                                    </li>
                                 {% endif %}
                                 {% if not footprint.notes %}
                                     <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
@@ -214,10 +221,8 @@
                 
                 {% if book.percent_complete > 0 or imprint.percent_complete > 0 %}
                     <dl class="dl-horizontal">
-                        <h3>Related Work</h3>
+                        <h3>More about {{work.title}}</h3>
                         {% if work %}
-                            <dt>Title</dt><dd class="border-bottom"><a href="/work/{{work.id}}/">{{work.title}}</a></dd>
-                            
                             {% for actor in work.actor.all %}
                                 <dt>{{actor.role.name}}</dt><dd class="border-bottom"><a href="/person/{{actor.person.id}}/">{{actor}}</a></dd>
                             {% endfor %}
@@ -234,8 +239,13 @@
                             {% if imprint.title %}
                                 <dt>Imprint Title</dt><dd class="border-bottom">{{imprint.title}}</dd>
                             {% endif %}
-                            {% if imprint.language %}
-                                <dt>Imprint Language</dt><dd class="border-bottom">{{imprint.language}}</dd>
+                            {% if imprint.language.count > 0 %}
+                                <dt>Publication Language</dt>
+                                <dd class="border-bottom">
+                                    {% for language in imprint.language.all %}
+                                        {{language.name}}
+                                    {% endfor %}
+                                </dd>
                             {% endif %}
                             {% if imprint.date_of_publication %}
                                 <dt>Publication Date</dt><dd class="border-bottom">{{imprint.date_of_publication}}</dd>
