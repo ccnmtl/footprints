@@ -431,6 +431,7 @@ class Footprint(models.Model):
         "Medium of Evidence", max_length=256,
         help_text='''Where the footprint is derived or deduced from, e.g.
             an extant copy with an owner's signature''')
+    medium_description = models.TextField(null=True, blank=True)
     provenance = models.CharField(
         "Provenance of Evidence", max_length=256,
         help_text='''Where can one find the evidence now: a particular
@@ -438,7 +439,6 @@ class Footprint(models.Model):
 
     title = models.TextField()
     language = models.ManyToManyField(Language, null=True, blank=True)
-    document_type = models.CharField(max_length=256, null=True, blank=True)
     place = models.ForeignKey(Place, null=True, blank=True)
 
     associated_date = models.OneToOneField(ExtendedDateFormat,
