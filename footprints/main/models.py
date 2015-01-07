@@ -456,6 +456,8 @@ class Footprint(models.Model):
 
     notes = models.TextField(null=True, blank=True)
 
+    narrative = models.TextField(null=True, blank=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 

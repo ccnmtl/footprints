@@ -101,8 +101,6 @@ ul.wizard-tabs.has-error li.active a {
 }
 
 .object-detail h3 {
-    text-transform: uppercase;
-    /* border-bottom: 1px solid #dcdee3; */
     line-height: 20px;
     font-size: 16px;
     margin-bottom: 16px;

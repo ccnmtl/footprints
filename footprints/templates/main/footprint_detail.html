@@ -68,6 +68,7 @@
         {% csrf_token %}
         <div class="row">
             <div class="col-md-8">
+                <div class="breadcrumb">FOOTPRINT</div>
                 <h2>
                     <img class="pull-left" src="{{STATIC_URL}}img/footprint.png" />
                     <span class="pull-left object-title" data-name='display-title'>{{footprint.display_title}}</span>
@@ -76,8 +77,12 @@
                 {% for media in footprint.digital_object.all %}
                     <img src="{{media.file.url}}"></img>
                 {% endfor %}
-
-                <h3>Footprint</h3>
+                {% if footprint.narrative %}
+                    <blockquote class="blockquote">
+                    {{footprint.narrative}}
+                    </blockquote>
+                {% endif %}
+                <br />
                 <div class="evidence-container">
                     <dl class="dl-horizontal">
                         <dt>Evidence Type</dt>
@@ -216,10 +221,8 @@
                 
                 {% if book.percent_complete > 0 or imprint.percent_complete > 0 %}
                     <dl class="dl-horizontal">
-                        <h3>Related Work</h3>
+                        <h3>More about {{work.title}}</h3>
                         {% if work %}
-                            <dt>Title</dt><dd class="border-bottom"><a href="/work/{{work.id}}/">{{work.title}}</a></dd>
-                            
                             {% for actor in work.actor.all %}
                                 <dt>{{actor.role.name}}</dt><dd class="border-bottom"><a href="/person/{{actor.person.id}}/">{{actor}}</a></dd>
                             {% endfor %}
@@ -236,8 +239,13 @@
                             {% if imprint.title %}
                                 <dt>Imprint Title</dt><dd class="border-bottom">{{imprint.title}}</dd>
                             {% endif %}
-                            {% if imprint.language %}
-                                <dt>Imprint Language</dt><dd class="border-bottom">{{imprint.language}}</dd>
+                            {% if imprint.language.count > 0 %}
+                                <dt>Publication Language</dt>
+                                <dd class="border-bottom">
+                                    {% for language in imprint.language.all %}
+                                        {{language.name}}
+                                    {% endfor %}
+                                </dd>
                             {% endif %}
                             {% if imprint.date_of_publication %}
                                 <dt>Publication Date</dt><dd class="border-bottom">{{imprint.date_of_publication}}</dd>
