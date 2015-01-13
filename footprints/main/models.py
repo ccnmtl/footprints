@@ -44,6 +44,10 @@ class RoleQuerySet(models.query.QuerySet):
         role, created = self.get_or_create(name='Author')
         return role
 
+    def get_owner_role(self):
+        role, created = self.get_or_create(name='Owner')
+        return role
+
 
 class RoleManager(models.Manager):
     def __init__(self, fields=None, *args, **kwargs):
@@ -55,6 +59,9 @@ class RoleManager(models.Manager):
 
     def get_author_role(self):
         return self.get_query_set().get_author_role()
+
+    def get_owner_role(self):
+        return self.get_query_set().get_owner_role()
 
 
 class Role(models.Model):
@@ -330,7 +337,8 @@ class WrittenWork(models.Model):
 class Imprint(models.Model):
     work = models.ForeignKey(WrittenWork, null=True, blank=True)
 
-    title = models.TextField(null=True, blank=True)
+    title = models.TextField(null=True, blank=True,
+                             verbose_name="Imprint Title")
     language = models.ManyToManyField(Language, null=True, blank=True)
     date_of_publication = models.OneToOneField(ExtendedDateFormat,
                                                null=True, blank=True)
@@ -437,7 +445,8 @@ class Footprint(models.Model):
         help_text='''Where can one find the evidence now: a particular
         library, archive, a printed book, a journal article etc.''')
 
-    title = models.TextField()
+    title = models.TextField(null=True, blank=True,
+                             verbose_name='Footprint Title')
     language = models.ManyToManyField(Language, null=True, blank=True)
     place = models.ForeignKey(Place, null=True, blank=True)
 
@@ -477,7 +486,7 @@ class Footprint(models.Model):
 
         if self.language is not None:
             completed += 1
-        if self.document_type is not None:
+        if self.call_number is not None:
             completed += 1
         if self.place is not None:
             completed += 1
