@@ -23,6 +23,7 @@
         <script src="{{STATIC_URL}}/select2-3.5.2/select2.js"></script>
         <script src="{{STATIC_URL}}jquery-ui-1.11.2/jquery-ui.js"></script>
         <script src="{{STATIC_URL}}bootstrap3-editable/js/bootstrap-editable.js"></script>
+        <script src="{{STATIC_URL}}bootstrap3-editable/js/actor-form.js"></script>
         {% comment %}<script src="{{STATIC_URL}}js/app/objectDetail.js"></script>{% endcomment %}
     {% endcompress %}
     
@@ -33,6 +34,7 @@
                headers: {'X-HTTP-Method-Override': 'PATCH'}
             };
             jQuery('.editable').editable({namedParams: true});
+            jQuery('.editable-actor').editable();
             jQuery('.editable-language').editable({
                 namedParams: true,
                 source: [{% for language in languages %}
@@ -92,7 +94,6 @@
                                 data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
                                 data-url="/api/footprint/{{footprint.id}}/" data-title="Edit Medium of Evidence">{{footprint.medium}}</a>
                         </dd>
-
                         <dt>Evidence Location</dt>
                         <dd class="border-bottom">
                             <a href="#" class="{% if editable %}editable{% else %}readonly{% endif %}" data-name="provenance"
@@ -152,9 +153,9 @@
                                     {{actor.display_name}} 
                                     <div class="pull-right">
                                         {% if editable %}
-                                        <a href="#" class="remove-footprint-actor" data-footprint-pk="{{footprint.id}}" data-actor-pk="{{actor.id}}"
-                                            data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" title="remove person">
-                                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+                                            <a href="/footprint/actor/{{actor.id}}/remove/" class="remove-footprint-actor" title="remove actor">
+                                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                            </a>
                                         {% endif %}
                                         &nbsp;
                                         <a href="/person/{{actor.person.id}}/" title="see details" class="foreign-key"><span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
@@ -178,7 +179,10 @@
                         <dd>    
                             <ul class="additional-questions">
                                 <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
-                                    <a href="#">other people related to this evidence, e.g. sellers, owners, curators?</a>
+                                    <a href="#" class="{% if editable %}editable-actor{% endif %} do-you-know" data-name="actor"
+                                        data-type="actor" data-pk="{{footprint.id}}" data-value=""
+                                        data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
+                                        data-url="/footprint/actor/{{footprint.id}}/add/">other people related to this evidence, e.g. sellers, owners, curators?</a>
                                 </li>
 
                                 {% if not footprint.place %}
@@ -188,6 +192,7 @@
                                         </span>
                                     </li>
                                 {% endif %}
+
                                 {% if not footprint.associated_date %}
                                     <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
                                     <a href="#" class="{% if editable %}editable{% endif %} do-you-know" data-name="associated_date"

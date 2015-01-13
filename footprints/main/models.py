@@ -477,7 +477,7 @@ class Footprint(models.Model):
 
         if self.language is not None:
             completed += 1
-        if self.document_type is not None:
+        if self.call_number is not None:
             completed += 1
         if self.place is not None:
             completed += 1

@@ -191,6 +191,11 @@ ul.wizard-tabs.has-error li.active a {
     vertical-align: top;
 }
 
+/** editable fields **/
+.editable-person {
+    padding: 20px;
+}
+
 
 /* Additional Information */
 ul.additional-questions {

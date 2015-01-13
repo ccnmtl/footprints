@@ -1,9 +1,8 @@
 from django.core.exceptions import ObjectDoesNotExist
+from footprints.main.models import Footprint, Language, Role, Actor
 from rest_framework import serializers
-from rest_framework.relations import StringRelatedField
+from rest_framework.relations import StringRelatedField, PrimaryKeyRelatedField
 import six
-
-from footprints.main.models import Footprint, Language
 
 
 class TitleSerializer(serializers.Serializer):
@@ -21,6 +20,12 @@ class LanguageSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Language
         fields = ('name',)
+
+
+class RoleSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Role
+        fields = ('id', 'name',)
 
 
 class LanguageRelatedField(StringRelatedField):
@@ -45,8 +50,9 @@ class LanguageRelatedField(StringRelatedField):
 
 class FootprintSerializer(serializers.HyperlinkedModelSerializer):
     language = LanguageRelatedField(many=True)
+    actor = PrimaryKeyRelatedField(many=True, queryset=Actor.objects.all())
 
     class Meta:
         model = Footprint
         fields = ('id', 'medium', 'provenance', 'title', 'language',
-                  'document_type', 'call_number', 'notes')
+                  'actor', 'call_number', 'notes')

@@ -1,3 +1,5 @@
+import json
+
 from django.conf import settings
 from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
@@ -5,6 +7,7 @@ from django.contrib.auth.views import logout as auth_logout_view
 from django.core.urlresolvers import reverse
 from django.db.models.query_utils import Q
 from django.http.response import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
 from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
 from djangowind.views import logout as wind_logout_view
@@ -20,7 +23,7 @@ from footprints.main.models import (Footprint, Imprint, BookCopy,
                                     Language)
 from footprints.main.permissions import IsOwnerOrReadOnly, IsStaffOrReadOnly
 from footprints.main.serializers import TitleSerializer, NameSerializer, \
-    FootprintSerializer, LanguageSerializer
+    FootprintSerializer, LanguageSerializer, RoleSerializer
 from footprints.mixins import (JSONResponseMixin, LoggedInMixin,
                                EditableMixin)
 
@@ -169,6 +172,32 @@ class CreateFootprintView(LoggedInMixin, TemplateView):
         return HttpResponseRedirect(url)
 
 
+class FootprintRemoveActorView(LoggedInMixin, JSONResponseMixin, View):
+
+    def post(self, *args, **kwargs):
+        footprint_id = kwargs.get('footprint_id', None)
+        footprint = get_object_or_404(Footprint, pk=footprint_id)
+
+        actor_id = self.request.POST.get('actor_id', None)
+        actor = get_object_or_404(Actor, pk=actor_id)
+        footprint.actor.remove(actor)
+        return self.render_to_json_response({'success': True})
+
+
+class FootprintAddActorView(LoggedInMixin, JSONResponseMixin, View):
+
+    def post(self, *args, **kwargs):
+        footprint_id = kwargs.get('footprint_id', None)
+        footprint = get_object_or_404(Footprint, pk=footprint_id)
+
+        values = json.loads(self.request.POST('value'))
+
+        name = self.request.POST.get('person-autocomplete', None)
+        role = self.request.POST.get('roles', None)
+
+        return self.render_to_json_response({'success': True})
+
+
 class TitleListView(APIView):
     renderer_classes = (JSONPRenderer,)
     permission_classes = (AllowAny,)
@@ -185,10 +214,13 @@ class NameListView(APIView):
     permission_classes = (AllowAny,)
 
     def get(self, request, format=None):
-        sqs = SearchQuerySet().autocomplete(
-            name=request.GET.get('q', ''))
-        serializer = NameSerializer(sqs, many=True)
-        return Response(serializer.data)
+        q = request.GET.get('q', '')
+        if len(q) > 0:
+            sqs = SearchQuerySet().autocomplete(name=q)
+            serializer = NameSerializer(sqs, many=True)
+            return Response(serializer.data)
+        else:
+            return Response({})
 
 
 class FootprintViewSet(viewsets.ModelViewSet):
@@ -200,4 +232,10 @@ class FootprintViewSet(viewsets.ModelViewSet):
 class LanguageViewSet(viewsets.ModelViewSet):
     queryset = Language.objects.all()
     serializer_class = LanguageSerializer
+    permission_classes = (IsStaffOrReadOnly,)
+
+
+class RoleViewSet(viewsets.ModelViewSet):
+    queryset = Role.objects.all()
+    serializer_class = RoleSerializer
     permission_classes = (IsStaffOrReadOnly,)
