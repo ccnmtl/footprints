@@ -49,4 +49,4 @@ class FootprintSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Footprint
         fields = ('id', 'medium', 'provenance', 'title', 'language',
-                  'document_type', 'call_number', 'notes')
+                  'call_number', 'notes')

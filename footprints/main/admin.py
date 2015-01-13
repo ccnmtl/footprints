@@ -54,18 +54,6 @@ def imprint_date(obj):
 imprint_date.short_description = 'Imprint Publication Date'
 
 
-def footprint_date(obj):
-    return obj.associated_date
-
-footprint_date.short_description = 'Footprint Date'
-
-
-def footprint_place(obj):
-    return obj.place
-
-footprint_place.short_description = 'Footprint Place'
-
-
 def owner(obj):
     role = Role.objects.get_owner_role()
     owners = obj.actor.filter(role=role)
@@ -75,7 +63,7 @@ owner.short_description = 'Owner'
 
 
 class FootprintAdmin(admin.ModelAdmin):
-    list_display = ('title', footprint_date, footprint_place, owner,
+    list_display = ('title', 'associated_date', 'place', owner,
                     imprint_title, imprint_date,)
 
 admin.site.register(Footprint, FootprintAdmin)

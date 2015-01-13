@@ -448,10 +448,12 @@ class Footprint(models.Model):
     title = models.TextField(null=True, blank=True,
                              verbose_name='Footprint Title')
     language = models.ManyToManyField(Language, null=True, blank=True)
-    place = models.ForeignKey(Place, null=True, blank=True)
+    place = models.ForeignKey(Place, null=True, blank=True,
+                              verbose_name='Footprint Location')
 
     associated_date = models.OneToOneField(ExtendedDateFormat,
-                                           null=True, blank=True)
+                                           null=True, blank=True,
+                                           verbose_name='Footprint Date')
 
     call_number = models.CharField(max_length=256, null=True, blank=True)
     collection = models.ForeignKey(Collection, null=True, blank=True)
