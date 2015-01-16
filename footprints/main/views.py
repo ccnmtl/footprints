@@ -1,5 +1,3 @@
-import json
-
 from django.conf import settings
 from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
@@ -190,12 +188,10 @@ class FootprintAddActorView(LoggedInMixin, JSONResponseMixin, View):
         footprint_id = kwargs.get('footprint_id', None)
         footprint = get_object_or_404(Footprint, pk=footprint_id)
 
-        values = json.loads(self.request.POST('value'))
-
-        name = self.request.POST.get('person-autocomplete', None)
-        role = self.request.POST.get('roles', None)
-
-        return self.render_to_json_response({'success': True})
+        return self.render_to_json_response({
+            'success': True,
+            'footprint_id': footprint.id
+        })
 
 
 class TitleListView(APIView):
