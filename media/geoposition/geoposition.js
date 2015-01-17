@@ -7,7 +7,7 @@ if (jQuery != undefined) {
 
 (function($) {
 
-    $(document).on('loadmap', function() {
+    $(document).ready(function() {
 
         try {
             var _ = google;

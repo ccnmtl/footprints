@@ -207,6 +207,21 @@ ul.additional-questions li {
     margin-bottom: 10px;
 }
 
+/* Search Page */
+
+.object-search .pagination {
+    margin: 0;
+}
+
+.object-search ul {
+    list-style: none;
+}
+
+.object-search ul li label {
+    font-weight: normal;
+}
+
+
 /* LOGIN PAGE */
 .login-uni-button {
     border: 0;

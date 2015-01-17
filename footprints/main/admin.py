@@ -30,8 +30,12 @@ def work_title(obj):
 work_title.short_description = 'Written Work Title'
 
 
+def language(obj):
+    return ', '.join(obj.language.values_list('name', flat=True))
+
+
 class ImprintAdmin(admin.ModelAdmin):
-    list_display = (work_title, 'title', 'date_of_publication')
+    list_display = (work_title, 'title', 'date_of_publication', language)
 
 admin.site.register(Imprint, ImprintAdmin)
 
