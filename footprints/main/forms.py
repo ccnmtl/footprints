@@ -1,3 +1,5 @@
+import urllib
+
 from django import forms
 from django.forms.models import ModelForm
 from django.utils.translation import ugettext_lazy as _
@@ -130,8 +132,11 @@ class FootprintSearchForm(ModelSearchForm):
             (get_model_ct(WrittenWork), 'Written Work'),
         ]
         self.fields['models'] = forms.MultipleChoiceField(
-            choices=choices, required=False, label=_('Search In'),
-            widget=forms.CheckboxSelectMultiple)
+            choices=choices, required=False, label=_('Search By Record Type'),
+            widget=forms.CheckboxSelectMultiple(
+                attrs={'class': 'regDropDown'}))
+        self.fields['q'].widget.attrs['class'] = 'form-control'
+        self.fields['q'].widget.attrs['placeholder'] = 'Titles, People, Places'
 
     def search(self):
         if not self.is_valid():
@@ -148,3 +153,6 @@ class FootprintSearchForm(ModelSearchForm):
             sqs = sqs.load_all()
 
         return sqs.models(*self.get_models())
+
+    def get_query_params(self):
+        return urllib.urlencode(self.cleaned_data, doseq=True)
