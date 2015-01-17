@@ -6,10 +6,10 @@
 {% block css %}
     <link href="{{STATIC_URL}}jquery-ui-1.11.2/jquery-ui.css" rel="stylesheet" />
     <link href="{{STATIC_URL}}bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet" />
-    <link href="{{STATIC_URL}}/select2-3.5.2/select2.css" rel="stylesheet" />
 {% endblock %}
 
 {% block extrahead %}
+    <link href="{{STATIC_URL}}/select2-3.5.2/select2.css" rel="stylesheet" />
 {% endblock %}
 
 {% block js %}
@@ -17,10 +17,9 @@
     <script src="{{STATIC_URL}}js/backbone-min.js"></script>
     <script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false"></script>
     <script src="{{STATIC_URL}}tinymce/tinymce.min.js"></script>
-
+    <script src="{{STATIC_URL}}/select2-3.5.2/select2.js"></script>
 
     {% compress js %}
-        <script src="{{STATIC_URL}}/select2-3.5.2/select2.js"></script>
         <script src="{{STATIC_URL}}jquery-ui-1.11.2/jquery-ui.js"></script>
         <script src="{{STATIC_URL}}bootstrap3-editable/js/bootstrap-editable.js"></script>
         <script src="{{STATIC_URL}}bootstrap3-editable/js/actor-form.js"></script>
