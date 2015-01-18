@@ -117,6 +117,11 @@ class WrittenWorkDetailView(EditableMixin, DetailView):
 class CreateFootprintView(LoggedInMixin, TemplateView):
     template_name = "record/create_footprint.html"
 
+    def get_context_data(self, **kwargs):
+        context = TemplateView.get_context_data(self, **kwargs)
+        context['mediums'] = Footprint.MEDIUM_CHOICES
+        return context
+
     def get_or_create_author(self, name_id, full_name):
         author_role = Role.objects.get_author_role()
 
@@ -160,8 +165,11 @@ class CreateFootprintView(LoggedInMixin, TemplateView):
         title = self.request.POST.get('footprint-title')
         provenance = self.request.POST.get('footprint-provenance')
         medium = self.request.POST.get('footprint-medium')
+        description = self.request.POST.get('footprint-medium-description')
         notes = self.request.POST.get('footprint-notes', '')
-        fp = Footprint.objects.create(title=title, medium=medium,
+        fp = Footprint.objects.create(title=title,
+                                      medium=medium,
+                                      medium_description=description,
                                       provenance=provenance,
                                       book_copy=book_copy,
                                       notes=notes)
