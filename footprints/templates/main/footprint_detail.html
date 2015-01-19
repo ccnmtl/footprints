@@ -24,7 +24,7 @@
         <script src="{{STATIC_URL}}bootstrap3-editable/js/bootstrap-editable.js"></script>
         <script src="{{STATIC_URL}}bootstrap3-editable/js/actor-form.js"></script>
     {% endcompress %}
-    
+
     <script type="text/javascript">
         jQuery(document).ready(function() {
             jQuery.fn.editable.defaults.mode = 'inline';
@@ -133,13 +133,13 @@
                                 data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
                                 data-url="/api/footprint/{{footprint.id}}/" data-title="Edit Evidence Type">{{footprint.medium}}</a>
                         </dd>
-                        <div class="description-list" {% if footprint.medium_description == None %}style="display: none"{% endif %}>
+                        <div class="description-list" {% if footprint.medium_description == '' %}style="display: none"{% endif %}>
                             <dt>Evidence Description</dt>
                             <dd class="border-bottom">
                                 <a href="#" class="{% if editable %}editable{% else %}readonly{% endif %}" data-name="medium_description"
                                     data-type="text" data-pk="{{footprint.id}}"
                                     data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
-                                    data-url="/api/footprint/{{footprint.id}}/" data-title="Edit Evidence Medium">{{footprint.medium_description}}</a>
+                                    data-url="/api/footprint/{{footprint.id}}/" data-title="Edit Evidence Description">{{footprint.medium_description}}</a>
                             </dd>
                         </div>
                         <dt>Evidence Location</dt>
@@ -175,6 +175,16 @@
                                     data-title="Edit Evidence Title">{{footprint.title}}</a>
                             </dd>
                         </div>
+                        <div class="description-list" {% if footprint.call_number == '' %}style="display: none"{% endif %}>
+                            <dt>Evidence Call Number</dt>
+                            <dd class="border-bottom">
+                                <a href="#" class="{% if editable %}editable{% else %}readonly{% endif %}" data-name="call_number"
+                                    data-type="text" data-pk="{{footprint.id}}"
+                                    data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
+                                    data-url="/api/footprint/{{footprint.id}}/" data-title="Edit Evidence Call Number">{{footprint.call_number}}</a>
+                            </dd>
+                        </div>
+                        
                         <div class="description-list" {% if not footprint.notes %}style="display: none"{% endif %}>
                             <dt>Notes</dt>
                             <dd class="border-bottom">
@@ -203,7 +213,24 @@
                                         </span>
                                     </li>
                                 {% endif %}
-
+                                {% if footprint.medium_description == '' %}
+                                    <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                                    <a href="#" class="{% if editable %}editable{% endif %} do-you-know" data-name="medium_description"
+                                        data-type="text" data-pk="{{footprint.id}}"
+                                        data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
+                                        data-value=""
+                                        data-url="/api/footprint/{{footprint.id}}/">details about the evidence type, e.g. a catalog title?</a>
+                                    </li>
+                                {% endif %}
+                                {% if footprint.call_number == '' %}
+                                    <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                                    <a href="#" class="{% if editable %}editable{% endif %} do-you-know" data-name="call_number"
+                                        data-type="text" data-pk="{{footprint.id}}"
+                                        data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
+                                        data-value=""
+                                        data-url="/api/footprint/{{footprint.id}}/">the call number of the evidence?</a>
+                                    </li>
+                                {% endif %}
                                 {% if not footprint.associated_date %}
                                     <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
                                     <a href="#" class="{% if editable %}editable{% endif %} do-you-know" data-name="associated_date"

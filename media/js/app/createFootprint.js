@@ -123,7 +123,7 @@
         },
         initialize: function () {
             var self = this;
-            
+
             jQuery(".btn-next").click(function(evt) {
                 evt.preventDefault();
                 if (self.currentView.isValid()) {
