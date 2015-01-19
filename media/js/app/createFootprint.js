@@ -10,20 +10,7 @@
         }
     };
     
-    CreateFootprintWizard.Views.TitleView = Backbone.View.extend({
-        initialize: function(options) {
-            _.bindAll(this, 'isValid', 'show', 'clearError', 'showError');
-            this.elTab = jQuery(this.el).find("#title");
-        },
-        isValid: function() {
-            var elt = jQuery(this.elTab).find('input[name="footprint-title"]')[0];
-            return jQuery(elt).val().length > 0;
-        },        
-        show: function() {
-            var elt = jQuery('a[href="#title"]');
-            jQuery(elt).parent('li').removeClass('disabled');
-            jQuery(elt).tab('show');
-        },
+    CreateFootprintWizard.Views.BaseView = Backbone.View.extend({
         showError: function() {
             jQuery(this.elTab).find('.form-group.required').addClass('has-error');
             jQuery(this.el).find('ul.wizard-tabs').addClass('has-error');
@@ -31,10 +18,27 @@
         clearError: function() {
             jQuery(this.elTab).find('.form-group.required').removeClass('has-error');
             jQuery(this.el).find('ul.wizard-tabs').removeClass('has-error');
+        },
+        show: function() {
+            var elt = jQuery('a[href="' + this.identifier + '"]');
+            jQuery(elt).parent('li').removeClass('disabled');
+            jQuery(elt).tab('show');
+        }
+    });
+    
+    CreateFootprintWizard.Views.TitleView = CreateFootprintWizard.Views.BaseView.extend({
+        initialize: function(options) {
+            _.bindAll(this, 'isValid', 'show', 'clearError', 'showError');
+            this.identifier = "#title";
+            this.elTab = jQuery(this.el).find(this.identifier);
+        },
+        isValid: function() {
+            var elt = jQuery(this.elTab).find('input[name="footprint-title"]')[0];
+            return jQuery(elt).val().length > 0;
         }
     });
 
-    CreateFootprintWizard.Views.EvidenceTypeView = Backbone.View.extend({
+    CreateFootprintWizard.Views.EvidenceTypeView = CreateFootprintWizard.Views.BaseView.extend({
         events: {
             'click li.disabled a': 'onClickDisabled',
             'change select[name="footprint-medium"]': 'onMediumChange' 
@@ -42,7 +46,8 @@
         initialize: function(options) {
             _.bindAll(this, 'isValid', 'show', 'showError', 'clearError',
                 'onClickDisabled', 'onMediumChange');
-            this.elTab = jQuery(this.el).find("#evidencetype");
+            this.identifier = "#evidencetype";
+            this.elTab = jQuery(this.el).find(this.identifier);
         },
         onClickDisabled: function(event) {
             event.preventDefault();
@@ -73,27 +78,17 @@
             } else {
                 return true;
             }
-        },
-        show: function() {
-            jQuery('a[href="#evidencetype"]').tab('show');
-        },
-        showError: function() {
-            jQuery(this.elTab).find('.form-group.required').addClass('has-error');
-            jQuery(this.el).find('ul.wizard-tabs').addClass('has-error');
-        },
-        clearError: function() {
-            jQuery(this.elTab).find('.form-group.required').removeClass('has-error');
-            jQuery(this.el).find('ul.wizard-tabs').removeClass('has-error');
         }
     });
 
-    CreateFootprintWizard.Views.EvidenceLocationView = Backbone.View.extend({
+    CreateFootprintWizard.Views.EvidenceLocationView = CreateFootprintWizard.Views.BaseView.extend({
         events: {
             'click li.disabled a': 'onClickDisabled'
         },
         initialize: function(options) {
             _.bindAll(this, 'isValid', 'show', 'showError', 'clearError',
                 'onClickDisabled');
+            this.identifier = "#evidencelocation",
             this.elTab = jQuery(this.el).find("#evidencelocation");
         },
         onClickDisabled: function(event) {
@@ -101,35 +96,8 @@
             return false;
         },
         isValid: function() {
-            var self = this;
-            var valid = true;
-            jQuery("#evidencelocation").find('textarea.required').each(function() {
-                var group = jQuery(this).parents('.form-group');
-                if (jQuery(this).val().length < 1) {
-                    jQuery(group).addClass('has-error');
-                    valid = false;
-                } else {
-                    jQuery(group).removeClass('has-error');
-                }
-            });
-            
-            if (valid) {
-                jQuery(this.el).find('ul.wizard-tabs').removeClass('has-error');
-            } else {
-                jQuery(this.el).find('ul.wizard-tabs').addClass('has-error');
-            }
-            return valid;
-        },
-        show: function() {
-            jQuery('a[href="#evidencelocation"]').tab('show');
-        },
-        showError: function() {
-            jQuery(this.elTab).find('.form-group.required').addClass('has-error');
-            jQuery(this.el).find('ul.wizard-tabs').addClass('has-error');
-        },
-        clearError: function() {
-            jQuery(this.elTab).find('.form-group.required').removeClass('has-error');
-            jQuery(this.el).find('ul.wizard-tabs').removeClass('has-error');
+            var elt = jQuery(this.elTab).find("textarea[name='footprint-provenance']")[0];
+            return jQuery(elt).val().length > 0
         }
     });
     
@@ -150,7 +118,8 @@
             '': 'title',
             'title': 'title',
             'evidencetype': 'evidencetype',
-            'evidencelocation': 'evidencelocation'
+            'evidencelocation': 'evidencelocation',
+            'create': 'create'
         },
         initialize: function () {
             var self = this;
@@ -158,6 +127,7 @@
             jQuery(".btn-next").click(function(evt) {
                 evt.preventDefault();
                 if (self.currentView.isValid()) {
+                    self.currentView.clearError();
                     var route = jQuery(evt.currentTarget).attr('href');
                     self.navigate(route, {trigger: true});
                 } else {
@@ -172,7 +142,7 @@
         },
         evidencetype: function() {
             if (!titleView.isValid()) {
-                self.navigate('title', {trigger: true});
+                this.navigate('title', {trigger: true});
             } else {
                 evidenceTypeView.show();
                 this.currentView = evidenceTypeView;
@@ -187,6 +157,9 @@
                 evidenceLocationView.show();
                 this.currentView = evidenceLocationView;
             }
+        },
+        create: function() {
+            return jQuery(this.currentView.el).submit();
         }
     });
     

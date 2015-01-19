@@ -77,6 +77,12 @@ ul.wizard-tabs.has-error li.active a {
     color: #737373;
 }
 
+input[name='footprint-medium-other'] {
+    margin-top: 5px;
+    width: 50%;
+}
+
+
 /* Object detail pages */
 .object-detail .breadcrumb {
     margin-bottom: 0;
@@ -220,7 +226,6 @@ ul.additional-questions li {
 .object-search ul li label {
     font-weight: normal;
 }
-
 
 /* LOGIN PAGE */
 .login-uni-button {
