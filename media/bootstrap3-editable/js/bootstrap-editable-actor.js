@@ -1,20 +1,18 @@
 /**
-Actor editable input. A combination of actor/person editing capabilities
-Internally value stored as {name: "Person Name", alternate_name: "Actor Name"}
+Actor editable input.
 
 @class actor
 @extends abstractinput
 @final
 @example
-<a href="#" class="editable-actor" name="actor" data-type="actor" data-pk="{{actor.id}}"
-    data-url="/api/actor/" data-title="Edit details">Orson Wells</a>
+<a href="#" data-type="name" data-pk="1">Fred Rogers</a>
 <script>
 $(function(){
-    $('.editable-actor').editable({
+    $('#actor').editable({
+        url: '/post',
+        title: 'Enter the actor's name',
         value: {
-            name: "Orson Wells", 
-            birth_date: "",
-            death_date: ""
+            name: "Fred Rogers"
         }
     });
 });
@@ -37,7 +35,50 @@ $(function(){
         @method render() 
         **/        
         render: function() {
-           this.$input = this.$tpl.find('input');
+           this.$input = this.$tpl.find('input[name="person-autocomplete"]');
+           this.$roleselect = this.$tpl.find('select[name="role"]');
+           this.$actorname =  this.$tpl.find('input[name="actor-name"]');
+           jQuery(this.$input).autocomplete({
+               source: function(request, response) {
+                   jQuery.ajax({
+                       url: "/api/name/",
+                       dataType: "jsonp",
+                       data: {
+                           q: request.term
+                       },
+                       success: function(data) {
+                           var names = [];
+                           for (var i=0; i < data.length; i++) {
+                               names.push({
+                                   label: data[i].name,
+                                   object_id: data[i].object_id
+                               });
+                           }
+                           response(names);
+                       }
+                   });
+               },
+               minLength: 2,
+               open: function() {
+                   jQuery(this).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+               },
+               close: function() {
+                   jQuery(this).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+               }
+           });
+
+           // populate the roles
+           var roleSelect = jQuery(this.$roleselect);
+           jQuery.ajax({
+               url: "/api/role/",
+               success: function(data) {
+                   roleSelect.empty();
+                   for (var i=0; i < data.results.length; i++) {
+                       var obj = data.results[i];
+                       roleSelect.append('<option value="' + obj.id + '">' + obj.name + '</option>');
+                   }
+               }
+           });
         },
         
         /**
@@ -50,7 +91,7 @@ $(function(){
                 $(element).empty();
                 return; 
             }
-            var html = $('<div>').text(value.city).html() + ', ' + $('<div>').text(value.street).html() + ' st., bld. ' + $('<div>').text(value.building).html();
+            var html = $('<div>').text(value.name).html();
             $(element).html(html); 
         },
         
@@ -84,7 +125,7 @@ $(function(){
        **/
        value2str: function(value) {
            var str = '';
-           if(value) {
+           if (value) {
                for(var k in value) {
                    str = str + k + ':' + value[k] + ';';  
                }
@@ -115,10 +156,10 @@ $(function(){
            if(!value) {
              return;
            }
-           this.$input.filter('[name="city"]').val(value.city);
-           this.$input.filter('[name="street"]').val(value.street);
-           this.$input.filter('[name="building"]').val(value.building);
-       },       
+           this.$input.val(value.name);
+           this.$roleSelect.val(value.role);
+       },
+
        
        /**
         Returns value of input.
@@ -126,12 +167,25 @@ $(function(){
         @method input2value() 
        **/          
        input2value: function() { 
+           return $.param({
+              name: this.$input.val(),
+              role: this.$roleselect.val(),
+              alias: this.$actorname.val()
+           });
+       },
+       
+       /**
+           @method value2submit(value) 
+           @param {mixed} value
+           @returns {mixed}
+       **/
+       value2submit: function(value) {
            return {
-              city: this.$input.filter('[name="city"]').val(), 
-              street: this.$input.filter('[name="street"]').val(), 
-              building: this.$input.filter('[name="building"]').val()
-           };
-       },        
+               name: this.$input.val(),
+               role: this.$roleselect.val(),
+               alias: this.$actorname.val()
+            }
+       },
        
         /**
         Activates input: sets focus on the first field.
@@ -139,7 +193,7 @@ $(function(){
         @method activate() 
        **/        
        activate: function() {
-            this.$input.filter('[name="city"]').focus();
+            this.$input.filter('[name="person-autocomplete"]').focus();
        },  
        
        /**
@@ -157,9 +211,7 @@ $(function(){
     });
 
     Actor.defaults = $.extend({}, $.fn.editabletypes.abstractinput.defaults, {
-        tpl: '<div class="editable-actor"><label><span>City: </span><input type="text" name="city" class="input-small"></label></div>'+
-             '<div class="editable-actor"><label><span>Street: </span><input type="text" name="street" class="input-small"></label></div>'+
-             '<div class="editable-actor"><label><span>Building: </span><input type="text" name="building" class="input-mini"></label></div>',
+        tpl: jQuery('#xeditable-actor-form').html(),
         inputclass: ''
     });
 

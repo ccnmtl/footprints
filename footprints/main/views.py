@@ -156,9 +156,39 @@ class FootprintRemoveActorView(LoggedInMixin, JSONResponseMixin, View):
 
 class FootprintAddActorView(LoggedInMixin, JSONResponseMixin, View):
 
+#     def get_or_create_actor(self, the_name, role):
+#         names = Name.objects.filter(name=the_name)
+#         if names.length 
+# 
+#         author_role = Role.objects.get_author_role()
+# 
+#         if len(name_id) == 0:
+#             name = Name.objects.create(name=full_name)
+#             person = Person.objects.create(name=name)
+#             return Actor.objects.create(person=person, role=author_role)
+#         else:
+#             # Is there an Actor with this name & the author role?
+#             authors = Actor.objects.filter(Q(actor_name__id=name_id) |
+#                                            Q(person__name__id=name_id),
+#                                            role=author_role)
+#             # Pick up actor name first
+#             authors = authors.order_by('actor_name', 'person__name')
+# 
+#             # return the first match
+#             if authors.count() > 0:
+#                 return authors.first()
+# 
+#             # Get the associated Person with this name & create the author role
+#             person = Person.objects.get(name__id=name_id)
+#             return Actor.objects.create(person=person, role=author_role)
+
     def post(self, *args, **kwargs):
         footprint_id = kwargs.get('footprint_id', None)
         footprint = get_object_or_404(Footprint, pk=footprint_id)
+
+        role = get_object_or_404(Role, pk=self.request.POST('role', None))
+        name = self.request.POST('name', None)
+        alias = self.request.POST('alias', None)
 
         return self.render_to_json_response({
             'success': True,

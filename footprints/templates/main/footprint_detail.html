@@ -10,6 +10,24 @@
 
 {% block extrahead %}
     <link href="{{STATIC_URL}}/select2-3.5.2/select2.css" rel="stylesheet" />
+    <script type="text/template" id="xeditable-actor-form">
+        <div class="editable-actor">
+            <div class="person-name">
+                <label>Person's Name</label><br />
+                <input type="text" class="form-control" name="person-autocomplete" placeholder="Type in a person's name"></input>
+            </div>
+                    
+            <div class="actor-name">
+                <label>Pseudonym or Alias (if applicable)</label><br />
+                <input type="text" class="form-control" name="actor-name" placeholder="Specify the person's alias"></select>
+            </div>
+
+            <div class="person-role">
+                <label>Role</label><br />
+                <select class="form-control" name="role" placeholder="Type in a role name"></select>
+            </div>
+        </div>
+    </script>
 {% endblock %}
 
 {% block js %}
@@ -22,7 +40,7 @@
     {% compress js %}
         <script src="{{STATIC_URL}}jquery-ui-1.11.2/jquery-ui.js"></script>
         <script src="{{STATIC_URL}}bootstrap3-editable/js/bootstrap-editable.js"></script>
-        <script src="{{STATIC_URL}}bootstrap3-editable/js/actor-form.js"></script>
+        <script src="{{STATIC_URL}}bootstrap3-editable/js/bootstrap-editable-actor.js"></script>
     {% endcompress %}
 
     <script type="text/javascript">
@@ -32,7 +50,15 @@
                headers: {'X-HTTP-Method-Override': 'PATCH'}
             };
             jQuery('.editable').editable({namedParams: true});
-            jQuery('.editable-actor').editable();
+            jQuery('.editable-actor').editable({
+                namedParams: true,
+                template: '#editable-actor-form',
+                validate: function(value) {
+                    if (value.indexOf('name=&role') === 0) {
+                        return 'Please enter the person\'s name'; 
+                    }
+                }
+            });
             jQuery('.editable-language').editable({
                 namedParams: true,
                 source: [{% for language in languages %}
@@ -203,7 +229,7 @@
                                     <a href="#" class="{% if editable %}editable-actor{% endif %} do-you-know" data-name="actor"
                                         data-type="actor" data-pk="{{footprint.id}}" data-value=""
                                         data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
-                                        data-url="/footprint/actor/{{footprint.id}}/add/">other people related to this evidence, e.g. sellers, owners, curators?</a>
+                                        data-url="/footprint/actor/{{footprint.id}}/add/">people related to this evidence, e.g. sellers, owners, curators?</a>
                                 </li>
 
                                 {% if not footprint.place %}
@@ -264,7 +290,11 @@
                 
                 {% if book.percent_complete > 0 or imprint.percent_complete > 0 %}
                     <dl class="dl-horizontal">
-                        <h3>More about {{work.title}}</h3>
+                        {% if work.title == '' %}
+                            <h3>More about the imprint</h3>
+                        {% else %}
+                            <h3>More about {{work.title}}</h3>
+                        {% endif %}
                         {% if work %}
                             {% for actor in work.actor.all %}
                                 <dt>{{actor.role.name}}</dt><dd class="border-bottom"><a href="/person/{{actor.person.id}}/">{{actor}}</a></dd>

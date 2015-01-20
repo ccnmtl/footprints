@@ -69,5 +69,20 @@ owner.short_description = 'Owner'
 class FootprintAdmin(admin.ModelAdmin):
     list_display = ('title', 'associated_date', 'place', owner,
                     imprint_title, imprint_date,)
+    readonly_fields = ('created_at', 'modified_at',
+                       'created_by', 'last_modified_by')
+    fieldsets = (
+        (None, {
+            'fields': ('book_copy', 'medium', 'medium_description',
+                       'provenance', 'title', 'language', 'place',
+                       'associated_date', 'call_number', 'collection',
+                       'digital_object', 'actor', 'notes', 'narrative')
+        }),
+        ('Advanced options', {
+            'classes': ('collapse',),
+            'fields': ('created_at', 'modified_at',
+                       'created_by', 'last_modified_by')
+        }),
+    )
 
 admin.site.register(Footprint, FootprintAdmin)

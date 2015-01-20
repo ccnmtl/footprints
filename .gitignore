@@ -16,3 +16,4 @@ ghostdriver.log
 .coverage
 media/CACHE
 reports
+node_modules
