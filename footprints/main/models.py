@@ -170,7 +170,7 @@ class StandardizedIdentification(models.Model):
 
 
 class Person(models.Model):
-    name = models.OneToOneField(Name, related_name="person_name")
+    full_name = models.TextField()
 
     birth_date = models.OneToOneField(ExtendedDateFormat,
                                       null=True, blank=True,
@@ -194,10 +194,10 @@ class Person(models.Model):
 
     class Meta:
         verbose_name = "Person"
-        ordering = ['name']
+        ordering = ['full_name']
 
     def __unicode__(self):
-        return "%s" % self.name.__unicode__()
+        return "%s" % self.full_name.__unicode__()
 
     def percent_complete(self):
         required = 6.0
@@ -219,10 +219,7 @@ class Person(models.Model):
 class Actor(models.Model):
     person = models.ForeignKey(Person)
     role = models.ForeignKey(Role)
-    actor_name = models.OneToOneField(Name,
-                                      related_name="actor_name",
-                                      null=True, blank=True)
-
+    alias = models.TextField(null=True, blank=True)
     notes = models.TextField(null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -233,10 +230,10 @@ class Actor(models.Model):
         related_name='actor_last_modified_by')
 
     def display_name(self):
-        if self.actor_name:
-            return self.actor_name.__unicode__()
+        if self.alias:
+            return self.alias
         else:
-            return self.person.name.__unicode__()
+            return self.person.full_name
 
     def __unicode__(self):
         return "%s (%s)" % (self.display_name(), self.role)

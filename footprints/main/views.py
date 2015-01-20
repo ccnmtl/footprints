@@ -121,7 +121,7 @@ class CreateFootprintView(LoggedInMixin, TemplateView):
 
         if len(name_id) == 0:
             name = Name.objects.create(name=full_name)
-            person = Person.objects.create(name=name)
+            person = Person.objects.create(full_name=name)
             return Actor.objects.create(person=person, role=author_role)
         else:
             # Is there an Actor with this name & the author role?
