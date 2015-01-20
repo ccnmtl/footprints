@@ -68,22 +68,10 @@ class PersonIndex(indexes.SearchIndex, indexes.Indexable):
     object_id = CharField(model_attr='id')
     object_type = CharField()
     text = indexes.NgramField(document=True, use_template=True)
+    name = indexes.NgramField(model_attr='full_name')
 
     def get_model(self):
         return Person
-
-    def prepare_object_type(self, obj):
-        return type(obj).__name__
-
-
-class NameIndex(indexes.SearchIndex, indexes.Indexable):
-    object_id = CharField(model_attr='id')
-    object_type = CharField()
-    text = indexes.NgramField(document=True, use_template=True)
-    name = indexes.NgramField(model_attr='name')
-
-    def get_model(self):
-        return Name
 
     def prepare_object_type(self, obj):
         return type(obj).__name__
