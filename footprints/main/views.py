@@ -3,7 +3,6 @@ from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import logout as auth_logout_view
 from django.core.urlresolvers import reverse
-from django.db.models.query_utils import Q
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.views.generic.base import TemplateView, View
@@ -17,7 +16,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from footprints.main.models import (Footprint, Imprint, BookCopy,
-                                    Actor, Person, Name, Role, WrittenWork,
+                                    Actor, Person, Role, WrittenWork,
                                     Language)
 from footprints.main.permissions import IsOwnerOrReadOnly, IsStaffOrReadOnly
 from footprints.main.serializers import TitleSerializer, NameSerializer, \
@@ -122,45 +121,10 @@ class CreateFootprintView(LoggedInMixin, TemplateView):
         context['mediums'] = Footprint.MEDIUM_CHOICES
         return context
 
-    def get_or_create_author(self, name_id, full_name):
-        author_role = Role.objects.get_author_role()
-
-        if len(name_id) == 0:
-            name = Name.objects.create(name=full_name)
-            person = Person.objects.create(name=name)
-            return Actor.objects.create(person=person, role=author_role)
-        else:
-            # Is there an Actor with this name & the author role?
-            authors = Actor.objects.filter(Q(actor_name__id=name_id) |
-                                           Q(person__name__id=name_id),
-                                           role=author_role)
-            # Pick up actor name first
-            authors = authors.order_by('actor_name', 'person__name')
-
-            # return the first match
-            if authors.count() > 0:
-                return authors.first()
-
-            # Get the associated Person with this name & create the author role
-            person = Person.objects.get(name__id=name_id)
-            return Actor.objects.create(person=person, role=author_role)
-
-    def get_names(self):
-        names = []
-        prefix = 'author_'
-        for key, value in self.request.POST.items():
-            if key.startswith(prefix):
-                names.append((key[len(prefix):], value))
-        return sorted(names)
-
     def post(self, *args, **kwargs):
         # Create stub objects for the footprint
         imprint = Imprint.objects.create()
         book_copy = BookCopy.objects.create(imprint=imprint)
-
-        for name in self.get_names():
-            actor = self.get_or_create_author(name[0], name[1])
-            imprint.actor.add(actor)
 
         title = self.request.POST.get('footprint-title')
         provenance = self.request.POST.get('footprint-provenance')
