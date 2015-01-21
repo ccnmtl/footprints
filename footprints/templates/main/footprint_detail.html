@@ -224,13 +224,13 @@
                                 {% endif %}
                                 {% if not footprint.associated_date %}
                                     <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
-                                    <a href="#" class="{% if editable %}editable{% endif %} do-you-know persistant" data-name="associated_date"
+                                    <a href="#" class="{% if editable %}editable{% endif %} do-you-know persistant"
+                                        data-name="associated_date"
                                         data-type="text" data-pk="{{footprint.id}}"
-                                        data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
-                                        data-value=""
+                                        data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" data-value=""
                                         data-url="/api/footprint/{{footprint.id}}/">the date when the footprint occurred?</a>
                                     </li>
-                                {% endif %}                            
+                                {% endif %}
                                 {% if footprint.language.count < 1 %}
                                     <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
                                         <a href="#" class="{% if editable %}editable-language{% endif %} do-you-know persistant"
