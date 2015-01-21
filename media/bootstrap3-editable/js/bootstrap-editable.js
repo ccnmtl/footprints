@@ -956,7 +956,8 @@ Applied as jQuery method.
                 $(document).on('click.editable', function(e) {
                     var $target = $(e.target), i,
                         exclude_classes = ['.editable-container', 
-                                           '.ui-datepicker-header', 
+                                           '.ui-datepicker-header',
+                                           '.ui-menu-item',
                                            '.datepicker', //in inline mode datepicker is rendered into body
                                            '.modal-backdrop', 
                                            '.bootstrap-wysihtml5-insert-image-modal', 

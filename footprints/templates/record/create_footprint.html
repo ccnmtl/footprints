@@ -22,115 +22,139 @@
     <script src="{{STATIC_URL}}js/app/createFootprint.js"></script>
 {% endblock %}
 
-{% block extrajs %}
-    {% comment %}nocompress{% endcomment %}
-    <script src="{{STATIC_URL}}js/underscore-min.js"></script>
-    <script src="{{STATIC_URL}}js/backbone-min.js"></script>
-{% endblock %}
-
 {% block content %}
+<div class="page-header">
+  <h1>Record</h1>
+</div>
 <div class="row">
+    <div class="col-md-3">
+        <div class="alert alert-info">
+        <h5><strong>What is a Footprint?</strong></h5>
+        <p>A footprint is evidence of a book copy at a moment in time and space, e.g. an auction catalog listing the sale of a book.</p>
+
+        <br />
+        <h5><strong>How is a Footprint Recorded?</strong></h5>
+        <p>At the most basic, a footprint is comprised of a book title and a description of the evidence. More
+        information about the footprint and written work is added after these pieces of information are gathered.
+        </p>
+        
+        <br />
+        <h5><strong>What is a Written Work?</strong></h5>
+        <p>
+        Ut eget luctus turpis. Nulla blandit sollicitudin libero, sit amet venenatis nisl cursus non. Etiam euismod elementum metus vel vulputate. Sed eu justo sapien.             
+        </p>
+
+        <br />
+        <h5><strong>What do I need?</strong></h5>
+        <p>Collect your source materials and follow the steps to the right.</p>
+        </div>
+    </div>
     <div class="col-md-9">
         <form id="footprint-form" class="footprint-form" role="form" method="post">
-        {% csrf_token %}
-        <div role="tabpanel">
-            <ul class="nav wizard-tabs" role="tablist">
-                <li role="presentation">
-                    <a href="#evidence" aria-controls="home" role="tab" data-toggle="tab">
-                        <span class="step-number">1. </span>Evidence
-                    </a></li>
-                <li role="presentation" class="disabled">
-                    <a href="#title" aria-controls="profile" role="tab" data-toggle="tab">
-                        <span class="step-number">2. </span>Title
-                    </a>
-                </li>
-                <li role="presentation" class="disabled">
-                    <a href="#author" aria-controls="messages" role="tab" data-toggle="tab">
-                        <span class="step-number">3. </span>Authors
-                    </a>
-                </li>
-            </ul>
-
-            <div class="tab-content well">
-                <div role="tabpanel" class="tab-pane active wizard-pane" id="evidence">
-                    <div class="form-content">
-                        <div class="form-group">
-                            <h3>Describe the evidence</h3>
-                            <br />
-                            <label>What is the provenance of evidence?</label>
-                            <div class="help-block">
-                                The provenance of evidence describes where can one find the evidence now, e.g.,
-                                a particular library, archive, a printed book, a journal article, a collection.
-                            </div>
-                            <textarea class="form-control required" name="footprint-provenance"></textarea>
-                            <div class="error-block">This field is required.</div>
-                        </div>
-                        <br />
-                        <div class="form-group">
-                            <label>What is the medium of evidence?</label>
-                            <div class="help-block">
-                                The medium of evidence is where the footprint is derived or deduced from, e.g.,
-                                an extant copy with an owner’s signature, a library mark, a book list or catalog, 
-                                a reference to a book coming into someone’s possession in a paratext to another work.
-                            </div>
-                            <textarea class="form-control required" name="footprint-medium"></textarea>
-                            <div class="error-block">This field is required.</div>
-                        </div>
-                    </div>
-                    <div class="clearfix"></div>
-                    <div class="btn-toolbar pull-right" role="toolbar">
-                        <div class="btn-group" role="group"><a href="#title" class="btn btn-primary btn-next">Next</a></div>
-                    </div>
-                    <div class="clearfix"></div>
-                </div>
+            {% csrf_token %}
+            <div role="tabpanel">
+                <ul class="nav wizard-tabs" role="tablist">
+                    <li role="presentation" class="active">
+                        <a href="#title" aria-controls="profile" role="tab" data-toggle="tab">
+                            <span class="step-number">1. </span>Title
+                        </a>
+                    </li>
+                    <li role="presentation" class="disabled">
+                        <a href="#evidencetype" aria-controls="home" role="tab" data-toggle="tab">
+                            <span class="step-number">2. </span>Evidence Type
+                        </a>
+                    </li>
+                    <li role="presentation" class="disabled">
+                        <a href="#evidencelocation" aria-controls="home" role="tab" data-toggle="tab">
+                            <span class="step-number">2. </span>Evidence Location
+                        </a>
+                    </li>
+                </ul>
                 
-                <div role="tabpanel" class="tab-pane wizard-pane" id="title">
-                    <div class="form-content">
-                        <div class="form-group">
-                            <h3>Record the title</h3>
-                            <br />
-                            <label>How is the work's title displayed in the evidence?</label>
-                            <div class="help-block">
-                                Enter the work's title exactly as it appears in the medium of evidence. 
-                                Abbreviations and alternate spellings are expected. You can link this footprint to a
-                                standardized title after the footprint is created.
+                <div class="tab-content well">
+                    <div role="tabpanel" class="tab-pane active wizard-pane" id="title">
+                        <div class="form-content">
+                            <div class="form-group required">
+                                <h3>Identify the Title</h3>
+                                <br />
+                                <label>Enter the written work's title exactly as it appears in the of evidence.</label>
+                                <div class="help-block">
+                                    Abbreviations and alternate spellings are expected.<br />
+                                    The footprint can be linked to a standardized title after creation.
+                                </div>
+                                <input type="text" class="form-control" name="footprint-title" placeholder=""/>
+                                <div class="error-block">This field is required.</div>
                             </div>
-                            <input type="text" class="form-control" name="footprint-title" placeholder=""/>
-                            <div class="error-block">This field is required.</div>
+                        </div>                    
+                        <div class="btn-toolbar" role="toolbar">
+                            <div class="btn-group pull-right" role="group"><a href="#evidencetype" class="btn btn-primary btn-next">Next</a></div>
                         </div>
-                    </div>                    
-                    <div class="btn-toolbar" role="toolbar">
-                        <div class="btn-group pull-left" role="group"><a href="#evidence" class="btn btn-primary">Previous</a></div>
-                        <div class="btn-group pull-right" role="group"><a href="#author" class="btn btn-primary btn-next">Next</a></div>
+                        <div class="clearfix"></div>
                     </div>
-                    <div class="clearfix"></div>
-                </div>
-
-                <div role="tabpanel" class="tab-pane wizard-pane" id="author">
-                    <div class="form-content">
-                        <div class="form-group">
-                            <h3>Identify the authors</h3>
-                            <br />
-                            <label>Do you know this work's authors?</label>
-                            <div class="help-block">
-                                <i>Developer note: As this step is optional, should it be left until the advanced entry screen?</i><br /> 
-                                If you know who authored this work, you can enter the information now.<br />
-                                Press Continue to skip this step. The information can be entered at a later time.
+                    
+                    <div role="tabpanel" class="tab-pane wizard-pane" id="evidencetype">
+                        <div class="form-content">
+                            <div class="form-group required">
+                                <h3>Describe the evidence</h3>
+                                <br />
+                                <label>What is the evidence type?</label>
+                                <div class="help-block">
+                                    The evidence type is where the footprint is derived or deduced from, e.g.,
+                                    an extant copy with an owner’s signature, a library mark, a book list or catalog, 
+                                    a reference to a book coming into someone’s possession in a paratext to another work.
+                                </div>
+                                <select class="form-control required" name="footprint-medium">
+                                    <option value="" disabled selected>Select the evidence type</option>
+                                    {% for medium in mediums %}
+                                        <option name="{{medium}}">{{medium}}</option>
+                                    {% endfor %}
+                                    <option value="other">Other (please specify)</option>
+                                </select>
+                                <input type="form-control" name="footprint-medium-other" class="form-control"
+                                    placeholder="Specify another evidence type" style="display: none"></input>
+                                <div class="error-block">This field is required.</div>
                             </div>
-                            <ul class="selected-authors"></ul>
-                            <input type="text" class="form-control" name="footprint-author" placeholder="Type in an author's name"/>
+                            <br />
+                            <div class="form-group">
+                                <label>Do you have additional descriptive information about the evidence?</label>
+                                <div class="help-block">
+                                    Additional information might include an auction catalog title. 
+                                </div>
+                                <textarea class="form-control" name="footprint-medium-description"></textarea>
+                            </div>
                         </div>
-                    </div>
-                    <div class="btn-toolbar" role="toolbar">
-                        <div class="btn-group pull-left" role="group"><a href="#title" class="btn btn-primary">Previous</a></div>
-                        <div class="btn-group pull-right" role="group">
-                            <input type="submit" class="btn btn-primary" value="Save & Continue" />
+                        <div class="clearfix"></div>
+                        <div class="btn-toolbar pull-right" role="toolbar">
+                            <div class="btn-group" role="group"><a href="#title" class="btn btn-primary btn-previous">Previous</a></div>
+                            <div class="btn-group" role="group"><a href="#evidencelocation" class="btn btn-primary btn-next">Next</a></div>
                         </div>
+                        <div class="clearfix"></div>
+                    </div>                
+                
+                    <div role="tabpanel" class="tab-pane wizard-pane" id="evidencelocation">
+                        <div class="form-content">
+                            <div class="form-group required">
+                                <h3>Locate the evidence</h3>
+                                <br />
+                                <label>Where can the evidence be found right now?</label>
+                                <div class="help-block">
+                                    The evidence location describes where one can find the evidence now. Options include
+                                    a particular library, archive, a printed book, a journal article, a collection, e.g.
+                                    Jewish Theological Society, New York, New York.
+                                </div>
+                                <textarea class="form-control required" name="footprint-provenance"></textarea>
+                                <div class="error-block">This field is required.</div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="btn-toolbar pull-right" role="toolbar">
+                            <div class="btn-group" role="group"><a href="#evidencetype" class="btn btn-primary btn-previous">Previous</a></div>
+                            <div class="btn-group" role="group"><a href="#create" class="btn btn-primary btn-next">Save &amp; Continue</a></div>
+                        </div>
+                        <div class="clearfix"></div>
                     </div>
-                    <div class="clearfix"></div>
                 </div>
             </div>
-        </div>
         </form>
     </div>
 </div>

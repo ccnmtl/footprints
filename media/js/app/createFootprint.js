@@ -9,196 +9,157 @@
             this.inst.router = new CreateFootprintWizard.Router();
         }
     };
+    
+    CreateFootprintWizard.Views.BaseView = Backbone.View.extend({
+        showError: function() {
+            jQuery(this.elTab).find('.form-group.required').addClass('has-error');
+            jQuery(this.el).find('ul.wizard-tabs').addClass('has-error');
+        },
+        clearError: function() {
+            jQuery(this.elTab).find('.form-group.required').removeClass('has-error');
+            jQuery(this.el).find('ul.wizard-tabs').removeClass('has-error');
+        },
+        show: function() {
+            var elt = jQuery('a[href="' + this.identifier + '"]');
+            jQuery(elt).parent('li').removeClass('disabled');
+            jQuery(elt).tab('show');
+        }
+    });
+    
+    CreateFootprintWizard.Views.TitleView = CreateFootprintWizard.Views.BaseView.extend({
+        initialize: function(options) {
+            _.bindAll(this, 'isValid', 'show', 'clearError', 'showError');
+            this.identifier = "#title";
+            this.elTab = jQuery(this.el).find(this.identifier);
+        },
+        isValid: function() {
+            var elt = jQuery(this.elTab).find('input[name="footprint-title"]')[0];
+            return jQuery(elt).val().length > 0;
+        }
+    });
 
-    CreateFootprintWizard.Views.EvidenceView = Backbone.View.extend({
+    CreateFootprintWizard.Views.EvidenceTypeView = CreateFootprintWizard.Views.BaseView.extend({
         events: {
-            'click li.disabled a': 'onClickDisabled'
+            'click li.disabled a': 'onClickDisabled',
+            'change select[name="footprint-medium"]': 'onMediumChange' 
         },
         initialize: function(options) {
-            _.bindAll(this, 'onClickDisabled');
+            _.bindAll(this, 'isValid', 'show', 'showError', 'clearError',
+                'onClickDisabled', 'onMediumChange');
+            this.identifier = "#evidencetype";
+            this.elTab = jQuery(this.el).find(this.identifier);
         },
         onClickDisabled: function(event) {
             event.preventDefault();
             return false;
         },
-        validates: function() {
-            var self = this;
-            var valid = true;
-            jQuery("#evidence").find('textarea.required').each(function() {
-                var group = jQuery(this).parents('.form-group');
-                if (jQuery(this).val().length < 1) {
-                    jQuery(group).addClass('has-error');
-                    valid = false;
-                } else {
-                    jQuery(group).removeClass('has-error');
-                }
-            });
-            
-            if (valid) {
-                jQuery(this.el).find('ul.wizard-tabs').removeClass('has-error');
+        onMediumChange: function(event) {
+            var eltInput = jQuery(this.el).find('input[name="footprint-medium-other"]')[0];
+            var medium = jQuery(this.el).find('select[name="footprint-medium"] option:selected').val();
+            if (medium === "other") {
+                jQuery(eltInput).show();
+                jQuery(eltInput).addClass("required");
+                this.clearError();
             } else {
-                jQuery(this.el).find('ul.wizard-tabs').addClass('has-error');
+                jQuery(eltInput).val('');
+                jQuery(eltInput).hide();
+                jQuery(eltInput).removeClass("required");
+                this.clearError();
             }
-            return valid;
         },
-        show: function() {
-            jQuery('a[href="#evidence"]').tab('show');
+        isValid: function() {
+            var medium = jQuery(this.el).find('select[name="footprint-medium"] option:selected').val();
+
+            if (medium === "") {
+                return false;
+            } else if (medium === "other"){
+                var val = jQuery(this.elTab).find('input[name="footprint-medium-other"]').val();
+                return val.length > 0;
+            } else {
+                return true;
+            }
         }
     });
-    
-    CreateFootprintWizard.Views.TitleView = Backbone.View.extend({
-        events: {
 
+    CreateFootprintWizard.Views.EvidenceLocationView = CreateFootprintWizard.Views.BaseView.extend({
+        events: {
+            'click li.disabled a': 'onClickDisabled'
         },
         initialize: function(options) {
-            
+            _.bindAll(this, 'isValid', 'show', 'showError', 'clearError',
+                'onClickDisabled');
+            this.identifier = "#evidencelocation",
+            this.elTab = jQuery(this.el).find("#evidencelocation");
         },
-        validates: function() {
-            var elt = jQuery('input[name="footprint-title"]')[0];
-            var group = jQuery(elt).parents('.form-group');
-            var valid = jQuery(elt).val().length > 0;
-
-            if (valid) {
-                jQuery(group).removeClass('has-error');
-                jQuery(this.el).find('ul.wizard-tabs').removeClass('has-error');
-            } else {
-                jQuery(group).addClass('has-error');
-                jQuery(this.el).find('ul.wizard-tabs').addClass('has-error');
-            }
-            return valid;
-        },        
-        show: function() {
-            var elt = jQuery('a[href="#title"]');
-            jQuery(elt).parent('li').removeClass('disabled');
-            jQuery(elt).tab('show');
-        }
-    });
-    
-    CreateFootprintWizard.Views.AuthorView = Backbone.View.extend({
-        events: {
-            'click .author-delete': 'onRemoveAuthor',
-            'keypress input[name="footprint-author"]': 'onNewAuthor'
-        },
-        initialize: function(options) {
-            _.bindAll(this, 'dataSource', 'onNewAuthor', 'onRemoveAuthor',
-                      'selectAuthor', 'show');
-
-            var html = jQuery('#author-list-template').html()
-            this.authorTemplate = _.template(html);
-
-            this.elInput = jQuery(this.el).find("input[name='footprint-author']")[0];
-            this.elAuthors = jQuery(this.el).find("ul.selected-authors")[0];
-           
-            jQuery(this.elInput).autocomplete({
-                source: this.dataSource,
-                select: this.selectAuthor,
-                minLength: 2,
-                open: function() {
-                    jQuery(this).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
-                },
-                close: function() {
-                    jQuery(this).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
-                }
-            });
-        },
-        validates: function() {
-            return true;
-        },
-        show: function() {
-            var elt = jQuery('a[href="#author"]');
-            jQuery(elt).parent('li').removeClass('disabled');
-            jQuery(elt).tab('show');
-        },
-        dataSource: function(request, response) {
-            jQuery.ajax({
-                url: "/api/name/",
-                dataType: "jsonp",
-                data: {
-                    q: request.term
-                },
-                success: function(data) {
-                    var names = [];
-                    for (var i=0; i < data.length; i++) {
-                        names.push({
-                            label: data[i].name,
-                            object_id: data[i].object_id
-                        });
-                    }
-                    response(names);
-                }
-            });
-        },
-        selectAuthor: function(event, ui) {
+        onClickDisabled: function(event) {
             event.preventDefault();
-            var markup = this.authorTemplate({'ui': ui.item});
-            jQuery(this.elAuthors).append(markup);
-            jQuery(this.elInput).val('');
             return false;
         },
-        onNewAuthor: function(event, ui) {
-            if (event.keyCode == 13) {
-                event.preventDefault();
-                var author = jQuery(event.currentTarget).val().trim();
-                if (author.length > 0) {
-                    var markup = this.authorTemplate({'ui': {label: author}});
-                    jQuery(this.elAuthors).append(markup);
-                    jQuery(this.elInput).val('');
-                }
-                return false;
-            }
-            return true;
-        },
-        onRemoveAuthor: function(evt) {
-            jQuery(evt.currentTarget).parent('li').remove();
+        isValid: function() {
+            var elt = jQuery(this.elTab).find("textarea[name='footprint-provenance']")[0];
+            return jQuery(elt).val().length > 0
         }
     });
     
-    var evidenceView = new CreateFootprintWizard.Views.EvidenceView({
-        el: jQuery("#footprint-form")
-    });    
-
     var titleView = new CreateFootprintWizard.Views.TitleView({
         el: jQuery("#footprint-form")
     });
 
-    var authorView = new CreateFootprintWizard.Views.AuthorView({
+    var evidenceTypeView = new CreateFootprintWizard.Views.EvidenceTypeView({
+        el: jQuery("#footprint-form")
+    });    
+
+    var evidenceLocationView = new CreateFootprintWizard.Views.EvidenceLocationView({
         el: jQuery("#footprint-form")
     });
 
     CreateFootprintWizard.Router = Backbone.Router.extend({
         routes: {
-            '': 'evidence',
-            'evidence': 'evidence',
+            '': 'title',
             'title': 'title',
-            'author': 'author',
-            'help': 'help'
+            'evidencetype': 'evidencetype',
+            'evidencelocation': 'evidencelocation',
+            'create': 'create'
         },
         initialize: function () {
             var self = this;
-            
+
             jQuery(".btn-next").click(function(evt) {
                 evt.preventDefault();
-                if (self.currentView.validates()) {
+                if (self.currentView.isValid()) {
+                    self.currentView.clearError();
                     var route = jQuery(evt.currentTarget).attr('href');
                     self.navigate(route, {trigger: true});
+                } else {
+                    self.currentView.showError();
                 }
                 return false;
             });
-        },
-        evidence: function() {
-            evidenceView.show();
-            this.currentView = evidenceView;
         },
         title: function() {
             titleView.show();
             this.currentView = titleView;
         },
-        author: function() {
-           authorView.show();
-           this.currentView = authorView;
+        evidencetype: function() {
+            if (!titleView.isValid()) {
+                this.navigate('title', {trigger: true});
+            } else {
+                evidenceTypeView.show();
+                this.currentView = evidenceTypeView;
+            }
         },
-        help: function() {
-            alert('help');
+        evidencelocation: function() {
+            if (!titleView.isValid()) {
+                this.navigate('title', {trigger: true});
+            } else if (!evidenceTypeView.isValid()) {
+                this.navigate('evidencetype', {trigger: true});
+            } else {
+                evidenceLocationView.show();
+                this.currentView = evidenceLocationView;
+            }
+        },
+        create: function() {
+            return jQuery(this.currentView.el).submit();
         }
     });
     

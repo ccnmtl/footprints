@@ -14,7 +14,9 @@ from footprints.main.views import (LoginView, LogoutView, TitleListView,
                                    CreateFootprintView, NameListView,
                                    WrittenWorkDetailView, FootprintDetailView,
                                    PersonDetailView, PlaceDetailView,
-                                   FootprintViewSet, LanguageViewSet)
+                                   FootprintViewSet, LanguageViewSet,
+                                   RoleViewSet, FootprintAddActorView,
+                                   FootprintRemoveActorView)
 from footprints.mixins import is_staff
 
 
@@ -27,6 +29,8 @@ if hasattr(settings, 'CAS_BASE'):
 router = routers.DefaultRouter()
 router.register(r'footprint', FootprintViewSet)
 router.register(r'language', LanguageViewSet)
+router.register(r'role', RoleViewSet)
+
 
 urlpatterns = patterns(
     '',
@@ -51,6 +55,10 @@ urlpatterns = patterns(
         password_reset_complete, name='password_reset_complete'),
 
     auth_urls,
+    (r'^footprint/actor/(?P<footprint_id>\d+)/add/$',
+     FootprintAddActorView.as_view()),
+    (r'^footprint/actor/(?P<footprint_id>\d+)/remove/$',
+     FootprintRemoveActorView.as_view()),
     (r'^footprint/create/$', CreateFootprintView.as_view()),
     url(r'^footprint/(?P<pk>\d+)/$',
         FootprintDetailView.as_view(), name='footprint-detail-view'),

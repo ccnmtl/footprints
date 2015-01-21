@@ -434,6 +434,20 @@ class BookCopy(models.Model):
 
 
 class Footprint(models.Model):
+    MEDIUM_CHOICES = [
+        "Approbation in imprint",
+        "Booklist/estate inventory",
+        "Bookseller/auction catalog  (pre-1850)",
+        "Bookseller/auction catalog (1850-present)",
+        "Bookseller marking in extant copy",
+        "Censor signature in extant copy",
+        "Dedication in imprint",
+        "Library catalog/union catalog",
+        "Owner signature/bookplate in extant copy",
+        "Reference in another text",
+        "Subscription list in imprint"
+    ]
+
     book_copy = models.ForeignKey(BookCopy)
     medium = models.CharField(
         "Medium of Evidence", max_length=256,
@@ -448,10 +462,12 @@ class Footprint(models.Model):
     title = models.TextField(null=True, blank=True,
                              verbose_name='Footprint Title')
     language = models.ManyToManyField(Language, null=True, blank=True)
-    place = models.ForeignKey(Place, null=True, blank=True)
+    place = models.ForeignKey(Place, null=True, blank=True,
+                              verbose_name='Footprint Location')
 
     associated_date = models.OneToOneField(ExtendedDateFormat,
-                                           null=True, blank=True)
+                                           null=True, blank=True,
+                                           verbose_name='Footprint Date')
 
     call_number = models.CharField(max_length=256, null=True, blank=True)
     collection = models.ForeignKey(Collection, null=True, blank=True)
