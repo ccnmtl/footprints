@@ -15,9 +15,8 @@ from rest_framework.renderers import JSONPRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from footprints.main.models import (Footprint, Imprint, BookCopy,
-                                    Actor, Person, Role, WrittenWork,
-                                    Language)
+from footprints.main.models import (Footprint, Actor, Person, Role,
+                                    WrittenWork, Language)
 from footprints.main.permissions import IsOwnerOrReadOnly, IsStaffOrReadOnly
 from footprints.main.serializers import TitleSerializer, NameSerializer, \
     FootprintSerializer, LanguageSerializer, RoleSerializer
@@ -71,14 +70,7 @@ class FootprintDetailView(EditableMixin, LoggedInMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super(FootprintDetailView, self).get_context_data(**kwargs)
 
-        related = []
-        if self.object.book_copy.imprint.work is None:
-            # written works, imprints & footprints with similar titles
-            sqs = SearchQuerySet().autocomplete(title=self.object.title)
-            serializer = TitleSerializer(sqs, many=True)
-            related.extend(serializer.data)
-
-        context['related'] = related
+        context['related'] = []
         context['editable'] = self.has_edit_permission(self.request.user,
                                                        self.object)
         context['languages'] = Language.objects.all().order_by('name')
@@ -122,10 +114,6 @@ class CreateFootprintView(LoggedInMixin, TemplateView):
         return context
 
     def post(self, *args, **kwargs):
-        # Create stub objects for the footprint
-        imprint = Imprint.objects.create()
-        book_copy = BookCopy.objects.create(imprint=imprint)
-
         title = self.request.POST.get('footprint-title')
         provenance = self.request.POST.get('footprint-provenance')
         medium = self.request.POST.get('footprint-medium')
@@ -134,9 +122,7 @@ class CreateFootprintView(LoggedInMixin, TemplateView):
         fp = Footprint.objects.create(title=title,
                                       medium=medium,
                                       medium_description=description,
-                                      provenance=provenance,
-                                      book_copy=book_copy,
-                                      notes=notes)
+                                      provenance=provenance, notes=notes)
 
         url = reverse('footprint-detail-view', kwargs={'pk': fp.pk})
         return HttpResponseRedirect(url)
@@ -156,39 +142,29 @@ class FootprintRemoveActorView(LoggedInMixin, JSONResponseMixin, View):
 
 class FootprintAddActorView(LoggedInMixin, JSONResponseMixin, View):
 
-#     def get_or_create_actor(self, the_name, role):
-#         names = Name.objects.filter(name=the_name)
-#         if names.length 
-# 
-#         author_role = Role.objects.get_author_role()
-# 
-#         if len(name_id) == 0:
-#             name = Name.objects.create(name=full_name)
-#             person = Person.objects.create(name=name)
-#             return Actor.objects.create(person=person, role=author_role)
-#         else:
-#             # Is there an Actor with this name & the author role?
-#             authors = Actor.objects.filter(Q(actor_name__id=name_id) |
-#                                            Q(person__name__id=name_id),
-#                                            role=author_role)
-#             # Pick up actor name first
-#             authors = authors.order_by('actor_name', 'person__name')
-# 
-#             # return the first match
-#             if authors.count() > 0:
-#                 return authors.first()
-# 
-#             # Get the associated Person with this name & create the author role
-#             person = Person.objects.get(name__id=name_id)
-#             return Actor.objects.create(person=person, role=author_role)
+    def create_actor(self, person_id, person_name, role, alias):
+        try:
+            person = Person.objects.get(pk=person_id)
+        except (Person.DoesNotExist, ValueError):
+            person = None
+
+        if person is None or person.name != person_name:
+            person = Person.objects.create(name=person_name)
+
+        return Actor.objects.create(person=person, role=role, alias=alias)
 
     def post(self, *args, **kwargs):
         footprint_id = kwargs.get('footprint_id', None)
         footprint = get_object_or_404(Footprint, pk=footprint_id)
 
-        role = get_object_or_404(Role, pk=self.request.POST('role', None))
-        name = self.request.POST('name', None)
-        alias = self.request.POST('alias', None)
+        role = get_object_or_404(Role, pk=self.request.POST.get('role', None))
+
+        person_name = self.request.POST.get('person_name', None)
+        person_id = self.request.POST.get('person_id', None)
+        alias = self.request.POST.get('alias', None)
+
+        actor = self.create_actor(person_id, person_name, role, alias)
+        footprint.actor.add(actor)
 
         return self.render_to_json_response({
             'success': True,

@@ -12,7 +12,6 @@ class TitleSerializer(serializers.Serializer):
 
 class NameSerializer(serializers.Serializer):
     object_id = serializers.CharField()
-    object_type = serializers.CharField()
     name = serializers.CharField(max_length=None, min_length=1)
 
 

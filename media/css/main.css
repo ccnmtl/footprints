@@ -168,7 +168,7 @@ ul.wizard-tabs.has-error li.active a {
 .object-detail .editable-inline,
 .object-detail .form-inline,
 .object-detail .form-group {
-    width: 94% !important;
+    width: 100% !important;
 }
 
 .object-detail .editable-input {
@@ -201,6 +201,7 @@ ul.wizard-tabs.has-error li.active a {
 
 .object-detail .glyphicon-question-sign {
     vertical-align: top;
+    margin-top: 2px;
 }
 
 /** editable fields **/
@@ -217,6 +218,12 @@ ul.additional-questions {
 
 ul.additional-questions li {
     margin-bottom: 10px;
+}
+
+ul.additional-questions .editable-container {
+    padding: 20px;
+    background-color: #f6f7f8;
+    border-radius: 10px;
 }
 
 /* Search Page */

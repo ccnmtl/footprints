@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block extrahead %}
-    <link href="{{STATIC_URL}}/select2-3.5.2/select2.css" rel="stylesheet" />
+    <link href="{{STATIC_URL}}select2-3.5.2/select2.css" rel="stylesheet" />
     <script type="text/template" id="xeditable-actor-form">
         <div class="editable-actor">
             <div class="person-name">
@@ -35,54 +35,22 @@
     <script src="{{STATIC_URL}}js/backbone-min.js"></script>
     <script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false"></script>
     <script src="{{STATIC_URL}}tinymce/tinymce.min.js"></script>
-    <script src="{{STATIC_URL}}/select2-3.5.2/select2.js"></script>
 
     {% compress js %}
+        <script src="{{STATIC_URL}}select2-3.5.2/select2.js"></script>
         <script src="{{STATIC_URL}}jquery-ui-1.11.2/jquery-ui.js"></script>
         <script src="{{STATIC_URL}}bootstrap3-editable/js/bootstrap-editable.js"></script>
         <script src="{{STATIC_URL}}bootstrap3-editable/js/bootstrap-editable-actor.js"></script>
+        <script src="{{STATIC_URL}}js/app/editFootprint.js"></script>
     {% endcompress %}
 
     <script type="text/javascript">
         jQuery(document).ready(function() {
-            jQuery.fn.editable.defaults.mode = 'inline';
-            jQuery.fn.editable.defaults.ajaxOptions = {
-               headers: {'X-HTTP-Method-Override': 'PATCH'}
-            };
-            jQuery('.editable').editable({namedParams: true});
-            jQuery('.editable-actor').editable({
-                namedParams: true,
-                template: '#editable-actor-form',
-                validate: function(value) {
-                    if (value.indexOf('name=&role') === 0) {
-                        return 'Please enter the person\'s name'; 
-                    }
-                }
-            });
-            jQuery('.editable-language').editable({
-                namedParams: true,
-                source: [{% for language in languages %}
-                    {value: '{{language.id}}', text: "{{language.name}}"}{% if not forloop.last %},{% endif %}
-                    {% endfor %}],
-                select2: {
-                    multiple: true,
-                    width: 200,
-                    placeholder: 'Select language',
-                    allowClear: true
-                }
-            });
-            jQuery('.do-you-know').on('save', function(e, params) {
-                var dataName = jQuery(e.currentTarget).data('name');
-                var elts = jQuery('[data-name="' + dataName + '"]').not(e.currentTarget);
-                jQuery(elts).each(function(index) {
-                    if (jQuery(this).is('.editable, .editable-language')) {
-                        jQuery(this).editable('setValue', params.newValue, true);
-                    }
-                    jQuery(this).parents('div.description-list').show();
-                });
-                jQuery(e.currentTarget).parents('li').fadeOut(function() {
-                    jQuery(this).remove();
-                });
+            var editView = new EditFootprintView({
+                el: jQuery("div.object-detail.footprint"),
+                languages: [{% for language in languages %}
+                            {value: '{{language.id}}', text: "{{language.name}}"}{% if not forloop.last %},{% endif %}
+                            {% endfor %}]
             });
         });
     </script>
@@ -117,8 +85,7 @@
                                 <a href="#" class="{% if editable %}editable{% else %}readonly{% endif %}" data-name="associated_date"
                                     data-type="text" data-pk="{{footprint.id}}"
                                     data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
-                                    data-url="/api/footprint/{{footprint.id}}/"
-                                    data-title="Edit Date of Evidence">{{footprint.associated_date}}</a>
+                                    data-url="/api/footprint/{{footprint.id}}/">{{footprint.associated_date}}</a>
                             </dd>
                         </div>
                         {% if footprint.place %}
@@ -127,7 +94,7 @@
                                 <!-- a href="#" class="{% if editable %}editable{% else %}readonly{% endif %}" data-name="place"
                                     data-type="location" data-pk="{{footprint.id}}"
                                     data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
-                                    data-url="/api/footprint/{{footprint.id}}/" data-title="Edit Place of Evidence"></a-->
+                                    data-url="/api/footprint/{{footprint.id}}/"></a-->
                                     {{footprint.place}}
                             </dd>
                         {% endif %}
@@ -157,7 +124,7 @@
                             <a href="#" class="{% if editable %}editable{% else %}readonly{% endif %}" data-name="medium"
                                 data-type="text" data-pk="{{footprint.id}}"
                                 data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
-                                data-url="/api/footprint/{{footprint.id}}/" data-title="Edit Evidence Type">{{footprint.medium}}</a>
+                                data-url="/api/footprint/{{footprint.id}}/">{{footprint.medium}}</a>
                         </dd>
                         <div class="description-list" {% if footprint.medium_description == '' %}style="display: none"{% endif %}>
                             <dt>Evidence Description</dt>
@@ -165,7 +132,7 @@
                                 <a href="#" class="{% if editable %}editable{% else %}readonly{% endif %}" data-name="medium_description"
                                     data-type="text" data-pk="{{footprint.id}}"
                                     data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
-                                    data-url="/api/footprint/{{footprint.id}}/" data-title="Edit Evidence Description">{{footprint.medium_description}}</a>
+                                    data-url="/api/footprint/{{footprint.id}}/">{{footprint.medium_description}}</a>
                             </dd>
                         </div>
                         <dt>Evidence Location</dt>
@@ -173,8 +140,7 @@
                             <a href="#" class="{% if editable %}editable{% else %}readonly{% endif %}" data-name="provenance"
                                 data-type="text" data-pk="{{footprint.id}}"
                                 data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
-                                data-url="/api/footprint/{{footprint.id}}/"
-                                data-title="Edit Provenance of Evidence">{{footprint.provenance}}</a>
+                                data-url="/api/footprint/{{footprint.id}}/">{{footprint.provenance}}</a>
                         </dd>
                         <div class="description-list" {% if footprint.language.count < 1 %}style="display: none"{% endif %}>
                             <dt>Evidence Language</dt>
@@ -183,7 +149,7 @@
                                     data-type="select2" data-pk="{{footprint.id}}"
                                     data-value="[{% for language in footprint.language.all %}{{language.id}}{% if not forloop.last %},{% endif %}{% endfor %}]"
                                     data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
-                                    data-url="/api/footprint/{{footprint.id}}/" data-title="Edit Language of Evidence">
+                                    data-url="/api/footprint/{{footprint.id}}/">
                                     {% for language in footprint.language.all %}
                                         {{language.name}}{% if not forloop.last %}, {% endif %}
                                     {% endfor %}
@@ -197,8 +163,7 @@
                                 <a href="#" class="{% if editable %}editable{% else %}readonly{% endif %}" data-name="title"
                                     data-type="text" data-pk="{{footprint.id}}"
                                     data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
-                                    data-url="/api/footprint/{{footprint.id}}/"
-                                    data-title="Edit Evidence Title">{{footprint.title}}</a>
+                                    data-url="/api/footprint/{{footprint.id}}/">{{footprint.title}}</a>
                             </dd>
                         </div>
                         <div class="description-list" {% if footprint.call_number == '' %}style="display: none"{% endif %}>
@@ -207,7 +172,7 @@
                                 <a href="#" class="{% if editable %}editable{% else %}readonly{% endif %}" data-name="call_number"
                                     data-type="text" data-pk="{{footprint.id}}"
                                     data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
-                                    data-url="/api/footprint/{{footprint.id}}/" data-title="Edit Evidence Call Number">{{footprint.call_number}}</a>
+                                    data-url="/api/footprint/{{footprint.id}}/">{{footprint.call_number}}</a>
                             </dd>
                         </div>
                         
@@ -216,7 +181,7 @@
                             <dd class="border-bottom">
                                 <a href="#" class="{% if editable %}editable{% else %}readonly{% endif %}" data-name="notes" data-type="textarea" data-pk="{{footprint.id}}"
                                     data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
-                                    data-url="/api/footprint/{{footprint.id}}/" data-title="Edit Notes">{{footprint.notes|safe}}</a>
+                                    data-url="/api/footprint/{{footprint.id}}/">{{footprint.notes|safe}}</a>
                             </dd>
                         </div>
                     </dl>
@@ -226,7 +191,7 @@
                         <dd>    
                             <ul class="additional-questions">
                                 <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
-                                    <a href="#" class="{% if editable %}editable-actor{% endif %} do-you-know" data-name="actor"
+                                    <a href="#" class="{% if editable %}editable-actor{% endif %} do-you-know persistant" data-name="actor"
                                         data-type="actor" data-pk="{{footprint.id}}" data-value=""
                                         data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
                                         data-url="/footprint/actor/{{footprint.id}}/add/">people related to this evidence, e.g. sellers, owners, curators?</a>
@@ -241,7 +206,7 @@
                                 {% endif %}
                                 {% if footprint.medium_description == '' %}
                                     <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
-                                    <a href="#" class="{% if editable %}editable{% endif %} do-you-know" data-name="medium_description"
+                                    <a href="#" class="{% if editable %}editable{% endif %} do-you-know persistant" data-name="medium_description"
                                         data-type="text" data-pk="{{footprint.id}}"
                                         data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
                                         data-value=""
@@ -250,7 +215,7 @@
                                 {% endif %}
                                 {% if footprint.call_number == '' %}
                                     <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
-                                    <a href="#" class="{% if editable %}editable{% endif %} do-you-know" data-name="call_number"
+                                    <a href="#" class="{% if editable %}editable{% endif %} do-you-know persistant" data-name="call_number"
                                         data-type="text" data-pk="{{footprint.id}}"
                                         data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
                                         data-value=""
@@ -259,7 +224,7 @@
                                 {% endif %}
                                 {% if not footprint.associated_date %}
                                     <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
-                                    <a href="#" class="{% if editable %}editable{% endif %} do-you-know" data-name="associated_date"
+                                    <a href="#" class="{% if editable %}editable{% endif %} do-you-know persistant" data-name="associated_date"
                                         data-type="text" data-pk="{{footprint.id}}"
                                         data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
                                         data-value=""
@@ -268,18 +233,19 @@
                                 {% endif %}                            
                                 {% if footprint.language.count < 1 %}
                                     <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
-                                        <a href="#" class="{% if editable %}editable-language{% endif %} do-you-know" data-name="language"
+                                        <a href="#" class="{% if editable %}editable-language{% endif %} do-you-know persistant"
+                                            data-name="language"
                                             data-type="select2" data-pk="{{footprint.id}}" data-value=""
                                             data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
-                                            data-url="/api/footprint/{{footprint.id}}/">in which language this evidence was recorded?</a>
+                                            data-url="/api/footprint/{{footprint.id}}/">in which language(s) this evidence was recorded?</a>
                                     </li>
                                 {% endif %}
                                 {% if not footprint.notes %}
                                     <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
-                                        <a href="#" class="editable do-you-know" data-name="notes"
+                                        <a href="#" class="editable do-you-know persistant" data-name="notes"
                                            data-type="textarea" data-pk="{{footprint.id}}" data-value=""
                                            data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
-                                           data-url="/api/footprint/{{footprint.id}}/" data-title="Edit Notes">any additional notes, clarifications, deductions or oddities?</a>
+                                           data-url="/api/footprint/{{footprint.id}}/">any additional notes, clarifications, deductions or oddities?</a>
                                     </li>
                                 {% endif %}
                             </ul>

@@ -3,11 +3,11 @@ import json
 from django.test import TestCase
 from django.test.client import Client, RequestFactory
 
-from footprints.main.models import Footprint
-from footprints.main.tests.factories import (UserFactory, NameFactory,
-                                             WrittenWorkFactory,
-                                             ImprintFactory, FootprintFactory)
-from footprints.main.views import CreateFootprintView
+from footprints.main.models import Footprint, Actor
+from footprints.main.tests.factories import (UserFactory, WrittenWorkFactory,
+                                             ImprintFactory, FootprintFactory,
+                                             PersonFactory, RoleFactory)
+from footprints.main.views import CreateFootprintView, FootprintAddActorView
 
 
 class BasicTest(TestCase):
@@ -140,7 +140,7 @@ class ListViewTests(TestCase):
         self.assertEquals(response.data[0]['title'], 'Alpha')
 
     def test_name_listview(self):
-        NameFactory(name="Alpha")
+        PersonFactory(name='Alpha')
 
         response = self.client.get('/api/name/', {'q': 'Foo'},
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
@@ -175,3 +175,41 @@ class CreateFootprintViewTest(TestCase):
         self.assertEquals(fp.medium, 'New Medium')
         self.assertEquals(fp.provenance, 'New Provenance')
         self.assertEquals(fp.notes, 'Some notes')
+
+
+class FootprintAddActorViewTest(TestCase):
+
+    def test_create_actor_new_person(self):
+        role = RoleFactory()
+
+        view = FootprintAddActorView()
+        view.create_actor('', 'Alpha Centauri', role, 'Alf')
+
+        Actor.objects.get(person__name='Alpha Centauri',
+                          role=role, alias='Alf')
+
+    def test_create_actor_existing_person(self):
+        alpha = PersonFactory(name='Alpha')
+        role = RoleFactory()
+
+        view = FootprintAddActorView()
+        view.create_actor(alpha.id, alpha.name, role, 'Alf')
+
+        Actor.objects.get(person__id=alpha.id,
+                          person__name=alpha.name,
+                          role=role, alias='Alf')
+
+    def test_create_actor_existing_person_new_name(self):
+        alpha = PersonFactory(name='Alpha')
+        role = RoleFactory()
+
+        view = FootprintAddActorView()
+        view.create_actor(alpha.id, 'Alpha Beta', role, 'Alf')
+
+        try:
+            Actor.objects.get(person__id=alpha.id)
+        except:
+            pass  # expected
+
+        Actor.objects.get(person__name='Alpha Beta',
+                          role=role, alias='Alf')

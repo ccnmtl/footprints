@@ -35,10 +35,20 @@ $(function(){
         @method render() 
         **/        
         render: function() {
+           var self = this;
+
            this.$input = this.$tpl.find('input[name="person-autocomplete"]');
            this.$roleselect = this.$tpl.find('select[name="role"]');
            this.$actorname =  this.$tpl.find('input[name="actor-name"]');
            jQuery(this.$input).autocomplete({
+               change: function(event, ui) {
+                   self.$input.data('instance', '');
+                   return true;
+               },
+               select: function (event, ui) {
+                   self.$input.data('instance', ui.item.object_id);
+                   return true;
+               },
                source: function(request, response) {
                    jQuery.ajax({
                        url: "/api/name/",
@@ -50,8 +60,8 @@ $(function(){
                            var names = [];
                            for (var i=0; i < data.length; i++) {
                                names.push({
-                                   label: data[i].name,
-                                   object_id: data[i].object_id
+                                   object_id: data[i].object_id,
+                                   label: data[i].name
                                });
                            }
                            response(names);
@@ -181,7 +191,8 @@ $(function(){
        **/
        value2submit: function(value) {
            return {
-               name: this.$input.val(),
+               person_name: this.$input.val(),
+               person_id: this.$input.data('instance'),
                role: this.$roleselect.val(),
                alias: this.$actorname.val()
             }

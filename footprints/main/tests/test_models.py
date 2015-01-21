@@ -7,7 +7,7 @@ from footprints.main.models import Language, DigitalFormat, \
 from footprints.main.tests.factories import RoleFactory, \
     ActorFactory, PlaceFactory, CollectionFactory, \
     WrittenWorkFactory, ImprintFactory, BookCopyFactory, FootprintFactory, \
-    PersonFactory, NameFactory
+    PersonFactory
 
 
 class BasicModelTest(TestCase):
@@ -50,8 +50,7 @@ class BasicModelTest(TestCase):
                           'bar')
 
     def test_person(self):
-        name = NameFactory(name="Cicero")
-        person = PersonFactory(name=name)
+        person = PersonFactory(name='Cicero')
         self.assertEquals(person.__unicode__(), "Cicero")
 
     def test_actor(self):
@@ -62,7 +61,7 @@ class BasicModelTest(TestCase):
         # No Alternate Name
         self.assertEquals(
             actor.__unicode__(),
-            '%s (%s)' % (actor.person.full_name, role.name))
+            '%s (%s)' % (actor.person.name, role.name))
 
         # With Alternate Name
         actor = ActorFactory(role=role)

@@ -347,10 +347,9 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
                 } else {  
                     //send ajax to server and return deferred object
                     return $.ajax($.extend({
-                        url     : this.options.url,
-                        data    : params,
+                        url: this.options.url,
+                        data: params,
                         traditional: true,
-                        type    : 'POST'
                     }, this.options.ajaxOptions));
                 }
             }
@@ -1451,7 +1450,9 @@ Applied as jQuery method.
         },
         
         innerShow: function () {
-            this.$element.hide();
+            if (!jQuery(this.$element).hasClass('persistant')) {
+                this.$element.hide();
+            }
             this.tip().insertAfter(this.$element).show();
         }, 
         
@@ -1830,7 +1831,7 @@ Makes editable any HTML element on the page. Applied as jQuery method.
         @param {boolean} closeAll Whether to close all other editable containers when showing this one. Default true.
         **/  
         toggle: function(closeAll) {
-            if(this.container && this.container.tip().is(':visible')) {
+            if (this.container && this.container.tip().is(':visible')) {
                 this.hide();
             } else {
                 this.show(closeAll);
