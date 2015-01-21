@@ -344,12 +344,13 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
 
                 if(typeof this.options.url === 'function') { //user's function
                     return this.options.url.call(this.options.scope, params);
-                } else {  
+                } else {
                     //send ajax to server and return deferred object
                     return $.ajax($.extend({
                         url: this.options.url,
                         data: params,
                         traditional: true,
+                        type: 'POST'
                     }, this.options.ajaxOptions));
                 }
             }
