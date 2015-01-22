@@ -16,7 +16,9 @@ from footprints.main.views import (LoginView, LogoutView, TitleListView,
                                    PersonDetailView, PlaceDetailView,
                                    FootprintViewSet, LanguageViewSet,
                                    RoleViewSet, FootprintAddActorView,
-                                   FootprintRemoveActorView)
+                                   FootprintRemoveActorView,
+                                   ExtendedDateFormatViewSet,
+                                   FootprintAddDateView)
 from footprints.mixins import is_staff
 
 
@@ -30,6 +32,7 @@ router = routers.DefaultRouter()
 router.register(r'footprint', FootprintViewSet)
 router.register(r'language', LanguageViewSet)
 router.register(r'role', RoleViewSet)
+router.register(r'edtf', ExtendedDateFormatViewSet)
 
 
 urlpatterns = patterns(
@@ -59,6 +62,8 @@ urlpatterns = patterns(
      FootprintAddActorView.as_view()),
     (r'^footprint/actor/(?P<footprint_id>\d+)/remove/$',
      FootprintRemoveActorView.as_view()),
+    (r'^footprint/date/(?P<footprint_id>\d+)/$',
+     FootprintAddDateView.as_view()),
     (r'^footprint/create/$', CreateFootprintView.as_view()),
     url(r'^footprint/(?P<pk>\d+)/$',
         FootprintDetailView.as_view(), name='footprint-detail-view'),

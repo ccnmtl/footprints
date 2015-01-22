@@ -82,10 +82,10 @@
                         <div class="description-list" {% if not footprint.associated_date %}style="display: none"{% endif %}>
                             <dt>Footprint Date</dt>
                             <dd class="border-bottom">
-                                <a href="#" class="{% if editable %}editable{% else %}readonly{% endif %}" data-name="associated_date"
-                                    data-type="text" data-pk="{{footprint.id}}"
+                                <a href="#" class="{% if editable %}editable{% else %}readonly{% endif %}"
+                                    data-name="edtf_format" data-type="text" data-pk="{{footprint.associated_date.id}}"
                                     data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
-                                    data-url="/api/footprint/{{footprint.id}}/">{{footprint.associated_date}}</a>
+                                    data-url="/api/edtf/{{footprint.associated_date.id}}/">{{footprint.associated_date}}</a>
                             </dd>
                         </div>
                         {% if footprint.place %}
@@ -98,7 +98,33 @@
                                     {{footprint.place}}
                             </dd>
                         {% endif %}
-            
+                        
+                        <div class="description-list" {% if footprint.language.count < 1 %}style="display: none"{% endif %}>
+                            <dt>Footprint Language</dt>
+                            <dd class="border-bottom">
+                                <a href="#" class="{% if editable %}editable-language{% else %}readonly{% endif %}" data-name="language"
+                                    data-type="select2" data-pk="{{footprint.id}}"
+                                    data-value="[{% for language in footprint.language.all %}{{language.id}}{% if not forloop.last %},{% endif %}{% endfor %}]"
+                                    data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                    data-url="/api/footprint/{{footprint.id}}/">
+                                    {% for language in footprint.language.all %}
+                                        {{language.name}}{% if not forloop.last %}, {% endif %}
+                                    {% endfor %}
+                                </a>
+                            </dd>
+                        </div>
+                        {% ifnotequal footprint.title footprint.display_title %}
+                        <div class="description-list" {% if not footprint.title %}style="display: none"{% endif %}>
+                            <dt>Title of the work<br />as shown in footprint</dt>
+                            <dd class="border-bottom">
+                                <a href="#" class="{% if editable %}editable{% else %}readonly{% endif %}" data-name="title"
+                                    data-type="text" data-pk="{{footprint.id}}"
+                                    data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
+                                    data-url="/api/footprint/{{footprint.id}}/">{{footprint.title}}</a>
+                            </dd>
+                        </div>
+                        {% endifnotequal %}
+                        
                         {% if footprint.actor.count > 0 %}
                             {% for actor in footprint.actor.all %}
                                 <dt>{{actor.role.name}}</dt>
@@ -106,12 +132,17 @@
                                     {{actor.display_name}} 
                                     <div class="pull-right">
                                         {% if editable %}
-                                        <a href="#" class="remove-footprint-actor" data-footprint-pk="{{footprint.id}}" data-actor-pk="{{actor.id}}"
-                                            data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" title="remove person">
+                                        <a href="#" class="remove-footprint-actor"
+                                            data-params="{actor_id:'{{actor.id}}'"
+                                            data-url="/footprint/actor/{{footprint.id}}/add/"
+                                            data-name="{{actor.display_name}}"
+                                            title="remove actor">
                                             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
                                         {% endif %}
                                         &nbsp;
-                                        <a href="/person/{{actor.person.id}}/" title="see details" class="foreign-key"><span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
+                                        <a href="/person/{{actor.person.id}}/" title="see details" class="foreign-key">
+                                            <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+                                        </a>
                                     </div>
                                 </dd>
                             {% endfor %}
@@ -142,30 +173,6 @@
                                 data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
                                 data-url="/api/footprint/{{footprint.id}}/">{{footprint.provenance}}</a>
                         </dd>
-                        <div class="description-list" {% if footprint.language.count < 1 %}style="display: none"{% endif %}>
-                            <dt>Evidence Language</dt>
-                            <dd class="border-bottom">
-                                <a href="#" class="{% if editable %}editable-language{% else %}readonly{% endif %}" data-name="language"
-                                    data-type="select2" data-pk="{{footprint.id}}"
-                                    data-value="[{% for language in footprint.language.all %}{{language.id}}{% if not forloop.last %},{% endif %}{% endfor %}]"
-                                    data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
-                                    data-url="/api/footprint/{{footprint.id}}/">
-                                    {% for language in footprint.language.all %}
-                                        {{language.name}}{% if not forloop.last %}, {% endif %}
-                                    {% endfor %}
-                                </a>
-                            </dd>
-                        </div>
-                        
-                        <div class="description-list" {% if not footprint.title %}style="display: none"{% endif %}>
-                            <dt>Title in evidence</dt>
-                            <dd class="border-bottom">
-                                <a href="#" class="{% if editable %}editable{% else %}readonly{% endif %}" data-name="title"
-                                    data-type="text" data-pk="{{footprint.id}}"
-                                    data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
-                                    data-url="/api/footprint/{{footprint.id}}/">{{footprint.title}}</a>
-                            </dd>
-                        </div>
                         <div class="description-list" {% if footprint.call_number == '' %}style="display: none"{% endif %}>
                             <dt>Evidence Call Number</dt>
                             <dd class="border-bottom">
@@ -174,8 +181,7 @@
                                     data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
                                     data-url="/api/footprint/{{footprint.id}}/">{{footprint.call_number}}</a>
                             </dd>
-                        </div>
-                        
+                        </div>                        
                         <div class="description-list" {% if not footprint.notes %}style="display: none"{% endif %}>
                             <dt>Notes</dt>
                             <dd class="border-bottom">
@@ -190,13 +196,6 @@
                         <dt>Do you know...</dt>
                         <dd>    
                             <ul class="additional-questions">
-                                <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
-                                    <a href="#" class="{% if editable %}editable-actor{% endif %} do-you-know persistant" data-name="actor"
-                                        data-type="actor" data-pk="{{footprint.id}}" data-value=""
-                                        data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
-                                        data-url="/footprint/actor/{{footprint.id}}/add/">people related to this evidence, e.g. sellers, owners, curators?</a>
-                                </li>
-
                                 {% if not footprint.place %}
                                     <li>
                                         <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
@@ -204,6 +203,31 @@
                                         </span>
                                     </li>
                                 {% endif %}
+                                {% if not footprint.associated_date %}
+                                    <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                                    <a href="#" class="{% if editable %}editable{% endif %} do-you-know persistant"
+                                        data-name="associated_date"
+                                        data-type="text" data-pk="{{footprint.id}}"
+                                        data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" data-value=""
+                                        data-url="/footprint/date/{{footprint.id}}/">the date when the footprint occurred?</a>
+                                    </li>
+                                {% endif %}
+                                {% if footprint.language.count < 1 %}
+                                    <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                                        <a href="#" class="{% if editable %}editable-language{% endif %} do-you-know persistant"
+                                            data-name="language"
+                                            data-type="select2" data-pk="{{footprint.id}}" data-value=""
+                                            data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
+                                            data-url="/api/footprint/{{footprint.id}}/">the language(s) of the footprint?</a>
+                                    </li>
+                                {% endif %}
+                                <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                                    <a href="#" class="{% if editable %}editable-actor{% endif %} do-you-know persistant" data-name="actor"
+                                        data-type="actor" data-pk="{{footprint.id}}" data-value=""
+                                        data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
+                                        data-url="/footprint/actor/{{footprint.id}}/add/">people related to this footprint, e.g. sellers, owners, curators?</a>
+                                </li>
+
                                 {% if footprint.medium_description == '' %}
                                     <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
                                     <a href="#" class="{% if editable %}editable{% endif %} do-you-know persistant" data-name="medium_description"
@@ -220,24 +244,6 @@
                                         data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
                                         data-value=""
                                         data-url="/api/footprint/{{footprint.id}}/">the call number of the evidence?</a>
-                                    </li>
-                                {% endif %}
-                                {% if not footprint.associated_date %}
-                                    <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
-                                    <a href="#" class="{% if editable %}editable{% endif %} do-you-know persistant"
-                                        data-name="associated_date"
-                                        data-type="text" data-pk="{{footprint.id}}"
-                                        data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" data-value=""
-                                        data-url="/api/footprint/{{footprint.id}}/">the date when the footprint occurred?</a>
-                                    </li>
-                                {% endif %}
-                                {% if footprint.language.count < 1 %}
-                                    <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
-                                        <a href="#" class="{% if editable %}editable-language{% endif %} do-you-know persistant"
-                                            data-name="language"
-                                            data-type="select2" data-pk="{{footprint.id}}" data-value=""
-                                            data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
-                                            data-url="/api/footprint/{{footprint.id}}/">in which language(s) this evidence was recorded?</a>
                                     </li>
                                 {% endif %}
                                 {% if not footprint.notes %}
@@ -341,6 +347,22 @@
                 {% endif %}
             </div>
         </div>
+        
+        <div class="modal" id="confirm-modal" tabindex="-1" role="dialog" aria-labelledby="Confirm" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Confirm</h4>
+                </div>
+                <div class="modal-body"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-primary btn-confirm">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>           
     </div>
 {% endwith %} 
 {% endblock %}

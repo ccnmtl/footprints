@@ -1,8 +1,12 @@
 (function() {
 
     EditFootprintView = Backbone.View.extend({
+        events: {
+            'click a.remove-footprint-actor span.glyphicon-remove': 'onConfirmRemoveActor',
+            'click .btn-confirm': 'removeActor'
+        },
         initialize: function(options) {
-            _.bindAll(this, 'render');
+            _.bindAll(this, 'render', 'onConfirmRemoveActor', 'removeActor');
 
             // Modifying X-Editable default properties
             jQuery.fn.editable.defaults.mode = 'inline';
@@ -49,6 +53,25 @@
                     jQuery(this).remove();
                 });
             });
+        },
+        onConfirmRemoveActor: function(evt) {
+            var anchor = jQuery(evt.currentTarget).parents('a')[0];
+            var name = jQuery(anchor).data('name');
+            var msg = "Are you sure you want to remove " + name + "?";
+            
+            jQuery("#confirm-modal").find('.modal-body').html(msg);
+            var eltConfirm = jQuery("#confirm-modal").find('.btn-confirm')[0]; 
+            jQuery(eltConfirm).data('params', jQuery(anchor).data('params'));
+            jQuery(eltConfirm).data('url', jQuery(anchor).data('url'));
+            
+            jQuery("#confirm-modal").modal({
+                'show': true,
+                'backdrop': 'static',
+                'keyboard': false
+            });
+        },
+        removeActor: function(evt) {
+            
         }
     });
 })();

@@ -16,10 +16,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from footprints.main.models import (Footprint, Actor, Person, Role,
-                                    WrittenWork, Language)
-from footprints.main.permissions import IsOwnerOrReadOnly, IsStaffOrReadOnly
+                                    WrittenWork, Language, ExtendedDateFormat)
+from footprints.main.permissions import IsStaffOrReadOnly
 from footprints.main.serializers import TitleSerializer, NameSerializer, \
-    FootprintSerializer, LanguageSerializer, RoleSerializer
+    FootprintSerializer, LanguageSerializer, RoleSerializer, \
+    ExtendedDateFormatSerializer
 from footprints.mixins import (JSONResponseMixin, LoggedInMixin,
                                EditableMixin)
 
@@ -172,6 +173,24 @@ class FootprintAddActorView(LoggedInMixin, JSONResponseMixin, View):
         })
 
 
+class FootprintAddDateView(LoggedInMixin, JSONResponseMixin, View):
+
+    def post(self, *args, **kwargs):
+        footprint_id = kwargs.get('footprint_id', None)
+        footprint = get_object_or_404(Footprint, pk=footprint_id)
+
+        date_string = self.request.POST.get('associated_date', None)
+        if date_string is not None:
+            edtf = ExtendedDateFormat.objects.create(edtf_format=date_string)
+            footprint.associated_date = edtf
+            footprint.save()
+
+        return self.render_to_json_response({
+            'success': True,
+            'footprint_id': footprint.id
+        })
+
+
 class TitleListView(APIView):
     renderer_classes = (JSONPRenderer,)
     permission_classes = (AllowAny,)
@@ -200,7 +219,7 @@ class NameListView(APIView):
 class FootprintViewSet(viewsets.ModelViewSet):
     queryset = Footprint.objects.all()
     serializer_class = FootprintSerializer
-    permission_classes = (IsOwnerOrReadOnly,)
+    permission_classes = (IsStaffOrReadOnly,)
 
 
 class LanguageViewSet(viewsets.ModelViewSet):
@@ -212,4 +231,10 @@ class LanguageViewSet(viewsets.ModelViewSet):
 class RoleViewSet(viewsets.ModelViewSet):
     queryset = Role.objects.all()
     serializer_class = RoleSerializer
+    permission_classes = (IsStaffOrReadOnly,)
+
+
+class ExtendedDateFormatViewSet(viewsets.ModelViewSet):
+    queryset = ExtendedDateFormat.objects.all()
+    serializer_class = ExtendedDateFormatSerializer
     permission_classes = (IsStaffOrReadOnly,)
