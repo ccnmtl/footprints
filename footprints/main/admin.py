@@ -18,7 +18,18 @@ admin.site.register(Actor)
 admin.site.register(Place)
 admin.site.register(Collection)
 admin.site.register(WrittenWork)
-admin.site.register(BookCopy)
+
+
+def imprint_display(obj):
+    return obj.imprint.__unicode__()
+
+
+class BookCopyAdmin(admin.ModelAdmin):
+    list_display = ('id', imprint_display)
+    fields = ('id', 'imprint', 'digital_object', 'notes')
+    readonly_fields = ('id',)
+
+admin.site.register(BookCopy, BookCopyAdmin)
 
 
 def work_title(obj):
