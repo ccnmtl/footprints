@@ -28,6 +28,24 @@
             </div>
         </div>
     </script>
+    <script type="text-template" id="actor-display-template">
+        <dt><%=actor.role.name%></dt>
+        <dd class="border-bottom">
+            <%=actor.person.name %><% if (actor.alias.length > 0) { %> as <%=actor.alias%> <% } %> 
+            <div class="pull-right">
+                <a href="#" class="remove-footprint-actor"
+                    data-params="{actor_id:'<%=actor.id%>'"
+                    data-url="/footprint/actor/<%=footprint.id%>/add/"
+                    data-name="<%=actor.display_name%>"
+                    title="remove actor">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+                &nbsp;
+                <a href="/person/<%=actor.person.id%>/" title="see details" class="foreign-key">
+                    <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+                </a>
+            </div>
+        </dd>
+    </script>
 {% endblock %}
 
 {% block js %}
@@ -125,11 +143,11 @@
                         </div>
                         {% endifnotequal %}
                         
-                        {% if footprint.actor.count > 0 %}
+                        <div class="actor-list" {% if not footprint.actor.count > 0 %}style="display: none"{% endif %}>
                             {% for actor in footprint.actor.all %}
                                 <dt>{{actor.role.name}}</dt>
                                 <dd class="border-bottom">
-                                    {{actor.display_name}} 
+                                    {{actor.person.name}}{% if actor.alias %} as {{actor.alias}} {% endif %} 
                                     <div class="pull-right">
                                         {% if editable %}
                                         <a href="#" class="remove-footprint-actor"
@@ -146,7 +164,7 @@
                                     </div>
                                 </dd>
                             {% endfor %}
-                        {% endif %}
+                       </div>
                     </dl>
                     <br />
                     <dl class="dl-horizontal">

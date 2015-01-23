@@ -7,14 +7,19 @@
         },
         initialize: function(options) {
             _.bindAll(this, 'render', 'onConfirmRemoveActor', 'removeActor');
+            
+            var html = jQuery("#actor-display-template").html();
+            this.actor_template = _.template(html);
+                
+            var self = this;
 
             // Modifying X-Editable default properties
             jQuery.fn.editable.defaults.mode = 'inline';
-
             jQuery.fn.editable.defaults.ajaxOptions = {
                headers: {'X-HTTP-Method-Override': 'PATCH'}
             };
 
+            // Initializing X-editable fields
             jQuery('.editable').editable({
                 namedParams: true
             });
@@ -26,6 +31,10 @@
                     if (value.indexOf('name=&role') === 0) {
                         return 'Please enter the person\'s name'; 
                     }
+                },
+                success: function(response, newValue) {
+                    var html = self.actor_template(response);
+                    jQuery('div.actor-list').append(html);
                 }
             });
 
@@ -71,7 +80,13 @@
             });
         },
         removeActor: function(evt) {
-            
+            jQuery.ajax({
+                url:,
+                success: {
+                   
+               } 
+            });
+            alert('remove actor');
         }
     });
 })();

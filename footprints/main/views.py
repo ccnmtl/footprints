@@ -20,7 +20,7 @@ from footprints.main.models import (Footprint, Actor, Person, Role,
 from footprints.main.permissions import IsStaffOrReadOnly
 from footprints.main.serializers import TitleSerializer, NameSerializer, \
     FootprintSerializer, LanguageSerializer, RoleSerializer, \
-    ExtendedDateFormatSerializer
+    ExtendedDateFormatSerializer, ActorSerializer, PersonSerializer
 from footprints.mixins import (JSONResponseMixin, LoggedInMixin,
                                EditableMixin)
 
@@ -169,7 +169,8 @@ class FootprintAddActorView(LoggedInMixin, JSONResponseMixin, View):
 
         return self.render_to_json_response({
             'success': True,
-            'footprint_id': footprint.id
+            'footprint': {'id': footprint.id},
+            'actor': ActorSerializer(actor).data
         })
 
 
@@ -238,3 +239,16 @@ class ExtendedDateFormatViewSet(viewsets.ModelViewSet):
     queryset = ExtendedDateFormat.objects.all()
     serializer_class = ExtendedDateFormatSerializer
     permission_classes = (IsStaffOrReadOnly,)
+
+
+class PersonViewSet(viewsets.ModelViewSet):
+    queryset = Person.objects.all()
+    serializer_class = PersonSerializer
+    permission_classes = (IsStaffOrReadOnly,)
+
+
+class ActorViewSet(viewsets.ModelViewSet):
+    queryset = Actor.objects.all()
+    serializer_class = ActorSerializer
+    permission_classes = (IsStaffOrReadOnly,)
+

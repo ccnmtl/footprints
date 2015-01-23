@@ -417,7 +417,7 @@ class BookCopy(models.Model):
         verbose_name_plural = "Book Copies"
 
     def __unicode__(self):
-        return self.imprint.__unicode__()
+        return "(%s) %s" % (self.id, self.imprint.__unicode__())
 
     def percent_complete(self):
         required = 3.0

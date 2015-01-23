@@ -1,35 +1,36 @@
 from django.core.exceptions import ObjectDoesNotExist
-from rest_framework import serializers
+from rest_framework.fields import CharField
 from rest_framework.relations import StringRelatedField, PrimaryKeyRelatedField
+from rest_framework.serializers import Serializer, HyperlinkedModelSerializer
 import six
 
 from footprints.main.models import Footprint, Language, Role, Actor, \
-    ExtendedDateFormat
+    ExtendedDateFormat, Person
 
 
-class TitleSerializer(serializers.Serializer):
-    object_type = serializers.CharField()
-    title = serializers.CharField(max_length=None, min_length=1)
+class TitleSerializer(Serializer):
+    object_type = CharField()
+    title = CharField(max_length=None, min_length=1)
 
 
-class NameSerializer(serializers.Serializer):
-    object_id = serializers.CharField()
-    name = serializers.CharField(max_length=None, min_length=1)
+class NameSerializer(Serializer):
+    object_id = CharField()
+    name = CharField(max_length=None, min_length=1)
 
 
-class LanguageSerializer(serializers.HyperlinkedModelSerializer):
+class LanguageSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = Language
         fields = ('name',)
 
 
-class ExtendedDateFormatSerializer(serializers.HyperlinkedModelSerializer):
+class ExtendedDateFormatSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = ExtendedDateFormat
         fields = ('id', 'edtf_format',)
 
 
-class RoleSerializer(serializers.HyperlinkedModelSerializer):
+class RoleSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = Role
         fields = ('id', 'name',)
@@ -55,8 +56,24 @@ class LanguageRelatedField(StringRelatedField):
             self.fail('incorrect_type', data_type=type(data).__name__)
 
 
-class FootprintSerializer(serializers.HyperlinkedModelSerializer):
-    associated_date = serializers.StringRelatedField()
+class PersonSerializer(HyperlinkedModelSerializer):
+    class Meta:
+        model = Person
+        fields = ('id', 'name')
+
+
+class ActorSerializer(HyperlinkedModelSerializer):
+    person = PersonSerializer()
+    role = RoleSerializer()
+
+    class Meta:
+        model = Actor
+        fields = ('id', 'alias', 'person', 'role')
+        depth = 1
+
+
+class FootprintSerializer(HyperlinkedModelSerializer):
+    associated_date = StringRelatedField()
     language = LanguageRelatedField(many=True)
     actor = PrimaryKeyRelatedField(many=True, queryset=Actor.objects.all())
 
