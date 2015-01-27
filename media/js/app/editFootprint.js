@@ -96,7 +96,6 @@
             var data = jQuery.fn.editableutils.tryParseJson(params, true);
             data.actor_id = actorId;
             
-            var actorId = jQuery(evt.currentTarget).data('actor-id');
             jQuery.ajax({
                 url: url,
                 type: "post",

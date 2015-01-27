@@ -90,12 +90,12 @@
         },
         initialize: function(options) {
             _.bindAll(this, 'isValid', 'show', 'showError', 'clearError');
-            this.identifier = "#evidencelocation",
+            this.identifier = "#evidencelocation";
             this.elTab = jQuery(this.el).find("#evidencelocation");
         },
         isValid: function() {
             var elt = jQuery(this.elTab).find("textarea[name='footprint-provenance']")[0];
-            return jQuery(elt).val().length > 0
+            return jQuery(elt).val().length > 0;
         }
     });
     
