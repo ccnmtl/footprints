@@ -1,7 +1,10 @@
 from django.core.exceptions import ObjectDoesNotExist
-from rest_framework.fields import CharField
-from rest_framework.relations import StringRelatedField, PrimaryKeyRelatedField
+from rest_framework.fields import CharField, empty
+from rest_framework.relations import (StringRelatedField,
+                                      PrimaryKeyRelatedField,
+                                      ManyRelatedField, MANY_RELATION_KWARGS)
 from rest_framework.serializers import Serializer, HyperlinkedModelSerializer
+from rest_framework.utils import html
 import six
 
 from footprints.main.models import Footprint, Language, Role, Actor, \
@@ -27,13 +30,39 @@ class LanguageSerializer(HyperlinkedModelSerializer):
 class ExtendedDateFormatSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = ExtendedDateFormat
-        fields = ('id', 'edtf_format',)
+        fields = ('pk', 'edtf_format',)
 
 
 class RoleSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = Role
         fields = ('id', 'name',)
+
+
+class ManyRelatedFieldEx(ManyRelatedField):
+    def get_value(self, dictionary):
+        # We override the default field access in order to support
+        # lists in HTML forms.
+        if html.is_html_input(dictionary):
+            # Don't return [] if the update is partial
+            if self.field_name not in dictionary:
+                if getattr(self.root, 'partial', False):
+                    return empty
+
+            return dictionary.getlist(self.field_name)
+
+        return dictionary.get(self.field_name, empty)
+
+
+class ActorRelatedField(PrimaryKeyRelatedField):
+
+    @classmethod
+    def many_init(cls, *args, **kwargs):
+        list_kwargs = {'child_relation': cls(*args, **kwargs)}
+        for key in kwargs.keys():
+            if key in MANY_RELATION_KWARGS:
+                list_kwargs[key] = kwargs[key]
+        return ManyRelatedFieldEx(**list_kwargs)
 
 
 class LanguageRelatedField(StringRelatedField):
@@ -55,6 +84,14 @@ class LanguageRelatedField(StringRelatedField):
         except (TypeError, ValueError):
             self.fail('incorrect_type', data_type=type(data).__name__)
 
+    @classmethod
+    def many_init(cls, *args, **kwargs):
+        list_kwargs = {'child_relation': cls(*args, **kwargs)}
+        for key in kwargs.keys():
+            if key in MANY_RELATION_KWARGS:
+                list_kwargs[key] = kwargs[key]
+        return ManyRelatedFieldEx(**list_kwargs)
+
 
 class PersonSerializer(HyperlinkedModelSerializer):
     class Meta:
@@ -75,9 +112,10 @@ class ActorSerializer(HyperlinkedModelSerializer):
 class FootprintSerializer(HyperlinkedModelSerializer):
     associated_date = StringRelatedField()
     language = LanguageRelatedField(many=True)
-    actor = PrimaryKeyRelatedField(many=True, queryset=Actor.objects.all())
+    actor = ActorRelatedField(many=True, queryset=Actor.objects.all())
 
     class Meta:
         model = Footprint
-        fields = ('id', 'medium', 'provenance', 'title', 'language',
+        fields = ('id', 'medium', 'medium_description',
+                  'provenance', 'title', 'language',
                   'actor', 'call_number', 'notes', 'associated_date')

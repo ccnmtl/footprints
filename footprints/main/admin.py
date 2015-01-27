@@ -14,11 +14,32 @@ admin.site.register(DigitalFormat)
 admin.site.register(DigitalObject)
 admin.site.register(StandardizedIdentification)
 admin.site.register(Person)
-admin.site.register(Actor)
+
+
+def person_name(obj):
+    return '' if obj.person.name is None else obj.person.name
+
+
+class ActorAdmin(admin.ModelAdmin):
+    list_display = (person_name, 'alias', 'role')
+
+admin.site.register(Actor, ActorAdmin)
+
 admin.site.register(Place)
 admin.site.register(Collection)
 admin.site.register(WrittenWork)
-admin.site.register(BookCopy)
+
+
+def imprint_display(obj):
+    return obj.imprint.__unicode__()
+
+
+class BookCopyAdmin(admin.ModelAdmin):
+    list_display = ('id', imprint_display)
+    fields = ('id', 'imprint', 'digital_object', 'notes')
+    readonly_fields = ('id',)
+
+admin.site.register(BookCopy, BookCopyAdmin)
 
 
 def work_title(obj):
@@ -68,7 +89,7 @@ owner.short_description = 'Owner'
 
 class FootprintAdmin(admin.ModelAdmin):
     list_display = ('title', 'associated_date', 'place', owner,
-                    imprint_title, imprint_date,)
+                    imprint_title, imprint_date, language)
     readonly_fields = ('created_at', 'modified_at',
                        'created_by', 'last_modified_by')
     fieldsets = (

@@ -97,12 +97,6 @@ $(function(){
         @method value2html(value, element) 
         **/
         value2html: function(value, element) {
-            if(!value) {
-                $(element).empty();
-                return; 
-            }
-            var html = $('<div>').text(value.name).html();
-            $(element).html(html); 
         },
         
         /**
@@ -111,19 +105,6 @@ $(function(){
         @method html2value(html) 
         **/        
         html2value: function(html) {        
-          /*
-            you may write parsing method to get value by element's html
-            e.g. "Moscow, st. Lenina, bld. 15" => {city: "Moscow", street: "Lenina", building: "15"}
-            but for complex structures it's not recommended.
-            Better set value directly via javascript, e.g. 
-            editable({
-                value: {
-                    city: "Moscow", 
-                    street: "Lenina", 
-                    building: "15"
-                }
-            });
-          */ 
           return null;  
         },
       
@@ -163,11 +144,6 @@ $(function(){
         @param {mixed} value
        **/         
        value2input: function(value) {
-           if(!value) {
-             return;
-           }
-           this.$input.val(value.name);
-           this.$roleSelect.val(value.role);
        },
 
        

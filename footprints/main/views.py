@@ -129,19 +129,21 @@ class CreateFootprintView(LoggedInMixin, TemplateView):
         return HttpResponseRedirect(url)
 
 
-class FootprintRemoveActorView(LoggedInMixin, JSONResponseMixin, View):
+class FootprintRemoveActorView(LoggedInMixin, EditableMixin,
+                               JSONResponseMixin, View):
 
     def post(self, *args, **kwargs):
         footprint_id = kwargs.get('footprint_id', None)
         footprint = get_object_or_404(Footprint, pk=footprint_id)
 
         actor_id = self.request.POST.get('actor_id', None)
-        actor = get_object_or_404(Actor, pk=actor_id)
+        actor = get_object_or_404(Actor, id=actor_id)
         footprint.actor.remove(actor)
         return self.render_to_json_response({'success': True})
 
 
-class FootprintAddActorView(LoggedInMixin, JSONResponseMixin, View):
+class FootprintAddActorView(LoggedInMixin, EditableMixin,
+                            JSONResponseMixin, View):
 
     def create_actor(self, person_id, person_name, role, alias):
         try:
@@ -186,10 +188,16 @@ class FootprintAddDateView(LoggedInMixin, JSONResponseMixin, View):
             footprint.associated_date = edtf
             footprint.save()
 
-        return self.render_to_json_response({
-            'success': True,
-            'footprint_id': footprint.id
-        })
+            return self.render_to_json_response({
+                'success': True,
+                'footprint_id': footprint.id,
+                'associated_date': edtf.id
+            })
+        else:
+            return self.render_to_json_response({
+                'success': False,
+                'error': 'Please enter a date'
+            })
 
 
 class TitleListView(APIView):
@@ -251,4 +259,3 @@ class ActorViewSet(viewsets.ModelViewSet):
     queryset = Actor.objects.all()
     serializer_class = ActorSerializer
     permission_classes = (IsStaffOrReadOnly,)
-

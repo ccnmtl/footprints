@@ -95,7 +95,8 @@ class BasicModelTest(TestCase):
 
     def test_book_copy(self):
         copy = BookCopyFactory()
-        self.assertEquals(copy.__unicode__(), 'The Odyssey, Edition 1 (1984~)')
+        self.assertTrue(
+            copy.__unicode__().endswith('The Odyssey, Edition 1 (1984~)'))
 
     def test_footprint(self):
         footprint = FootprintFactory()

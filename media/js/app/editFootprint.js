@@ -51,27 +51,36 @@
 
             jQuery('.do-you-know').on('save', function(e, params) {
                 var dataName = jQuery(e.currentTarget).data('name');
-                var elts = jQuery('[data-name="' + dataName + '"]').not(e.currentTarget);
+                var elts = jQuery('[data-attribute-name="' + dataName + '"]');
                 jQuery(elts).each(function(index) {
-                    if (jQuery(this).is('.editable, .editable-language')) {
+                    if (jQuery(this).is('.editable-date')) {
+                        jQuery(this).editable('setValue', params.newValue, true);
+                        jQuery(this).attr('data-pk', params.response.associated_date);
+                        var url = jQuery(this).attr('data-url');
+                        jQuery(this).attr('data-url', url + params.response.associated_date + '/');
+                        jQuery(this).editable('option', 'pk', params.response.associated_date);
+                    } else if (jQuery(this).is('.editable, .editable-language')) {
                         jQuery(this).editable('setValue', params.newValue, true);
                     }
                     jQuery(this).parents('div.description-list').show();
                 });
-                jQuery(e.currentTarget).parents('li').fadeOut(function() {
-                    jQuery(this).remove();
-                });
+                if (!jQuery(e.currentTarget).hasClass('editable-actor')) {
+                    jQuery(e.currentTarget).parents('li').fadeOut(function() {
+                        jQuery(this).remove();
+                    });
+                }
             });
         },
         onConfirmRemoveActor: function(evt) {
             var anchor = jQuery(evt.currentTarget).parents('a')[0];
             var name = jQuery(anchor).data('name');
             var msg = "Are you sure you want to remove " + name + "?";
-            
+
             jQuery("#confirm-modal").find('.modal-body').html(msg);
             var eltConfirm = jQuery("#confirm-modal").find('.btn-confirm')[0]; 
             jQuery(eltConfirm).data('params', jQuery(anchor).data('params'));
             jQuery(eltConfirm).data('url', jQuery(anchor).data('url'));
+            jQuery(eltConfirm).data('actor-id', jQuery(anchor).data('actor-id'));
             
             jQuery("#confirm-modal").modal({
                 'show': true,
@@ -80,13 +89,28 @@
             });
         },
         removeActor: function(evt) {
+            var url = jQuery(evt.currentTarget).data('url');
+            var actorId = jQuery(evt.currentTarget).data('actor-id');
+            var params = jQuery(evt.currentTarget).data('params');
+
+            var data = jQuery.fn.editableutils.tryParseJson(params, true);
+            data.actor_id = actorId;
+            
+            var actorId = jQuery(evt.currentTarget).data('actor-id');
             jQuery.ajax({
-                url:,
-                success: {
-                   
-               } 
+                url: url,
+                type: "post",
+                data: data,
+                success: function(response) {
+                    jQuery("[data-actor-id='" + actorId + "']").fadeOut(function() {
+                        jQuery(this).remove(); 
+                    });
+                    jQuery("#confirm-modal").modal("hide");
+                },
+                error: function() {
+                    jQuery("#confirm-modal div.error").modal("An error occurred. Please try again.");
+                }
             });
-            alert('remove actor');
         }
     });
 })();
