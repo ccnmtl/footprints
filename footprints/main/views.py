@@ -3,7 +3,7 @@ from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import logout as auth_logout_view
 from django.core.urlresolvers import reverse
-from django.http.response import HttpResponseRedirect
+from django.http.response import HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
@@ -16,7 +16,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from footprints.main.models import (Footprint, Actor, Person, Role,
-                                    WrittenWork, Language, ExtendedDateFormat)
+                                    WrittenWork, Language, ExtendedDateFormat,
+                                    Place)
 from footprints.main.permissions import IsStaffOrReadOnly
 from footprints.main.serializers import TitleSerializer, NameSerializer, \
     FootprintSerializer, LanguageSerializer, RoleSerializer, \
@@ -52,15 +53,14 @@ class LogoutView(LoggedInMixin, View):
             return auth_logout_view(request, "/")
 
 
-class PersonDetailView(EditableMixin, DetailView):
+class PersonDetailView(EditableMixin, LoggedInMixin, DetailView):
 
     model = Person
 
     def get_context_data(self, **kwargs):
         context = super(PersonDetailView, self).get_context_data(**kwargs)
 
-        related = []
-        context['related'] = related
+        context['related'] = []
         return context
 
 
@@ -78,29 +78,27 @@ class FootprintDetailView(EditableMixin, LoggedInMixin, DetailView):
         return context
 
 
-class PlaceDetailView(EditableMixin, DetailView):
+class PlaceDetailView(EditableMixin, LoggedInMixin, DetailView):
 
-    model = Actor
+    model = Place
 
     def get_context_data(self, **kwargs):
-        context = super(PersonDetailView, self).get_context_data(**kwargs)
+        context = super(PlaceDetailView, self).get_context_data(**kwargs)
 
-        related = []
-        context['related'] = related
+        context['related'] = []
         context['editable'] = self.has_edit_permission(self.request.user,
                                                        self.object)
         return context
 
 
-class WrittenWorkDetailView(EditableMixin, DetailView):
+class WrittenWorkDetailView(EditableMixin, LoggedInMixin, DetailView):
 
     model = WrittenWork
 
     def get_context_data(self, **kwargs):
         context = super(WrittenWorkDetailView, self).get_context_data(**kwargs)
 
-        related = []
-        context['related'] = related
+        context['related'] = []
         context['editable'] = self.has_edit_permission(self.request.user,
                                                        self.object)
         return context
@@ -135,6 +133,9 @@ class FootprintRemoveActorView(LoggedInMixin, EditableMixin,
     def post(self, *args, **kwargs):
         footprint_id = kwargs.get('footprint_id', None)
         footprint = get_object_or_404(Footprint, pk=footprint_id)
+
+        if not self.has_edit_permission(self.request.user, footprint):
+            return HttpResponseForbidden()
 
         actor_id = self.request.POST.get('actor_id', None)
         actor = get_object_or_404(Actor, id=actor_id)
@@ -176,11 +177,15 @@ class FootprintAddActorView(LoggedInMixin, EditableMixin,
         })
 
 
-class FootprintAddDateView(LoggedInMixin, JSONResponseMixin, View):
+class FootprintAddDateView(LoggedInMixin, EditableMixin,
+                           JSONResponseMixin, View):
 
     def post(self, *args, **kwargs):
         footprint_id = kwargs.get('footprint_id', None)
         footprint = get_object_or_404(Footprint, pk=footprint_id)
+
+        if not self.has_edit_permission(self.request.user, footprint):
+            return HttpResponseForbidden()
 
         date_string = self.request.POST.get('associated_date', None)
         if date_string is not None:
