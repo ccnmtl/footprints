@@ -2,12 +2,12 @@ from django.db.utils import IntegrityError
 from django.test import TestCase
 
 from footprints.main.models import Language, DigitalFormat, \
-    ExtendedDateFormat, Name, StandardizedIdentification, \
+    ExtendedDateFormat, StandardizedIdentification, \
     Actor, Place, Imprint
 from footprints.main.tests.factories import RoleFactory, \
     ActorFactory, PlaceFactory, CollectionFactory, \
     WrittenWorkFactory, ImprintFactory, BookCopyFactory, FootprintFactory, \
-    PersonFactory, NameFactory
+    PersonFactory
 
 
 class BasicModelTest(TestCase):
@@ -36,10 +36,6 @@ class BasicModelTest(TestCase):
         except IntegrityError:
             pass  # expected
 
-    def test_name(self):
-        name = Name.objects.create(name='Prince')
-        self.assertEquals(name.__unicode__(), 'Prince')
-
     def test_standardized_identification(self):
         si = StandardizedIdentification.objects.create(identifier='foo',
                                                        identifier_type='LOC')
@@ -54,8 +50,7 @@ class BasicModelTest(TestCase):
                           'bar')
 
     def test_person(self):
-        name = NameFactory(name="Cicero")
-        person = PersonFactory(name=name)
+        person = PersonFactory(name='Cicero')
         self.assertEquals(person.__unicode__(), "Cicero")
 
     def test_actor(self):
@@ -66,13 +61,13 @@ class BasicModelTest(TestCase):
         # No Alternate Name
         self.assertEquals(
             actor.__unicode__(),
-            '%s (%s)' % (actor.person.name.__unicode__(), role.name))
+            '%s (%s)' % (actor.person.name, role.name))
 
         # With Alternate Name
         actor = ActorFactory(role=role)
         self.assertEquals(
             actor.__unicode__(),
-            '%s (%s)' % (actor.actor_name.__unicode__(), role.name))
+            '%s (%s)' % (actor.alias, role.name))
 
     def test_place(self):
         place = Place.objects.create(continent='EU')

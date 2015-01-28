@@ -14,7 +14,17 @@ admin.site.register(DigitalFormat)
 admin.site.register(DigitalObject)
 admin.site.register(StandardizedIdentification)
 admin.site.register(Person)
-admin.site.register(Actor)
+
+
+def person_name(obj):
+    return '' if obj.person.name is None else obj.person.name
+
+
+class ActorAdmin(admin.ModelAdmin):
+    list_display = (person_name, 'alias', 'role')
+
+admin.site.register(Actor, ActorAdmin)
+
 admin.site.register(Place)
 admin.site.register(Collection)
 admin.site.register(WrittenWork)
@@ -72,13 +82,28 @@ imprint_date.short_description = 'Imprint Publication Date'
 def owner(obj):
     role = Role.objects.get_owner_role()
     owners = obj.actor.filter(role=role)
-    return ", ".join(owners.values_list('person__name__name', flat=True))
+    return ", ".join(owners.values_list('person__name', flat=True))
 
 owner.short_description = 'Owner'
 
 
 class FootprintAdmin(admin.ModelAdmin):
     list_display = ('title', 'associated_date', 'place', owner,
-                    imprint_title, imprint_date,)
+                    imprint_title, imprint_date, language)
+    readonly_fields = ('created_at', 'modified_at',
+                       'created_by', 'last_modified_by')
+    fieldsets = (
+        (None, {
+            'fields': ('book_copy', 'medium', 'medium_description',
+                       'provenance', 'title', 'language', 'place',
+                       'associated_date', 'call_number', 'collection',
+                       'digital_object', 'actor', 'notes', 'narrative')
+        }),
+        ('Advanced options', {
+            'classes': ('collapse',),
+            'fields': ('created_at', 'modified_at',
+                       'created_by', 'last_modified_by')
+        }),
+    )
 
 admin.site.register(Footprint, FootprintAdmin)

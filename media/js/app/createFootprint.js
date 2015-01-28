@@ -11,6 +11,10 @@
     };
     
     CreateFootprintWizard.Views.BaseView = Backbone.View.extend({
+        onClickDisabled: function(event) {
+            event.preventDefault();
+            return false;
+        },
         showError: function() {
             jQuery(this.elTab).find('.form-group.required').addClass('has-error');
             jQuery(this.el).find('ul.wizard-tabs').addClass('has-error');
@@ -27,6 +31,9 @@
     });
     
     CreateFootprintWizard.Views.TitleView = CreateFootprintWizard.Views.BaseView.extend({
+        events: {
+            'click li.disabled a': 'onClickDisabled'
+        },
         initialize: function(options) {
             _.bindAll(this, 'isValid', 'show', 'clearError', 'showError');
             this.identifier = "#title";
@@ -45,13 +52,9 @@
         },
         initialize: function(options) {
             _.bindAll(this, 'isValid', 'show', 'showError', 'clearError',
-                'onClickDisabled', 'onMediumChange');
+                'onMediumChange');
             this.identifier = "#evidencetype";
             this.elTab = jQuery(this.el).find(this.identifier);
-        },
-        onClickDisabled: function(event) {
-            event.preventDefault();
-            return false;
         },
         onMediumChange: function(event) {
             var eltInput = jQuery(this.el).find('input[name="footprint-medium-other"]')[0];
@@ -86,18 +89,13 @@
             'click li.disabled a': 'onClickDisabled'
         },
         initialize: function(options) {
-            _.bindAll(this, 'isValid', 'show', 'showError', 'clearError',
-                'onClickDisabled');
-            this.identifier = "#evidencelocation",
+            _.bindAll(this, 'isValid', 'show', 'showError', 'clearError');
+            this.identifier = "#evidencelocation";
             this.elTab = jQuery(this.el).find("#evidencelocation");
-        },
-        onClickDisabled: function(event) {
-            event.preventDefault();
-            return false;
         },
         isValid: function() {
             var elt = jQuery(this.elTab).find("textarea[name='footprint-provenance']")[0];
-            return jQuery(elt).val().length > 0
+            return jQuery(elt).val().length > 0;
         }
     });
     

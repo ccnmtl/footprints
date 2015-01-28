@@ -170,7 +170,7 @@ class StandardizedIdentification(models.Model):
 
 
 class Person(models.Model):
-    name = models.OneToOneField(Name, related_name="person_name")
+    name = models.TextField()
 
     birth_date = models.OneToOneField(ExtendedDateFormat,
                                       null=True, blank=True,
@@ -197,7 +197,7 @@ class Person(models.Model):
         ordering = ['name']
 
     def __unicode__(self):
-        return "%s" % self.name.__unicode__()
+        return self.name
 
     def percent_complete(self):
         required = 6.0
@@ -219,10 +219,7 @@ class Person(models.Model):
 class Actor(models.Model):
     person = models.ForeignKey(Person)
     role = models.ForeignKey(Role)
-    actor_name = models.OneToOneField(Name,
-                                      related_name="actor_name",
-                                      null=True, blank=True)
-
+    alias = models.TextField(null=True, blank=True)
     notes = models.TextField(null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -233,10 +230,10 @@ class Actor(models.Model):
         related_name='actor_last_modified_by')
 
     def display_name(self):
-        if self.actor_name:
-            return self.actor_name.__unicode__()
+        if self.alias:
+            return self.alias
         else:
-            return self.person.name.__unicode__()
+            return self.person.name
 
     def __unicode__(self):
         return "%s (%s)" % (self.display_name(), self.role)
@@ -448,7 +445,7 @@ class Footprint(models.Model):
         "Subscription list in imprint"
     ]
 
-    book_copy = models.ForeignKey(BookCopy)
+    book_copy = models.ForeignKey(BookCopy, null=True, blank=True)
     medium = models.CharField(
         "Medium of Evidence", max_length=256,
         help_text='''Where the footprint is derived or deduced from, e.g.
@@ -517,7 +514,9 @@ class Footprint(models.Model):
         return int(completed/required * 100)
 
     def display_title(self):
-        if self.book_copy.imprint.work:
+        # return written work title OR the footprint title
+        if (self.book_copy and self.book_copy.imprint and
+                self.book_copy.imprint.work):
             return self.book_copy.imprint.work.title
         else:
             return self.title

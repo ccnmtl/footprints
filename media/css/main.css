@@ -50,6 +50,11 @@ ul.selected-authors li {
 }
 
 /* Create Footprint */
+
+ul.wizard-tabs.has-error li.active a {
+    background-color: #a94442;
+}
+
 .footprint-form .form-content {
     height: 400px;
 }
@@ -58,26 +63,22 @@ ul.selected-authors li {
     margin-top: 10px;
 }
 
-ul.wizard-tabs.has-error li.active a {
-    background-color: #a94442;
-}
-
-.form-group .error-block {
+.footprint-form .form-group .error-block {
     display: none;
     color: #a94442;
     margin: 10px;
 }
 
-.form-group.has-error .error-block {
+.footprint-form .form-group.has-error .error-block {
     display: block;
     float: right;
 }
 
-.form-group.has-error .help-block {
+.footprint-form .form-group.has-error .help-block {
     color: #737373;
 }
 
-input[name='footprint-medium-other'] {
+.footprint-form input[name='footprint-medium-other'] {
     margin-top: 5px;
     width: 50%;
 }
@@ -167,7 +168,7 @@ input[name='footprint-medium-other'] {
 .object-detail .editable-inline,
 .object-detail .form-inline,
 .object-detail .form-group {
-    width: 94% !important;
+    width: 100% !important;
 }
 
 .object-detail .editable-input {
@@ -183,6 +184,11 @@ input[name='footprint-medium-other'] {
     cursor: pointer;
 }
 
+.object-detail .editable-actor .actor-name,
+.object-detail .editable-actor .person-role {
+    margin-top: 10px;
+}
+
 .object-detail .do-you-know {
     color: #337ab7;
     text-decoration: none;
@@ -195,6 +201,7 @@ input[name='footprint-medium-other'] {
 
 .object-detail .glyphicon-question-sign {
     vertical-align: top;
+    margin-top: 2px;
 }
 
 /** editable fields **/
@@ -211,6 +218,12 @@ ul.additional-questions {
 
 ul.additional-questions li {
     margin-bottom: 10px;
+}
+
+ul.additional-questions .editable-container {
+    padding: 20px;
+    background-color: #f6f7f8;
+    border-radius: 10px;
 }
 
 /* Search Page */

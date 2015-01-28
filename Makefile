@@ -7,6 +7,12 @@ jenkins: ./ve/bin/python validate test flake8
 ./ve/bin/python: requirements.txt bootstrap.py virtualenv.py
 	chmod +x manage.py bootstrap.py
 	./bootstrap.py
+	
+jshint: node_modules/jshint/bin/jshint
+	./node_modules/jshint/bin/jshint media/js/app/
+
+node_modules/jshint/bin/jshint:
+	npm install jshint --prefix .
 
 test: ./ve/bin/python
 	$(MANAGE) jenkins --pep8-exclude=migrations

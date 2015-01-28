@@ -3,7 +3,7 @@ from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import logout as auth_logout_view
 from django.core.urlresolvers import reverse
-from django.http.response import HttpResponseRedirect
+from django.http.response import HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
@@ -15,12 +15,13 @@ from rest_framework.renderers import JSONPRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from footprints.main.models import (Footprint, Imprint, BookCopy,
-                                    Actor, Person, Role, WrittenWork,
-                                    Language)
-from footprints.main.permissions import IsOwnerOrReadOnly, IsStaffOrReadOnly
+from footprints.main.models import (Footprint, Actor, Person, Role,
+                                    WrittenWork, Language, ExtendedDateFormat,
+                                    Place)
+from footprints.main.permissions import IsStaffOrReadOnly
 from footprints.main.serializers import TitleSerializer, NameSerializer, \
-    FootprintSerializer, LanguageSerializer, RoleSerializer
+    FootprintSerializer, LanguageSerializer, RoleSerializer, \
+    ExtendedDateFormatSerializer, ActorSerializer, PersonSerializer
 from footprints.mixins import (JSONResponseMixin, LoggedInMixin,
                                EditableMixin)
 
@@ -52,15 +53,14 @@ class LogoutView(LoggedInMixin, View):
             return auth_logout_view(request, "/")
 
 
-class PersonDetailView(EditableMixin, DetailView):
+class PersonDetailView(EditableMixin, LoggedInMixin, DetailView):
 
     model = Person
 
     def get_context_data(self, **kwargs):
         context = super(PersonDetailView, self).get_context_data(**kwargs)
 
-        related = []
-        context['related'] = related
+        context['related'] = []
         return context
 
 
@@ -71,43 +71,34 @@ class FootprintDetailView(EditableMixin, LoggedInMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super(FootprintDetailView, self).get_context_data(**kwargs)
 
-        related = []
-        if self.object.book_copy.imprint.work is None:
-            # written works, imprints & footprints with similar titles
-            sqs = SearchQuerySet().autocomplete(title=self.object.title)
-            serializer = TitleSerializer(sqs, many=True)
-            related.extend(serializer.data)
-
-        context['related'] = related
+        context['related'] = []
         context['editable'] = self.has_edit_permission(self.request.user,
                                                        self.object)
         context['languages'] = Language.objects.all().order_by('name')
         return context
 
 
-class PlaceDetailView(EditableMixin, DetailView):
+class PlaceDetailView(EditableMixin, LoggedInMixin, DetailView):
 
-    model = Actor
+    model = Place
 
     def get_context_data(self, **kwargs):
-        context = super(PersonDetailView, self).get_context_data(**kwargs)
+        context = super(PlaceDetailView, self).get_context_data(**kwargs)
 
-        related = []
-        context['related'] = related
+        context['related'] = []
         context['editable'] = self.has_edit_permission(self.request.user,
                                                        self.object)
         return context
 
 
-class WrittenWorkDetailView(EditableMixin, DetailView):
+class WrittenWorkDetailView(EditableMixin, LoggedInMixin, DetailView):
 
     model = WrittenWork
 
     def get_context_data(self, **kwargs):
         context = super(WrittenWorkDetailView, self).get_context_data(**kwargs)
 
-        related = []
-        context['related'] = related
+        context['related'] = []
         context['editable'] = self.has_edit_permission(self.request.user,
                                                        self.object)
         return context
@@ -122,10 +113,6 @@ class CreateFootprintView(LoggedInMixin, TemplateView):
         return context
 
     def post(self, *args, **kwargs):
-        # Create stub objects for the footprint
-        imprint = Imprint.objects.create()
-        book_copy = BookCopy.objects.create(imprint=imprint)
-
         title = self.request.POST.get('footprint-title')
         provenance = self.request.POST.get('footprint-provenance')
         medium = self.request.POST.get('footprint-medium')
@@ -134,36 +121,88 @@ class CreateFootprintView(LoggedInMixin, TemplateView):
         fp = Footprint.objects.create(title=title,
                                       medium=medium,
                                       medium_description=description,
-                                      provenance=provenance,
-                                      book_copy=book_copy,
-                                      notes=notes)
+                                      provenance=provenance, notes=notes)
 
         url = reverse('footprint-detail-view', kwargs={'pk': fp.pk})
         return HttpResponseRedirect(url)
 
 
-class FootprintRemoveActorView(LoggedInMixin, JSONResponseMixin, View):
+class FootprintRemoveActorView(LoggedInMixin, EditableMixin,
+                               JSONResponseMixin, View):
 
     def post(self, *args, **kwargs):
         footprint_id = kwargs.get('footprint_id', None)
         footprint = get_object_or_404(Footprint, pk=footprint_id)
 
+        if not self.has_edit_permission(self.request.user, footprint):
+            return HttpResponseForbidden()
+
         actor_id = self.request.POST.get('actor_id', None)
-        actor = get_object_or_404(Actor, pk=actor_id)
+        actor = get_object_or_404(Actor, id=actor_id)
         footprint.actor.remove(actor)
         return self.render_to_json_response({'success': True})
 
 
-class FootprintAddActorView(LoggedInMixin, JSONResponseMixin, View):
+class FootprintAddActorView(LoggedInMixin, EditableMixin,
+                            JSONResponseMixin, View):
+
+    def create_actor(self, person_id, person_name, role, alias):
+        try:
+            person = Person.objects.get(pk=person_id)
+        except (Person.DoesNotExist, ValueError):
+            person = None
+
+        if person is None or person.name != person_name:
+            person = Person.objects.create(name=person_name)
+
+        return Actor.objects.create(person=person, role=role, alias=alias)
 
     def post(self, *args, **kwargs):
         footprint_id = kwargs.get('footprint_id', None)
         footprint = get_object_or_404(Footprint, pk=footprint_id)
 
+        role = get_object_or_404(Role, pk=self.request.POST.get('role', None))
+
+        person_name = self.request.POST.get('person_name', None)
+        person_id = self.request.POST.get('person_id', None)
+        alias = self.request.POST.get('alias', None)
+
+        actor = self.create_actor(person_id, person_name, role, alias)
+        footprint.actor.add(actor)
+
         return self.render_to_json_response({
             'success': True,
-            'footprint_id': footprint.id
+            'footprint': {'id': footprint.id},
+            'actor': ActorSerializer(actor).data
         })
+
+
+class FootprintAddDateView(LoggedInMixin, EditableMixin,
+                           JSONResponseMixin, View):
+
+    def post(self, *args, **kwargs):
+        footprint_id = kwargs.get('footprint_id', None)
+        footprint = get_object_or_404(Footprint, pk=footprint_id)
+
+        if not self.has_edit_permission(self.request.user, footprint):
+            return HttpResponseForbidden()
+
+        date_string = self.request.POST.get('associated_date', None)
+        if date_string is not None:
+            edtf = ExtendedDateFormat.objects.create(edtf_format=date_string)
+            footprint.associated_date = edtf
+            footprint.save()
+
+            return self.render_to_json_response({
+                'success': True,
+                'footprint_id': footprint.id,
+                'associated_date': edtf.id
+            })
+        else:
+            return self.render_to_json_response({
+                'success': False,
+                'error': 'Please enter a date'
+            })
 
 
 class TitleListView(APIView):
@@ -194,7 +233,7 @@ class NameListView(APIView):
 class FootprintViewSet(viewsets.ModelViewSet):
     queryset = Footprint.objects.all()
     serializer_class = FootprintSerializer
-    permission_classes = (IsOwnerOrReadOnly,)
+    permission_classes = (IsStaffOrReadOnly,)
 
 
 class LanguageViewSet(viewsets.ModelViewSet):
@@ -206,4 +245,22 @@ class LanguageViewSet(viewsets.ModelViewSet):
 class RoleViewSet(viewsets.ModelViewSet):
     queryset = Role.objects.all()
     serializer_class = RoleSerializer
+    permission_classes = (IsStaffOrReadOnly,)
+
+
+class ExtendedDateFormatViewSet(viewsets.ModelViewSet):
+    queryset = ExtendedDateFormat.objects.all()
+    serializer_class = ExtendedDateFormatSerializer
+    permission_classes = (IsStaffOrReadOnly,)
+
+
+class PersonViewSet(viewsets.ModelViewSet):
+    queryset = Person.objects.all()
+    serializer_class = PersonSerializer
+    permission_classes = (IsStaffOrReadOnly,)
+
+
+class ActorViewSet(viewsets.ModelViewSet):
+    queryset = Actor.objects.all()
+    serializer_class = ActorSerializer
     permission_classes = (IsStaffOrReadOnly,)
