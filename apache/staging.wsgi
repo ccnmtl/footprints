@@ -9,5 +9,6 @@ sys.path.append('/var/www/footprints/footprints/')
 os.environ['DJANGO_SETTINGS_MODULE'] = 'footprints.settings_staging'
 
 import django.core.handlers.wsgi
-
+import django
+django.setup()
 application = django.core.handlers.wsgi.WSGIHandler()
