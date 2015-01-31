@@ -55,11 +55,20 @@
                 source: options.languages,
                 select2: {
                     multiple: true,
-                    width: 200,
+                    width: 350,
                     placeholder: 'Select language(s)',
                     allowClear: true
                 }
             });
+            
+            jQuery('.editable-medium').editable({
+                namedParams: true,
+                source: options.mediums,
+                select2: {
+                    width: 350,
+                    placeholder: 'Select evidence type'
+                }
+            });            
 
             jQuery('.do-you-know').on('save', function(e, params) {
                 var dataName = jQuery(e.currentTarget).data('name');
