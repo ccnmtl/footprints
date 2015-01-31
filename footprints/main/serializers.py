@@ -102,7 +102,7 @@ class PersonSerializer(HyperlinkedModelSerializer):
 class PlaceSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = Place
-        fields = ('id', 'continent', 'region', 'country', 'city', 'position')
+        fields = ('id', 'continent', 'country', 'city', 'position')
 
 
 class ActorSerializer(HyperlinkedModelSerializer):
