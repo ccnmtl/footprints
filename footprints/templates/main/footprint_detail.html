@@ -71,7 +71,10 @@
                 el: jQuery("div.object-detail.footprint"),
                 languages: [{% for language in languages %}
                             {value: '{{language.id}}', text: "{{language.name}}"}{% if not forloop.last %},{% endif %}
-                            {% endfor %}]
+                            {% endfor %}],
+                mediums:  [{% for medium in footprint.MEDIUM_CHOICES %}
+                           {value: '{{medium}}', text: "{{medium}}"}{% if not forloop.last %},{% endif %}
+                           {% endfor %}],
             });
         });
     </script>
@@ -183,11 +186,13 @@
                     <dl class="dl-horizontal">
                         <dt>Evidence Type</dt>
                         <dd class="border-bottom">
-                            <a href="#" class="{% if editable %}editable{% else %}readonly{% endif %}"
+                            <a href="#" class="{% if editable %}editable-medium{% else %}readonly{% endif %}"
                                 data-attribute-name="medium" data-name="medium"
-                                data-type="text" data-pk="{{footprint.id}}"
-                                data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
-                                data-url="/api/footprint/{{footprint.id}}/">{{footprint.medium}}</a>
+                                data-type="select2" data-pk="{{footprint.id}}"
+                                data-value="{{footprint.medium}}"
+                                data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                data-url="/api/footprint/{{footprint.id}}/">{{footprint.medium}}
+                            </a>
                         </dd>
                         <div class="description-list"
                             {% if footprint.medium_description == None or footprint.medium_description == ''%}style="display: none"{% endif %}>
