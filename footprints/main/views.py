@@ -19,9 +19,12 @@ from footprints.main.models import (Footprint, Actor, Person, Role,
                                     WrittenWork, Language, ExtendedDateFormat,
                                     Place)
 from footprints.main.permissions import IsStaffOrReadOnly
-from footprints.main.serializers import TitleSerializer, NameSerializer, \
-    FootprintSerializer, LanguageSerializer, RoleSerializer, \
-    ExtendedDateFormatSerializer, ActorSerializer, PersonSerializer
+from footprints.main.serializers import (TitleSerializer, NameSerializer,
+                                         FootprintSerializer,
+                                         LanguageSerializer, RoleSerializer,
+                                         ExtendedDateFormatSerializer,
+                                         ActorSerializer, PersonSerializer,
+                                         PlaceSerializer)
 from footprints.mixins import (JSONResponseMixin, LoggedInMixin,
                                EditableMixin)
 
@@ -206,6 +209,44 @@ class FootprintAddDateView(LoggedInMixin, EditableMixin,
             })
 
 
+class FootprintAddPlaceView(LoggedInMixin, EditableMixin,
+                            JSONResponseMixin, View):
+
+    def post(self, *args, **kwargs):
+        footprint_id = kwargs.get('footprint_id', None)
+        footprint = get_object_or_404(Footprint, pk=footprint_id)
+
+        if not self.has_edit_permission(self.request.user, footprint):
+            return HttpResponseForbidden()
+
+        # @todo - get or create place
+
+        return self.render_to_json_response({
+            'success': True,
+            'footprint_id': footprint.id
+        })
+
+
+class FootprintRemovePlaceView(LoggedInMixin, EditableMixin,
+                               JSONResponseMixin, View):
+
+    def post(self, *args, **kwargs):
+        footprint_id = kwargs.get('footprint_id', None)
+        footprint = get_object_or_404(Footprint, pk=footprint_id)
+
+        if not self.has_edit_permission(self.request.user, footprint):
+            return HttpResponseForbidden()
+
+        place_id = self.request.POST.get('place_id', None)
+        place = get_object_or_404(Place, id=place_id)
+
+        if footprint.place == place:
+            footprint.place = None
+            footprint.save()
+
+        return self.render_to_json_response({'success': True})
+
+
 class TitleListView(APIView):
     renderer_classes = (JSONPRenderer,)
     permission_classes = (AllowAny,)
@@ -258,6 +299,12 @@ class ExtendedDateFormatViewSet(viewsets.ModelViewSet):
 class PersonViewSet(viewsets.ModelViewSet):
     queryset = Person.objects.all()
     serializer_class = PersonSerializer
+    permission_classes = (IsStaffOrReadOnly,)
+
+
+class PlaceViewSet(viewsets.ModelViewSet):
+    queryset = Place.objects.all()
+    serializer_class = PlaceSerializer
     permission_classes = (IsStaffOrReadOnly,)
 
 
