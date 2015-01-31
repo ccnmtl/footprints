@@ -75,7 +75,7 @@ class BasicModelTest(TestCase):
 
         place = PlaceFactory()
         self.assertEquals(place.__unicode__(),
-                          'Smyrna, Greece, Balkan Peninsula, Europe')
+                          'Smyrna, Greece, Europe')
 
     def test_collection(self):
         collection = CollectionFactory(name='The Morgan Collection')

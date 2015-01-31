@@ -62,7 +62,6 @@ class PlaceFactory(factory.DjangoModelFactory):
     FACTORY_FOR = Place
 
     continent = 'EU'
-    region = 'Balkan Peninsula'
     country = 'Greece'
     city = 'Smyrna'
 

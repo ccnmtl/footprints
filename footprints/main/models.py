@@ -241,7 +241,6 @@ class Actor(models.Model):
 
 class Place(models.Model):
     continent = models.CharField(max_length=2, choices=CONTINENTS)
-    region = models.CharField(max_length=256, null=True, blank=True)
     country = models.CharField(max_length=256, null=True, blank=True)
     city = models.CharField(max_length=256, null=True, blank=True)
 
@@ -262,7 +261,7 @@ class Place(models.Model):
     last_modified_by = LastUserField(related_name='place_last_modified_by')
 
     class Meta:
-        ordering = ['continent', 'region', 'country', 'city']
+        ordering = ['continent', 'country', 'city']
         verbose_name = "Place"
 
     def __unicode__(self):
@@ -271,8 +270,6 @@ class Place(models.Model):
             parts.append(self.city)
         if self.country:
             parts.append(self.country)
-        if self.region:
-            parts.append(self.region)
         parts.append(dict(CONTINENTS)[self.continent])
 
         return ', '.join(parts)
