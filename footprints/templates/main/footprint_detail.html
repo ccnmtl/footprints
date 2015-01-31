@@ -25,10 +25,43 @@
 
             <div class="person-role">
                 <label>Role</label><br />
-                <select class="form-control" name="role" placeholder="Type in a role name"></select>
+                <select class="form-control" name="role" placeholder="Type in a role name">
+                    {% for role in roles %}
+                        <option value="{{role.id}}">{{role.name}}</option>
+                    {% endfor %}
+                </select>
             </div>
         </div>
     </script>
+    
+    <script type="text/template" id="xeditable-place-form">
+        <div class="editable-place">
+            <div>
+                <select class="form-control" name="continent" tabindex="-1" title="Continent:">
+                    <option value="" selected="selected">Select a continent</option>
+                    <option value="AF">Africa</option>
+                    <option value="AS">Asia</option>
+                    <option value="EU">Europe</option>
+                    <option value="NA">North America</option>
+                    <option value="SA">South America</option>
+                    <option value="OC">Oceania</option>
+                    <option value="AN">Antarctica</option>
+                </select>
+            </div>
+            <div>
+                <input class="form-control" placeholder="Country" maxlength="256" name="country" type="text">
+            </div>        
+            <div>
+                <input class="form-control" placeholder="City" maxlength="256" name="city" type="text">
+            </div>
+            <div>
+                <input class="form-control" placeholder="Latitude" name="latitude" type="hidden"></input>
+                <input class="form-control" placeholder="Longitude" name="longitude" type="hidden"></input>
+                <input class="form-control" placeholder="Start typing an address..." type="text"></div>
+                <div class="geoposition-map"></div>
+            </div>
+        </div>
+    </script>    
 
     <script type="text-template" id="actor-display-template">
         <dt data-actor-id="<%=actor.id%>"><%=actor.role.name%></dt>
@@ -62,6 +95,7 @@
         <script src="{{STATIC_URL}}jquery-ui-1.11.2/jquery-ui.js"></script>
         <script src="{{STATIC_URL}}bootstrap3-editable/js/bootstrap-editable.js"></script>
         <script src="{{STATIC_URL}}bootstrap3-editable/js/bootstrap-editable-actor.js"></script>
+        <script src="{{STATIC_URL}}bootstrap3-editable/js/bootstrap-editable-place.js"></script>
         <script src="{{STATIC_URL}}js/app/editFootprint.js"></script>
     {% endcompress %}
 
@@ -237,8 +271,10 @@
                                 {% if not footprint.place %}
                                     <li>
                                         <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
-                                        <a href="#">the place where the footprint occurred?</a>
-                                        </span>
+                                        <a href="#" class="{% if editable %}editable-place{% endif %} do-you-know persistant" data-name="place"
+                                            data-type="place" data-pk="{{footprint.id}}" data-value=""
+                                            data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
+                                            data-url="/footprint/place/{{footprint.id}}/add/">the place where the footprint occurred?</a>
                                     </li>
                                 {% endif %}
                                 {% if not footprint.associated_date %}

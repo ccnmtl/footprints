@@ -37,6 +37,18 @@
                     jQuery('div.actor-list').append(html);
                 }
             });
+            
+            jQuery('.editable-place').editable({
+                namedParams: true,
+                template: '#editable-place-form',
+                validate: function(value) {
+                    // @todo
+                },
+                success: function(response, newValue) {
+                    //var html = self.actor_template(response);
+                    //jQuery('div.actor-list').append(html);
+                }
+            });            
 
             jQuery('.editable-language').editable({
                 namedParams: true,

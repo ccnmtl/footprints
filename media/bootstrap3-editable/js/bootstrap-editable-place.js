@@ -1,16 +1,16 @@
 /**
-Actor editable input.
+Place editable input.
 
-@class actor
+@class place
 @extends abstractinput
 @final
 @example
 <a href="#" data-type="name" data-pk="1">Fred Rogers</a>
 <script>
 $(function(){
-    $('#actor').editable({
+    $('#place').editable({
         url: '/post',
-        title: 'Enter the actor's name',
+        title: 'Enter the place's name',
         value: {
             name: "Fred Rogers"
         }
@@ -21,14 +21,14 @@ $(function(){
 (function ($) {
     "use strict";
     
-    var Actor = function (options) {
-        this.init('actor', options, Actor.defaults);
+    var Place = function (options) {
+        this.init('place', options, Place.defaults);
     };
 
     //inherit from Abstract input
-    $.fn.editableutils.inherit(Actor, $.fn.editabletypes.abstractinput);
+    $.fn.editableutils.inherit(Place, $.fn.editabletypes.abstractinput);
 
-    $.extend(Actor.prototype, {
+    $.extend(Place.prototype, {
         /**
         Renders input from tpl
 
@@ -37,45 +37,11 @@ $(function(){
         render: function() {
            var self = this;
 
-           this.$input = this.$tpl.find('input[name="person-autocomplete"]');
-           this.$roleselect = this.$tpl.find('select[name="role"]');
-           this.$actorname =  this.$tpl.find('input[name="actor-name"]');
-           jQuery(this.$input).autocomplete({
-               change: function(event, ui) {
-                   self.$input.data('instance', '');
-                   return true;
-               },
-               select: function (event, ui) {
-                   self.$input.data('instance', ui.item.object_id);
-                   return true;
-               },
-               source: function(request, response) {
-                   jQuery.ajax({
-                       url: "/api/name/",
-                       dataType: "jsonp",
-                       data: {
-                           q: request.term
-                       },
-                       success: function(data) {
-                           var names = [];
-                           for (var i=0; i < data.length; i++) {
-                               names.push({
-                                   object_id: data[i].object_id,
-                                   label: data[i].name
-                               });
-                           }
-                           response(names);
-                       }
-                   });
-               },
-               minLength: 2,
-               open: function() {
-                   jQuery(this).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
-               },
-               close: function() {
-                   jQuery(this).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
-               }
-           });
+           this.$continent = this.$tpl.find('select[name="continent"]');
+           this.$country =  this.$tpl.find('input[name="country"]');
+           this.$city =  this.$tpl.find('input[name="city"]');
+           this.$latitude =  this.$tpl.find('input[name="latitude"]');
+           this.$longitude =  this.$tpl.find('input[name="longitude"]');
         },
         
         /**
@@ -141,9 +107,11 @@ $(function(){
        **/          
        input2value: function() { 
            return $.param({
-              name: this.$input.val(),
-              role: this.$roleselect.val(),
-              alias: this.$actorname.val()
+               continent: this.$continent.val(),
+               country: this.$country.val(),
+               city: this.$city.val(),
+               latitude: this.$latitude.val(),
+               longitude: this.$longitude.val()
            });
        },
        
@@ -154,10 +122,11 @@ $(function(){
        **/
        value2submit: function(value) {
            return {
-               person_name: this.$input.val(),
-               person_id: this.$input.data('instance'),
-               role: this.$roleselect.val(),
-               alias: this.$actorname.val()
+               continent: this.$continent.val(),
+               country: this.$country.val(),
+               city: this.$city.val(),
+               latitude: this.$latitude.val(),
+               longitude: this.$longitude.val()
             }
        },
        
@@ -167,7 +136,7 @@ $(function(){
         @method activate() 
        **/        
        activate: function() {
-            this.$input.filter('[name="person-autocomplete"]').focus();
+            this.$input.filter('[name="continent"]').focus();
        },  
        
        /**
@@ -184,11 +153,11 @@ $(function(){
        }       
     });
 
-    Actor.defaults = $.extend({}, $.fn.editabletypes.abstractinput.defaults, {
-        tpl: jQuery('#xeditable-actor-form').html(),
+    Place.defaults = $.extend({}, $.fn.editabletypes.abstractinput.defaults, {
+        tpl: jQuery('#xeditable-place-form').html(),
         inputclass: ''
     });
 
-    $.fn.editabletypes.actor = Actor;
+    $.fn.editabletypes.place = Place;
 
 }(window.jQuery));

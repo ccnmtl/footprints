@@ -75,6 +75,7 @@ class FootprintDetailView(EditableMixin, LoggedInMixin, DetailView):
         context['editable'] = self.has_edit_permission(self.request.user,
                                                        self.object)
         context['languages'] = Language.objects.all().order_by('name')
+        context['roles'] = Role.objects.all().order_by('name')
         return context
 
 
