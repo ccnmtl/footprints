@@ -3,11 +3,12 @@
     EditFootprintView = Backbone.View.extend({
         events: {
             'click a.remove-foreign-key span.glyphicon-remove': 'onConfirmRemove',
-            'click .btn-confirm': 'remove'
+            'click .btn-cancel': 'onCancelRemove',
+            'click .btn-confirm': 'onRemove'
         },
         initialize: function(options) {
             _.bindAll(this, 'render',
-                    'onConfirmRemove', 'remove');
+                    'onConfirmRemove', 'onCancelRemove', 'onRemove');
             
             var html = jQuery("#actor-display-template").html();
             this.actor_template = _.template(html);
@@ -105,23 +106,24 @@
             });
         },
         onConfirmRemove: function(evt) {
-            this.eltToRemove = evt.currentTarget;
-            this.eltToRemove = jQuery(evt.currentTarget).prevAll('span')[0];
-            var display = jQuery(this.eltToRemove).html();
-            var msg = "Are you sure you want to remove " + display + "?";
+            this.eltToRemove = jQuery(evt.currentTarget).parents('a')[0];
+            
+            var elt = jQuery(evt.currentTarget).closest('div').prev();
+            var msg = "Are you sure you want to remove the connection to " + jQuery(elt).html() + "?";
 
             jQuery("#confirm-modal").find('.modal-body').html(msg);
 
             jQuery("#confirm-modal").modal({
                 'show': true,
                 'backdrop': 'static',
-                'keyboard': false
+                'keyboard': false,
             });
         },
         onCancelRemove: function(evt) {
             delete this.eltToRemove;
         },
         onRemove: function(evt) {
+            var self = this;
             var params = jQuery(this.eltToRemove).data('params');
             var data = jQuery.fn.editableutils.tryParseJson(params, true);
 
@@ -130,12 +132,16 @@
                 type: "post",
                 data: data,
                 success: function(response) {
-                    var dt = jQuery(this.eltToRemove).prevAll('dt')[0];
-                    var dd = jQuery(this.eltToRemove).prevAll('dd')[0];
-                    fadeOut(function() {
-                        jQuery(this).remove(); 
+                    var dd = jQuery(self.eltToRemove).closest('dd')[0];
+                    var dt = jQuery(dd).prev();
+                    
+                    jQuery.each([dd, dt], function(i, elt) {
+                        jQuery(elt).fadeOut(function() {
+                            jQuery(elt).remove();
+                        });
                     });
                     jQuery("#confirm-modal").modal("hide");
+                    delete self.eltToRemove;
                 },
                 error: function() {
                     jQuery("#confirm-modal div.error").modal("An error occurred. Please try again.");
