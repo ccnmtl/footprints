@@ -344,3 +344,98 @@ class FootprintAddDateView(TestCase):
         self.assertEquals(the_json['footprint_id'], footprint.id)
         self.assertEquals(footprint.associated_date.id,
                           the_json['associated_date'])
+
+
+class FootprintAddPlaceView(TestCase):
+
+    def setUp(self):
+        self.user = UserFactory()
+        self.staff = UserFactory(is_staff=True)
+        self.footprint = FootprintFactory(title="Custom", place=None)
+
+        self.url = reverse('footprint-add-place-view',
+                           kwargs={'footprint_id': self.footprint.id})
+
+    def test_post_expected_errors(self):
+        # not logged in
+        self.assertEquals(self.client.post(self.url).status_code, 302)
+
+        self.client.login(username=self.user.username, password="test")
+
+        # no ajax
+        self.assertEquals(self.client.post(self.url).status_code, 405)
+
+        # no permissions
+        response = self.client.post(self.url, {},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 403)
+
+    def test_post_no_data(self):
+        self.client.login(username=self.staff.username, password="test")
+        response = self.client.post(self.url,
+                                    {},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        the_json = loads(response.content)
+        self.assertFalse(the_json['success'])
+
+    def test_post_success(self):
+        self.client.login(username=self.staff.username, password="test")
+        response = self.client.post(self.url,
+                                    {'city': 'New York',
+                                     'country': 'United States',
+                                     'position': '40.752946,-73.983435'},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        the_json = loads(response.content)
+
+        footprint = Footprint.objects.get(title='Custom')  # refresh from db
+        self.assertTrue(the_json['success'])
+        self.assertEquals(the_json['footprint_id'], footprint.id)
+        self.assertEquals(footprint.place.id,
+                          the_json['place']['id'])
+
+
+class FootprintRemovePlaceViewTest(TestCase):
+    def setUp(self):
+        self.user = UserFactory()
+        self.staff = UserFactory(is_staff=True)
+        self.footprint = FootprintFactory(title="Custom")
+
+        self.remove_url = reverse(
+            'footprint-remove-place-view',
+            kwargs={'footprint_id': self.footprint.id,
+                    'place_id': self.footprint.place.id})
+
+    def test_post_expected_errors(self):
+        # not logged in
+        self.assertEquals(self.client.post(self.remove_url).status_code, 302)
+
+        self.client.login(username=self.user.username, password="test")
+
+        # no ajax
+        self.assertEquals(self.client.post(self.remove_url).status_code, 405)
+
+        # no permissions
+        response = self.client.post(self.remove_url, {},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 403)
+
+        # invalid actor id
+        bad_remove_url = reverse('footprint-remove-place-view',
+                                 kwargs={'footprint_id': self.footprint.id,
+                                         'place_id': 500})
+        self.client.login(username=self.staff.username, password="test")
+        response = self.client.post(bad_remove_url, {},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 404)
+
+    def test_post_success(self):
+        self.client.login(username=self.staff.username, password="test")
+        response = self.client.post(self.remove_url, {},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        self.assertTrue(loads(response.content)['success'])
+
+        footprint = Footprint.objects.get(title='Custom')  # refresh from db
+        self.assertIsNone(footprint.place)
