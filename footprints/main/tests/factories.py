@@ -61,7 +61,6 @@ class ActorFactory(factory.DjangoModelFactory):
 class PlaceFactory(factory.DjangoModelFactory):
     FACTORY_FOR = Place
 
-    continent = 'EU'
     country = 'Greece'
     city = 'Smyrna'
 

@@ -1,0 +1,3 @@
+{{object.continent}}
+{{object.country}}
+{{object.city}}

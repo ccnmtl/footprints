@@ -2,14 +2,18 @@
 
     EditFootprintView = Backbone.View.extend({
         events: {
-            'click a.remove-footprint-actor span.glyphicon-remove': 'onConfirmRemoveActor',
-            'click .btn-confirm': 'removeActor'
+            'click a.remove-foreign-key span.glyphicon-remove': 'onConfirmRemove',
+            'click .btn-confirm': 'remove'
         },
         initialize: function(options) {
-            _.bindAll(this, 'render', 'onConfirmRemoveActor', 'removeActor');
+            _.bindAll(this, 'render',
+                    'onConfirmRemove', 'remove');
             
             var html = jQuery("#actor-display-template").html();
             this.actor_template = _.template(html);
+            
+            var html = jQuery("#place-display-template").html();
+            this.place_template = _.template(html);
                 
             var self = this;
 
@@ -41,12 +45,20 @@
             jQuery('.editable-place').editable({
                 namedParams: true,
                 template: '#editable-place-form',
-                validate: function(value) {
-                    // @todo
+                validate: function(values) {
+                    if (!values.hasOwnProperty('latitude') ||
+                            !values.hasOwnProperty('longitude')) {
+                        return "Please select a location on the map";
+                    } else  if (values.city.length < 1) {
+                        return "Please specify a city";
+                    } else if (values.country.length < 1) {
+                        return "Please specify a country";
+                    }
                 },
                 success: function(response, newValue) {
-                    //var html = self.actor_template(response);
-                    //jQuery('div.actor-list').append(html);
+                    var html = self.place_template(response);
+                    jQuery('.footprint-place').html(html);
+                    jQuery('.footprint-place').fadeIn();
                 }
             });            
 
@@ -92,37 +104,35 @@
                 }
             });
         },
-        onConfirmRemoveActor: function(evt) {
-            var anchor = jQuery(evt.currentTarget).parents('a')[0];
-            var name = jQuery(anchor).data('name');
-            var msg = "Are you sure you want to remove " + name + "?";
+        onConfirmRemove: function(evt) {
+            this.eltToRemove = evt.currentTarget;
+            this.eltToRemove = jQuery(evt.currentTarget).prevAll('span')[0];
+            var display = jQuery(this.eltToRemove).html();
+            var msg = "Are you sure you want to remove " + display + "?";
 
             jQuery("#confirm-modal").find('.modal-body').html(msg);
-            var eltConfirm = jQuery("#confirm-modal").find('.btn-confirm')[0]; 
-            jQuery(eltConfirm).data('params', jQuery(anchor).data('params'));
-            jQuery(eltConfirm).data('url', jQuery(anchor).data('url'));
-            jQuery(eltConfirm).data('actor-id', jQuery(anchor).data('actor-id'));
-            
+
             jQuery("#confirm-modal").modal({
                 'show': true,
                 'backdrop': 'static',
                 'keyboard': false
             });
         },
-        removeActor: function(evt) {
-            var url = jQuery(evt.currentTarget).data('url');
-            var actorId = jQuery(evt.currentTarget).data('actor-id');
-            var params = jQuery(evt.currentTarget).data('params');
-
+        onCancelRemove: function(evt) {
+            delete this.eltToRemove;
+        },
+        onRemove: function(evt) {
+            var params = jQuery(this.eltToRemove).data('params');
             var data = jQuery.fn.editableutils.tryParseJson(params, true);
-            data.actor_id = actorId;
-            
+
             jQuery.ajax({
-                url: url,
+                url: jQuery(this.eltToRemove).data('url'),
                 type: "post",
                 data: data,
                 success: function(response) {
-                    jQuery("[data-actor-id='" + actorId + "']").fadeOut(function() {
+                    var dt = jQuery(this.eltToRemove).prevAll('dt')[0];
+                    var dd = jQuery(this.eltToRemove).prevAll('dd')[0];
+                    fadeOut(function() {
                         jQuery(this).remove(); 
                     });
                     jQuery("#confirm-modal").modal("hide");

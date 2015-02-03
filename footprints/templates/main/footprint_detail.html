@@ -13,17 +13,17 @@
 
     <script type="text/template" id="xeditable-actor-form">
         <div class="editable-actor">
-            <div class="person-name">
+            <div class="form-group">
                 <label>Person's Name</label><br />
                 <input type="text" class="form-control" name="person-autocomplete" placeholder="Type in a person's name"></input>
             </div>
                     
-            <div class="actor-name">
+            <div class="form-group">
                 <label>Pseudonym or Alias (if applicable)</label><br />
                 <input type="text" class="form-control" name="actor-name" placeholder="Specify the person's alias"></select>
             </div>
 
-            <div class="person-role">
+            <div class="form-group">
                 <label>Role</label><br />
                 <select class="form-control" name="role" placeholder="Type in a role name">
                     {% for role in roles %}
@@ -33,49 +33,67 @@
             </div>
         </div>
     </script>
-    
-    <script type="text/template" id="xeditable-place-form">
-        <div class="editable-place">
-            <div>
-                <select class="form-control" name="continent" tabindex="-1" title="Continent:">
-                    <option value="" selected="selected">Select a continent</option>
-                    <option value="AF">Africa</option>
-                    <option value="AS">Asia</option>
-                    <option value="EU">Europe</option>
-                    <option value="NA">North America</option>
-                    <option value="SA">South America</option>
-                    <option value="OC">Oceania</option>
-                    <option value="AN">Antarctica</option>
-                </select>
-            </div>
-            <div>
-                <input class="form-control" placeholder="Country" maxlength="256" name="country" type="text">
-            </div>        
-            <div>
-                <input class="form-control" placeholder="City" maxlength="256" name="city" type="text">
-            </div>
-            <div>
-                <input class="form-control" placeholder="Latitude" name="latitude" type="hidden"></input>
-                <input class="form-control" placeholder="Longitude" name="longitude" type="hidden"></input>
-                <input class="form-control" placeholder="Start typing an address..." type="text"></div>
-                <div class="geoposition-map"></div>
-            </div>
-        </div>
-    </script>    
 
     <script type="text-template" id="actor-display-template">
-        <dt data-actor-id="<%=actor.id%>"><%=actor.role.name%></dt>
-        <dd data-actor-id="<%=actor.id%>" class="border-bottom">
-            <%=actor.person.name %><% if (actor.alias.length > 0) { %> as <%=actor.alias%> <% } %> 
+        <dt><%=actor.role.name%></dt>
+        <dd class="border-bottom">
+            <span><%=actor.person.name %><% if (actor.alias.length > 0) { %> as <%=actor.alias%> <% } %></span> 
             <div class="pull-right">
-                <a href="#" class="remove-footprint-actor"
-                    data-actor-id="<%=actor.id%>"
+                <a href="#" class="remove-foreign-key"
                     data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
-                    data-url="/footprint/actor/<%=footprint.id%>/remove/"
-                    data-name="<%=actor.display_name%>" title="remove actor">
+                    data-url="/footprint/actor/<%=footprint.id%>/remove/<%=actor.id%>/"
+                    title="remove actor">
                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
                 &nbsp;
                 <a href="/person/<%=actor.person.id%>/" title="see details" class="foreign-key">
+                    <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+                </a>
+            </div>
+        </dd>
+    </script>
+    
+    <script type="text/template" id="xeditable-place-form">
+        <div class="editable-place">
+            <div class="form-group">
+                <label>Pinpoint the location on a map</label> 
+                <div class="help-block">
+                    Search by address or click the map to drop a marker.<br />
+                    City and country values will autopopulate based on the map location.<br />
+                    These modern names can be updated if not historically accurate. 
+                </div>
+                <input class="form-control" placeholder="Search for an address..." name="address" type="text"></div>
+                <div class="map-container"></div>
+            </div>
+            <div class="row" style="width: 120%;">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>City</label>
+                        <input class="form-control" placeholder="City" maxlength="256" name="city" type="text">
+                        </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Country</label>
+                        <input class="form-control" placeholder="Country" maxlength="256" name="country" type="text">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+    
+    <script type="text/template" id="place-display-template">
+        <dt>Footprint Place</dt>
+        <dd class="border-bottom footprint-place">
+            <span><%= place.description %></span>
+            <div class="pull-right">
+                <a href="#" class="remove-foreign-key"
+                    data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
+                    data-url="/footprint/place/<%=footprint_id%>/remove/<%= place.id%>/"
+                    title="remove place">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+                &nbsp;
+                <a href="/place/<%=place.id%>/" title="see details" class="foreign-key">
                     <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
                 </a>
             </div>
@@ -87,7 +105,7 @@
 {% block js %}
     <script src="{{STATIC_URL}}js/underscore-min.js"></script>
     <script src="{{STATIC_URL}}js/backbone-min.js"></script>
-    <script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false"></script>
+    <script type="text/javascript" src="//maps.google.com/maps/api/js?libraries=places&sensor=false"></script>
     <script src="{{STATIC_URL}}tinymce/tinymce.min.js"></script>
 
     {% compress js %}
@@ -152,18 +170,26 @@
                                     {% endif %}>{{footprint.associated_date}}</a>
                             </dd>
                         </div>
-                        {% if footprint.place %}
+                        <div class="footprint-place" {% if not footprint.place %}style="display: none"{% endif %}>
                             <dt>Footprint Place</dt>
-                            <dd class="border-bottom">
-                                <!-- a href="#" class="{% if editable %}editable{% else %}readonly{% endif %}"
-                                    data-attribute-name="place" data-name="place"
-                                    data-type="location" data-pk="{{footprint.id}}"
-                                    data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
-                                    data-url="/api/footprint/{{footprint.id}}/"></a-->
-                                    {{footprint.place}}
+                            <dd class="border-bottom footprint-place">
+                                <span>{{footprint.place}}</span>
+                                <div class="pull-right">
+                                    {% if editable %}
+                                        <a href="#" class="remove-foreign-key"
+                                            data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
+                                            data-url="/footprint/place/{{footprint.id}}/remove/{{footprint.place.id}}/"
+                                            title="remove place">
+                                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                        </a>
+                                    {% endif %}
+                                    &nbsp;
+                                    <a href="/place/{{footprint.place.id}}/" title="see details" class="foreign-key">
+                                        <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+                                    </a>
+                                </div>
                             </dd>
-                        {% endif %}
-                        
+                        </div>
                         <div class="description-list" {% if footprint.language.count < 1 %}style="display: none"{% endif %}>
                             <dt>Footprint Language</dt>
                             <dd class="border-bottom">
@@ -194,16 +220,14 @@
                         
                         <div class="actor-list">
                             {% for actor in footprint.actor.all %}
-                                <dt data-actor-id="{{actor.id}}">{{actor.role.name}}</dt>
-                                <dd data-actor-id="{{actor.id}}" class="border-bottom">
-                                    {{actor.person.name}}{% if actor.alias %} as {{actor.alias}} {% endif %} 
+                                <dt>{{actor.role.name}}</dt>
+                                <dd class="border-bottom">
+                                    <span>{{actor.person.name}}{% if actor.alias %} as {{actor.alias}} {% endif %}</span> 
                                     <div class="pull-right">
                                         {% if editable %}
-                                        <a href="#" class="remove-footprint-actor"
-                                            data-actor-id="{{actor.id}}"
+                                        <a href="#" class="remove-foreign-key"
                                             data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
-                                            data-url="/footprint/actor/{{footprint.id}}/remove/"
-                                            data-name="{{actor.display_name}}"
+                                            data-url="/footprint/actor/{{footprint.id}}/remove/{{actor.id}}/"
                                             title="remove actor">
                                             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
                                         {% endif %}

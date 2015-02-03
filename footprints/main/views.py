@@ -141,7 +141,7 @@ class FootprintRemoveActorView(LoggedInMixin, EditableMixin,
         if not self.has_edit_permission(self.request.user, footprint):
             return HttpResponseForbidden()
 
-        actor_id = self.request.POST.get('actor_id', None)
+        actor_id = kwargs.get('actor_id', None)
         actor = get_object_or_404(Actor, id=actor_id)
         footprint.actor.remove(actor)
         return self.render_to_json_response({'success': True})
@@ -219,10 +219,27 @@ class FootprintAddPlaceView(LoggedInMixin, EditableMixin,
         if not self.has_edit_permission(self.request.user, footprint):
             return HttpResponseForbidden()
 
-        # @todo - get or create place
+        position = self.request.POST.get('position', '')
+        if len(position) < 1:
+            return self.render_to_json_response({
+                'success': False,
+                'error': 'Please specify a position'
+            })
+
+        place, created = Place.objects.get_or_create(
+            city=self.request.POST.get('city', ''),
+            country=self.request.POST.get('country', ''),
+            position=position)
+
+        footprint.place = place
+        footprint.save()
 
         return self.render_to_json_response({
             'success': True,
+            'place': {
+                'id': place.id,
+                'description': place.__unicode__(),
+            },
             'footprint_id': footprint.id
         })
 
@@ -237,7 +254,7 @@ class FootprintRemovePlaceView(LoggedInMixin, EditableMixin,
         if not self.has_edit_permission(self.request.user, footprint):
             return HttpResponseForbidden()
 
-        place_id = self.request.POST.get('place_id', None)
+        place_id = kwargs.get('place_id', None)
         place = get_object_or_404(Place, id=place_id)
 
         if footprint.place == place:

@@ -260,7 +260,8 @@ class FootprintRemoveActorViewTest(TestCase):
         self.footprint.actor.add(self.actor)
 
         self.remove_url = reverse('footprint-remove-actor-view',
-                                  kwargs={'footprint_id': self.footprint.id})
+                                  kwargs={'footprint_id': self.footprint.id,
+                                          'actor_id': self.actor.id})
 
     def test_post_expected_errors(self):
         # not logged in
@@ -276,9 +277,12 @@ class FootprintRemoveActorViewTest(TestCase):
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 403)
 
-        # no actor id
+        # invalid actor id
+        bad_remove_url = reverse('footprint-remove-actor-view',
+                                 kwargs={'footprint_id': self.footprint.id,
+                                         'actor_id': 500})
         self.client.login(username=self.staff.username, password="test")
-        response = self.client.post(self.remove_url, {},
+        response = self.client.post(bad_remove_url, {},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 404)
 
@@ -287,7 +291,7 @@ class FootprintRemoveActorViewTest(TestCase):
 
         self.client.login(username=self.staff.username, password="test")
         response = self.client.post(self.remove_url,
-                                    {'actor_id': self.actor.id},
+                                    {},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
         self.assertTrue(loads(response.content)['success'])

@@ -2,7 +2,7 @@ from haystack import indexes
 from haystack.fields import CharField
 
 from footprints.main.models import (WrittenWork, Imprint, Footprint, Actor,
-                                    Person)
+                                    Person, Place)
 
 
 class WrittenWorkIndex(indexes.SearchIndex, indexes.Indexable):
@@ -72,6 +72,18 @@ class PersonIndex(indexes.SearchIndex, indexes.Indexable):
 
     def get_model(self):
         return Person
+
+    def prepare_object_type(self, obj):
+        return type(obj).__name__
+
+
+class PlaceIndex(indexes.SearchIndex, indexes.Indexable):
+    object_id = CharField(model_attr='id')
+    object_type = CharField()
+    text = indexes.NgramField(document=True, use_template=True)
+
+    def get_model(self):
+        return Place
 
     def prepare_object_type(self, obj):
         return type(obj).__name__
