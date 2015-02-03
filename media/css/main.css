@@ -184,8 +184,7 @@ ul.wizard-tabs.has-error li.active a {
     cursor: pointer;
 }
 
-.object-detail .editable-actor .actor-name,
-.object-detail .editable-actor .person-role {
+.object-detail .editable-input .form-group {
     margin-top: 10px;
 }
 
@@ -207,6 +206,12 @@ ul.wizard-tabs.has-error li.active a {
 /** editable fields **/
 .editable-person {
     padding: 20px;
+}
+
+.editable-place .map-container {
+    width: 120%;
+    height: 300px;
+    margin-top: 10px;
 }
 
 

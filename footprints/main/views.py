@@ -19,9 +19,12 @@ from footprints.main.models import (Footprint, Actor, Person, Role,
                                     WrittenWork, Language, ExtendedDateFormat,
                                     Place)
 from footprints.main.permissions import IsStaffOrReadOnly
-from footprints.main.serializers import TitleSerializer, NameSerializer, \
-    FootprintSerializer, LanguageSerializer, RoleSerializer, \
-    ExtendedDateFormatSerializer, ActorSerializer, PersonSerializer
+from footprints.main.serializers import (TitleSerializer, NameSerializer,
+                                         FootprintSerializer,
+                                         LanguageSerializer, RoleSerializer,
+                                         ExtendedDateFormatSerializer,
+                                         ActorSerializer, PersonSerializer,
+                                         PlaceSerializer)
 from footprints.mixins import (JSONResponseMixin, LoggedInMixin,
                                EditableMixin)
 
@@ -75,6 +78,7 @@ class FootprintDetailView(EditableMixin, LoggedInMixin, DetailView):
         context['editable'] = self.has_edit_permission(self.request.user,
                                                        self.object)
         context['languages'] = Language.objects.all().order_by('name')
+        context['roles'] = Role.objects.all().order_by('name')
         return context
 
 
@@ -137,7 +141,7 @@ class FootprintRemoveActorView(LoggedInMixin, EditableMixin,
         if not self.has_edit_permission(self.request.user, footprint):
             return HttpResponseForbidden()
 
-        actor_id = self.request.POST.get('actor_id', None)
+        actor_id = kwargs.get('actor_id', None)
         actor = get_object_or_404(Actor, id=actor_id)
         footprint.actor.remove(actor)
         return self.render_to_json_response({'success': True})
@@ -205,6 +209,61 @@ class FootprintAddDateView(LoggedInMixin, EditableMixin,
             })
 
 
+class FootprintAddPlaceView(LoggedInMixin, EditableMixin,
+                            JSONResponseMixin, View):
+
+    def post(self, *args, **kwargs):
+        footprint_id = kwargs.get('footprint_id', None)
+        footprint = get_object_or_404(Footprint, pk=footprint_id)
+
+        if not self.has_edit_permission(self.request.user, footprint):
+            return HttpResponseForbidden()
+
+        position = self.request.POST.get('position', '')
+        if len(position) < 1:
+            return self.render_to_json_response({
+                'success': False,
+                'error': 'Please specify a position'
+            })
+
+        place, created = Place.objects.get_or_create(
+            city=self.request.POST.get('city', ''),
+            country=self.request.POST.get('country', ''),
+            position=position)
+
+        footprint.place = place
+        footprint.save()
+
+        return self.render_to_json_response({
+            'success': True,
+            'place': {
+                'id': place.id,
+                'description': place.__unicode__(),
+            },
+            'footprint_id': footprint.id
+        })
+
+
+class FootprintRemovePlaceView(LoggedInMixin, EditableMixin,
+                               JSONResponseMixin, View):
+
+    def post(self, *args, **kwargs):
+        footprint_id = kwargs.get('footprint_id', None)
+        footprint = get_object_or_404(Footprint, pk=footprint_id)
+
+        if not self.has_edit_permission(self.request.user, footprint):
+            return HttpResponseForbidden()
+
+        place_id = kwargs.get('place_id', None)
+        place = get_object_or_404(Place, id=place_id)
+
+        if footprint.place == place:
+            footprint.place = None
+            footprint.save()
+
+        return self.render_to_json_response({'success': True})
+
+
 class TitleListView(APIView):
     renderer_classes = (JSONPRenderer,)
     permission_classes = (AllowAny,)
@@ -257,6 +316,12 @@ class ExtendedDateFormatViewSet(viewsets.ModelViewSet):
 class PersonViewSet(viewsets.ModelViewSet):
     queryset = Person.objects.all()
     serializer_class = PersonSerializer
+    permission_classes = (IsStaffOrReadOnly,)
+
+
+class PlaceViewSet(viewsets.ModelViewSet):
+    queryset = Place.objects.all()
+    serializer_class = PlaceSerializer
     permission_classes = (IsStaffOrReadOnly,)
 
 

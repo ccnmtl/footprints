@@ -10,16 +10,13 @@ from rest_framework import routers
 
 from footprints.main import views
 from footprints.main.forms import FootprintSearchForm
-from footprints.main.views import (LoginView, LogoutView, TitleListView,
-                                   CreateFootprintView, NameListView,
-                                   WrittenWorkDetailView, FootprintDetailView,
-                                   PersonDetailView, PlaceDetailView,
-                                   FootprintViewSet, LanguageViewSet,
-                                   RoleViewSet, FootprintAddActorView,
-                                   FootprintRemoveActorView,
-                                   ExtendedDateFormatViewSet,
-                                   FootprintAddDateView, ActorViewSet,
-                                   PersonViewSet)
+from footprints.main.views import (
+    LoginView, LogoutView, TitleListView, CreateFootprintView, NameListView,
+    WrittenWorkDetailView, FootprintDetailView, PersonDetailView,
+    PlaceDetailView, FootprintViewSet, LanguageViewSet, RoleViewSet,
+    FootprintAddActorView, FootprintRemoveActorView, ExtendedDateFormatViewSet,
+    FootprintAddDateView, ActorViewSet, PersonViewSet, PlaceViewSet,
+    FootprintAddPlaceView, FootprintRemovePlaceView)
 from footprints.mixins import is_staff
 
 
@@ -30,12 +27,13 @@ if hasattr(settings, 'CAS_BASE'):
     auth_urls = (r'^accounts/', include('djangowind.urls'))
 
 router = routers.DefaultRouter()
+router.register(r'actor', ActorViewSet)
+router.register(r'edtf', ExtendedDateFormatViewSet)
 router.register(r'footprint', FootprintViewSet)
 router.register(r'language', LanguageViewSet)
-router.register(r'role', RoleViewSet)
-router.register(r'edtf', ExtendedDateFormatViewSet)
 router.register(r'person', PersonViewSet)
-router.register(r'actor', ActorViewSet)
+router.register(r'place', PlaceViewSet)
+router.register(r'role', RoleViewSet)
 
 
 urlpatterns = patterns(
@@ -63,9 +61,14 @@ urlpatterns = patterns(
     auth_urls,
     url(r'^footprint/actor/(?P<footprint_id>\d+)/add/$',
         FootprintAddActorView.as_view(), name='footprint-add-actor-view'),
-    url(r'^footprint/actor/(?P<footprint_id>\d+)/remove/$',
+    url(r'^footprint/actor/(?P<footprint_id>\d+)/remove/(?P<actor_id>\d+)/$',
         FootprintRemoveActorView.as_view(),
         name='footprint-remove-actor-view'),
+    url(r'^footprint/place/(?P<footprint_id>\d+)/add/$',
+        FootprintAddPlaceView.as_view(), name='footprint-add-place-view'),
+    url(r'^footprint/place/(?P<footprint_id>\d+)/remove/(?P<place_id>\d+)/$',
+        FootprintRemovePlaceView.as_view(),
+        name='footprint-remove-place-view'),
     url(r'^footprint/date/(?P<footprint_id>\d+)/$',
         FootprintAddDateView.as_view(), name='footprint-add-date-view'),
     (r'^footprint/create/$', CreateFootprintView.as_view()),
