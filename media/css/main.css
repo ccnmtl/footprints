@@ -228,6 +228,10 @@ ul.additional-questions .editable-container {
 
 /* Search Page */
 
+.object-search .panel-body {
+    padding: 0;
+}
+
 .object-search .pagination {
     margin: 0;
 }
@@ -238,6 +242,24 @@ ul.additional-questions .editable-container {
 
 .object-search ul li label {
     font-weight: normal;
+}
+
+.object-search .search-result {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.object-search .search-result h4 {
+    margin-top: 0;
+}
+
+.object-search .search-result div {
+    margin-left: 25px;
+}
+
+.object-search .search-result:hover {
+    background-color: #f5f5f5;
+    cursor: pointer;
 }
 
 /* LOGIN PAGE */

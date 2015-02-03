@@ -53,31 +53,47 @@
                     </div>
                     <div class="panel-body">
                         {% for result in page.object_list %}
-                            <p>
+                            <div class="search-result {% cycle 'odd' 'even' %}" data-href="/{{result.model_name}}/{{result.object.id}}/">
                                 {% ifequal result.model_name 'footprint' %}
-                                    <img src="{{STATIC_URL}}img/footprint.png" />
-                                {% endifequal %}
-                                {% ifequal result.model_name 'person' %}
-                                    <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-                                {% endifequal %}
-                                {% ifequal result.model_name 'place' %}
-                                    <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
-                                {% endifequal %}
-                                {% ifequal result.model_name 'imprint' %}
-                                    <span class="glyphicon glyphicon-stats" aria-hidden="true"></span>
-                                {% endifequal %}
-                                {% ifequal result.model_name 'writtenwork' %}
-                                    <span class="glyphicon glyphicon-book" aria-hidden="true"></span>
-                                {% endifequal %}
+                                    <h4><img src="{{STATIC_URL}}img/footprint.png" />{{result.object}}</h4>
+                                    <dl class="dl-horizontal">
+                                    {% if result.object.has_written_work %}
+                                        {% with authors=result.object.book_copy.imprint.work.authors %}
+                                            {% for actor in authors %}
+                                                <dt>Author</dt><dd>{{actor.display_name}}</dd>
+                                            {% endfor %}
+                                        {% endwith %}
+                                     {% endif %}
+                                     {% with owners=result.object.owners %}
+                                        {% for actor in owners %}
+                                            <dt>Owner</dt><dd>{{actor.display_name}}</dd>
+                                        {% endfor %}
+                                     {% endwith %}
+                                     {% if result.object.associated_date %}
+                                        <dt>Footprint Date</dt>
+                                        <dd>{{result.object.associated_date}}</dd>
+                                     {% endif %}
+                                     {% if result.object.place %}
+                                        <dt>Footprint Place</dt>
+                                        <dd>{{result.object.place}}</dd>
+                                     {% endif %}
+                                     </dl>
+                                {% else %}{% ifequal result.model_name 'person' %}
+                                    <h4><span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{result.object}}</h4>
+                                {% else %}{% ifequal result.model_name 'place' %}
+                                    <h4><span class="glyphicon glyphicon-globe" aria-hidden="true"></span> {{result.object}}</h4>
+                                {% else %}{% ifequal result.model_name 'writtenwork' %}
+                                    <h4><span class="glyphicon glyphicon-book" aria-hidden="true"></span> {{result.object.title}}</h4>
+                                    <dl class="dl-horizontal">
+                                    {% with authors=result.object.authors %}
+                                        {% for actor in authors %}
+                                            <dt>Author</dt><dd>{{actor.display_name}}</dd>
+                                        {% endfor %}
+                                    {% endwith %}
+                                    </dl>
+                                {% endifequal %}{% endifequal %}{% endifequal %}{% endifequal %}
                                 
-                                {% if result.model_name == 'footprint' %}
-                                <a href="/{{result.model_name}}/{{result.object.id}}/">
-                                    {{result.object}}
-                                </a>
-                                {% else %}
-                                    <span>{{result.object}}</span>
-                                {% endif %}
-                            </p>
+                            </div>
                         {% empty %}
                             <p>No results found.</p>
                         {% endfor %}
@@ -105,4 +121,15 @@
         </div>
     </div>
 </div>    
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        jQuery('.search-result').click(function() {
+            var url = jQuery(this).data('href');
+            window.location = url;
+        });
+    });
+</script>
 {% endblock %}
