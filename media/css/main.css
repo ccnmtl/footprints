@@ -256,6 +256,7 @@ ul.additional-questions .editable-container {
 
 .object-search .search-result h4 {
     margin-top: 0;
+    font-weight: normal;
 }
 
 .object-search .search-result div {
@@ -265,6 +266,10 @@ ul.additional-questions .editable-container {
 .object-search .search-result:hover {
     background-color: #f5f5f5;
     cursor: pointer;
+}
+
+.object-search .no-results h4 {
+    margin-left: 10px;
 }
 
 /* LOGIN PAGE */

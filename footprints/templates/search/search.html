@@ -10,6 +10,7 @@
 <div class="object-search">
     <div class="row">
         <div class="col-md-3">
+        
             <form method="get" action=".">
                 <br />
                 <div class="form-group">
@@ -25,11 +26,12 @@
                     <label for="models">Filter By Record Type</label>
                     {{form.models}}
                 </div>
-                <input class="btn btn-primary" type="submit" value="Search">
+                <input class="btn btn-default" type="reset" value="Clear"></input>
+                <input class="btn btn-primary" type="submit" value="Search"></input>
             </form>
         </div>
         <div class="col-md-9">
-            {% if page %}
+            {% if form.is_bound %}
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <div class="panel-title">
@@ -55,8 +57,16 @@
                         {% for result in page.object_list %}
                             <div class="search-result {% cycle 'odd' 'even' %}" data-href="/{{result.model_name}}/{{result.object.id}}/">
                                 {% ifequal result.model_name 'footprint' %}
-                                    <h4><img src="{{STATIC_URL}}img/footprint.png" />{{result.object}}</h4>
+                                    <h4><img src="{{STATIC_URL}}img/footprint.png" />{{result.object.display_title}}</h4>
                                     <dl class="dl-horizontal">
+                                     {% if result.object.associated_date %}
+                                        <dt>Footprint Date</dt>
+                                        <dd>{{result.object.associated_date}}</dd>
+                                     {% endif %}
+                                     {% if result.object.place %}
+                                        <dt>Footprint Place</dt>
+                                        <dd>{{result.object.place}}</dd>
+                                     {% endif %}
                                     {% if result.object.has_written_work %}
                                         {% with authors=result.object.book_copy.imprint.work.authors %}
                                             {% for actor in authors %}
@@ -69,14 +79,6 @@
                                             <dt>Owner</dt><dd>{{actor.display_name}}</dd>
                                         {% endfor %}
                                      {% endwith %}
-                                     {% if result.object.associated_date %}
-                                        <dt>Footprint Date</dt>
-                                        <dd>{{result.object.associated_date}}</dd>
-                                     {% endif %}
-                                     {% if result.object.place %}
-                                        <dt>Footprint Place</dt>
-                                        <dd>{{result.object.place}}</dd>
-                                     {% endif %}
                                      </dl>
                                 {% else %}{% ifequal result.model_name 'person' %}
                                     <h4><span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{result.object}}</h4>
@@ -95,7 +97,7 @@
                                 
                             </div>
                         {% empty %}
-                            <p>No results found.</p>
+                            <div class="no-results"><h4>No results found</h4></div>
                         {% endfor %}
                     </div>
                     {% if page.has_previous or page.has_next %}
@@ -125,10 +127,15 @@
 
 {% block js %}
 <script type="text/javascript">
+
     jQuery(document).ready(function() {
         jQuery('.search-result').click(function() {
             var url = jQuery(this).data('href');
             window.location = url;
+        });
+        
+        jQuery('input:reset').click(function(evt) {
+            window.location = '/search/';
         });
     });
 </script>
