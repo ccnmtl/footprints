@@ -285,7 +285,7 @@ class Collection(models.Model):
 
 
 class WrittenWork(models.Model):
-    title = models.TextField()
+    title = models.TextField(null=True, blank=True)
     actor = models.ManyToManyField(
         Actor, null=True, blank=True,
         help_text="The author or creator of the work. ")
@@ -317,7 +317,7 @@ class WrittenWork(models.Model):
 
 
 class Imprint(models.Model):
-    work = models.ForeignKey(WrittenWork, null=True, blank=True)
+    work = models.ForeignKey(WrittenWork)
 
     title = models.TextField(null=True, blank=True,
                              verbose_name="Imprint Title")

@@ -4,12 +4,15 @@
         events: {
             'click a.remove-foreign-key span.glyphicon-remove': 'onConfirmRemove',
             'click .btn-cancel': 'onCancelRemove',
-            'click .btn-confirm': 'onRemove'
+            'click .btn-confirm': 'onRemove',
+            'mouseover li.list-group-item': 'highlightRelated',
+            'mouseout li.list-group-item': 'highlightRelated'
         },
         initialize: function(options) {
             _.bindAll(this, 'render',
-                    'onConfirmRemove', 'onCancelRemove', 'onRemove');
-            
+                'onConfirmRemove', 'onCancelRemove', 'onRemove',
+                'highlightRelated');
+
             var html = jQuery("#actor-display-template").html();
             this.actor_template = _.template(html);
             
@@ -46,6 +49,7 @@
             jQuery('.editable-place').editable({
                 namedParams: true,
                 template: '#editable-place-form',
+                onblur: 'ignore',
                 validate: function(values) {
                     if (!values.hasOwnProperty('latitude') ||
                             !values.hasOwnProperty('longitude')) {
@@ -147,6 +151,16 @@
                     jQuery("#confirm-modal div.error").modal("An error occurred. Please try again.");
                 }
             });
+        },
+        highlightRelated: function(evt) {
+            var selector = jQuery(evt.currentTarget).data('related-fields');
+            var elts = jQuery(selector);
+            jQuery(elts).toggleClass('highlight');
+        },
+        unhighlightRelated: function(evt) {
+            var selector = jQuery(evt.currentTarget).data('related-fields');
+            var elts = jQuery(selector);
+            jQuery(elts).css("background-color", "white");
         }
     });
 })();

@@ -86,23 +86,21 @@ ul.wizard-tabs.has-error li.active a {
 
 /* Object detail pages */
 .object-detail .breadcrumb {
-    margin-bottom: 0;
+    margin-bottom: 10px;
     background: #f6f7f8; 
     color: #666;
     font: bold 12px "Helvetica Neue", "Helvetica Narrow", Arial, sans-serif;
     text-transform: uppercase;
 }
 
-.object-detail h2 {
-    background: #f6f7f8;
+.object-detail h1 {
     padding: 10px;
     color: #373e4d;
     vertical-align: middle;
-    font-size: 25px;
     margin-top: 0;
 }
 
-.object-detail h2 .object-title {
+.object-detail h1 .object-title {
     width: 85%;
     margin-left: 20px;
 }
@@ -201,6 +199,20 @@ ul.wizard-tabs.has-error li.active a {
 .object-detail .glyphicon-question-sign {
     vertical-align: top;
     margin-top: 2px;
+}
+
+ul.record-checklist li.list-group-item small {
+    margin-left: 22px;
+}
+
+ul.record-checklist li.list-item-complete {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+}
+
+.object-detail .highlight {
+    background-color: lightyellow;
 }
 
 /** editable fields **/

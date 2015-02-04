@@ -16,7 +16,7 @@ from footprints.main.views import (
     PlaceDetailView, FootprintViewSet, LanguageViewSet, RoleViewSet,
     FootprintAddActorView, FootprintRemoveActorView, ExtendedDateFormatViewSet,
     FootprintAddDateView, ActorViewSet, PersonViewSet, PlaceViewSet,
-    FootprintAddPlaceView, FootprintRemovePlaceView)
+    FootprintAddPlaceView, FootprintRemovePlaceView, WrittenWorkViewSet)
 from footprints.mixins import is_staff
 
 
@@ -34,6 +34,7 @@ router.register(r'language', LanguageViewSet)
 router.register(r'person', PersonViewSet)
 router.register(r'place', PlaceViewSet)
 router.register(r'role', RoleViewSet)
+router.register(r'writtenwork', WrittenWorkViewSet)
 
 
 urlpatterns = patterns(

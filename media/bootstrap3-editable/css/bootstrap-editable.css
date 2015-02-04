@@ -181,10 +181,9 @@ a.editable-click.editable-disabled:hover {
    border-bottom: none;
 }
 
-.editable-empty, .editable-empty:hover, .editable-empty:focus{
+.editable-empty, .editable-empty:hover, .editable-empty:focus {
   font-style: italic; 
   color: #DD1144;  
-  /* border-bottom: none; */
   text-decoration: none;
 }
 

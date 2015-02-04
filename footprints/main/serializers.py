@@ -8,7 +8,7 @@ from rest_framework.utils import html
 import six
 
 from footprints.main.models import Footprint, Language, Role, Actor, \
-    ExtendedDateFormat, Person, Place
+    ExtendedDateFormat, Person, Place, WrittenWork
 
 
 class TitleSerializer(Serializer):
@@ -113,6 +113,14 @@ class ActorSerializer(HyperlinkedModelSerializer):
         model = Actor
         fields = ('id', 'alias', 'person', 'role')
         depth = 1
+
+
+class WrittenWorkSerializer(HyperlinkedModelSerializer):
+    actor = ActorRelatedField(many=True, queryset=Actor.objects.all())
+
+    class Meta:
+        model = WrittenWork
+        fields = ('id', 'title', 'actor', 'notes')
 
 
 class FootprintSerializer(HyperlinkedModelSerializer):
