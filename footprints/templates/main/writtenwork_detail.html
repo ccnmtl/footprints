@@ -23,7 +23,7 @@
             <div class="col-md-8">
                 <div class="breadcrumb">WRITTEN WORK</div>
                 <h2>
-                    <span class="glyphicon glyphicon-user pull-left" aria-hidden="true"></span>
+                    <span class="glyphicon glyphicon-book pull-left" aria-hidden="true"></span>
                     <span class="pull-left object-title">{{work}}</span>
                     <div class="clearfix"></div>
                 </h2>
@@ -60,24 +60,32 @@
                 {% endfor %}
                 </ul>
             </div>
-            <div class="col-md-3">
-                <div class="progress">
+            <div class="col-md-4">
+                <div class="sidebar-box">
                     {% with complete=work.percent_complete %}
-                        <div class="progress-bar" role="progressbar"
-                            aria-valuenow="{{complete}}" aria-valuemin="0"
-                            aria-valuemax="100" style="width: {{complete}}%;">
-                            {{complete}}%
+                        <h4>Record Progress</h4>
+                        <div>
+                            <div class="progress pull-left">
+                                <div class="progress-bar" role="progressbar"
+                                    aria-valuenow="{{complete}}" aria-valuemin="0"
+                                    aria-valuemax="100" style="width: {{complete}}%;">
+                                </div>
+                            </div>
+                            <div class="progress-report pull-right">{{complete}}% complete</div>
                         </div>
+                        <div class="clearfix"></div>
+                        {% if editable %}
+                        <div>
+                            <strong>Do you know something important?</strong>
+                            <p>Praesent fringilla sit amet dolor at congue. Fusce pretium neque rutrum luctus dictum.</p>
+                            <button class="btn btn-sm btn-primary pull-right">Save</button>&nbsp;
+                            <button class="btn btn-sm btn-default pull-right" style="margin-right: 6px;">Skip</button>
+                        </div>
+                        {% endif %}
                     {% endwith %}
+                    <div class="clearfix"></div>
                 </div>
-
-                <h3>Do you know...</h3>
-                <h3>Related?</h3>
-                <p>Further describe your footprint by connecting similar records.</p>
-                {% for record in records %}
-                    {{record}}
-                {% endfor %}
-            </div>
+            </div>        
         </div>
     </div>
 {% endwith %} 
