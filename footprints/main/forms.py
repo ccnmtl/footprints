@@ -127,7 +127,7 @@ class FootprintSearchForm(ModelSearchForm):
 
         choices = [
             (get_model_ct(Footprint), 'Footprint'),
-            (get_model_ct(Imprint), 'Imprint'),
+            (get_model_ct(Place), 'Place'),
             (get_model_ct(Person), 'Person'),
             (get_model_ct(WrittenWork), 'Written Work'),
         ]

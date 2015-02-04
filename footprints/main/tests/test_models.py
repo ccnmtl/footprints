@@ -3,7 +3,7 @@ from django.test import TestCase
 
 from footprints.main.models import Language, DigitalFormat, \
     ExtendedDateFormat, StandardizedIdentification, \
-    Actor, Place, Imprint
+    Actor, Imprint
 from footprints.main.tests.factories import RoleFactory, \
     ActorFactory, PlaceFactory, CollectionFactory, \
     WrittenWorkFactory, ImprintFactory, BookCopyFactory, FootprintFactory, \
@@ -70,12 +70,9 @@ class BasicModelTest(TestCase):
             '%s (%s)' % (actor.alias, role.name))
 
     def test_place(self):
-        place = Place.objects.create(continent='EU')
-        self.assertEquals(place.__unicode__(), 'Europe')
-
         place = PlaceFactory()
         self.assertEquals(place.__unicode__(),
-                          'Smyrna, Greece, Balkan Peninsula, Europe')
+                          'Smyrna, Greece')
 
     def test_collection(self):
         collection = CollectionFactory(name='The Morgan Collection')

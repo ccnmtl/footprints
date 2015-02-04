@@ -76,19 +76,6 @@ $(function(){
                    jQuery(this).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
                }
            });
-
-           // populate the roles
-           var roleSelect = jQuery(this.$roleselect);
-           jQuery.ajax({
-               url: "/api/role/",
-               success: function(data) {
-                   roleSelect.empty();
-                   for (var i=0; i < data.results.length; i++) {
-                       var obj = data.results[i];
-                       roleSelect.append('<option value="' + obj.id + '">' + obj.name + '</option>');
-                   }
-               }
-           });
         },
         
         /**
