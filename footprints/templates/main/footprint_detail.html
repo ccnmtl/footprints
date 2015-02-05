@@ -26,9 +26,55 @@
             <div class="form-group">
                 <label>Role</label><br />
                 <select class="form-control" name="role" placeholder="Type in a role name">
-                    {% for role in roles %}
+                    {% for role in roles.for_footprint %}
                         <option value="{{role.id}}">{{role.name}}</option>
                     {% endfor %}
+                </select>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/template" id="xeditable-author-form">
+        <div class="editable-author">
+            <div class="form-group">
+                <label>Author's Name</label><br />
+                <input type="text" class="form-control" name="person-autocomplete" placeholder="Type in a person's name"></input>
+                </div>
+                
+            <div class="form-group">
+                <label>Pseudonym or Alias (if applicable)</label><br />
+                <input type="text" class="form-control" name="actor-name" placeholder="Specify the person's alias"></select>
+            </div>
+
+            <div class="form-group" style="display: none">
+                <label>Role</label><br />
+                <select class="form-control" name="role" placeholder="Type in a role name" disabled="disabled">
+                    {% with author=roles.get_author_role %}
+                        <option value="{{author.id}}">{{author.name}}</option>
+                    {% endwith %}
+                </select>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/template" id="xeditable-imprint-actor-form">
+        <div class="editable-actor">
+            <div class="form-group">
+                <label>Person's Name</label><br />
+                <input type="text" class="form-control" name="person-autocomplete" placeholder="Type in a person's name"></input>
+            </div>
+            
+            <div class="form-group">
+                <label>Pseudonym or Alias (if applicable)</label><br />
+                <input type="text" class="form-control" name="actor-name" placeholder="Specify the person's alias"></select>
+            </div>
+
+            <div class="form-group" style="display: none">
+                <label>Role</label><br />
+                <select class="form-control" name="role" placeholder="Type in a role name" disabled="disabled">
+                    {% with author=roles.for_imprint %}
+                        <option value="{{author.id}}">{{author.name}}</option>
+                    {% endwith %}
                 </select>
             </div>
         </div>
@@ -41,7 +87,7 @@
             <div class="pull-right">
                 <a href="#" class="remove-foreign-key"
                     data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
-                    data-url="/footprint/actor/<%=footprint.id%>/remove/<%=actor.id%>/"
+                    data-url="/<%=object.type%>/actor/<%=object.id%>/remove/<%=actor.id%>/"
                     title="remove actor">
                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
                 &nbsp;
@@ -51,7 +97,7 @@
             </div>
         </dd>
     </script>
-    
+
     <script type="text/template" id="xeditable-place-form">
         <div class="editable-place">
             <div class="form-group">
@@ -99,7 +145,6 @@
             </div>
         </dd>
     </script>
-
 {% endblock %}
 
 {% block js %}
@@ -139,12 +184,13 @@
         {% csrf_token %}
         <div class="row">
             <div class="col-md-8">
-                <div class="breadcrumb">FOOTPRINT</div>
-                <h2>
+                <h1>
                     <img class="pull-left" src="{{STATIC_URL}}img/footprint.png" />
                     <span class="pull-left object-title" data-name='display-title'>{{footprint.display_title}}</span>
                     <div class="clearfix"></div>
-                </h2>
+                </h1>
+
+                <div class="breadcrumb">A FOOTPRINT</div>
                 {% for media in footprint.digital_object.all %}
                     <img src="{{media.file.url}}"></img>
                 {% endfor %}
@@ -153,10 +199,10 @@
                     {{footprint.narrative}}
                     </blockquote>
                 {% endif %}
-                <br />
                 <div class="evidence-container">
                     <dl class="dl-horizontal">
-                        <div class="description-list" {% if not footprint.associated_date %}style="display: none"{% endif %}>
+                        <div class="description-list footprint-date-container"
+                            {% if not footprint.associated_date %}style="display: none"{% endif %}>
                             <dt>Footprint Date</dt>
                             <dd class="border-bottom">
                                 <a href="#" class="{% if editable %}editable editable-date{% else %}readonly{% endif %}"
@@ -170,7 +216,7 @@
                                     {% endif %}>{{footprint.associated_date}}</a>
                             </dd>
                         </div>
-                        <div class="footprint-place" {% if not footprint.place %}style="display: none"{% endif %}>
+                        <div class="footprint-place footprint-place-container" {% if not footprint.place %}style="display: none"{% endif %}>
                             <dt>Footprint Place</dt>
                             <dd class="border-bottom footprint-place">
                                 <span>{{footprint.place}}</span>
@@ -187,6 +233,12 @@
                                     <a href="/place/{{footprint.place.id}}/" title="see details" class="foreign-key">
                                         <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
                                     </a>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="footprint-map"
+                                    data-latitude="{{footprint.place.position.latitude}}"
+                                    data-longitude="{{footprint.place.position.longitude}}"
+                                    data-title="{{footprint.place}}">
                                 </div>
                             </dd>
                         </div>
@@ -207,7 +259,7 @@
                         </div>
                         {% ifnotequal footprint.title footprint.display_title %}
                         <div class="description-list" {% if not footprint.title %}style="display: none"{% endif %}>
-                            <dt>Title of the work<br />as shown in footprint</dt>
+                            <dt title="the written work's title exactly as it appears in the of evidence.">Footprint Title Display<br /></dt>
                             <dd class="border-bottom">
                                 <a href="#" class="{% if editable %}editable{% else %}readonly{% endif %}"
                                     data-attribute-name="title" data-name="title"
@@ -240,8 +292,8 @@
                             {% endfor %}
                        </div>
                     </dl>
-                    <br />
                     <dl class="dl-horizontal">
+                        <div class="evidence-type-container">
                         <dt>Evidence Type</dt>
                         <dd class="border-bottom">
                             <a href="#" class="{% if editable %}editable-medium{% else %}readonly{% endif %}"
@@ -252,6 +304,7 @@
                                 data-url="/api/footprint/{{footprint.id}}/">{{footprint.medium}}
                             </a>
                         </dd>
+                        </div>
                         <div class="description-list"
                             {% if footprint.medium_description == None or footprint.medium_description == ''%}style="display: none"{% endif %}>
                             <dt>Evidence Description</dt>
@@ -263,14 +316,16 @@
                                     data-url="/api/footprint/{{footprint.id}}/">{{footprint.medium_description}}</a>
                             </dd>
                         </div>
-                        <dt>Evidence Location</dt>
-                        <dd class="border-bottom">
-                            <a href="#" class="{% if editable %}editable{% else %}readonly{% endif %}"
-                                data-attribute-name="provenance" data-name="provenance"
-                                data-type="text" data-pk="{{footprint.id}}"
-                                data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
-                                data-url="/api/footprint/{{footprint.id}}/">{{footprint.provenance}}</a>
-                        </dd>
+                        <div class="evidence-location-container">
+                            <dt>Evidence Location</dt>
+                            <dd class="border-bottom">
+                                <a href="#" class="{% if editable %}editable{% else %}readonly{% endif %}"
+                                    data-attribute-name="provenance" data-name="provenance"
+                                    data-type="text" data-pk="{{footprint.id}}"
+                                    data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
+                                    data-url="/api/footprint/{{footprint.id}}/">{{footprint.provenance}}</a>
+                            </dd>
+                        </div>
                         <div class="description-list" {% if footprint.call_number == None or footprint.call_number == '' %}style="display: none"{% endif %}>
                             <dt>Evidence Call Number</dt>
                             <dd class="border-bottom">
@@ -298,7 +353,7 @@
                         <dd>  
                             <ul class="additional-questions">
                                 {% if not footprint.place %}
-                                    <li>
+                                    <li class="footprint-place-container">
                                         <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
                                         <a href="#" class="{% if editable %}editable-place{% endif %} do-you-know persistant" data-name="place"
                                             data-type="place" data-pk="{{footprint.id}}" data-value=""
@@ -307,7 +362,7 @@
                                     </li>
                                 {% endif %}
                                 {% if not footprint.associated_date %}
-                                    <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                                    <li class="footprint-date-container"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
                                     <a href="#" class="{% if editable %}editable editable-date{% endif %} do-you-know persistant"
                                         data-name="associated_date"
                                         data-type="text" data-pk="{{footprint.id}}"
@@ -327,6 +382,7 @@
 
                                 <li class="fixed"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
                                     <a href="#" class="{% if editable %}editable-actor{% endif %} do-you-know persistant" data-name="actor"
+                                        data-template="#xeditable-actor-form" 
                                         data-type="actor" data-pk="{{footprint.id}}" data-value=""
                                         data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
                                         data-url="/footprint/actor/{{footprint.id}}/add/">people related to this footprint, e.g. sellers, owners, curators?</a>
@@ -364,82 +420,177 @@
                     </dl>
                     {% endif %}
                 </div>
-                
-                {% if book.percent_complete > 0 or imprint.percent_complete > 0 %}
-                    <dl class="dl-horizontal">
-                        {% if work.title == '' %}
-                            <h3>More about the imprint</h3>
-                        {% else %}
-                            <h3>More about {{work.title}}</h3>
-                        {% endif %}
-                        {% if work %}
-                            {% for actor in work.actor.all %}
-                                <dt>{{actor.role.name}}</dt><dd class="border-bottom"><a href="/person/{{actor.person.id}}/">{{actor}}</a></dd>
-                            {% endfor %}
-                            {% if work.notes %}
-                                <dt>Notes</dt><dd class="border-bottom">{{work.notes}}</dd>
-                            {% endif %}
-                        {% endif %}
-                                                    
-                        {% if book.percent_complete > 0 %}
 
-                        {% endif %}
-    
-                        {% if imprint.percent_complete > 0 %}
-                            {% if imprint.title %}
-                                <dt>Imprint Title</dt><dd class="border-bottom">{{imprint.title}}</dd>
-                            {% endif %}
-                            {% if imprint.language.count > 0 %}
-                                <dt>Publication Language</dt>
-                                <dd class="border-bottom">
-                                    {% for language in imprint.language.all %}
-                                        {{language.name}}
-                                    {% endfor %}
-                                </dd>
-                            {% endif %}
-                            {% if imprint.date_of_publication %}
-                                <dt>Publication Date</dt><dd class="border-bottom">{{imprint.date_of_publication}}</dd>
-                            {% endif %}
-                            {% if imprint.place %}
-                                <dt>Publication Place</dt><dd class="border-bottom"><a href="/place/{{imprint.place.id}}/">{{imprint.place}}</a></dd>
-                            {% endif %}
-                            {% if imprint.actor.count > 0 %}
-                                {% for actor in imprint.actor.all %}
-                                    {% if not actor.role.is_author %}
-                                        <dt>{{actor.role.name}}</dt>
-                                        <dd class="border-bottom"><a href="/person/{{actor.person.id}}/">{{actor}}</a></dd>
+                <div class="breadcrumb">THE BOOK</div>
+                <dl class="dl-horizontal">
+                    <div class="description-list writtenwork-title-container" {% if not work.title %}style="display: none"{% endif %}> 
+                        <dt>Title</dt>
+                        <dd><a href="#" class="{% if editable %}editable{% else %}readonly{% endif %}"
+                                data-attribute-name="title"  data-name="title"
+                                data-type="text" data-pk="{{work.id}}"
+                                data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
+                                data-url="/api/writtenwork/{{work.id}}/">{{work.title}}</a>
+                        </dd>
+                    </div>
+                    <div class="description-list writtenwork-author-container">
+                        {% for actor in work.actor.all %}
+                            <dt>{{actor.role.name}}</dt>
+                            <dd class="border-bottom">
+                                <span>{{actor.person.name}}{% if actor.alias %} as {{actor.alias}} {% endif %}</span> 
+                                <div class="pull-right">
+                                    {% if editable %}
+                                    <a href="#" class="remove-foreign-key"
+                                        data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
+                                        data-url="/work/actor/{{footprint.id}}/remove/{{actor.id}}/"
+                                        title="remove author">
+                                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
                                     {% endif %}
-                                {% endfor %}
-                            {% endif %}
-                        {% endif %}
+                                    &nbsp;
+                                    <a href="/person/{{actor.person.id}}/" title="see details" class="foreign-key">
+                                        <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+                                    </a>
+                                </div>
+                            </dd>
+                        {% endfor %}
+                    </div>
+                    <div class="description-list" {% if not work.notes %}style="display: none"{% endif %}>
+                        <dt>Notes</dt>
+                        <dd class="border-bottom">
+                            <a href="#" class="{% if editable %}editable{% else %}readonly{% endif %}"
+                                data-attribute-name="notes" data-name="notes"
+                                data-type="textarea" data-pk="{{work.id}}"
+                                data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
+                                data-url="/api/writtenwork/{{work.id}}/">{{work.notes|safe}}</a>
+                        </dd>
+                    </div>
+                </dl>
+                
+                <dl class="dl-horizontal">
+                    <div class="description-list" {% if not imprint.title %}style="display: none"{% endif %}>
+                        <dt>Imprint Title</dt>
+                        <dd class="border-bottom">
+                            {{imprint.title}}
+                        </dd>
+                    </div>
+                    <div class="description-list" {% if not imprint.date_of_publication %}style="display: none"{% endif %}>
+                        <dt>Publication Date</dt>
+                        <dd class="border-bottom">
+                            {{imprint.date_of_publication}}
+                        </dd>
+                    </div>
+                    <div class="description-list imprint-actor-container">
+                    {% for actor in imprint.actor.all %}
+                        <dt>{{actor.role.name}}</dt>
+                        <dd class="border-bottom">
+                            <span>{{actor.person.name}}{% if actor.alias %} as {{actor.alias}} {% endif %}</span> 
+                            <div class="pull-right">
+                                {% if editable %}
+                                <a href="#" class="remove-foreign-key"
+                                    data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
+                                    data-url="/imprint/actor/{{imprint.id}}/remove/{{actor.id}}/"
+                                    title="remove author">
+                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+                                {% endif %}
+                                &nbsp;
+                                <a href="/person/{{actor.person.id}}/" title="see details" class="foreign-key">
+                                    <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+                                </a>
+                            </div>
+                        </dd>
+                    {% endfor %}
+                    </div>
+                </dl>
+
+                {% if editable %}
+                    <dl class="dl-horizontal">
+                        <dt>Do you know...</dt>
+                        <dd>  
+                            <ul class="additional-questions">
+                                {% if not work.title %}
+                                    <li class="writtenwork-title-container">
+                                        <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                                        <a href="#" class="{% if editable %}editable{% endif %} do-you-know persistant"
+                                            data-name="title" data-type="text" data-pk="{{work.id}}" data-value=""
+                                            data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                            data-url="/api/writtenwork/{{work.id}}/">the title of the written work?</a>
+                                    </li>
+                                {% endif %}
+                                <li class="fixed"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                                    <a href="#" class="{% if editable %}editable-author{% endif %} do-you-know persistant" data-name="actor"
+                                        data-template="#xeditable-author-form" 
+                                        data-type="actor" data-pk="{{work.id}}" data-value=""
+                                        data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
+                                        data-url="/work/actor/{{footprint.id}}/add/">the author(s) of the written work?</a>
+                                </li>
+                                
+                                {% if not work.notes %}
+                                    <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                                        <a href="#" class="editable do-you-know persistant" data-name="notes"
+                                            data-type="textarea" data-pk="{{work.id}}" data-value=""
+                                            data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
+                                            data-url="/api/writtenwork/{{work.id}}/">any additional notes about the written work?</a>
+                                    </li>
+                                {% endif %}
+
+                            </ul>
+                       </dd>
                     </dl>
                 {% endif %}
             </div>
             <div class="col-md-4">
-                <div class="sidebar-box">
-                    {% with complete=footprint.percent_complete %}
-                        <h4>Record Progress</h4>
-                        <div>
-                            <div class="progress pull-left">
-                                <div class="progress-bar" role="progressbar"
-                                    aria-valuenow="{{complete}}" aria-valuemin="0"
-                                    aria-valuemax="100" style="width: {{complete}}%;">
+                {% with complete=footprint.percent_complete %}
+                    <ul class="list-group record-checklist">
+                        <li class="list-group-item">
+                            <h4>Record Progress</h4>
+                            <div>
+                                <div class="progress pull-left">
+                                    <div class="progress-bar" role="progressbar"
+                                        aria-valuenow="{{complete}}" aria-valuemin="0"
+                                        aria-valuemax="100" style="width: {{complete}}%;">
+                                    </div>
                                 </div>
+                                <div class="progress-report pull-right">{{complete}}% complete</div>
                             </div>
-                            <div class="progress-report pull-right">{{complete}}% complete</div>
-                        </div>
-                        <div class="clearfix"></div>
-                        {% if editable %}
-                        <div>
-                            <strong>Do you know something important?</strong>
-                            <p>Praesent fringilla sit amet dolor at congue. Fusce pretium neque rutrum luctus dictum.</p>
-                            <button class="btn btn-sm btn-primary pull-right">Save</button>&nbsp;
-                            <button class="btn btn-sm btn-default pull-right" style="margin-right: 6px;">Skip</button>
-                        </div>
-                        {% endif %}
-                    {% endwith %}
-                    <div class="clearfix"></div>
-                </div>
+                            <div class="clearfix"></div>
+                        </li>
+                        <li class="list-group-item list-item-complete" data-related-fields=".evidence-type-container, .evidence-location-container">
+                            {% comment %}Required fields mean this item will always be "complete"{% endcomment %}
+                            <span class="glyphicon glyphicon-check" aria-hidden="true"></span>&nbsp;&nbsp;Footprint Evidence<br />
+                            <small>type, location</small>
+                        </li>
+                        <li class="list-group-item {% if work.title %}list-item-complete"{% endif %}
+                            data-related-fields=".writtenwork-title-container">
+                            {% if work.title %}
+                                <span class="glyphicon glyphicon-check" aria-hidden="true"></span>&nbsp;&nbsp;The Book Title
+                            {% else %}
+                                <span class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>&nbsp;&nbsp;The Book Title
+                            {% endif %}
+                        </li>
+                            <li class="list-group-item {% if work.actor|length > 0 %}list-item-complete{% endif %}" data-related-fields=".writtenwork-author-container">
+                            {% if work.actor|length > 0 %}
+                                <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+                            {% else %}
+                                <span class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>
+                            {% endif %}
+                            &nbsp;&nbsp;The Book Author(s)
+                        </li>
+                        <li class="list-group-item" data-related-fields="">
+                            <span class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>&nbsp;&nbsp;Imprint Details<br />
+                            <small>publisher, date, location</small>
+                        </li>
+                        <li class="list-group-item {% if footprint.associated_date and footprint.place %}list-item-complete{% endif%}" 
+                            data-related-fields=".footprint-date-container, .footprint-place-container">
+                            {% if footprint.associated_date and footprint.place %}
+                                <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+                            {% else %}
+                                <span class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>
+                            {% endif %}
+                            Footprint Details<br />
+                            <small>date, location</small>
+                        </li>
+                    </ul>
+                {% endwith %}
+                <div class="clearfix"></div>
 
                 {% if editable %}
                 <div class="sidebar-box">

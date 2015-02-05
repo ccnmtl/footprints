@@ -22,6 +22,8 @@ $(function(){
     "use strict";
     
     var Actor = function (options) {
+        var template = jQuery(options.scope).data("template");
+        Actor.defaults.tpl = jQuery(template).html(); 
         this.init('actor', options, Actor.defaults);
     };
 
@@ -185,7 +187,7 @@ $(function(){
     });
 
     Actor.defaults = $.extend({}, $.fn.editabletypes.abstractinput.defaults, {
-        tpl: jQuery('#xeditable-actor-form').html(),
+        tpl: undefined,
         inputclass: ''
     });
 

@@ -38,6 +38,13 @@ class RoleQuerySet(models.query.QuerySet):
         role, created = self.get_or_create(name='Owner')
         return role
 
+    def for_footprint(self):
+        return self.filter(name__in=["Owner", "Bookdealer", "Printer"])
+
+    def for_imprint(self):
+        return self.filter(name__in=["Publisher", "Editor",
+                                     "Anthologizer", "Printer"])
+
 
 class RoleManager(models.Manager):
     def __init__(self, fields=None, *args, **kwargs):
@@ -285,7 +292,7 @@ class Collection(models.Model):
 
 
 class WrittenWork(models.Model):
-    title = models.TextField()
+    title = models.TextField(null=True, blank=True)
     actor = models.ManyToManyField(
         Actor, null=True, blank=True,
         help_text="The author or creator of the work. ")
@@ -321,7 +328,7 @@ class WrittenWork(models.Model):
 
 
 class Imprint(models.Model):
-    work = models.ForeignKey(WrittenWork, null=True, blank=True)
+    work = models.ForeignKey(WrittenWork)
 
     title = models.TextField(null=True, blank=True,
                              verbose_name="Imprint Title")
@@ -507,8 +514,9 @@ class Footprint(models.Model):
                 self.book_copy.imprint.work)
 
     def display_title(self):
-        # return written work title OR the footprint title
-        if (self.has_written_work()):
+        # return written work title OR the footprint title ?
+        if (self.has_written_work() and
+                len(self.book_copy.imprint.work.title) > 0):
             return self.book_copy.imprint.work.title
         else:
             return self.title

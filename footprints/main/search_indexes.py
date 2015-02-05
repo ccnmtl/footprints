@@ -9,7 +9,7 @@ class WrittenWorkIndex(indexes.SearchIndex, indexes.Indexable):
     object_id = CharField(model_attr='id')
     object_type = CharField()
     text = indexes.NgramField(document=True, use_template=True)
-    title = indexes.NgramField(model_attr='title')
+    title = indexes.NgramField(model_attr='title', null=True)
 
     def get_model(self):
         return WrittenWork
@@ -22,7 +22,7 @@ class ImprintIndex(indexes.SearchIndex, indexes.Indexable):
     object_id = CharField(model_attr='id')
     object_type = CharField()
     text = indexes.NgramField(document=True, use_template=True)
-    title = indexes.NgramField(model_attr='title')
+    title = indexes.NgramField(model_attr='title', null=True)
 
     def get_model(self):
         return Imprint
@@ -32,7 +32,7 @@ class ImprintIndex(indexes.SearchIndex, indexes.Indexable):
 
     def index_queryset(self, using=None):
         "Used when the entire index for model is updated."
-        return self.get_model().objects.filter(work__isnull=False)
+        return self.get_model().objects.filter()
 
 
 class FootprintIndex(indexes.SearchIndex, indexes.Indexable):

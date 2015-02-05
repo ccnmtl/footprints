@@ -15,18 +15,16 @@ from rest_framework.renderers import JSONPRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from footprints.main.models import (Footprint, Actor, Person, Role,
-                                    WrittenWork, Language, ExtendedDateFormat,
-                                    Place)
+from footprints.main.models import (
+    Footprint, Actor, Person, Role, WrittenWork, Language, ExtendedDateFormat,
+    Place, Imprint, BookCopy)
 from footprints.main.permissions import IsStaffOrReadOnly
-from footprints.main.serializers import (TitleSerializer, NameSerializer,
-                                         FootprintSerializer,
-                                         LanguageSerializer, RoleSerializer,
-                                         ExtendedDateFormatSerializer,
-                                         ActorSerializer, PersonSerializer,
-                                         PlaceSerializer)
-from footprints.mixins import (JSONResponseMixin, LoggedInMixin,
-                               EditableMixin)
+from footprints.main.serializers import (
+    TitleSerializer, NameSerializer, FootprintSerializer, LanguageSerializer,
+    RoleSerializer, ExtendedDateFormatSerializer, ActorSerializer,
+    PersonSerializer, PlaceSerializer, WrittenWorkSerializer)
+from footprints.mixins import (
+    JSONResponseMixin, LoggedInMixin, EditableMixin)
 
 
 class IndexView(TemplateView):
@@ -122,10 +120,15 @@ class CreateFootprintView(LoggedInMixin, TemplateView):
         medium = self.request.POST.get('footprint-medium')
         description = self.request.POST.get('footprint-medium-description')
         notes = self.request.POST.get('footprint-notes', '')
+
+        work = WrittenWork.objects.create()
+        imprint = Imprint.objects.create(work=work)
+        book_copy = BookCopy.objects.create(imprint=imprint)
         fp = Footprint.objects.create(title=title,
                                       medium=medium,
                                       medium_description=description,
-                                      provenance=provenance, notes=notes)
+                                      provenance=provenance, notes=notes,
+                                      book_copy=book_copy)
 
         url = reverse('footprint-detail-view', kwargs={'pk': fp.pk})
         return HttpResponseRedirect(url)
@@ -328,4 +331,10 @@ class PlaceViewSet(viewsets.ModelViewSet):
 class ActorViewSet(viewsets.ModelViewSet):
     queryset = Actor.objects.all()
     serializer_class = ActorSerializer
+    permission_classes = (IsStaffOrReadOnly,)
+
+
+class WrittenWorkViewSet(viewsets.ModelViewSet):
+    queryset = WrittenWork.objects.all()
+    serializer_class = WrittenWorkSerializer
     permission_classes = (IsStaffOrReadOnly,)
