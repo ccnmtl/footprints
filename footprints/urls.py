@@ -79,7 +79,7 @@ urlpatterns = patterns(
         PersonDetailView.as_view(), name='person-detail-view'),
     url(r'^place/(?P<pk>\d+)/$',
         PlaceDetailView.as_view(), name='place-detail-view'),
-    url(r'^work/(?P<pk>[-_\w]+)/$',
+    url(r'^writtenwork/(?P<pk>[-_\w]+)/$',
         WrittenWorkDetailView.as_view(), name='writtenwork-detail-view'),
 
     url(r'^search/',

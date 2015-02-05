@@ -221,7 +221,7 @@ class Actor(models.Model):
 
     def display_name(self):
         if self.alias:
-            return self.alias
+            return "%s as %s" % (self.person.name, self.alias)
         else:
             return self.person.name
 
@@ -314,6 +314,10 @@ class WrittenWork(models.Model):
         if self.notes is not None and len(self.notes) > 0:
             complete += 1
         return int(complete/required * 100)
+
+    def authors(self):
+        role = Role.objects.get_author_role()
+        return self.actor.filter(role=role)
 
 
 class Imprint(models.Model):
@@ -498,10 +502,17 @@ class Footprint(models.Model):
             completed += 1
         return int(completed/required * 100)
 
+    def has_written_work(self):
+        return (self.book_copy and self.book_copy.imprint and
+                self.book_copy.imprint.work)
+
     def display_title(self):
         # return written work title OR the footprint title
-        if (self.book_copy and self.book_copy.imprint and
-                self.book_copy.imprint.work):
+        if (self.has_written_work()):
             return self.book_copy.imprint.work.title
         else:
             return self.title
+
+    def owners(self):
+        role = Role.objects.get_owner_role()
+        return self.actor.filter(role=role)

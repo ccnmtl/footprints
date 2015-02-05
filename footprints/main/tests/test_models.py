@@ -67,7 +67,7 @@ class BasicModelTest(TestCase):
         actor = ActorFactory(role=role)
         self.assertEquals(
             actor.__unicode__(),
-            '%s (%s)' % (actor.alias, role.name))
+            '%s as %s (%s)' % (actor.person.name, actor.alias, role.name))
 
     def test_place(self):
         place = PlaceFactory()

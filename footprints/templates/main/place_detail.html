@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %}Place{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block js %}
+{% endblock %}
+
+{% block extrajs %}
+    {% comment %}assets that do not need to be compressed{% endcomment %}
+{% endblock %}
+
+{% block content %}
+{% with place=object %}
+
+    <div class="object-detail place">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="breadcrumb">PLACE</div>
+                <h2>
+                    <span class="glyphicon glyphicon-globe pull-left" aria-hidden="true"></span>
+                    <span class="pull-left object-title">{{place}}</span>
+                    <div class="clearfix"></div>
+                </h2>
+
+                <h3>Details</h3>
+                {% for media in place.digital_object.all %}
+                    <img src="{{media.file.url}}"></img>
+                {% endfor %}
+                
+                <div class="map-container"></div>
+             </div>
+            <div class="col-md-4">
+                <div class="sidebar-box">
+                    {% with complete=place.percent_complete %}
+                        <h4>Record Progress</h4>
+                        <div>
+                            <div class="progress pull-left">
+                                <div class="progress-bar" role="progressbar"
+                                    aria-valuenow="{{complete}}" aria-valuemin="0"
+                                    aria-valuemax="100" style="width: {{complete}}%;">
+                                </div>
+                            </div>
+                            <div class="progress-report pull-right">{{complete}}% complete</div>
+                        </div>
+                        <div class="clearfix"></div>
+                        {% if editable %}
+                        <div>
+                            <strong>Do you know something important?</strong>
+                            <p>Praesent fringilla sit amet dolor at congue. Fusce pretium neque rutrum luctus dictum.</p>
+                            <button class="btn btn-sm btn-primary pull-right">Save</button>&nbsp;
+                            <button class="btn btn-sm btn-default pull-right" style="margin-right: 6px;">Skip</button>
+                        </div>
+                        {% endif %}
+                    {% endwith %}
+                    <div class="clearfix"></div>
+                </div>
+
+                {% if editable %}
+                <div class="sidebar-box">
+                    <h4>Can you connect this record?</h4>
+                    <p>Further describe {{place}} by connecting similar records.</p>
+                    {% for record in records %}
+                        {{record}}
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>            
+        </div>
+    </div>
+{% endwith %} 
+{% endblock %}
