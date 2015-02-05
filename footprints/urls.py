@@ -65,6 +65,7 @@ urlpatterns = patterns(
     url(r'^footprint/actor/(?P<footprint_id>\d+)/remove/(?P<actor_id>\d+)/$',
         FootprintRemoveActorView.as_view(),
         name='footprint-remove-actor-view'),
+
     url(r'^footprint/place/(?P<footprint_id>\d+)/add/$',
         FootprintAddPlaceView.as_view(), name='footprint-add-place-view'),
     url(r'^footprint/place/(?P<footprint_id>\d+)/remove/(?P<place_id>\d+)/$',

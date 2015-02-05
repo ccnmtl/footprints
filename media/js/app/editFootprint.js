@@ -8,14 +8,52 @@
             'mouseover li.list-group-item': 'highlightRelated',
             'mouseout li.list-group-item': 'highlightRelated'
         },
+        getIconProperties: function() {
+            return {
+                url: "http://maps.gstatic.com/mapfiles/place_api/icons/geocode-71.png",
+                size: new google.maps.Size(71, 71),
+                origin: new google.maps.Point(0, 0),
+                anchor: new google.maps.Point(17, 34),
+                scaledSize: new google.maps.Size(25, 25)
+            };
+        },
         initialize: function(options) {
             _.bindAll(this, 'render',
                 'onConfirmRemove', 'onCancelRemove', 'onRemove',
                 'highlightRelated');
+            
+            this.mapOptions = {
+                zoom: 10,
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                zoomControl: true,
+                zoomControlOptions: {
+                  style: google.maps.ZoomControlStyle.SMALL,
+                  position: google.maps.ControlPosition.RIGHT_BOTTOM
+                },
+                mapTypeControl: false,
+                streetViewControl: false
+            }
+            this.mapElt = jQuery('.footprint-map')[0];
+            if (this.mapElt) {
+                var lat = jQuery(this.mapElt).data('latitude');
+                var lng = jQuery(this.mapElt).data('longitude');
+                if (lat && lng) {
+                    var latlng = new google.maps.LatLng(lat, lng);
+                    this.mapOptions.center = latlng;
+                    this.map = new google.maps.Map(this.mapElt, this.mapOptions);
+                    
+                    this.marker = new google.maps.Marker({
+                        position: latlng,
+                        map: this.map,
+                        icon: this.getIconProperties(),
+                        title: jQuery(this.mapElt).data('title')
+                    });
+                }
+            }
 
             var html = jQuery("#actor-display-template").html();
             this.actor_template = _.template(html);
-            
+
             var html = jQuery("#place-display-template").html();
             this.place_template = _.template(html);
                 
@@ -34,15 +72,34 @@
 
             jQuery('.editable-actor').editable({
                 namedParams: true,
-                template: '#editable-actor-form',
+                template: '#xeditable-actor-form',
                 validate: function(value) {
                     if (value.indexOf('name=&role') === 0) {
                         return 'Please enter the person\'s name'; 
                     }
                 },
                 success: function(response, newValue) {
+                    response.object = {'type': 'footprint',
+                                       'id': response.footprint.id}
                     var html = self.actor_template(response);
                     jQuery('div.actor-list').append(html);
+                }
+            });
+
+            jQuery('.editable-author').editable({
+                namedParams: true,
+                template: '#xeditable-author-form',
+                validate: function(value) {
+                    if (value.indexOf('name=&role') === 0) {
+                        return 'Please enter an author\'s name'; 
+                    }
+                },
+                success: function(response, newValue) {
+                    response.object = {'type': 'footprint',
+                                       'id': response.writtenwork.id}
+
+                    var html = self.actor_template(response);
+                    jQuery('.writtenwork-author-container').append(html);
                 }
             });
             
