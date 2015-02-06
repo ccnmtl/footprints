@@ -11,14 +11,16 @@ from rest_framework import routers
 from footprints.main import views
 from footprints.main.forms import FootprintSearchForm
 from footprints.main.views import (
-    LoginView, LogoutView, TitleListView, CreateFootprintView, NameListView,
-    WrittenWorkDetailView, FootprintDetailView, PersonDetailView,
-    PlaceDetailView, FootprintViewSet, LanguageViewSet, RoleViewSet,
-    FootprintAddActorView, FootprintRemoveActorView, ExtendedDateFormatViewSet,
-    FootprintAddDateView, ActorViewSet, PersonViewSet, PlaceViewSet,
-    FootprintAddPlaceView, FootprintRemovePlaceView, WrittenWorkViewSet,
-    UserViewSet)
+    LoginView, LogoutView, FootprintAddActorView,
+    FootprintRemoveActorView, FootprintRemovePlaceView, CreateFootprintView,
+    FootprintDetailView, PersonDetailView, PlaceDetailView,
+    WrittenWorkDetailView, TitleListView, NameListView, FootprintAddPlaceView,
+    FootprintAddDateView)
 from footprints.mixins import is_staff
+from footprints.main.viewsets import (
+    BookCopyViewSet, ImprintViewSet, ActorViewSet,
+    ExtendedDateFormatViewSet, FootprintViewSet, LanguageViewSet,
+    PersonViewSet, PlaceViewSet, RoleViewSet, WrittenWorkViewSet, UserViewSet)
 
 
 admin.autodiscover()
@@ -37,6 +39,8 @@ router.register(r'place', PlaceViewSet)
 router.register(r'role', RoleViewSet)
 router.register(r'writtenwork', WrittenWorkViewSet)
 router.register(r'user', UserViewSet)
+router.register(r'book', BookCopyViewSet)
+router.register(r'imprint', ImprintViewSet)
 
 
 urlpatterns = patterns(
@@ -73,8 +77,10 @@ urlpatterns = patterns(
     url(r'^footprint/place/(?P<footprint_id>\d+)/remove/(?P<place_id>\d+)/$',
         FootprintRemovePlaceView.as_view(),
         name='footprint-remove-place-view'),
+
     url(r'^footprint/date/(?P<footprint_id>\d+)/$',
         FootprintAddDateView.as_view(), name='footprint-add-date-view'),
+
     (r'^footprint/create/$', CreateFootprintView.as_view()),
     url(r'^footprint/(?P<pk>\d+)/$',
         FootprintDetailView.as_view(), name='footprint-detail-view'),

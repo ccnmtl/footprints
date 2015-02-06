@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.models import User
 from django.contrib.auth.views import logout as auth_logout_view
 from django.core.urlresolvers import reverse
 from django.http.response import HttpResponseRedirect, HttpResponseForbidden
@@ -10,7 +9,6 @@ from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
 from djangowind.views import logout as wind_logout_view
 from haystack.query import SearchQuerySet
-from rest_framework import viewsets
 from rest_framework.permissions import AllowAny
 from rest_framework.renderers import JSONPRenderer
 from rest_framework.response import Response
@@ -19,11 +17,8 @@ from rest_framework.views import APIView
 from footprints.main.models import (
     Footprint, Actor, Person, Role, WrittenWork, Language, ExtendedDateFormat,
     Place, Imprint, BookCopy)
-from footprints.main.permissions import IsStaffOrReadOnly
 from footprints.main.serializers import (
-    TitleSerializer, NameSerializer, FootprintSerializer, LanguageSerializer,
-    RoleSerializer, ExtendedDateFormatSerializer, ActorSerializer,
-    PersonSerializer, PlaceSerializer, WrittenWorkSerializer, UserSerializer)
+    TitleSerializer, NameSerializer, ActorSerializer)
 from footprints.mixins import (
     JSONResponseMixin, LoggedInMixin, EditableMixin)
 
@@ -291,57 +286,3 @@ class NameListView(APIView):
             return Response(serializer.data)
         else:
             return Response({})
-
-
-class FootprintViewSet(viewsets.ModelViewSet):
-    queryset = Footprint.objects.all()
-    serializer_class = FootprintSerializer
-    permission_classes = (IsStaffOrReadOnly,)
-
-
-class LanguageViewSet(viewsets.ModelViewSet):
-    queryset = Language.objects.all()
-    serializer_class = LanguageSerializer
-    permission_classes = (IsStaffOrReadOnly,)
-
-
-class RoleViewSet(viewsets.ModelViewSet):
-    queryset = Role.objects.all()
-    serializer_class = RoleSerializer
-    permission_classes = (IsStaffOrReadOnly,)
-
-
-class ExtendedDateFormatViewSet(viewsets.ModelViewSet):
-    queryset = ExtendedDateFormat.objects.all()
-    serializer_class = ExtendedDateFormatSerializer
-    permission_classes = (IsStaffOrReadOnly,)
-
-
-class PersonViewSet(viewsets.ModelViewSet):
-    queryset = Person.objects.all()
-    serializer_class = PersonSerializer
-    permission_classes = (IsStaffOrReadOnly,)
-
-
-class PlaceViewSet(viewsets.ModelViewSet):
-    queryset = Place.objects.all()
-    serializer_class = PlaceSerializer
-    permission_classes = (IsStaffOrReadOnly,)
-
-
-class ActorViewSet(viewsets.ModelViewSet):
-    queryset = Actor.objects.all()
-    serializer_class = ActorSerializer
-    permission_classes = (IsStaffOrReadOnly,)
-
-
-class WrittenWorkViewSet(viewsets.ModelViewSet):
-    queryset = WrittenWork.objects.all()
-    serializer_class = WrittenWorkSerializer
-    permission_classes = (IsStaffOrReadOnly,)
-
-
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = (IsStaffOrReadOnly,)

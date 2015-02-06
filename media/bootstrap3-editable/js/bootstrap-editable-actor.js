@@ -141,14 +141,10 @@ $(function(){
         
         @method input2value() 
        **/          
-       input2value: function() { 
-           return $.param({
-              name: this.$input.val(),
-              role: this.$roleselect.val(),
-              alias: this.$actorname.val()
-           });
+       input2value: function() {
+           return this.value2submit();
        },
-       
+
        /**
            @method value2submit(value) 
            @param {mixed} value

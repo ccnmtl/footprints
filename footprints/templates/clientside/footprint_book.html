@@ -1,119 +1,36 @@
 <script type="text/template" id="book-detail-template">
-{% comment %}
 <div class="breadcrumb">THE BOOK</div>
 <dl class="dl-horizontal">
-    <div class="description-list writtenwork-title-container" {% if not work.title %}style="display: none"{% endif %}> 
+    <% if (imprint.work.title.length > 0) { %>
         <dt>Title</dt>
-        <dd><a href="#" class="{% if editable %}editable{% else %}readonly{% endif %}"
+        <dd><a href="#" class="<% if (editable) { %>editable<% } else { %>readonly<% } %>"
                 data-attribute-name="title"  data-name="title"
-                data-type="text" data-pk="{{work.id}}"
-                data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
-                data-url="/api/writtenwork/{{work.id}}/">{{work.title}}</a>
+                data-type="text" data-pk="<%=imprint.work.id%>"
+                data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
+                data-url="/api/writtenwork/<%=imprint.work.id%>/">
+                <%=imprint.work.title%>
+            </a>
         </dd>
-    </div>
-    <div class="description-list writtenwork-author-container">
-        {% for actor in work.actor.all %}
-            <dt>{{actor.role.name}}</dt>
-            <dd class="border-bottom">
-                <span>{{actor.person.name}}{% if actor.alias %} as {{actor.alias}} {% endif %}</span> 
-                <div class="pull-right">
-                    {% if editable %}
-                    <a href="#" class="remove-foreign-key"
-                        data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
-                        data-url="/work/actor/{{footprint.id}}/remove/{{actor.id}}/"
-                        title="remove author">
-                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
-                    {% endif %}
-                    &nbsp;
-                    <a href="/person/{{actor.person.id}}/" title="see details" class="foreign-key">
-                        <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
-                    </a>
-                </div>
-            </dd>
-        {% endfor %}
-    </div>
-    <div class="description-list" {% if not work.notes %}style="display: none"{% endif %}>
-        <dt>Notes</dt>
-        <dd class="border-bottom">
-            <a href="#" class="{% if editable %}editable{% else %}readonly{% endif %}"
-                data-attribute-name="notes" data-name="notes"
-                data-type="textarea" data-pk="{{work.id}}"
-                data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
-                data-url="/api/writtenwork/{{work.id}}/">{{work.notes|safe}}</a>
-        </dd>
-    </div>
+    <% } %>
 </dl>
 
-<dl class="dl-horizontal">
-    <div class="description-list" {% if not imprint.title %}style="display: none"{% endif %}>
-        <dt>Imprint Title</dt>
-        <dd class="border-bottom">
-            {{imprint.title}}
-        </dd>
-    </div>
-    <div class="description-list" {% if not imprint.date_of_publication %}style="display: none"{% endif %}>
-        <dt>Publication Date</dt>
-        <dd class="border-bottom">
-            {{imprint.date_of_publication}}
-        </dd>
-    </div>
-    <div class="description-list imprint-actor-container">
-    {% for actor in imprint.actor.all %}
-        <dt>{{actor.role.name}}</dt>
-        <dd class="border-bottom">
-            <span>{{actor.person.name}}{% if actor.alias %} as {{actor.alias}} {% endif %}</span> 
-            <div class="pull-right">
-                {% if editable %}
-                <a href="#" class="remove-foreign-key"
-                    data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
-                    data-url="/imprint/actor/{{imprint.id}}/remove/{{actor.id}}/"
-                    title="remove author">
-                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
-                {% endif %}
-                &nbsp;
-                <a href="/person/{{actor.person.id}}/" title="see details" class="foreign-key">
-                    <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
-                </a>
-            </div>
-        </dd>
-    {% endfor %}
-    </div>
-</dl>
 
-{% if editable %}
+<% if (editable) { %>
     <dl class="dl-horizontal">
         <dt>Do you know...</dt>
         <dd>  
             <ul class="additional-questions">
-                {% if not work.title %}
-                    <li class="writtenwork-title-container">
+                <% if (imprint.work.title.length < 1) { %>
+                    <li>
                         <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
-                        <a href="#" class="{% if editable %}editable{% endif %} do-you-know persistant"
-                            data-name="title" data-type="text" data-pk="{{work.id}}" data-value=""
-                            data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
-                            data-url="/api/writtenwork/{{work.id}}/">the title of the written work?</a>
+                        <a href="#" class="<% if (editable) { %>editable<% } %> do-you-know persistant"
+                            data-name="title" data-type="text" data-pk="<%=imprint.work.id%>" data-value=""
+                            data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
+                            data-url="/api/writtenwork/<%=imprint.work.id%>/">the title of the written work?</a>
                     </li>
-                {% endif %}
-                <li class="fixed"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
-                    <a href="#" class="{% if editable %}editable-author{% endif %} do-you-know persistant" data-name="actor"
-                        data-template="#xeditable-author-form" 
-                        data-type="actor" data-pk="{{work.id}}" data-value=""
-                        data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" 
-                        data-url="/work/actor/{{footprint.id}}/add/">the author(s) of the written work?</a>
-                </li>
-                
-                {% if not work.notes %}
-                    <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
-                        <a href="#" class="editable do-you-know persistant" data-name="notes"
-                            data-type="textarea" data-pk="{{work.id}}" data-value=""
-                            data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}"
-                            data-url="/api/writtenwork/{{work.id}}/">any additional notes about the written work?</a>
-                    </li>
-                {% endif %}
-
+                <% } %>
             </ul>
        </dd>
     </dl>
-{% endif %}
-{% endcomment %}
+<% } %>
 </script>

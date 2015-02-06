@@ -1,67 +1,49 @@
 <script type="text/template" id="progress-sidebar-template">
-{% comment %}
-                {% with complete=footprint.percent_complete %}
-                    <ul class="list-group record-checklist">
-                        <li class="list-group-item">
-                            <h4>Record Progress</h4>
-                            <div>
-                                <div class="progress pull-left">
-                                    <div class="progress-bar" role="progressbar"
-                                        aria-valuenow="{{complete}}" aria-valuemin="0"
-                                        aria-valuemax="100" style="width: {{complete}}%;">
-                                    </div>
-                                </div>
-                                <div class="progress-report pull-right">{{complete}}% complete</div>
-                            </div>
-                            <div class="clearfix"></div>
-                        </li>
-                        <li class="list-group-item list-item-complete" data-related-fields=".evidence-type-container, .evidence-location-container">
-                            <span class="glyphicon glyphicon-check" aria-hidden="true"></span>&nbsp;&nbsp;Footprint Evidence<br />
-                            <small>type, location</small>
-                        </li>
-                        <li class="list-group-item {% if work.title %}list-item-complete"{% endif %}
-                            data-related-fields=".writtenwork-title-container">
-                            {% if work.title %}
-                                <span class="glyphicon glyphicon-check" aria-hidden="true"></span>&nbsp;&nbsp;The Book Title
-                            {% else %}
-                                <span class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>&nbsp;&nbsp;The Book Title
-                            {% endif %}
-                        </li>
-                            <li class="list-group-item {% if work.actor|length > 0 %}list-item-complete{% endif %}" data-related-fields=".writtenwork-author-container">
-                            {% if work.actor|length > 0 %}
-                                <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
-                            {% else %}
-                                <span class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>
-                            {% endif %}
-                            &nbsp;&nbsp;The Book Author(s)
-                        </li>
-                        <li class="list-group-item" data-related-fields="">
-                            <span class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>&nbsp;&nbsp;Imprint Details<br />
-                            <small>publisher, date, location</small>
-                        </li>
-                        <li class="list-group-item {% if footprint.associated_date and footprint.place %}list-item-complete{% endif%}" 
-                            data-related-fields=".footprint-date-container, .footprint-place-container">
-                            {% if footprint.associated_date and footprint.place %}
-                                <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
-                            {% else %}
-                                <span class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>
-                            {% endif %}
-                            Footprint Details<br />
-                            <small>date, location</small>
-                        </li>
-                    </ul>
-                {% endwith %}
-                <div class="clearfix"></div>
-
-                {% if editable %}
-                <div class="sidebar-box">
-                    <h4>Can you connect this record?</h4>
-                    <p>Further describe your footprint by connecting similar records.</p>
-                    {% for record in records %}
-                        {{record}}
-                    {% endfor %}
+    <ul class="list-group record-checklist">
+        <li class="list-group-item">
+            <h4>Record Progress</h4>
+            <div>
+                <div class="progress pull-left">
+                    <div class="progress-bar" role="progressbar"
+                        aria-valuenow="<%=footprint.percent_complete%>" aria-valuemin="0"
+                        aria-valuemax="100" style="width: <%=footprint.percent_complete%>%;">
+                    </div>
                 </div>
-                {% endif %}
+                <div class="progress-report pull-right"><%=footprint.percent_complete%>% complete</div>
             </div>
-{% endcomment %}
+            <div class="clearfix"></div>
+        </li>
+        <li class="list-group-item list-item-complete">
+            <span class="glyphicon glyphicon-check" aria-hidden="true"></span>&nbsp;&nbsp;Footprint Evidence<br />
+            <small>type, location</small>
+        </li>
+        <li class="list-group-item">
+            <span class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>&nbsp;&nbsp;The Book Title
+        </li>
+        <li class="list-group-item">
+            <span class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>
+            &nbsp;&nbsp;The Book Author(s)
+        </li>
+        <li class="list-group-item" data-related-fields="">
+            <span class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>&nbsp;&nbsp;Imprint Details<br />
+            <small>publisher, date, location</small>
+        </li>
+        <li class="list-group-item <% if (footprint.associated_date && footprint.place) { %>list-item-complete<% } %>">
+            <% if (footprint.associated_date && footprint.place) { %>
+                <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+            <% } else { %>
+                <span class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>
+            <% } %>
+            Footprint Details<br />
+            <small>date, location</small>
+        </li>
+    </ul>
+    <div class="clearfix"></div>
+
+    <% if (editable) { %>
+        <div class="sidebar-box">
+            <h4>Can you connect this record?</h4>
+            <p>Further describe your footprint by connecting similar records.</p>
+        </div>
+    <% } %>
 </script>
