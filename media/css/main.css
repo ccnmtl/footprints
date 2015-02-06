@@ -85,6 +85,10 @@ ul.wizard-tabs.has-error li.active a {
 
 
 /* Object detail pages */
+.object-detail blockquote {
+    border-left: 0;
+}
+
 .object-detail .breadcrumb {
     margin-bottom: 10px;
     background: #f6f7f8; 

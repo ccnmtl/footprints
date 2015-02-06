@@ -1,0 +1,401 @@
+<script type="text/template" id="footprint-detail-template">
+    <h1>
+        <img class="pull-left" src="<%=static_url%>img/footprint.png" />
+        <span class="pull-left object-title" data-name='display-title'><%=title%></span>
+        <div class="clearfix"></div>
+    </h1>
+    <div class="breadcrumb">A FOOTPRINT</div>
+    <% if (narrative) { %>
+        <blockquote class="blockquote">
+            <%=narrative%>
+        </blockquote>
+    <% } %>
+
+    <dl class="dl-horizontal">
+        <% if (associated_date) { %>
+            <dt>Footprint Date</dt>
+            <dd class="border-bottom">
+                <a href="#" class="<% if (editable) { %>editable<% } else { %>readonly<% } %>"
+                 data-attribute-name="associated_date" data-name="edtf_format"
+                 data-type="text" data-pk="<%=associated_date.id%>"
+                 data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
+                 data-url="/api/edtf/<%=associated_date.id%>/">
+                    <%=associated_date.edtf_format%>
+                </a>
+           </dd>
+       <% } %>
+       <% if (place) { %>
+           <dt>Footprint Place</dt>
+           <dd class="border-bottom footprint-place">
+               <span><%=place.display_title%></span>
+               <div class="pull-right">
+                   <% if (editable) { %>
+                       <a href="#" class="remove-related"
+                           data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
+                           data-url="/footprint/place/<%=id%>/remove/<%=place.id%>/"
+                           title="remove place">
+                           <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                       </a>
+                   <% } %>
+                   &nbsp;
+                   <a href="/place/<%=place.id%>/" title="see details" class="foreign-key">
+                       <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+                   </a>
+               </div>
+               <div class="clearfix"></div>
+               <div class="footprint-map"
+                   data-latitude="<%=place.latitude%>"
+                   data-longitude="<%=place.longitude%>"
+                   data-title="<%=place.display_title%>">
+               </div>
+           </dd>
+       <% } %>
+       <% if (language.length > 0) { %>
+           <dt>Footprint Language</dt>
+           <dd class="border-bottom">
+               <a href="#" class="<% if (editable) { %>editable-language<% } else { %>readonly<% } %>"
+                   data-attribute-name="language" data-name="language"
+                   data-type="select2" data-pk="<%=id%>"
+                   data-value="[<% for (var i=0; i < language.length; i++) { %><%=language[i].id%><% if (i < language.length-1) { %> ,<% } }%>]"
+                   data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
+                   data-url="/api/footprint/<%=id%>/">
+                   <% for (var i=0; i < language.length; i++) { %> 
+                       <%= language[i].name %><% if (i < language.length-1) { %> , <% } %>
+                   <% } %>
+               </a>
+           </dd>
+       <% } %>
+    </dl>
+    
+    <% if (editable) { %>
+        <dl class="dl-horizontal">
+            <dt>Do you know...</dt>
+            <dd>  
+                <ul class="additional-questions">
+                    <% if (!place) { %> 
+                        <li class="footprint-place-container">
+                            <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                            <a href="#" class="<% if (editable) { %>editable-place<% } %> do-you-know persistant" data-name="place"
+                                data-type="place" data-pk="<%=id%>" data-value=""
+                                data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
+                                data-url="/footprint/place/<%=id%>/add/">the place where the footprint occurred?</a>
+                        </li>
+                    <% } %>
+                    <% if (!associated_date) { %> 
+                        <li class="footprint-date-container"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                        <a href="#" class="<% if (editable) { %>editable<% } %> do-you-know persistant editable-refresh"
+                            data-name="associated_date"
+                            data-type="text" data-pk="<%=id%>"
+                            data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" data-value=""
+                            data-url="/footprint/date/<%=id%>/">the date when the footprint occurred?</a>
+                        </li>
+                    <% } %>
+                 </ul>    
+             </dd>
+         </dl>
+    <% } %>
+
+{% comment %} 
+    <dl class="dl-horizontal">
+    <div class="description-list" <% if (language.count < 1) { %> style="display: none"<% } %>>
+        <dt>Footprint Language</dt>
+        <dd class="border-bottom">
+            <a href="#" class="<% if (editable) { %>editable-language<% } else { %>readonly<% } %>"
+                data-attribute-name="language" data-name="language"
+                data-type="select2" data-pk="<%=id%>"
+                data-value="[{% for language in language.all) { %> {{language.id}}<% if (not forloop.last) { %> ,<% } %>{% endfor) { %> ]"
+                data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
+                data-url="/api/footprint/<%=id%>/">
+                {% for language in language.all) { %> 
+                    {{language.name}}<% if (not forloop.last) { %> , <% } %>
+                {% endfor) { %> 
+            </a>
+        </dd>
+    </div>
+    {% ifnotequal title display_title) { %> 
+    <div class="description-list" <% if (not title) { %> style="display: none"<% } %>>
+        <dt title="the written work's title exactly as it appears in the of evidence.">Footprint Title Display<br /></dt>
+        <dd class="border-bottom">
+            <a href="#" class="<% if (editable) { %>editable<% } else { %>readonly<% } %>"
+                data-attribute-name="title" data-name="title"
+                data-type="text" data-pk="<%=id%>"
+                data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
+                data-url="/api/footprint/<%=id%>/">{{title}}</a>
+        </dd>
+    </div>
+    {% endifnotequal) { %> 
+    
+    <div class="actor-list">
+        {% for actor in actor.all) { %> 
+            <dt>{{actor.role.name}}</dt>
+            <dd class="border-bottom">
+                <span>{{actor.person.name}}<% if (actor.alias) { %>  as {{actor.alias}} <% } %></span> 
+                <div class="pull-right">
+                    <% if (editable) { %>
+                    <a href="#" class="remove-related"
+                        data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
+                        data-url="/footprint/actor/<%=id%>/remove/{{actor.id}}/"
+                        title="remove actor">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+                    <% } %>
+                    &nbsp;
+                    <a href="/person/{{actor.person.id}}/" title="see details" class="foreign-key">
+                        <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+                    </a>
+                </div>
+            </dd>
+        {% endfor) { %> 
+   </div>
+</dl>    
+    </div>
+</div>
+
+    
+    {% for media in digital_object.all) { %> 
+        <img src="{{media.file.url}}"></img>
+    {% endfor) { %> 
+    <div class="evidence-container">
+        <dl class="dl-horizontal">
+            <div class="footprint-place footprint-place-container" <% if (not place) { %> style="display: none"<% } %>>
+                <dt>Footprint Place</dt>
+                <dd class="border-bottom footprint-place">
+                    <span>{{place}}</span>
+                    <div class="pull-right">
+                        <% if (editable) { %>
+                            <a href="#" class="remove-related"
+                                data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
+                                data-url="/footprint/place/<%=id%>/remove/{{place.id}}/"
+                                title="remove place">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            </a>
+                        <% } %>
+                        &nbsp;
+                        <a href="/place/{{place.id}}/" title="see details" class="foreign-key">
+                            <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+                        </a>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="footprint-map"
+                        data-latitude="{{place.position.latitude}}"
+                        data-longitude="{{place.position.longitude}}"
+                        data-title="{{place}}">
+                    </div>
+                </dd>
+            </div>
+            <div class="description-list" <% if (language.count < 1) { %> style="display: none"<% } %>>
+                <dt>Footprint Language</dt>
+                <dd class="border-bottom">
+                    <a href="#" class="<% if (editable) { %>editable-language<% } else { %>readonly<% } %>"
+                        data-attribute-name="language" data-name="language"
+                        data-type="select2" data-pk="<%=id%>"
+                        data-value="[{% for language in language.all) { %> {{language.id}}<% if (not forloop.last) { %> ,<% } %>{% endfor) { %> ]"
+                        data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
+                        data-url="/api/footprint/<%=id%>/">
+                        {% for language in language.all) { %> 
+                            {{language.name}}<% if (not forloop.last) { %> , <% } %>
+                        {% endfor) { %> 
+                    </a>
+                </dd>
+            </div>
+            {% ifnotequal title display_title) { %> 
+            <div class="description-list" <% if (not title) { %> style="display: none"<% } %>>
+                <dt title="the written work's title exactly as it appears in the of evidence.">Footprint Title Display<br /></dt>
+                <dd class="border-bottom">
+                    <a href="#" class="<% if (editable) { %>editable<% } else { %>readonly<% } %>"
+                        data-attribute-name="title" data-name="title"
+                        data-type="text" data-pk="<%=id%>"
+                        data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
+                        data-url="/api/footprint/<%=id%>/">{{title}}</a>
+                </dd>
+            </div>
+            {% endifnotequal) { %> 
+            
+            <div class="actor-list">
+                {% for actor in actor.all) { %> 
+                    <dt>{{actor.role.name}}</dt>
+                    <dd class="border-bottom">
+                        <span>{{actor.person.name}}<% if (actor.alias) { %>  as {{actor.alias}} <% } %></span> 
+                        <div class="pull-right">
+                            <% if (editable) { %>
+                            <a href="#" class="remove-related"
+                                data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
+                                data-url="/footprint/actor/<%=id%>/remove/{{actor.id}}/"
+                                title="remove actor">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+                            <% } %>
+                            &nbsp;
+                            <a href="/person/{{actor.person.id}}/" title="see details" class="foreign-key">
+                                <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+                            </a>
+                        </div>
+                    </dd>
+                {% endfor) { %> 
+           </div>
+        </dl>
+        <dl class="dl-horizontal">
+            <div class="evidence-type-container">
+            <dt>Evidence Type</dt>
+            <dd class="border-bottom">
+                <a href="#" class="<% if (editable) { %>editable-medium<% } else { %>readonly<% } %>"
+                    data-attribute-name="medium" data-name="medium"
+                    data-type="select2" data-pk="<%=id%>"
+                    data-value="{{medium}}"
+                    data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
+                    data-url="/api/footprint/<%=id%>/">{{medium}}
+                </a>
+            </dd>
+            </div>
+            <div class="description-list"
+                <% if (medium_description == None or medium_description == ''%}style="display: none"<% } %>>
+                <dt>Evidence Description</dt>
+                <dd class="border-bottom">
+                    <a href="#" class="<% if (editable) { %>editable<% } else { %>readonly<% } %>"
+                        data-attribute-name="medium_description" data-name="medium_description"
+                        data-type="text" data-pk="<%=id%>"
+                        data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
+                        data-url="/api/footprint/<%=id%>/">{{medium_description}}</a>
+                </dd>
+            </div>
+            <div class="evidence-location-container">
+                <dt>Evidence Location</dt>
+                <dd class="border-bottom">
+                    <a href="#" class="<% if (editable) { %>editable<% } else { %>readonly<% } %>"
+                        data-attribute-name="provenance" data-name="provenance"
+                        data-type="text" data-pk="<%=id%>"
+                        data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
+                        data-url="/api/footprint/<%=id%>/">{{provenance}}</a>
+                </dd>
+            </div>
+            <div class="description-list" <% if (call_number == None or call_number == '') { %> style="display: none"<% } %>>
+                <dt>Evidence Call Number</dt>
+                <dd class="border-bottom">
+                    <a href="#" class="<% if (editable) { %>editable<% } else { %>readonly<% } %>"
+                        data-attribute-name="call_number"  data-name="call_number"
+                        data-type="text" data-pk="<%=id%>"
+                        data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
+                        data-url="/api/footprint/<%=id%>/">{{call_number}}</a>
+                </dd>
+            </div>                        
+            <div class="description-list" <% if (not notes) { %> style="display: none"<% } %>>
+                <dt>Notes</dt>
+                <dd class="border-bottom">
+                    <a href="#" class="<% if (editable) { %>editable<% } else { %>readonly<% } %>"
+                        data-attribute-name="notes" data-name="notes"
+                        data-type="textarea" data-pk="<%=id%>"
+                        data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
+                        data-url="/api/footprint/<%=id%>/">{{notes|safe}}</a>
+                </dd>
+            </div>
+        </dl>
+        <% if (editable) { %>
+        <dl class="dl-horizontal">
+            <dt>Do you know...</dt>
+            <dd>  
+                <ul class="additional-questions">
+                    <% if (not place) { %> 
+                        <li class="footprint-place-container">
+                            <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                            <a href="#" class="<% if (editable) { %>editable-place<% } %> do-you-know persistant" data-name="place"
+                                data-type="place" data-pk="<%=id%>" data-value=""
+                                data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
+                                data-url="/footprint/place/<%=id%>/add/">the place where the footprint occurred?</a>
+                        </li>
+                    <% } %>
+                    <% if (not associated_date) { %> 
+                        <li class="footprint-date-container"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                        <a href="#" class="<% if (editable) { %>editable editable-date<% } %> do-you-know persistant"
+                            data-name="associated_date"
+                            data-type="text" data-pk="<%=id%>"
+                            data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" data-value=""
+                            data-url="/footprint/date/<%=id%>/">the date when the footprint occurred?</a>
+                        </li>
+                    <% } %>
+                    <% if (language.count < 1) { %> 
+                        <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                            <a href="#" class="<% if (editable) { %>editable-language<% } %> do-you-know persistant"
+                                data-name="language"
+                                data-type="select2" data-pk="<%=id%>" data-value=""
+                                data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
+                                data-url="/api/footprint/<%=id%>/">the language(s) of the footprint?</a>
+                        </li>
+                    <% } %>
+
+                    <li class="fixed"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                        <a href="#" class="<% if (editable) { %>editable-actor<% } %> do-you-know persistant" data-name="actor"
+                            data-template="#xeditable-actor-form" 
+                            data-type="actor" data-pk="<%=id%>" data-value=""
+                            data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
+                            data-url="/footprint/actor/<%=id%>/add/">people related to this footprint, e.g. sellers, owners, curators?</a>
+                    </li>
+
+                    <% if (medium_description == None or medium_description == '') { %> 
+                        <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                            <a href="#" class="<% if (editable) { %>editable<% } %> do-you-know persistant"
+                                data-name="medium_description" data-value=""                                         
+                                data-type="text" data-pk="<%=id%>"
+                                data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
+                                data-url="/api/footprint/<%=id%>/">details about the evidence type, e.g. a catalog title?</a>
+                        </li>
+                    <% } %>
+
+                    <% if (call_number == None or call_number == '') { %> 
+                        <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                        <a href="#" class="<% if (editable) { %>editable<% } %> do-you-know persistant" data-name="call_number"
+                            data-type="text" data-pk="<%=id%>"
+                            data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
+                            data-value=""
+                            data-url="/api/footprint/<%=id%>/">the call number of the evidence?</a>
+                        </li>
+                    <% } %>
+                    <% if (!notes) { %> 
+                        <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                            <a href="#" class="editable do-you-know persistant" data-name="notes"
+                               data-type="textarea" data-pk="<%=id%>" data-value=""
+                               data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
+                               data-url="/api/footprint/<%=id%>/">any additional notes, clarifications, deductions or oddities?</a>
+                        </li>
+                    <% } %>
+                </ul>
+            </dd>
+        </dl>
+        <% } %>
+    </div>
+</div>
+{% endcomment %} 
+</script>
+
+<script type="text-template" id="actor-display-template">
+    <dt><%=actor.role.name%></dt>
+    <dd class="border-bottom">
+        <span><%=actor.person.name %><% if (actor.alias.length > 0) { %> as <%=actor.alias%> <% } %></span> 
+        <div class="pull-right">
+            <a href="#" class="remove-related"
+                data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
+                data-url="/<%=object.type%>/actor/<%=object.id%>/remove/<%=actor.id%>/"
+                title="remove actor">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+            &nbsp;
+            <a href="/person/<%=actor.person.id%>/" title="see details" class="foreign-key">
+                <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+            </a>
+        </div>
+    </dd>
+</script>
+
+<script type="text/template" id="place-display-template">
+    <dt>Footprint Place</dt>
+    <dd class="border-bottom footprint-place">
+        <span><%= place.description %></span>
+        <div class="pull-right">
+            <a href="#" class="remove-related"
+                data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
+                data-url="/footprint/place/<%=footprint_id%>/remove/<%= place.id%>/"
+                title="remove place">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+            &nbsp;
+            <a href="/place/<%=place.id%>/" title="see details" class="foreign-key">
+                <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+            </a>
+        </div>
+    </dd>
+</script>

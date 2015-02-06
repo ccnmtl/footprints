@@ -327,7 +327,7 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
                             params[key] = submitValue[key];
                         }
                     }
-                } else { 
+                } else {
                     //standard params
                     params['name'] = this.options.name || '';
                     params['value'] = submitValue;

@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import User
 from django.contrib.auth.views import logout as auth_logout_view
 from django.core.urlresolvers import reverse
 from django.http.response import HttpResponseRedirect, HttpResponseForbidden
@@ -22,7 +23,7 @@ from footprints.main.permissions import IsStaffOrReadOnly
 from footprints.main.serializers import (
     TitleSerializer, NameSerializer, FootprintSerializer, LanguageSerializer,
     RoleSerializer, ExtendedDateFormatSerializer, ActorSerializer,
-    PersonSerializer, PlaceSerializer, WrittenWorkSerializer)
+    PersonSerializer, PlaceSerializer, WrittenWorkSerializer, UserSerializer)
 from footprints.mixins import (
     JSONResponseMixin, LoggedInMixin, EditableMixin)
 
@@ -337,4 +338,10 @@ class ActorViewSet(viewsets.ModelViewSet):
 class WrittenWorkViewSet(viewsets.ModelViewSet):
     queryset = WrittenWork.objects.all()
     serializer_class = WrittenWorkSerializer
+    permission_classes = (IsStaffOrReadOnly,)
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
     permission_classes = (IsStaffOrReadOnly,)
