@@ -11,13 +11,6 @@ IDENTIFIER_TYPES = (
     ('GETT', 'The Getty Thesaurus of Geographic Names')
 )
 
-HIDDEN_FIELDS = ['id']
-
-
-def get_model_fields(the_model):
-    return [field.name for field in the_model._meta.fields
-            if field.name not in HIDDEN_FIELDS]
-
 
 class ExtendedDateFormat(models.Model):
     edtf_format = models.CharField(max_length=256)
@@ -62,9 +55,16 @@ class RoleManager(models.Manager):
 
 
 class Role(models.Model):
+    LEVEL_TYPES = (
+        ('footprint', 'Footprint'),
+        ('imprint', 'Imprint'),
+        ('writtenwork', 'WrittenWork')
+    )
+
     objects = RoleManager()
 
     name = models.CharField(max_length=256, unique=True)
+    level = models.CharField(max_length=25, choices=LEVEL_TYPES)
 
     class Meta:
         ordering = ['name']
