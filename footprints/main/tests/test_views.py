@@ -5,11 +5,11 @@ from django.test import TestCase
 from django.test.client import Client, RequestFactory
 
 from footprints.main.models import Footprint, Actor
-from footprints.main.tests.factories import (UserFactory, WrittenWorkFactory,
-                                             ImprintFactory, FootprintFactory,
-                                             PersonFactory, RoleFactory,
-                                             PlaceFactory, ActorFactory)
-from footprints.main.views import CreateFootprintView, FootprintAddActorView
+from footprints.main.tests.factories import (
+    UserFactory, WrittenWorkFactory, ImprintFactory, FootprintFactory,
+    PersonFactory, RoleFactory, PlaceFactory, ActorFactory)
+from footprints.main.views import (
+    CreateFootprintView, AddActorView)
 
 
 class BasicTest(TestCase):
@@ -212,34 +212,36 @@ class CreateFootprintViewTest(TestCase):
         self.assertEquals(fp.notes, 'Some notes')
 
 
-class FootprintAddActorViewTest(TestCase):
+class AddActorViewTest(TestCase):
+    def setUp(self):
+        self.user = UserFactory()
+        self.staff = UserFactory(is_staff=True)
+        self.footprint = FootprintFactory()
+
+        self.add_url = reverse('add-actor-view')
+        self.role = RoleFactory()
 
     def test_create_actor_new_person(self):
-        role = RoleFactory()
-
-        view = FootprintAddActorView()
-        view.create_actor('', 'Alpha Centauri', role, 'Alf')
+        view = AddActorView()
+        view.create_actor('', 'Alpha Centauri', self.role, 'Alf')
 
         Actor.objects.get(person__name='Alpha Centauri',
-                          role=role, alias='Alf')
+                          role=self.role, alias='Alf')
 
     def test_create_actor_existing_person(self):
         alpha = PersonFactory(name='Alpha')
-        role = RoleFactory()
-
-        view = FootprintAddActorView()
-        view.create_actor(alpha.id, alpha.name, role, 'Alf')
+        view = AddActorView()
+        view.create_actor(alpha.id, alpha.name, self.role, 'Alf')
 
         Actor.objects.get(person__id=alpha.id,
                           person__name=alpha.name,
-                          role=role, alias='Alf')
+                          role=self.role, alias='Alf')
 
     def test_create_actor_existing_person_new_name(self):
         alpha = PersonFactory(name='Alpha')
-        role = RoleFactory()
 
-        view = FootprintAddActorView()
-        view.create_actor(alpha.id, 'Alpha Beta', role, 'Alf')
+        view = AddActorView()
+        view.create_actor(alpha.id, 'Alpha Beta', self.role, 'Alf')
 
         try:
             Actor.objects.get(person__id=alpha.id)
@@ -247,10 +249,58 @@ class FootprintAddActorViewTest(TestCase):
             pass  # expected
 
         Actor.objects.get(person__name='Alpha Beta',
-                          role=role, alias='Alf')
+                          role=self.role, alias='Alf')
+
+    def test_post_expected_errors(self):
+        # not logged in
+        self.assertEquals(self.client.post(self.add_url).status_code, 302)
+
+        self.client.login(username=self.user.username, password="test")
+
+        # no ajax
+        self.assertEquals(self.client.post(self.add_url).status_code, 405)
+
+        # no permissions
+        response = self.client.post(self.add_url,
+                                    {'parent_id': self.footprint.id,
+                                     'parent_model': 'footprint',
+                                     'role': self.role.id},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 403)
+
+    def test_post_invalid_role(self):
+        # invalid role id
+        self.client.login(username=self.staff.username, password="test")
+        response = self.client.post(self.add_url,
+                                    {'parent_id': self.footprint.id,
+                                     'parent_model': 'footprint',
+                                     'person_name': 'Albert Einstein',
+                                     'role': 3000},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 404)
+
+    def test_post_success(self):
+        self.assertEquals(self.footprint.actor.count(), 0)
+
+        self.client.login(username=self.staff.username, password="test")
+        response = self.client.post(self.add_url,
+                                    {'parent_id': self.footprint.id,
+                                     'parent_model': 'footprint',
+                                     'person_name': 'Albert Einstein',
+                                     'role': self.role.id},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        the_json = loads(response.content)
+        self.assertTrue(the_json['success'])
+
+        # refresh footprint from database
+        footprint = Footprint.objects.get(id=self.footprint.id)
+        self.assertEquals(footprint.actor.count(), 1)
+        self.assertEquals(footprint.actor.first().person.name,
+                          'Albert Einstein')
 
 
-class FootprintRemoveActorViewTest(TestCase):
+class RemoveRelatedViewTest(TestCase):
     def setUp(self):
         self.user = UserFactory()
         self.staff = UserFactory(is_staff=True)
@@ -259,9 +309,7 @@ class FootprintRemoveActorViewTest(TestCase):
         self.actor = ActorFactory()
         self.footprint.actor.add(self.actor)
 
-        self.remove_url = reverse('footprint-remove-actor-view',
-                                  kwargs={'footprint_id': self.footprint.id,
-                                          'actor_id': self.actor.id})
+        self.remove_url = reverse('remove-related')
 
     def test_post_expected_errors(self):
         # not logged in
@@ -273,40 +321,57 @@ class FootprintRemoveActorViewTest(TestCase):
         self.assertEquals(self.client.post(self.remove_url).status_code, 405)
 
         # no permissions
-        response = self.client.post(self.remove_url, {},
+        response = self.client.post(self.remove_url,
+                                    {'parent_id': self.footprint.id,
+                                     'parent_model': 'footprint'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 403)
 
         # invalid actor id
-        bad_remove_url = reverse('footprint-remove-actor-view',
-                                 kwargs={'footprint_id': self.footprint.id,
-                                         'actor_id': 500})
+        bad_remove_url = reverse('remove-related')
         self.client.login(username=self.staff.username, password="test")
-        response = self.client.post(bad_remove_url, {},
+        response = self.client.post(bad_remove_url,
+                                    {'parent_id': self.footprint.id,
+                                     'parent_model': 'footprint',
+                                     'actor_id': 500},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 404)
 
-    def test_post_success(self):
+    def test_post_remove_actor(self):
         self.assertEquals(self.footprint.actor.count(), 1)
 
         self.client.login(username=self.staff.username, password="test")
         response = self.client.post(self.remove_url,
-                                    {},
+                                    {'parent_id': self.footprint.id,
+                                     'parent_model': 'footprint',
+                                     'actor_id': self.actor.id},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
         self.assertTrue(loads(response.content)['success'])
         self.assertEquals(self.footprint.actor.count(), 0)
 
+    def test_post_remove_place(self):
+        self.client.login(username=self.staff.username, password="test")
+        response = self.client.post(self.remove_url,
+                                    {'parent_id': self.footprint.id,
+                                     'parent_model': 'footprint',
+                                     'place_id': self.footprint.place.id},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        self.assertTrue(loads(response.content)['success'])
 
-class FootprintAddDateView(TestCase):
+        footprint = Footprint.objects.get(id=self.footprint.id)  # refresh
+        self.assertIsNone(footprint.place)
+
+
+class AddDateViewTest(TestCase):
 
     def setUp(self):
         self.user = UserFactory()
         self.staff = UserFactory(is_staff=True)
         self.footprint = FootprintFactory(title="Custom", associated_date=None)
 
-        self.url = reverse('footprint-add-date-view',
-                           kwargs={'footprint_id': self.footprint.id})
+        self.url = reverse('add-date-view')
 
     def test_post_expected_errors(self):
         # not logged in
@@ -318,14 +383,17 @@ class FootprintAddDateView(TestCase):
         self.assertEquals(self.client.post(self.url).status_code, 405)
 
         # no permissions
-        response = self.client.post(self.url, {},
+        response = self.client.post(self.url,
+                                    {'parent_id': self.footprint.id,
+                                     'parent_model': 'footprint'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 403)
 
     def test_post_no_data(self):
         self.client.login(username=self.staff.username, password="test")
         response = self.client.post(self.url,
-                                    {},
+                                    {'parent_id': self.footprint.id,
+                                     'parent_model': 'footprint'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
         the_json = loads(response.content)
@@ -334,27 +402,27 @@ class FootprintAddDateView(TestCase):
     def test_post_success(self):
         self.client.login(username=self.staff.username, password="test")
         response = self.client.post(self.url,
-                                    {'associated_date': '1673'},
+                                    {'parent_id': self.footprint.id,
+                                     'parent_model': 'footprint',
+                                     'attr': 'associated_date',
+                                     'date_string': '1673'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
         the_json = loads(response.content)
 
-        footprint = Footprint.objects.get(title='Custom')  # refresh from db
+        footprint = Footprint.objects.get(id=self.footprint.id)  # refresh
         self.assertTrue(the_json['success'])
-        self.assertEquals(the_json['footprint_id'], footprint.id)
-        self.assertEquals(footprint.associated_date.id,
-                          the_json['associated_date'])
+        self.assertEquals(footprint.associated_date.edtf_format, '1673')
 
 
-class FootprintAddPlaceView(TestCase):
+class AddPlaceViewTest(TestCase):
 
     def setUp(self):
         self.user = UserFactory()
         self.staff = UserFactory(is_staff=True)
         self.footprint = FootprintFactory(title="Custom", place=None)
 
-        self.url = reverse('footprint-add-place-view',
-                           kwargs={'footprint_id': self.footprint.id})
+        self.url = reverse('add-place-view')
 
     def test_post_expected_errors(self):
         # not logged in
@@ -366,14 +434,17 @@ class FootprintAddPlaceView(TestCase):
         self.assertEquals(self.client.post(self.url).status_code, 405)
 
         # no permissions
-        response = self.client.post(self.url, {},
+        response = self.client.post(self.url,
+                                    {'parent_id': self.footprint.id,
+                                     'parent_model': 'footprint'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 403)
 
     def test_post_no_data(self):
         self.client.login(username=self.staff.username, password="test")
         response = self.client.post(self.url,
-                                    {},
+                                    {'parent_id': self.footprint.id,
+                                     'parent_model': 'footprint'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
         the_json = loads(response.content)
@@ -382,7 +453,9 @@ class FootprintAddPlaceView(TestCase):
     def test_post_success(self):
         self.client.login(username=self.staff.username, password="test")
         response = self.client.post(self.url,
-                                    {'city': 'New York',
+                                    {'parent_id': self.footprint.id,
+                                     'parent_model': 'footprint',
+                                     'city': 'New York',
                                      'country': 'United States',
                                      'position': '40.752946,-73.983435'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
@@ -391,51 +464,8 @@ class FootprintAddPlaceView(TestCase):
 
         footprint = Footprint.objects.get(title='Custom')  # refresh from db
         self.assertTrue(the_json['success'])
-        self.assertEquals(the_json['footprint_id'], footprint.id)
-        self.assertEquals(footprint.place.id,
-                          the_json['place']['id'])
-
-
-class FootprintRemovePlaceViewTest(TestCase):
-    def setUp(self):
-        self.user = UserFactory()
-        self.staff = UserFactory(is_staff=True)
-        self.footprint = FootprintFactory(title="Custom")
-
-        self.remove_url = reverse(
-            'footprint-remove-place-view',
-            kwargs={'footprint_id': self.footprint.id,
-                    'place_id': self.footprint.place.id})
-
-    def test_post_expected_errors(self):
-        # not logged in
-        self.assertEquals(self.client.post(self.remove_url).status_code, 302)
-
-        self.client.login(username=self.user.username, password="test")
-
-        # no ajax
-        self.assertEquals(self.client.post(self.remove_url).status_code, 405)
-
-        # no permissions
-        response = self.client.post(self.remove_url, {},
-                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 403)
-
-        # invalid actor id
-        bad_remove_url = reverse('footprint-remove-place-view',
-                                 kwargs={'footprint_id': self.footprint.id,
-                                         'place_id': 500})
-        self.client.login(username=self.staff.username, password="test")
-        response = self.client.post(bad_remove_url, {},
-                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 404)
-
-    def test_post_success(self):
-        self.client.login(username=self.staff.username, password="test")
-        response = self.client.post(self.remove_url, {},
-                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
-        self.assertTrue(loads(response.content)['success'])
-
-        footprint = Footprint.objects.get(title='Custom')  # refresh from db
-        self.assertIsNone(footprint.place)
+        self.assertEquals(footprint.place.city, 'New York')
+        self.assertEquals(footprint.place.country, 'United States')
+        self.assertEquals(str(footprint.place.position.latitude), '40.752946')
+        self.assertEquals(str(footprint.place.position.longitude),
+                          '-73.983435')

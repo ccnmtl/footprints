@@ -1,7 +1,7 @@
 <script type="text/template" id="progress-sidebar-template">
     <ul class="list-group record-checklist">
         <li class="list-group-item">
-            <h4>Record Progress</h4>
+            <h4>Record Checklist</h4>
             <div>
                 <div class="progress pull-left">
                     <div class="progress-bar" role="progressbar"
@@ -18,17 +18,32 @@
             <small>type, location</small>
         </li>
         <li class="list-group-item">
-            <span class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>&nbsp;&nbsp;The Book Title
+            <% if (book.imprint.work && book.imprint.work.title && book.imprint.work.title.length > 0) {%>
+                <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+            <% } else { %>
+                <span class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>
+            <% } %>
+            
+            &nbsp;&nbsp;The Book Title
         </li>
         <li class="list-group-item">
-            <span class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>
+            <% if (book.imprint.work && book.imprint.work.actor.length > 0) {%>
+                <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+            <% } else { %>
+                <span class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>
+            <% } %>
             &nbsp;&nbsp;The Book Author(s)
         </li>
-        <li class="list-group-item" data-related-fields="">
-            <span class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>&nbsp;&nbsp;Imprint Details<br />
+        <li class="list-group-item">
+            <% if (book.imprint.work && book.imprint.actor.length > 0 && book.imprint.date_of_publication && book.imprint.place) { %>
+                <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+            <% } else { %>
+                <span class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>
+            <% } %>
+            </span>&nbsp;&nbsp;Imprint Details<br />
             <small>publisher, date, location</small>
         </li>
-        <li class="list-group-item <% if (footprint.associated_date && footprint.place) { %>list-item-complete<% } %>">
+        <li class="list-group-item">
             <% if (footprint.associated_date && footprint.place) { %>
                 <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
             <% } else { %>

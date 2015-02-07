@@ -1,19 +1,153 @@
 <script type="text/template" id="book-detail-template">
 <div class="breadcrumb">THE BOOK</div>
 <dl class="dl-horizontal">
+    <dt>Book Copy Identifier</dt><dd class="border-bottom"><%=id%>-<%=imprint.id%></dd>
     <% if (imprint.work.title.length > 0) { %>
         <dt>Title</dt>
-        <dd><a href="#" class="<% if (editable) { %>editable<% } else { %>readonly<% } %>"
+        <dd class="border-bottom"><a href="#" class="<% if (editable) { %>editable<% } else { %>readonly<% } %>"
                 data-attribute-name="title"  data-name="title"
                 data-type="text" data-pk="<%=imprint.work.id%>"
                 data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
                 data-url="/api/writtenwork/<%=imprint.work.id%>/">
                 <%=imprint.work.title%>
             </a>
+            <div class="pull-right">
+                <a href="/writtenwork/<%=imprint.work.id%>/" title="see details" class="foreign-key">
+                    <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+                </a>
+            </div>
+        </dd>
+    <% } %>
+
+    <% for (var i=0; i < imprint.work.actor.length; i++) { %> 
+        <dt><%=imprint.work.actor[i].role.name%></dt>
+        <dd class="border-bottom">
+            <span><%=imprint.work.actor[i].person.name%><% if (imprint.work.actor[i].alias) { %>  as <%=imprint.work.actor[i].alias%> <% } %></span> 
+            <div class="pull-right">
+                <% if (editable) { %>
+                    <a href="#" class="remove-related"
+                     data-params="{actor_id:'<%=imprint.work.actor[i].id%>',csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=imprint.work.id%>,parent_model:'writtenwork'}" 
+                     data-url="/remove/related/"
+                     title="remove author">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </a>
+                <% } %>
+                &nbsp;
+                <a href="/person/<%=imprint.work.actor[i].person.id%>/" title="see details" class="foreign-key">
+                    <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+                </a>
+            </div>
+        </dd>
+    <% } %>
+    <% if (imprint.work.notes.length > 0) { %>
+        <dt>Notes</dt>
+        <dd class="border-bottom">
+            <a href="#" class="<% if (editable) { %>editable<% } else { %>readonly<% } %>"
+                data-attribute-name="notes" data-name="notes"
+                data-type="textarea" data-pk="<%=imprint.work.id%>"
+                data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
+                data-url="/api/writtenwork/<%=imprint.work.id%>/"><%=imprint.work.notes%></a>
         </dd>
     <% } %>
 </dl>
 
+<dl class="dl-horizontal">
+    <% if (imprint.title && imprint.title.length > 0) { %>
+        <dt>Imprint Title</dt>
+        <dd class="border-bottom"><a href="#" class="<% if (editable) { %>editable<% } else { %>readonly<% } %>"
+             data-attribute-name="title"  data-name="title"
+             data-type="text" data-pk="<%=imprint.id%>"
+             data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
+             data-url="/api/imprint/<%=imprint.id%>/">
+                <%=imprint.title%>
+            </a>
+        </dd>
+    <% } %>
+    <% if (imprint.language.length > 0) { %>
+        <dt>Imprint Language</dt>
+        <dd class="border-bottom">
+            <a href="#" class="<% if (editable) { %>editable-language<% } else { %>readonly<% } %>"
+                data-name="language"
+                data-type="select2" data-pk="<%=imprint.id%>"
+                data-value="[<% for (var i=0; i < imprint.language.length; i++) { %><%=imprint.language[i].id%><% if (i < imprint.language.length-1) { %> ,<% } }%>]"
+                data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
+                data-url="/api/imprint/<%=imprint.id%>/">
+                <% for (var i=0; i < imprint.language.length; i++) { %> 
+                    <%= imprint.language[i].name %><% if (i < imprint.language.length-1) { %> , <% } %>
+                <% } %>
+            </a>
+        </dd>
+    <% } %>
+    <% if (imprint.date_of_publication) { %>
+        <dt>Publication Date</dt>
+        <dd class="border-bottom">
+            <a href="#" class="<% if (editable) { %>editable<% } else { %>readonly<% } %>"
+             data-name="edtf_format"
+             data-type="text" data-pk="<%=imprint.date_of_publication.id%>"
+             data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
+             data-url="/api/edtf/<%=imprint.date_of_publication.id%>/">
+                <%=imprint.date_of_publication.edtf_format%>
+            </a>
+        </dd>
+    <% } %>
+    <% if (imprint.place) { %>
+        <dt>Imprint Location</dt>
+        <dd class="border-bottom footprint-place">
+            <span><%=imprint.place.display_title%></span>
+            <div class="pull-right">
+                <% if (editable) { %>
+                    <a href="#" class="remove-related"
+                        data-params="{place_id:'<%=imprint.place.id%>',csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=imprint.id%>,parent_model:'imprint'}" 
+                        data-url="/remove/related/"
+                        title="remove place">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </a>
+                <% } %>
+                &nbsp;
+                <a href="/place/<%=imprint.place.id%>/" title="see details" class="foreign-key">
+                    <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+                </a>
+            </div>
+            <div class="clearfix"></div>
+            <div class="footprint-map"
+                data-latitude="<%=imprint.place.latitude%>"
+                data-longitude="<%=imprint.place.longitude%>"
+                data-title="<%=imprint.place.display_title%>">
+            </div>
+        </dd>
+    <% } %>
+    <% for (var i=0; i < imprint.actor.length; i++) { %> 
+        <dt><%=imprint.actor[i].role.name%></dt>
+        <dd class="border-bottom">
+            <span><%=imprint.actor[i].person.name%><% if (imprint.actor[i].alias) { %>  as <%=imprint.actor[i].alias%> <% } %></span> 
+            <div class="pull-right">
+                <% if (editable) { %>
+                    <a href="#" class="remove-related"
+                     data-params="{actor_id:'<%=imprint.actor[i].id%>',csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=imprint.id%>,parent_model:'imprint'}" 
+                     data-url="/remove/related/"
+                     title="remove author">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </a>
+                <% } %>
+                &nbsp;
+                <a href="/person/<%=imprint.actor[i].person.id%>/" title="see details" class="foreign-key">
+                    <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+                </a>
+            </div>
+        </dd>
+    <% } %>
+    <% if (imprint.notes && imprint.notes.length > 0) { %>
+        <dt>Imprint Notes</dt>
+        <dd class="border-bottom">
+            <a href="#" class="<% if (editable) { %>editable<% } else { %>readonly<% } %>"
+                data-attribute-name="notes" data-name="notes"
+                data-type="textarea" data-pk="<%=imprint.id%>"
+                data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
+                data-url="/api/imprint/<%=imprint.id%>/"><%=imprint.notes%></a>
+        </dd>
+    <% } %>
+    
+</dl>
 
 <% if (editable) { %>
     <dl class="dl-horizontal">
@@ -27,6 +161,78 @@
                             data-name="title" data-type="text" data-pk="<%=imprint.work.id%>" data-value=""
                             data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
                             data-url="/api/writtenwork/<%=imprint.work.id%>/">the title of the written work?</a>
+                    </li>
+                <% } %>
+                <li class="fixed"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                    <a href="#" class="<% if (editable) { %>editable-author<% } %> do-you-know persistant" data-name="actor"
+                        data-template="#xeditable-author-form"
+                        data-type="actor" data-pk="<%=imprint.work.id%>" data-value=""
+                        data-params="{csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=imprint.work.id%>,parent_model:'writtenwork'}" 
+                        data-url="/actor/add/">the author(s) of the written work?</a>
+                </li>
+                
+                <% if (imprint.work.notes.length < 1) { %>
+                    <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                        <a href="#" class="editable do-you-know persistant" data-name="notes"
+                            data-type="textarea" data-pk="<%=imprint.work.id%>" data-value=""
+                            data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
+                            data-url="/api/writtenwork/<%=imprint.work.id%>/">any additional notes about the written work?</a>
+                    </li>
+                <% } %>
+                
+                <% if (!imprint.title || imprint.title.length < 1) { %>
+                    <li>
+                        <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                        <a href="#" class="<% if (editable) { %>editable<% } %> do-you-know persistant"
+                            data-name="title" data-type="text" data-pk="<%=imprint.id%>" data-value=""
+                            data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
+                            data-url="/api/imprint/<%=imprint.id%>/">the title of the imprint?</a>
+                    </li>
+                <% } %>
+                
+                <% if (imprint.language.length < 1) { %> 
+                    <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                        <a href="#" class="<% if (editable) { %>editable-language<% } %> do-you-know persistant"
+                            data-name="language"
+                            data-type="select2" data-pk="<%=imprint.id%>" data-value=""
+                            data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
+                        data-url="/api/imprint/<%=imprint.id%>/">the language(s) of the imprint?</a>
+                    </li>
+                <% } %>
+                <% if (!imprint.date_of_publication) { %> 
+                    <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                    <a href="#" class="<% if (editable) { %>editable<% } %> do-you-know persistant editable-refresh"
+                        data-name="date_string" data-type="text" data-pk="<%=imprint.id%>"
+                        data-value=""
+                        data-params="{csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=imprint.id%>,parent_model:'imprint',attr:'date_of_publication'}"
+                        data-url="/date/add/">the imprint publication date?</a>
+                    </li>
+                <% } %>
+                
+                <% if (!imprint.place) { %> 
+                    <li>
+                        <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                        <a href="#" class="<% if (editable) { %>editable-place<% } %> do-you-know persistant"
+                            data-name="place" data-pk="<%=imprint.id%>" data-type="place"
+                            data-params="{csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=imprint.id%>,parent_model:'imprint'}"
+                            data-url="/place/add/">the imprint publication location?</a>
+                    </li>
+                <% } %>
+                
+                <li class="fixed"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                    <a href="#" class="<% if (editable) { %>editable-publisher<% } %> do-you-know persistant" data-name="actor"
+                        data-template="#xeditable-publisher-form"
+                        data-type="actor" data-pk="<%=imprint.id%>" data-value=""
+                        data-params="{csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=imprint.id%>,parent_model:'imprint'}" 
+                        data-url="/actor/add/">people associated with the imprint, e.g. printer, publisher, editor?</a>
+                </li>
+                
+                <% if (!imprint.notes || imprint.notes.length < 1) { %>
+                    <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                        <a href="#" class="editable do-you-know persistant" data-name="notes"
+                            data-type="textarea" data-pk="<%=imprint.id%>" data-value=""
+                            data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
+                            data-url="/api/imprint/<%=imprint.id%>/">any additional notes about the imprint?</a>
                     </li>
                 <% } %>
             </ul>

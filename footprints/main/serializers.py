@@ -88,6 +88,9 @@ class ExtendedDateFormatSerializer(HyperlinkedModelSerializerEx):
         model = ExtendedDateFormat
         fields = ('id', 'edtf_format',)
 
+    def get_queryset(self):
+        return ExtendedDateFormat.objects.all()
+
 
 class RoleSerializer(HyperlinkedModelSerializer):
     class Meta:
@@ -96,9 +99,12 @@ class RoleSerializer(HyperlinkedModelSerializer):
 
 
 class PersonSerializer(HyperlinkedModelSerializer):
+    birth_date = ExtendedDateFormatSerializer()
+    death_date = ExtendedDateFormatSerializer()
+
     class Meta:
         model = Person
-        fields = ('id', 'name')
+        fields = ('id', 'name', 'birth_date', 'death_date')
 
 
 class PlaceSerializer(HyperlinkedModelSerializerEx):
@@ -140,7 +146,7 @@ class ActorSerializer(HyperlinkedModelSerializer):
         return ManyRelatedFieldEx(**list_kwargs)
 
 
-class WrittenWorkSerializer(HyperlinkedModelSerializer):
+class WrittenWorkSerializer(HyperlinkedModelSerializerEx):
     actor = ActorSerializer(many=True)
 
     class Meta:
@@ -148,16 +154,17 @@ class WrittenWorkSerializer(HyperlinkedModelSerializer):
         fields = ('id', 'title', 'actor', 'notes')
 
 
-class ImprintSerializer(HyperlinkedModelSerializer):
+class ImprintSerializer(HyperlinkedModelSerializerEx):
     work = WrittenWorkSerializer()
     language = LanguageSerializer(many=True)
     actor = ActorSerializer(many=True)
     place = PlaceSerializer()
+    date_of_publication = ExtendedDateFormatSerializer()
 
     class Meta:
         model = Imprint
         # @todo digital_object, standardized_identifier
-        fields = ('work', 'title', 'language', 'place',
+        fields = ('id', 'work', 'title', 'language', 'place',
                   'date_of_publication', 'actor', 'notes')
 
     def update(self, instance, validated_data):
@@ -165,7 +172,7 @@ class ImprintSerializer(HyperlinkedModelSerializer):
             instance.language = validated_data['language']
             instance.save()
         else:
-            instance = super(FootprintSerializer, self).update(
+            instance = super(ImprintSerializer, self).update(
                 instance, validated_data)
 
         return instance

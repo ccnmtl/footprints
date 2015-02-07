@@ -14,15 +14,44 @@
     });
     
     FootprintBaseView = Backbone.View.extend({
-        events: {
-            'click a.remove-related span.glyphicon-remove': 'confirmRemoveRelated',
-        },
         context: function() {
             var ctx = this.model.toJSON();
             for (var attrname in this.baseContext) {
                 ctx[attrname] = this.baseContext[attrname];
             }
             return ctx;
+        },
+        mapOptions: {
+            zoom: 10,
+            draggable: false,
+            scrollwheel: false,
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            zoomControl: true,
+            zoomControlOptions: {
+              style: google.maps.ZoomControlStyle.SMALL,
+              position: google.maps.ControlPosition.RIGHT_BOTTOM
+            },
+            mapTypeControl: false,
+            streetViewControl: false
+        },
+        initializeMap: function() {
+            // Initialize display map
+            this.mapElt = jQuery(this.el).find('.footprint-map')[0];
+            if (this.mapElt) {
+                var lat = jQuery(this.mapElt).data('latitude');
+                var lng = jQuery(this.mapElt).data('longitude');
+                if (lat && lng) {
+                    var latlng = new google.maps.LatLng(lat, lng);
+                    this.mapOptions.center = latlng;
+                    this.map = new google.maps.Map(this.mapElt, this.mapOptions);
+                    
+                    this.marker = new google.maps.Marker({
+                        position: latlng,
+                        map: this.map,
+                        title: jQuery(this.mapElt).data('title')
+                    });
+                }
+            }
         },
         refresh: function(response, newValue) {
             this.model.fetch();
@@ -87,6 +116,9 @@
     });
     
     FootprintDetailView = FootprintBaseView.extend({
+        events: {
+            'click a.remove-related span.glyphicon-remove': 'confirmRemoveRelated'
+        },
         initialize: function(options) {
             _.bindAll(this, 'context', 'refresh', 'render',
                'confirmRemoveRelated', 'removeRelated',
@@ -96,20 +128,6 @@
             this.template = _.template(jQuery(options.template).html());
             this.model.on('change', this.render);
             this.model.fetch();
-            
-            this.mapOptions = {
-                zoom: 10,
-                draggable: false,
-                scrollwheel: false,
-                mapTypeId: google.maps.MapTypeId.ROADMAP,
-                zoomControl: true,
-                zoomControlOptions: {
-                  style: google.maps.ZoomControlStyle.SMALL,
-                  position: google.maps.ControlPosition.RIGHT_BOTTOM
-                },
-                mapTypeControl: false,
-                streetViewControl: false
-            }
         },
         render: function() {
             var self = this;
@@ -121,16 +139,11 @@
             // Initialize X-editable fields
             jQuery(this.el).find('.editable').editable({
                 namedParams: true,
-                success: this.refresh
-            });
-
-            jQuery(this.el).find('.editable-required').editable({
-                namedParams: true,
                 success: this.refresh,
                 validate: this.validate
             });
 
-            jQuery('.editable-place').editable({
+            jQuery(this.el).find('.editable-place').editable({
                 namedParams: true,
                 template: '#editable-place-form',
                 onblur: 'ignore',
@@ -138,7 +151,7 @@
                 success: this.refresh
             });
 
-            jQuery('.editable-language').editable({
+            jQuery(this.el).find('.editable-language').editable({
                 namedParams: true,
                 source: this.baseContext.all_languages,
                 select2: {
@@ -150,14 +163,14 @@
                 success: this.refresh
             });
             
-            jQuery('.editable-actor').editable({
+            jQuery(this.el).find('.editable-actor').editable({
                 namedParams: true,
                 template: '#xeditable-actor-form',
                 validate: this.validateActor,
                 success: this.refresh
             });
             
-            jQuery('.editable-medium').editable({
+            jQuery(this.el).find('.editable-medium').editable({
                 namedParams: true,
                 source: this.baseContext.all_mediums,
                 select2: {
@@ -168,31 +181,18 @@
                 success: this.refresh
             });
             
-            // Initialize display map
-            this.mapElt = jQuery(this.el).find('.footprint-map')[0];
-            if (this.mapElt) {
-                var lat = jQuery(this.mapElt).data('latitude');
-                var lng = jQuery(this.mapElt).data('longitude');
-                if (lat && lng) {
-                    var latlng = new google.maps.LatLng(lat, lng);
-                    this.mapOptions.center = latlng;
-                    this.map = new google.maps.Map(this.mapElt, this.mapOptions);
-                    
-                    this.marker = new google.maps.Marker({
-                        position: latlng,
-                        map: this.map,
-                        title: jQuery(this.mapElt).data('title')
-                    });
-                }
-            }
+            this.initializeMap();
         }
     });
 
     BookDetailView = FootprintBaseView.extend({
         events: {
+            'click a.remove-related span.glyphicon-remove': 'confirmRemoveRelated',
         },
         initialize: function(options) {
-            _.bindAll(this, 'render');
+            _.bindAll(this, 'context', 'refresh', 'render',
+                      'confirmRemoveRelated', 'removeRelated',
+                      'validate', 'validatePlace', 'validateActor');
             
             this.baseContext = options.baseContext;
             this.template = _.template(jQuery(options.template).html());
@@ -203,12 +203,51 @@
             var markup = this.template(this.context());
             jQuery(this.el).html(markup);
             this.delegateEvents();
-            
+
             // Initialize X-editable fields
             jQuery(this.el).find('.editable').editable({
                 namedParams: true,
+                success: this.refresh,
+                validate: this.validate
+            });
+
+            jQuery(this.el).find('.editable-author').editable({
+                namedParams: true,
+                template: '#xeditable-author-form',
+                validate: this.validateActor,
+                success: this.refresh            
+            });
+            
+            jQuery(this.el).find('.editable-publisher').editable({
+                namedParams: true,
+                template: '#xeditable-publisher-form',
+                validate: this.validateActor,
                 success: this.refresh
             });
+            
+            jQuery(this.el).find('.editable-language').editable({
+                namedParams: true,
+                source: this.baseContext.all_languages,
+                select2: {
+                    multiple: true,
+                    width: 350,
+                    placeholder: 'Select language(s)',
+                    allowClear: true
+                },
+                success: this.refresh,
+                validate: this.validate
+            });
+            
+            jQuery(this.el).find('.editable-place').editable({
+                namedParams: true,
+                template: '#editable-place-form',
+                onblur: 'ignore',
+                validate: this.validatePlace,
+                success: this.refresh
+            });
+            
+            this.initializeMap();
+
         }
     });
     

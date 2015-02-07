@@ -15,7 +15,7 @@
         <% if (associated_date) { %>
             <dt>Footprint Date</dt>
             <dd class="border-bottom">
-                <a href="#" class="<% if (editable) { %>editable-required<% } else { %>readonly<% } %>"
+                <a href="#" class="<% if (editable) { %>editable<% } else { %>readonly<% } %>"
                  data-name="edtf_format"
                  data-type="text" data-pk="<%=associated_date.id%>"
                  data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
@@ -31,8 +31,8 @@
                 <div class="pull-right">
                     <% if (editable) { %>
                         <a href="#" class="remove-related"
-                            data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
-                            data-url="/footprint/place/<%=id%>/remove/<%=place.id%>/"
+                            data-params="{place_id:'<%=place.id%>',csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=id%>,parent_model:'footprint'}" 
+                            data-url="/remove/related/"
                             title="remove place">
                             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                         </a>
@@ -67,7 +67,7 @@
         <% } %>
         <dt title="the written work's title exactly as it appears in the of evidence.">Footprint Title Display<br /></dt>
         <dd class="border-bottom">
-            <a href="#" class="<% if (editable) { %>editable-required<% } else { %>readonly<% } %>"
+            <a href="#" class="<% if (editable) { %>editable<% } else { %>readonly<% } %>"
                 data-name="title"
                 data-type="text" data-pk="<%=id%>"
                 data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
@@ -80,8 +80,8 @@
                 <div class="pull-right">
                     <% if (editable) { %>
                         <a href="#" class="remove-related"
-                            data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
-                            data-url="/footprint/actor/<%=id%>/remove/<%=actor[i].id%>/"
+                            data-params="{actor_id:'<%=actor[i].id%>',csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=id%>,parent_model:'footprint'}" 
+                            data-url="/remove/related/"
                             title="remove actor">
                             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
                     <% } %>
@@ -119,7 +119,7 @@
         
         <dt>Evidence Location</dt>
         <dd class="border-bottom">
-            <a href="#" class="<% if (editable) { %>editable-required<% } else { %>readonly<% } %>"
+            <a href="#" class="<% if (editable) { %>editable<% } else { %>readonly<% } %>"
                 data-name="provenance"
                 data-type="text" data-pk="<%=id%>"
                 data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
@@ -156,21 +156,21 @@
             <dd>  
                 <ul class="additional-questions">
                     <% if (!place) { %> 
-                        <li class="footprint-place-container">
+                        <li>
                             <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
-                            <a href="#" class="<% if (editable) { %>editable-place<% } %> do-you-know persistant" data-name="place"
-                                data-type="place" data-pk="<%=id%>" data-value=""
-                                data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
-                                data-url="/footprint/place/<%=id%>/add/">the place where the footprint occurred?</a>
+                            <a href="#" class="<% if (editable) { %>editable-place<% } %> do-you-know persistant"
+                                data-name="place" data-pk="<%=id%>" data-type="place"
+                                data-params="{csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=id%>,parent_model:'footprint'}"
+                                data-url="/place/add/">the place where the footprint occurred?</a>
                         </li>
                     <% } %>
                     <% if (!associated_date) { %> 
-                        <li class="footprint-date-container"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                        <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
                         <a href="#" class="<% if (editable) { %>editable<% } %> do-you-know persistant editable-refresh"
-                            data-name="associated_date"
-                            data-type="text" data-pk="<%=id%>"
-                            data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" data-value=""
-                            data-url="/footprint/date/<%=id%>/">the date when the footprint occurred?</a>
+                            data-name="date_string" data-type="text" data-pk="<%=id%>"
+                            data-value=""
+                            data-params="{csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=id%>,parent_model:'footprint',attr:'associated_date'}"
+                            data-url="/date/add/">the date when the footprint occurred?</a>
                         </li>
                     <% } %>
                     <% if (language.length < 1) { %> 
@@ -182,13 +182,13 @@
                             data-url="/api/footprint/<%=id%>/">the language(s) of the footprint?</a>
                         </li>
                     <% } %>
-                    <li class="fixed"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
-                        <a href="#" class="<% if (editable) { %>editable-actor<% } %> do-you-know persistant" data-name="actor"
-                            data-template="#xeditable-actor-form" 
-                            data-type="actor" data-pk="<%=id%>" data-value=""
-                            data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
-                            data-url="/footprint/actor/<%=id%>/add/">people related to this footprint, e.g. sellers, owners, curators?</a>
-                    </li>
+                        <li class="fixed"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                            <a href="#" class="<% if (editable) { %>editable-actor<% } %> do-you-know persistant"
+                                data-name="actor" data-template="#xeditable-actor-form" 
+                                data-type="actor" data-pk="<%=id%>" data-value=""
+                                data-params="{csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=id%>,parent_model:'footprint'}" 
+                                data-url="/actor/add/">people related to this footprint, e.g. sellers, owners, curators?</a>
+                        </li>
                     <% if (medium_description.length < 1) { %> 
                         <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
                             <a href="#" class="<% if (editable) { %>editable<% } %> do-you-know persistant"

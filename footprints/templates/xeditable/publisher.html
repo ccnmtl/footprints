@@ -1,4 +1,4 @@
-<script type="text/template" id="xeditable-actor-form">
+<script type="text/template" id="xeditable-publisher-form">
     <div class="editable-actor">
         <div class="form-group">
             <label>Person's Name</label><br />
@@ -13,7 +13,7 @@
         <div class="form-group">
             <label>Role</label><br />
             <select class="form-control" name="role" placeholder="Type in a role name">
-                {% for role in roles.for_footprint %}
+                {% for role in roles.for_imprint %}
                     <option value="{{role.id}}">{{role.name}}</option>
                 {% endfor %}
             </select>
