@@ -20,6 +20,7 @@ class ExtendedDateFormatFactory(factory.DjangoModelFactory):
 class RoleFactory(factory.DjangoModelFactory):
     FACTORY_FOR = Role
     name = factory.Sequence(lambda n: "Author%03d" % n)
+    level = 'footprint'
 
 
 class LanguageFactory(factory.DjangoModelFactory):
