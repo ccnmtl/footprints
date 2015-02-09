@@ -85,6 +85,10 @@ ul.wizard-tabs.has-error li.active a {
 
 
 /* Object detail pages */
+.object-detail blockquote {
+    border-left: 0;
+}
+
 .object-detail .breadcrumb {
     margin-bottom: 10px;
     background: #f6f7f8; 
@@ -214,10 +218,6 @@ ul.record-checklist li.list-group-item small {
     margin-left: 22px;
 }
 
-ul.record-checklist li.list-item-complete {
-    color: #3c763d;
-    background-color: #dff0d8;
-}
 
 /** editable fields **/
 .editable-person {

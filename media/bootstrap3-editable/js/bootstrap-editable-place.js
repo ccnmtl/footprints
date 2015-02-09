@@ -34,15 +34,6 @@ Place editable input.
     $.fn.editableutils.inherit(Place, $.fn.editabletypes.abstractinput);
 
     $.extend(Place.prototype, {
-        getIconProperties: function() {
-            return {
-                url: "http://maps.gstatic.com/mapfiles/place_api/icons/geocode-71.png",
-                size: new google.maps.Size(71, 71),
-                origin: new google.maps.Point(0, 0),
-                anchor: new google.maps.Point(17, 34),
-                scaledSize: new google.maps.Size(25, 25)
-            };
-        },
         geocodePosition: function() {
             var self = this;
             self.geocoder.geocode({
@@ -72,7 +63,6 @@ Place editable input.
             }
             self.marker = new google.maps.Marker({
                 position: latlng,
-                icon: self.getIconProperties(),
                 map: self.mapInstance,
                 draggable: true,
                 animation: google.maps.Animation.DROP
@@ -98,7 +88,6 @@ Place editable input.
                 }
                 self.marker = new google.maps.Marker({
                     map: self.mapInstance,
-                    icon: self.getIconProperties(),
                     title: self.place.name,
                     position: self.place.geometry.location,
                     draggable: true,

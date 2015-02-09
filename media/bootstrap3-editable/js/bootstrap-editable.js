@@ -320,14 +320,18 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
                 params = {pk: pk};
                 if (this.options.namedParams) {
                     if (Array.isArray(submitValue) || typeof submitValue !== "object") {
-                        // named params
-                        params[this.options.name || 'name'] = submitValue;
+                        if (submitValue.length > 0) {
+                            // named params
+                            params[this.options.name || 'name'] = submitValue;
+                        } else {
+                            params[this.options.name || 'name'] = '';
+                        }
                     } else {
                         for (var key in submitValue) {
                             params[key] = submitValue[key];
                         }
                     }
-                } else { 
+                } else {
                     //standard params
                     params['name'] = this.options.name || '';
                     params['value'] = submitValue;

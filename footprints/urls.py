@@ -11,12 +11,14 @@ from rest_framework import routers
 from footprints.main import views
 from footprints.main.forms import FootprintSearchForm
 from footprints.main.views import (
-    LoginView, LogoutView, TitleListView, CreateFootprintView, NameListView,
-    WrittenWorkDetailView, FootprintDetailView, PersonDetailView,
-    PlaceDetailView, FootprintViewSet, LanguageViewSet, RoleViewSet,
-    FootprintAddActorView, FootprintRemoveActorView, ExtendedDateFormatViewSet,
-    FootprintAddDateView, ActorViewSet, PersonViewSet, PlaceViewSet,
-    FootprintAddPlaceView, FootprintRemovePlaceView, WrittenWorkViewSet)
+    LoginView, LogoutView, AddActorView, CreateFootprintView,
+    FootprintDetailView, PersonDetailView, PlaceDetailView,
+    WrittenWorkDetailView, TitleListView, NameListView,
+    AddPlaceView, AddDateView, RemoveRelatedView)
+from footprints.main.viewsets import (
+    BookCopyViewSet, ImprintViewSet, ActorViewSet,
+    ExtendedDateFormatViewSet, FootprintViewSet, LanguageViewSet,
+    PersonViewSet, PlaceViewSet, RoleViewSet, WrittenWorkViewSet, UserViewSet)
 from footprints.mixins import is_staff
 
 
@@ -35,6 +37,9 @@ router.register(r'person', PersonViewSet)
 router.register(r'place', PlaceViewSet)
 router.register(r'role', RoleViewSet)
 router.register(r'writtenwork', WrittenWorkViewSet)
+router.register(r'user', UserViewSet)
+router.register(r'book', BookCopyViewSet)
+router.register(r'imprint', ImprintViewSet)
 
 
 urlpatterns = patterns(
@@ -60,19 +65,16 @@ urlpatterns = patterns(
         password_reset_complete, name='password_reset_complete'),
 
     auth_urls,
-    url(r'^footprint/actor/(?P<footprint_id>\d+)/add/$',
-        FootprintAddActorView.as_view(), name='footprint-add-actor-view'),
-    url(r'^footprint/actor/(?P<footprint_id>\d+)/remove/(?P<actor_id>\d+)/$',
-        FootprintRemoveActorView.as_view(),
-        name='footprint-remove-actor-view'),
+    url(r'^actor/add/$',
+        AddActorView.as_view(), name='add-actor-view'),
+    url(r'^place/add/$',
+        AddPlaceView.as_view(), name='add-place-view'),
+    url(r'^date/add/$',
+        AddDateView.as_view(), name='add-date-view'),
 
-    url(r'^footprint/place/(?P<footprint_id>\d+)/add/$',
-        FootprintAddPlaceView.as_view(), name='footprint-add-place-view'),
-    url(r'^footprint/place/(?P<footprint_id>\d+)/remove/(?P<place_id>\d+)/$',
-        FootprintRemovePlaceView.as_view(),
-        name='footprint-remove-place-view'),
-    url(r'^footprint/date/(?P<footprint_id>\d+)/$',
-        FootprintAddDateView.as_view(), name='footprint-add-date-view'),
+    url(r'^remove/related/$',
+        RemoveRelatedView.as_view(), name='remove-related'),
+
     (r'^footprint/create/$', CreateFootprintView.as_view()),
     url(r'^footprint/(?P<pk>\d+)/$',
         FootprintDetailView.as_view(), name='footprint-detail-view'),

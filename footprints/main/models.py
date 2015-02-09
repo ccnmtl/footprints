@@ -269,6 +269,12 @@ class Place(models.Model):
 
         return ', '.join(parts)
 
+    def latitude(self):
+        return self.position.latitude
+
+    def longitude(self):
+        return self.position.longitude
+
 
 class Collection(models.Model):
     name = models.CharField(max_length=512, unique=True)

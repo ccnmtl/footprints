@@ -1,3 +1,4 @@
+from django.apps import apps
 from django.conf import settings
 from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
@@ -9,7 +10,6 @@ from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
 from djangowind.views import logout as wind_logout_view
 from haystack.query import SearchQuerySet
-from rest_framework import viewsets
 from rest_framework.permissions import AllowAny
 from rest_framework.renderers import JSONPRenderer
 from rest_framework.response import Response
@@ -18,11 +18,7 @@ from rest_framework.views import APIView
 from footprints.main.models import (
     Footprint, Actor, Person, Role, WrittenWork, Language, ExtendedDateFormat,
     Place, Imprint, BookCopy)
-from footprints.main.permissions import IsStaffOrReadOnly
-from footprints.main.serializers import (
-    TitleSerializer, NameSerializer, FootprintSerializer, LanguageSerializer,
-    RoleSerializer, ExtendedDateFormatSerializer, ActorSerializer,
-    PersonSerializer, PlaceSerializer, WrittenWorkSerializer)
+from footprints.main.serializers import TitleSerializer, NameSerializer
 from footprints.mixins import (
     JSONResponseMixin, LoggedInMixin, EditableMixin)
 
@@ -134,24 +130,43 @@ class CreateFootprintView(LoggedInMixin, TemplateView):
         return HttpResponseRedirect(url)
 
 
-class FootprintRemoveActorView(LoggedInMixin, EditableMixin,
-                               JSONResponseMixin, View):
+class RemoveRelatedView(LoggedInMixin, EditableMixin,
+                        JSONResponseMixin, View):
 
     def post(self, *args, **kwargs):
-        footprint_id = kwargs.get('footprint_id', None)
-        footprint = get_object_or_404(Footprint, pk=footprint_id)
+        try:
+            model_name = self.request.POST.get('parent_model', None)
+            the_model = apps.get_model(app_label='main', model_name=model_name)
 
-        if not self.has_edit_permission(self.request.user, footprint):
+            the_parent = get_object_or_404(
+                the_model, pk=self.request.POST.get('parent_id', None))
+        except ValueError:
+            return self.render_to_json_response({'success': False})
+
+        if not self.has_edit_permission(self.request.user, the_parent):
             return HttpResponseForbidden()
 
-        actor_id = kwargs.get('actor_id', None)
-        actor = get_object_or_404(Actor, id=actor_id)
-        footprint.actor.remove(actor)
+        # cheating a bit here. @todo - make this totally generic
+        # will need to figure out whether related is FK or M2M
+        actor_id = self.request.POST.get('actor_id', None)
+        place_id = self.request.POST.get('place_id', None)
+        if actor_id is None and place_id is None:
+            return self.render_to_json_response({'success': False})
+
+        if actor_id:
+            actor = get_object_or_404(Actor, id=actor_id)
+            the_parent.actor.remove(actor)
+        elif place_id:
+            place = get_object_or_404(Place, id=place_id)
+            if the_parent.place == place:
+                the_parent.place = None
+                the_parent.save()
+
         return self.render_to_json_response({'success': True})
 
 
-class FootprintAddActorView(LoggedInMixin, EditableMixin,
-                            JSONResponseMixin, View):
+class AddActorView(LoggedInMixin, EditableMixin,
+                   JSONResponseMixin, View):
 
     def create_actor(self, person_id, person_name, role, alias):
         try:
@@ -165,8 +180,14 @@ class FootprintAddActorView(LoggedInMixin, EditableMixin,
         return Actor.objects.create(person=person, role=role, alias=alias)
 
     def post(self, *args, **kwargs):
-        footprint_id = kwargs.get('footprint_id', None)
-        footprint = get_object_or_404(Footprint, pk=footprint_id)
+        parent_model = self.request.POST.get('parent_model', None)
+        the_model = apps.get_model(app_label='main', model_name=parent_model)
+
+        parent_id = self.request.POST.get('parent_id', None)
+        the_parent = get_object_or_404(the_model, pk=parent_id)
+
+        if not self.has_edit_permission(self.request.user, the_parent):
+            return HttpResponseForbidden()
 
         role = get_object_or_404(Role, pk=self.request.POST.get('role', None))
 
@@ -175,36 +196,33 @@ class FootprintAddActorView(LoggedInMixin, EditableMixin,
         alias = self.request.POST.get('alias', None)
 
         actor = self.create_actor(person_id, person_name, role, alias)
-        footprint.actor.add(actor)
+        the_parent.actor.add(actor)
 
-        return self.render_to_json_response({
-            'success': True,
-            'footprint': {'id': footprint.id},
-            'actor': ActorSerializer(actor).data
-        })
+        return self.render_to_json_response({'success': True})
 
 
-class FootprintAddDateView(LoggedInMixin, EditableMixin,
-                           JSONResponseMixin, View):
+class AddDateView(LoggedInMixin, EditableMixin,
+                  JSONResponseMixin, View):
 
     def post(self, *args, **kwargs):
-        footprint_id = kwargs.get('footprint_id', None)
-        footprint = get_object_or_404(Footprint, pk=footprint_id)
+        parent_model = self.request.POST.get('parent_model', None)
+        the_model = apps.get_model(app_label='main', model_name=parent_model)
 
-        if not self.has_edit_permission(self.request.user, footprint):
+        parent_id = self.request.POST.get('parent_id', None)
+        the_parent = get_object_or_404(the_model, pk=parent_id)
+
+        attr = self.request.POST.get('attr', None)
+
+        if not self.has_edit_permission(self.request.user, the_parent):
             return HttpResponseForbidden()
 
-        date_string = self.request.POST.get('associated_date', None)
+        date_string = self.request.POST.get('date_string', None)
         if date_string is not None:
             edtf = ExtendedDateFormat.objects.create(edtf_format=date_string)
-            footprint.associated_date = edtf
-            footprint.save()
+            setattr(the_parent, attr, edtf)
+            the_parent.save()
 
-            return self.render_to_json_response({
-                'success': True,
-                'footprint_id': footprint.id,
-                'associated_date': edtf.id
-            })
+            return self.render_to_json_response({'success': True})
         else:
             return self.render_to_json_response({
                 'success': False,
@@ -212,14 +230,17 @@ class FootprintAddDateView(LoggedInMixin, EditableMixin,
             })
 
 
-class FootprintAddPlaceView(LoggedInMixin, EditableMixin,
-                            JSONResponseMixin, View):
+class AddPlaceView(LoggedInMixin, EditableMixin,
+                   JSONResponseMixin, View):
 
     def post(self, *args, **kwargs):
-        footprint_id = kwargs.get('footprint_id', None)
-        footprint = get_object_or_404(Footprint, pk=footprint_id)
+        parent_model = self.request.POST.get('parent_model', None)
+        the_model = apps.get_model(app_label='main', model_name=parent_model)
 
-        if not self.has_edit_permission(self.request.user, footprint):
+        parent_id = self.request.POST.get('parent_id', None)
+        the_parent = get_object_or_404(the_model, pk=parent_id)
+
+        if not self.has_edit_permission(self.request.user, the_parent):
             return HttpResponseForbidden()
 
         position = self.request.POST.get('position', '')
@@ -234,35 +255,8 @@ class FootprintAddPlaceView(LoggedInMixin, EditableMixin,
             country=self.request.POST.get('country', ''),
             position=position)
 
-        footprint.place = place
-        footprint.save()
-
-        return self.render_to_json_response({
-            'success': True,
-            'place': {
-                'id': place.id,
-                'description': place.__unicode__(),
-            },
-            'footprint_id': footprint.id
-        })
-
-
-class FootprintRemovePlaceView(LoggedInMixin, EditableMixin,
-                               JSONResponseMixin, View):
-
-    def post(self, *args, **kwargs):
-        footprint_id = kwargs.get('footprint_id', None)
-        footprint = get_object_or_404(Footprint, pk=footprint_id)
-
-        if not self.has_edit_permission(self.request.user, footprint):
-            return HttpResponseForbidden()
-
-        place_id = kwargs.get('place_id', None)
-        place = get_object_or_404(Place, id=place_id)
-
-        if footprint.place == place:
-            footprint.place = None
-            footprint.save()
+        the_parent.place = place
+        the_parent.save()
 
         return self.render_to_json_response({'success': True})
 
@@ -290,51 +284,3 @@ class NameListView(APIView):
             return Response(serializer.data)
         else:
             return Response({})
-
-
-class FootprintViewSet(viewsets.ModelViewSet):
-    queryset = Footprint.objects.all()
-    serializer_class = FootprintSerializer
-    permission_classes = (IsStaffOrReadOnly,)
-
-
-class LanguageViewSet(viewsets.ModelViewSet):
-    queryset = Language.objects.all()
-    serializer_class = LanguageSerializer
-    permission_classes = (IsStaffOrReadOnly,)
-
-
-class RoleViewSet(viewsets.ModelViewSet):
-    queryset = Role.objects.all()
-    serializer_class = RoleSerializer
-    permission_classes = (IsStaffOrReadOnly,)
-
-
-class ExtendedDateFormatViewSet(viewsets.ModelViewSet):
-    queryset = ExtendedDateFormat.objects.all()
-    serializer_class = ExtendedDateFormatSerializer
-    permission_classes = (IsStaffOrReadOnly,)
-
-
-class PersonViewSet(viewsets.ModelViewSet):
-    queryset = Person.objects.all()
-    serializer_class = PersonSerializer
-    permission_classes = (IsStaffOrReadOnly,)
-
-
-class PlaceViewSet(viewsets.ModelViewSet):
-    queryset = Place.objects.all()
-    serializer_class = PlaceSerializer
-    permission_classes = (IsStaffOrReadOnly,)
-
-
-class ActorViewSet(viewsets.ModelViewSet):
-    queryset = Actor.objects.all()
-    serializer_class = ActorSerializer
-    permission_classes = (IsStaffOrReadOnly,)
-
-
-class WrittenWorkViewSet(viewsets.ModelViewSet):
-    queryset = WrittenWork.objects.all()
-    serializer_class = WrittenWorkSerializer
-    permission_classes = (IsStaffOrReadOnly,)
