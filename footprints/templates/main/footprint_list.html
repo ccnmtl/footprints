@@ -32,16 +32,23 @@
         <table class="table table-striped table-footprints">
             <tr>
                 <th class="title">Title</th>
-                <th class="footprint-date">Footprint Date</th>
+                <th class="footprint-date">Footprint</th>
                 <th class="evidence-type">Evidence Type</th>
                 <th class="evidence-location">Evidence Location</th>
                 <th class="owners">Owners</th>
-                <th class="imprint-date">Imprint Date</th>
+                <th class="imprint-date">Imprint</th>
             </tr>
             {% for footprint in object_list %}
                 <tr>
                     <td><a href="/footprint/{{footprint.id}}">{{footprint.display_title}}</a></td>
-                    <td>{{footprint.associated_date}}</td>
+                    <td>
+                        {% if footprint.associated_date %}
+                            <div>{{footprint.associated_date}}</div>
+                        {% endif %}
+                        {% if footprint.place %}
+                            <div>{{footprint.place}}</div>
+                        {% endif %}
+                    </td>
                     <td>{{footprint.medium}}</td>
                     <td>{{footprint.provenance}}</td>
                     <td>
@@ -50,7 +57,22 @@
                             {% if not forloop.last %},{% endif %}
                         {% endfor %}
                     </td>
-                    <td>{{footprint.book_copy.imprint.date_of_publication}}</td>
+                    <td>
+                        {% if footprint.book_copy.imprint.publishers.count > 0 %}
+                            <div>
+                                {% for publisher in footprint.book_copy.imprint.publishers %}
+                                    {{publisher.display_name}}
+                                    {% if not forloop.last %},{% endif %}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        {% if footprint.book_copy.imprint.date_of_publication %}
+                            <div>{{footprint.book_copy.imprint.date_of_publication}}</div>
+                        {% endif %}
+                        {% if footprint.book_copy.imprint.place %}
+                            <div>{{footprint.book_copy.imprint.place}}</div>
+                        {% endif %}
+                    </td>
                 </tr>
             {% endfor %}
         </table>
