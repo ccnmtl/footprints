@@ -1,9 +1,12 @@
+from decimal import Decimal
+
 from django.db.utils import IntegrityError
 from django.test import TestCase
 
 from footprints.main.models import Language, DigitalFormat, \
     ExtendedDateFormat, StandardizedIdentification, \
-    Actor, Imprint, FOOTPRINT_LEVEL, IMPRINT_LEVEL, WRITTENWORK_LEVEL, Role
+    Actor, Imprint, FOOTPRINT_LEVEL, IMPRINT_LEVEL, WRITTENWORK_LEVEL, Role, \
+    Place
 from footprints.main.tests.factories import RoleFactory, \
     ActorFactory, PlaceFactory, CollectionFactory, \
     WrittenWorkFactory, ImprintFactory, BookCopyFactory, FootprintFactory, \
@@ -82,6 +85,8 @@ class BasicModelTest(TestCase):
         person = PersonFactory(name='Cicero')
         self.assertEquals(person.__unicode__(), "Cicero")
 
+        self.assertEquals(person.percent_complete(), 100)
+
     def test_actor(self):
         person = PersonFactory()
         role = RoleFactory()
@@ -99,9 +104,13 @@ class BasicModelTest(TestCase):
             '%s as %s (%s)' % (actor.person.name, actor.alias, role.name))
 
     def test_place(self):
+        place = Place.objects.create(position='50.064650,19.944979')
+        self.assertEquals(place.__unicode__(), '')
+
         place = PlaceFactory()
-        self.assertEquals(place.__unicode__(),
-                          'Smyrna, Greece')
+        self.assertEquals(place.__unicode__(), 'Cracow, Poland')
+        self.assertEquals(place.latitude(), Decimal('50.064650'))
+        self.assertEquals(place.longitude(), Decimal('19.944979'))
 
     def test_collection(self):
         collection = CollectionFactory(name='The Morgan Collection')
@@ -111,6 +120,12 @@ class BasicModelTest(TestCase):
         work = WrittenWorkFactory()
         self.assertEquals(work.__unicode__(), 'The Odyssey')
 
+        self.assertEquals(work.percent_complete(), 100)
+
+        author_role = Role.objects.get_author_role()
+        work.actor.add(ActorFactory(role=author_role))
+        self.assertEquals(work.authors().count(), 1)
+
     def test_imprint(self):
         imprint = Imprint.objects.create(work=WrittenWorkFactory())
         self.assertEquals(imprint.__unicode__(), 'The Odyssey')
@@ -119,11 +134,23 @@ class BasicModelTest(TestCase):
         self.assertEquals(imprint.__unicode__(),
                           'The Odyssey, Edition 1 (1984~)')
 
+        self.assertEquals(imprint.percent_complete(), 100)
+
     def test_book_copy(self):
         copy = BookCopyFactory()
         self.assertTrue(
             copy.__unicode__().endswith('The Odyssey, Edition 1 (1984~)'))
 
+        self.assertEquals(copy.percent_complete(), 100)
+
     def test_footprint(self):
         footprint = FootprintFactory()
         self.assertEquals(footprint.__unicode__(), 'Provenance')
+
+        self.assertEquals(footprint.percent_complete(), 100)
+
+        self.assertEquals(footprint.display_title(), "The Odyssey")
+
+        owner_role = Role.objects.get_owner_role()
+        footprint.actor.add(ActorFactory(role=owner_role))
+        self.assertEquals(footprint.owners().count(), 1)

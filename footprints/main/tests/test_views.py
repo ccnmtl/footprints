@@ -284,7 +284,7 @@ class AddActorViewTest(TestCase):
         self.assertEquals(response.status_code, 404)
 
     def test_post_success(self):
-        self.assertEquals(self.footprint.actor.count(), 0)
+        self.assertEquals(self.footprint.actor.count(), 1)
 
         self.client.login(username=self.staff.username, password="test")
         response = self.client.post(self.add_url,
@@ -299,9 +299,8 @@ class AddActorViewTest(TestCase):
 
         # refresh footprint from database
         footprint = Footprint.objects.get(id=self.footprint.id)
-        self.assertEquals(footprint.actor.count(), 1)
-        self.assertEquals(footprint.actor.first().person.name,
-                          'Albert Einstein')
+        self.assertEquals(footprint.actor.count(), 2)
+        footprint.actor.get(person__name='Albert Einstein')
 
 
 class RemoveRelatedViewTest(TestCase):
@@ -342,7 +341,7 @@ class RemoveRelatedViewTest(TestCase):
         self.assertEquals(response.status_code, 404)
 
     def test_post_remove_actor(self):
-        self.assertEquals(self.footprint.actor.count(), 1)
+        self.assertEquals(self.footprint.actor.count(), 2)
 
         self.client.login(username=self.staff.username, password="test")
         response = self.client.post(self.remove_url,
@@ -352,7 +351,7 @@ class RemoveRelatedViewTest(TestCase):
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
         self.assertTrue(loads(response.content)['success'])
-        self.assertEquals(self.footprint.actor.count(), 0)
+        self.assertEquals(self.footprint.actor.count(), 1)
 
     def test_post_remove_place(self):
         self.client.login(username=self.staff.username, password="test")

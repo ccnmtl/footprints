@@ -32,23 +32,6 @@ HAYSTACK_CONNECTIONS = {
 
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 
-if 'test' in sys.argv or 'jenkins' in sys.argv:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': ':memory:',
-            'HOST': '',
-            'PORT': '',
-            'USER': '',
-            'PASSWORD': '',
-        }
-    }
-    HAYSTACK_CONNECTIONS = {
-        'default': {
-            'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
-        },
-    }
-
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 NOSE_ARGS = [
@@ -218,3 +201,21 @@ REST_FRAMEWORK = {
     ],
     'PAGINATE_BY': 30
 }
+
+if 'test' in sys.argv or 'jenkins' in sys.argv:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': ':memory:',
+            'HOST': '',
+            'PORT': '',
+            'USER': '',
+            'PASSWORD': '',
+        }
+    }
+    HAYSTACK_CONNECTIONS = {
+        'default': {
+            'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
+        },
+    }
+    MEDIA_ROOT = './'
