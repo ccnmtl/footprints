@@ -14,7 +14,7 @@ from footprints.main.views import (
     LoginView, LogoutView, AddActorView, CreateFootprintView,
     FootprintDetailView, PersonDetailView, PlaceDetailView,
     WrittenWorkDetailView, TitleListView, NameListView,
-    AddPlaceView, AddDateView, RemoveRelatedView)
+    AddPlaceView, AddDateView, RemoveRelatedView, FootprintListView)
 from footprints.main.viewsets import (
     BookCopyViewSet, ImprintViewSet, ActorViewSet,
     ExtendedDateFormatViewSet, FootprintViewSet, LanguageViewSet,
@@ -76,6 +76,7 @@ urlpatterns = patterns(
         RemoveRelatedView.as_view(), name='remove-related'),
 
     (r'^footprint/create/$', CreateFootprintView.as_view()),
+
     url(r'^footprint/(?P<pk>\d+)/$',
         FootprintDetailView.as_view(), name='footprint-detail-view'),
     url(r'^person/(?P<pk>\d+)/$',
@@ -84,6 +85,11 @@ urlpatterns = patterns(
         PlaceDetailView.as_view(), name='place-detail-view'),
     url(r'^writtenwork/(?P<pk>[-_\w]+)/$',
         WrittenWorkDetailView.as_view(), name='writtenwork-detail-view'),
+
+
+    url(r'^browse/footprints/$', FootprintListView.as_view(),
+        name='browse-footprint-list'),
+
 
     url(r'^search/',
         login_required(SearchView(template="search/search.html",

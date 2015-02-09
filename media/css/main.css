@@ -17,14 +17,17 @@ body > .container {
   min-height: 100%;
 }
 
+blockquote {
+    border-left: 0;
+}
 
-/* Record Entry */
 .blockquote-list {
     font-size: 15.5px;
     font-weight: 300;
-    line-height: 1.25;
+    line-height: 1.75;
 }
 
+/* Record Entry */
 .btn-image-only {
     border: 0;
     background-color: transparent;
@@ -85,9 +88,6 @@ ul.wizard-tabs.has-error li.active a {
 
 
 /* Object detail pages */
-.object-detail blockquote {
-    border-left: 0;
-}
 
 .object-detail .breadcrumb {
     margin-bottom: 10px;
@@ -230,7 +230,7 @@ ul.record-checklist li.list-group-item small {
 }
 
 .editable-place .map-container {
-    width: 120%;
+    width: 116%;
     height: 300px;
     margin-top: 10px;
 }
@@ -252,7 +252,48 @@ ul.additional-questions .editable-container {
     border-radius: 10px;
 }
 
-/* Search Page */
+/* Browse */
+.object-browse .panel-body {
+    padding: 0;
+}
+
+.object-browse .pagination {
+    margin: -4px 0 0 30px;
+}
+
+.object-browse table {
+    margin-top: 20px;
+}
+
+.object-browse table th.title {
+    width: 16%;
+}
+
+.object-browse table th.footprint-date {
+    width: 16%;
+}
+
+.object-browse table th.evidence-type {
+    width: 16%;
+}
+
+.object-browse table th.evidence-location {
+    width: 16%;
+}
+
+.object-browse table th.owners {
+    width: 16%;
+}
+
+.object-browse table th.imprint-date {
+    width: 16%;
+}
+
+.object-browse .page-count {
+    font-size: 16px;
+}
+
+/* Search Page & Browse Pages */
 
 .object-search .panel-body {
     padding: 0;

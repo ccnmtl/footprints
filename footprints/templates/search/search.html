@@ -67,13 +67,11 @@
                                         <dt>Footprint Place</dt>
                                         <dd>{{result.object.place}}</dd>
                                      {% endif %}
-                                    {% if result.object.has_written_work %}
-                                        {% with authors=result.object.book_copy.imprint.work.authors %}
-                                            {% for actor in authors %}
-                                                <dt>Author</dt><dd>{{actor.display_name}}</dd>
-                                            {% endfor %}
-                                        {% endwith %}
-                                     {% endif %}
+                                    {% with authors=result.object.book_copy.imprint.work.authors %}
+                                        {% for actor in authors %}
+                                            <dt>Author</dt><dd>{{actor.display_name}}</dd>
+                                        {% endfor %}
+                                    {% endwith %}
                                      {% with owners=result.object.owners %}
                                         {% for actor in owners %}
                                             <dt>Owner</dt><dd>{{actor.display_name}}</dd>

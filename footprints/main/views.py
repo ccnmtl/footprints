@@ -8,6 +8,7 @@ from django.http.response import HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
+from django.views.generic.list import ListView
 from djangowind.views import logout as wind_logout_view
 from haystack.query import SearchQuerySet
 from rest_framework.permissions import AllowAny
@@ -25,6 +26,12 @@ from footprints.mixins import (
 
 class IndexView(TemplateView):
     template_name = "main/index.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(IndexView, self).get_context_data(**kwargs)
+
+        context['footprint_count'] = Footprint.objects.count()
+        return context
 
 
 class LoginView(JSONResponseMixin, View):
@@ -74,6 +81,21 @@ class FootprintDetailView(EditableMixin, LoggedInMixin, DetailView):
         context['languages'] = Language.objects.all().order_by('name')
         context['roles'] = Role.objects.all().order_by('name')
         return context
+
+
+class FootprintListView(LoggedInMixin, ListView):
+    model = Footprint
+    default_sort = ['book_copy__imprint__work__title', 'title']
+    paginate_by = 20
+
+    def get_context_data(self, **kwargs):
+        context = super(FootprintListView, self).get_context_data(**kwargs)
+        return context
+
+    def get_queryset(self):
+        qs = super(FootprintListView, self).get_queryset()
+        qs = qs.order_by(*self.default_sort)
+        return qs
 
 
 class PlaceDetailView(EditableMixin, LoggedInMixin, DetailView):
