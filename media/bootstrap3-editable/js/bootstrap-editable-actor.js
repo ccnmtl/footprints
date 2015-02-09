@@ -44,11 +44,11 @@ $(function(){
            this.$actorname =  this.$tpl.find('input[name="actor-name"]');
            jQuery(this.$input).autocomplete({
                change: function(event, ui) {
-                   self.$input.data('instance', '');
+                   self.$input.attr('data-instance', '');
                    return true;
                },
                select: function (event, ui) {
-                   self.$input.data('instance', ui.item.object_id);
+                   self.$input.attr('data-instance', ui.item.object_id);
                    return true;
                },
                source: function(request, response) {
