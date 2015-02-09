@@ -6,7 +6,7 @@
         <dt>Title</dt>
         <dd class="border-bottom"><a href="#" class="<% if (editable) { %>editable<% } else { %>readonly<% } %>"
                 data-attribute-name="title"  data-name="title"
-                data-type="text" data-pk="<%=imprint.work.id%>"
+                data-type="title" data-pk="<%=imprint.work.id%>"
                 data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
                 data-url="/api/writtenwork/<%=imprint.work.id%>/">
                 <%=imprint.work.title%>
@@ -56,7 +56,7 @@
         <dt>Imprint Title</dt>
         <dd class="border-bottom"><a href="#" class="<% if (editable) { %>editable<% } else { %>readonly<% } %>"
              data-attribute-name="title"  data-name="title"
-             data-type="text" data-pk="<%=imprint.id%>"
+             data-type="title" data-pk="<%=imprint.id%>"
              data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
              data-url="/api/imprint/<%=imprint.id%>/">
                 <%=imprint.title%>
