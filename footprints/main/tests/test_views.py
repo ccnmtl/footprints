@@ -211,6 +211,10 @@ class CreateFootprintViewTest(TestCase):
         self.assertEquals(fp.provenance, 'New Provenance')
         self.assertEquals(fp.notes, 'Some notes')
 
+        self.assertIsNotNone(fp.book_copy)
+        self.assertIsNotNone(fp.book_copy.imprint)
+        self.assertIsNotNone(fp.book_copy.imprint.work)
+
 
 class AddActorViewTest(TestCase):
     def setUp(self):
