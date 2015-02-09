@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %}Browse{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+  <h1>Browse Footprints</h1>
+</div>
+
+<div class="object-browse">
+    <div>
+        {% if paginator.num_pages > 1 %}
+            <ul class="pagination pagination-sm pull-right">
+                {% for a_page in paginator.page_range %}
+                    {% ifequal page_obj.number a_page %}
+                        <li class="active"><a class="page-link disabled"
+                    {% else %}
+                        <li><a class="page-link"
+                    {% endifequal %}
+                        href="?page={{ a_page }}">{{a_page}}</a></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <div class="pull-right page-count">
+            {{page_obj.start_index}} - {{page_obj.end_index}} of {{paginator.count}} items
+        </div>
+        <div class="clearfix"></div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-footprints">
+            <tr>
+                <th class="title">Title</th>
+                <th class="footprint-date">Footprint Date</th>
+                <th class="evidence-type">Evidence Type</th>
+                <th class="evidence-location">Evidence Location</th>
+                <th class="owners">Owners</th>
+                <th class="imprint-date">Imprint Date</th>
+            </tr>
+            {% for footprint in object_list %}
+                <tr>
+                    <td><a href="/footprint/{{footprint.id}}">{{footprint.display_title}}</a></td>
+                    <td>{{footprint.associated_date}}</td>
+                    <td>{{footprint.medium}}</td>
+                    <td>{{footprint.provenance}}</td>
+                    <td>
+                        {% for owner in footprint.owners %}
+                            {{owner.display_name}}
+                            {% if not forloop.last %},{% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>{{footprint.book_copy.imprint.date_of_publication}}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+    
+    {% if is_paginated %}
+        <nav>
+            <ul class="pager">
+                {% if page_obj.has_previous %}
+                    <li><a href="?page={{ page_obj.previous_page_number }}">&laquo; Previous</a></li>
+                {% else %}
+                    <li class="disabled"><a href="#">&laquo; Previous</a>
+                {% endif %}
+                {% if page_obj.has_next %}
+                    <li><a href="?page={{ page_obj.next_page_number }}">Next &raquo;</a></li>
+                {% else %}
+                    <li class="disabled"><a href="#">Next &raquo;</a>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+</div>
+
+{% endblock %}
