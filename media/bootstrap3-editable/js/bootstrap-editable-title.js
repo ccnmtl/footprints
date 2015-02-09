@@ -5,7 +5,7 @@ Title editable input.
 @extends abstractinput
 @final
 @example
-<a href="#" data-type="name" data-pk="1">The Cat In The Hat</a>
+<a href="#" data-type="title" data-pk="1">The Cat In The Hat</a>
 <script>
 $(function(){
     $('#title').editable({
@@ -23,7 +23,7 @@ $(function(){
     
     var Title = function (options) {
         var template = jQuery(options.scope).data("template");
-        Title.defaults.tpl = jQuery(template).html(); 
+        Title.defaults.tpl = jQuery(template).html();
         this.init('title', options, Title.defaults);
     };
 
@@ -40,28 +40,21 @@ $(function(){
            var self = this;
 
            this.$input = this.$tpl.find('input[name="title-autocomplete"]');
+
            jQuery(this.$input).autocomplete({
-               change: function(event, ui) {
-                   self.$input.data('instance', '');
-                   return true;
-               },
-               select: function (event, ui) {
-                   self.$input.data('instance', ui.item.object_id);
-                   return true;
-               },
                source: function(request, response) {
                    jQuery.ajax({
                        url: "/api/title/",
                        dataType: "jsonp",
                        data: {
-                           q: request.term
+                           q: request.term,
+                           object_type: jQuery(self.options.scope).data("model-type")
                        },
                        success: function(data) {
                            var titles = [];
                            for (var i=0; i < data.length; i++) {
                                titles.push({
-                                   object_id: data[i].object_id,
-                                   label: data[i].name
+                                   label: data[i].title
                                });
                            }
                            response(titles);
