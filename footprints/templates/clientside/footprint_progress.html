@@ -15,10 +15,10 @@
         </li>
         <li class="list-group-item list-item-complete">
             <span class="glyphicon glyphicon-check" aria-hidden="true"></span>&nbsp;&nbsp;Footprint Evidence<br />
-            <small>type, location</small>
+            <small>title, type, location</small>
         </li>
         <li class="list-group-item">
-            <% if (book.imprint.work && book.imprint.work.title && book.imprint.work.title.length > 0) {%>
+            <% if (book.imprint && book.imprint.work.title && book.imprint.work.title.length > 0) {%>
                 <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
             <% } else { %>
                 <span class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>
@@ -27,7 +27,7 @@
             &nbsp;&nbsp;The Book Title
         </li>
         <li class="list-group-item">
-            <% if (book.imprint.work && book.imprint.work.actor.length > 0) {%>
+            <% if (book.imprint && book.imprint.work && book.imprint.work.actor.length > 0) {%>
                 <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
             <% } else { %>
                 <span class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>
@@ -35,7 +35,7 @@
             &nbsp;&nbsp;The Book Author(s)
         </li>
         <li class="list-group-item">
-            <% if (book.imprint.work && book.imprint.actor.length > 0 && book.imprint.date_of_publication && book.imprint.place) { %>
+            <% if (book.imprint && book.imprint.work && book.imprint.actor.length > 0 && book.imprint.date_of_publication && book.imprint.place) { %>
                 <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
             <% } else { %>
                 <span class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>
