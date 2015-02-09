@@ -3,7 +3,7 @@ from django.test import TestCase
 
 from footprints.main.models import Language, DigitalFormat, \
     ExtendedDateFormat, StandardizedIdentification, \
-    Actor, Imprint
+    Actor, Imprint, FOOTPRINT_LEVEL, IMPRINT_LEVEL, WRITTENWORK_LEVEL, Role
 from footprints.main.tests.factories import RoleFactory, \
     ActorFactory, PlaceFactory, CollectionFactory, \
     WrittenWorkFactory, ImprintFactory, BookCopyFactory, FootprintFactory, \
@@ -25,6 +25,35 @@ class BasicModelTest(TestCase):
             self.fail('expected an already exists error')
         except IntegrityError:
             pass  # expected
+
+    def test_role(self):
+        owner = RoleFactory(name="Owner", level=FOOTPRINT_LEVEL)
+        publisher = RoleFactory(name="Publisher", level=IMPRINT_LEVEL)
+        author = RoleFactory(name="Author", level=WRITTENWORK_LEVEL)
+
+        self.assertEquals(author, Role.objects.get_author_role())
+        self.assertEquals(owner, Role.objects.get_owner_role())
+
+        qs = Role.objects.for_footprint()
+        self.assertEquals(qs.count(), 1)
+        self.assertEquals(qs.first(), owner)
+
+        qs = Role.objects.for_imprint()
+        self.assertEquals(qs.count(), 1)
+        self.assertEquals(qs.first(), publisher)
+
+        qs = Role.objects.for_work()
+        self.assertEquals(qs.count(), 1)
+        self.assertEquals(qs.first(), author)
+
+    def for_footprint(self):
+        return self.filter(level=FOOTPRINT_LEVEL)
+
+    def for_imprint(self):
+        return self.filter(level=IMPRINT_LEVEL)
+
+    def for_work(self):
+        return self.filter(level=WRITTENWORK_LEVEL)
 
     def test_digital_format(self):
         digital_format = DigitalFormat.objects.create(name='png')
