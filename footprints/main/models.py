@@ -11,6 +11,16 @@ IDENTIFIER_TYPES = (
     ('GETT', 'The Getty Thesaurus of Geographic Names')
 )
 
+FOOTPRINT_LEVEL = 'footprint'
+IMPRINT_LEVEL = 'imprint'
+WRITTENWORK_LEVEL = 'writtenwork'
+
+LEVEL_TYPES = (
+    (FOOTPRINT_LEVEL, 'Footprint'),
+    (IMPRINT_LEVEL, 'Imprint'),
+    (WRITTENWORK_LEVEL, 'WrittenWork')
+)
+
 
 class ExtendedDateFormat(models.Model):
     edtf_format = models.CharField(max_length=256)
@@ -32,11 +42,13 @@ class RoleQuerySet(models.query.QuerySet):
         return role
 
     def for_footprint(self):
-        return self.filter(name__in=["Owner", "Bookdealer", "Printer"])
+        return self.filter(level=FOOTPRINT_LEVEL)
 
     def for_imprint(self):
-        return self.filter(name__in=["Publisher", "Editor",
-                                     "Anthologizer", "Printer"])
+        return self.filter(level=IMPRINT_LEVEL)
+
+    def for_work(self):
+        return self.filter(level=WRITTENWORK_LEVEL)
 
 
 class RoleManager(models.Manager):
@@ -53,14 +65,17 @@ class RoleManager(models.Manager):
     def get_owner_role(self):
         return self.get_query_set().get_owner_role()
 
+    def for_footprint(self):
+        return self.get_query_set().for_footprint()
+
+    def for_imprint(self):
+        return self.get_query_set().for_imprint()
+
+    def for_work(self):
+        return self.get_query_set().for_work()
+
 
 class Role(models.Model):
-    LEVEL_TYPES = (
-        ('footprint', 'Footprint'),
-        ('imprint', 'Imprint'),
-        ('writtenwork', 'WrittenWork')
-    )
-
     objects = RoleManager()
 
     name = models.CharField(max_length=256, unique=True)
