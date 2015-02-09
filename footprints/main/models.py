@@ -530,13 +530,9 @@ class Footprint(models.Model):
             completed += 1
         return int(completed/required * 100)
 
-    def has_written_work(self):
-        return (self.book_copy and self.book_copy.imprint and
-                self.book_copy.imprint.work)
-
     def display_title(self):
         # return written work title OR the footprint title ?
-        if (self.has_written_work() and
+        if (self.book_copy.imprint.work.title is not None and
                 len(self.book_copy.imprint.work.title) > 0):
             return self.book_copy.imprint.work.title
         else:
