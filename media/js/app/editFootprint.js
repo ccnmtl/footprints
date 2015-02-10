@@ -246,6 +246,16 @@
                 success: this.refresh
             });
             
+            
+            jQuery(this.el).find('.editable-title').editable({
+                namedParams: true,
+                template: '#editable-title',
+                onblur: 'ignore',
+                validate: this.validate,
+                success: this.refresh
+            });
+
+            
             this.initializeMap();
 
         }

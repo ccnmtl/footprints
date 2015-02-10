@@ -168,7 +168,8 @@ class ListViewTests(TestCase):
         self.assertEquals(response.status_code, 200)
         self.assertEquals(len(response.data), 0)
 
-        response = self.client.get('/api/title/', {'q': 'Alp'},
+        response = self.client.get('/api/title/',
+                                   {'q': 'Alp'},
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
         self.assertEquals(len(response.data), 1)

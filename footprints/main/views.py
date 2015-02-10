@@ -288,8 +288,12 @@ class TitleListView(APIView):
     permission_classes = (AllowAny,)
 
     def get(self, request, format=None):
-        sqs = SearchQuerySet().autocomplete(
-            title=request.GET.get('q', ''))
+        sqs = SearchQuerySet().autocomplete(title=request.GET.get('q', ''))
+
+        object_type = request.GET.get('object_type', None)
+        if object_type:
+            sqs = sqs.filter(object_type=object_type)
+
         serializer = TitleSerializer(sqs, many=True)
         return Response(serializer.data)
 
