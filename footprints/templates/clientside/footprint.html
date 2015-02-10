@@ -126,7 +126,7 @@
                 data-url="/api/footprint/<%=id%>/"><%=provenance%></a>
         </dd>
 
-        <% if (call_number.length > 0) { %>
+        <% if (call_number && call_number.length > 0) { %>
             <dt>Evidence Call Number</dt>
             <dd class="border-bottom">
                 <a href="#" class="<% if (editable) { %>editable<% } else { %>readonly<% } %>"
@@ -198,7 +198,7 @@
                                 data-url="/api/footprint/<%=id%>/">details about the evidence type, e.g. a catalog title?</a>
                         </li>
                     <% } %>
-                    <% if (call_number.length < 1) { %> 
+                    <% if (!call_number || call_number.length < 1) { %> 
                         <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
                             <a href="#" class="<% if (editable) { %>editable<% } %> do-you-know persistant" data-name="call_number"
                                 data-type="text" data-pk="<%=id%>"

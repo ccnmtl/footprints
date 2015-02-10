@@ -168,7 +168,8 @@ class ListViewTests(TestCase):
         self.assertEquals(response.status_code, 200)
         self.assertEquals(len(response.data), 0)
 
-        response = self.client.get('/api/title/', {'q': 'Alp'},
+        response = self.client.get('/api/title/',
+                                   {'q': 'Alp'},
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
         self.assertEquals(len(response.data), 1)
@@ -210,6 +211,10 @@ class CreateFootprintViewTest(TestCase):
         self.assertEquals(fp.medium, 'New Medium')
         self.assertEquals(fp.provenance, 'New Provenance')
         self.assertEquals(fp.notes, 'Some notes')
+
+        self.assertIsNotNone(fp.book_copy)
+        self.assertIsNotNone(fp.book_copy.imprint)
+        self.assertIsNotNone(fp.book_copy.imprint.work)
 
 
 class AddActorViewTest(TestCase):

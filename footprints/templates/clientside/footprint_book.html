@@ -2,11 +2,12 @@
 <div class="breadcrumb">THE BOOK</div>
 <dl class="dl-horizontal">
     <dt>Book Copy Identifier</dt><dd class="border-bottom"><%=id%>-<%=imprint.id%></dd>
-    <% if (imprint.work.title.length > 0) { %>
+    <% if (imprint.work.title && imprint.work.title.length > 0) { %>
         <dt>Title</dt>
-        <dd class="border-bottom"><a href="#" class="<% if (editable) { %>editable<% } else { %>readonly<% } %>"
+        <dd class="border-bottom"><a href="#" class="<% if (editable) { %>editable-title<% } else { %>readonly<% } %>"
                 data-attribute-name="title"  data-name="title"
-                data-type="text" data-pk="<%=imprint.work.id%>"
+                data-model-type="WrittenWork"
+                data-type="title" data-pk="<%=imprint.work.id%>"
                 data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
                 data-url="/api/writtenwork/<%=imprint.work.id%>/">
                 <%=imprint.work.title%>
@@ -39,7 +40,7 @@
             </div>
         </dd>
     <% } %>
-    <% if (imprint.work.notes.length > 0) { %>
+    <% if (imprint.work.notes && imprint.work.notes.length > 0) { %>
         <dt>Notes</dt>
         <dd class="border-bottom">
             <a href="#" class="<% if (editable) { %>editable<% } else { %>readonly<% } %>"
@@ -54,9 +55,10 @@
 <dl class="dl-horizontal">
     <% if (imprint.title && imprint.title.length > 0) { %>
         <dt>Imprint Title</dt>
-        <dd class="border-bottom"><a href="#" class="<% if (editable) { %>editable<% } else { %>readonly<% } %>"
+        <dd class="border-bottom"><a href="#" class="<% if (editable) { %>editable-title<% } else { %>readonly<% } %>"
              data-attribute-name="title"  data-name="title"
-             data-type="text" data-pk="<%=imprint.id%>"
+             data-model-type="Imprint"
+             data-type="title" data-pk="<%=imprint.id%>"
              data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
              data-url="/api/imprint/<%=imprint.id%>/">
                 <%=imprint.title%>
@@ -154,11 +156,13 @@
         <dt>Do you know...</dt>
         <dd>  
             <ul class="additional-questions">
-                <% if (imprint.work.title.length < 1) { %>
+                <% if (!imprint.work.title || imprint.work.title.length < 1) { %>
                     <li>
                         <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
-                        <a href="#" class="<% if (editable) { %>editable<% } %> do-you-know persistant"
-                            data-name="title" data-type="text" data-pk="<%=imprint.work.id%>" data-value=""
+                        <a href="#" class="<% if (editable) { %>editable-title<% } %> do-you-know persistant"
+                            data-template="#xeditable-title-form"
+                            data-model-type="WrittenWork"
+                            data-name="title" data-type="title" data-pk="<%=imprint.work.id%>" data-value=""
                             data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
                             data-url="/api/writtenwork/<%=imprint.work.id%>/">the title of the written work?</a>
                     </li>
@@ -168,10 +172,10 @@
                         data-template="#xeditable-author-form"
                         data-type="actor" data-pk="<%=imprint.work.id%>" data-value=""
                         data-params="{csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=imprint.work.id%>,parent_model:'writtenwork'}" 
-                        data-url="/actor/add/">the author(s) of the written work?</a>
+                        data-url="/actor/add/">the author of the written work?</a>
                 </li>
                 
-                <% if (imprint.work.notes.length < 1) { %>
+                <% if (imprint.work.notes && imprint.work.notes.length < 1) { %>
                     <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
                         <a href="#" class="editable do-you-know persistant" data-name="notes"
                             data-type="textarea" data-pk="<%=imprint.work.id%>" data-value=""
@@ -183,8 +187,10 @@
                 <% if (!imprint.title || imprint.title.length < 1) { %>
                     <li>
                         <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
-                        <a href="#" class="<% if (editable) { %>editable<% } %> do-you-know persistant"
-                            data-name="title" data-type="text" data-pk="<%=imprint.id%>" data-value=""
+                        <a href="#" class="<% if (editable) { %>editable-title<% } %> do-you-know persistant"
+                            data-template="#xeditable-title-form"
+                            data-model-type="Imprint"
+                            data-name="title" data-type="title" data-pk="<%=imprint.id%>" data-value=""
                             data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
                             data-url="/api/imprint/<%=imprint.id%>/">the title of the imprint?</a>
                     </li>
@@ -196,7 +202,7 @@
                             data-name="language"
                             data-type="select2" data-pk="<%=imprint.id%>" data-value=""
                             data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
-                        data-url="/api/imprint/<%=imprint.id%>/">the language(s) of the imprint?</a>
+                        data-url="/api/imprint/<%=imprint.id%>/">the language of the imprint?</a>
                     </li>
                 <% } %>
                 <% if (!imprint.date_of_publication) { %> 
