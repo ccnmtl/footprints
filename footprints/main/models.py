@@ -41,6 +41,10 @@ class RoleQuerySet(models.query.QuerySet):
         role, created = self.get_or_create(name='Owner')
         return role
 
+    def get_publisher_role(self):
+        role, created = self.get_or_create(name='Publisher')
+        return role
+
     def for_footprint(self):
         return self.filter(level=FOOTPRINT_LEVEL)
 
@@ -64,6 +68,9 @@ class RoleManager(models.Manager):
 
     def get_owner_role(self):
         return self.get_query_set().get_owner_role()
+
+    def get_publisher_role(self):
+        return self.get_query_set().get_publisher_role()
 
     def for_footprint(self):
         return self.get_query_set().for_footprint()
@@ -389,6 +396,10 @@ class Imprint(models.Model):
         if self.notes is not None:
             completed += 1
         return int(completed/required * 100)
+
+    def publishers(self):
+        publisher = Role.objects.get_publisher_role()
+        return self.actor.filter(role=publisher)
 
 
 class BookCopy(models.Model):

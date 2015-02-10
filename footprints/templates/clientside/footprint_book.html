@@ -4,9 +4,10 @@
     <dt>Book Copy Identifier</dt><dd class="border-bottom"><%=id%>-<%=imprint.id%></dd>
     <% if (imprint.work.title && imprint.work.title.length > 0) { %>
         <dt>Title</dt>
-        <dd class="border-bottom"><a href="#" class="<% if (editable) { %>editable<% } else { %>readonly<% } %>"
+        <dd class="border-bottom"><a href="#" class="<% if (editable) { %>editable-title<% } else { %>readonly<% } %>"
                 data-attribute-name="title"  data-name="title"
-                data-type="text" data-pk="<%=imprint.work.id%>"
+                data-model-type="WrittenWork"
+                data-type="title" data-pk="<%=imprint.work.id%>"
                 data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
                 data-url="/api/writtenwork/<%=imprint.work.id%>/">
                 <%=imprint.work.title%>
@@ -54,9 +55,10 @@
 <dl class="dl-horizontal">
     <% if (imprint.title && imprint.title.length > 0) { %>
         <dt>Imprint Title</dt>
-        <dd class="border-bottom"><a href="#" class="<% if (editable) { %>editable<% } else { %>readonly<% } %>"
+        <dd class="border-bottom"><a href="#" class="<% if (editable) { %>editable-title<% } else { %>readonly<% } %>"
              data-attribute-name="title"  data-name="title"
-             data-type="text" data-pk="<%=imprint.id%>"
+             data-model-type="Imprint"
+             data-type="title" data-pk="<%=imprint.id%>"
              data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
              data-url="/api/imprint/<%=imprint.id%>/">
                 <%=imprint.title%>
@@ -157,8 +159,10 @@
                 <% if (!imprint.work.title || imprint.work.title.length < 1) { %>
                     <li>
                         <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
-                        <a href="#" class="<% if (editable) { %>editable<% } %> do-you-know persistant"
-                            data-name="title" data-type="text" data-pk="<%=imprint.work.id%>" data-value=""
+                        <a href="#" class="<% if (editable) { %>editable-title<% } %> do-you-know persistant"
+                            data-template="#xeditable-title-form"
+                            data-model-type="WrittenWork"
+                            data-name="title" data-type="title" data-pk="<%=imprint.work.id%>" data-value=""
                             data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
                             data-url="/api/writtenwork/<%=imprint.work.id%>/">the title of the written work?</a>
                     </li>
@@ -183,8 +187,10 @@
                 <% if (!imprint.title || imprint.title.length < 1) { %>
                     <li>
                         <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
-                        <a href="#" class="<% if (editable) { %>editable<% } %> do-you-know persistant"
-                            data-name="title" data-type="text" data-pk="<%=imprint.id%>" data-value=""
+                        <a href="#" class="<% if (editable) { %>editable-title<% } %> do-you-know persistant"
+                            data-template="#xeditable-title-form"
+                            data-model-type="Imprint"
+                            data-name="title" data-type="title" data-pk="<%=imprint.id%>" data-value=""
                             data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
                             data-url="/api/imprint/<%=imprint.id%>/">the title of the imprint?</a>
                     </li>

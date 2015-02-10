@@ -36,6 +36,7 @@ class BasicModelTest(TestCase):
 
         self.assertEquals(author, Role.objects.get_author_role())
         self.assertEquals(owner, Role.objects.get_owner_role())
+        self.assertEquals(publisher, Role.objects.get_publisher_role())
 
         qs = Role.objects.for_footprint()
         self.assertEquals(qs.count(), 1)
