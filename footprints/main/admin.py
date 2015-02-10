@@ -1,14 +1,13 @@
 from django.contrib import admin
 
 from footprints.main.models import Footprint, DigitalFormat, Role, \
-    Name, ExtendedDateFormat, Actor, Language, DigitalObject, \
+    ExtendedDateFormat, Actor, Language, DigitalObject, \
     StandardizedIdentification, Person, Place, Collection, WrittenWork, \
     Imprint, BookCopy
 
 
 admin.site.register(ExtendedDateFormat)
 admin.site.register(Role)
-admin.site.register(Name)
 admin.site.register(Language)
 admin.site.register(DigitalFormat)
 admin.site.register(DigitalObject)

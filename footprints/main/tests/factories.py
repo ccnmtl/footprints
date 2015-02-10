@@ -1,9 +1,15 @@
+import os
+
 from django.contrib.auth.models import User
 import factory
 
-from footprints.main.models import Language, ExtendedDateFormat, Role, \
-    DigitalFormat, StandardizedIdentification, Person, \
-    Actor, Place, Collection, WrittenWork, Imprint, BookCopy, Footprint
+from footprints.main.models import (
+    Language, ExtendedDateFormat, Role, DigitalFormat,
+    StandardizedIdentification, Person, Actor, Place, Collection, WrittenWork,
+    Imprint, BookCopy, Footprint, DigitalObject)
+
+
+TEST_MEDIA_PATH = os.path.join(os.path.dirname(__file__), 'test.txt')
 
 
 class UserFactory(factory.DjangoModelFactory):
@@ -30,7 +36,16 @@ class LanguageFactory(factory.DjangoModelFactory):
 
 class DigitalFormatFactory(factory.DjangoModelFactory):
     FACTORY_FOR = DigitalFormat
-    name = 'txt'
+    name = factory.Sequence(lambda n: "format%03d" % n)
+
+
+class DigitalObjectFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = DigitalObject
+    name = factory.Sequence(lambda n: "image%03d" % n)
+    digital_format = factory.SubFactory(DigitalFormatFactory)
+
+    file = factory.django.FileField(data=b"uhuh",
+                                    filename=TEST_MEDIA_PATH)
 
 
 class StandardizedIdentificationFactory(factory.DjangoModelFactory):
@@ -49,6 +64,12 @@ class PersonFactory(factory.DjangoModelFactory):
     death_date = factory.SubFactory(ExtendedDateFormatFactory)
     standardized_identifier = factory.SubFactory(
         StandardizedIdentificationFactory)
+    notes = "notes"
+
+    @factory.post_generation
+    def digital_object(self, create, extracted, **kwargs):
+        if create:
+            self.digital_object.add(DigitalObjectFactory())
 
 
 class ActorFactory(factory.DjangoModelFactory):
@@ -62,8 +83,9 @@ class ActorFactory(factory.DjangoModelFactory):
 class PlaceFactory(factory.DjangoModelFactory):
     FACTORY_FOR = Place
 
-    country = 'Greece'
-    city = 'Smyrna'
+    country = 'Poland'
+    city = 'Cracow'
+    position = '50.064650,19.944979'
 
 
 class CollectionFactory(factory.DjangoModelFactory):
@@ -82,6 +104,7 @@ class WrittenWorkFactory(factory.DjangoModelFactory):
     FACTORY_FOR = WrittenWork
 
     title = 'The Odyssey'
+    notes = 'epic'
 
     @factory.post_generation
     def actors(self, create, extracted, **kwargs):
@@ -97,6 +120,7 @@ class ImprintFactory(factory.DjangoModelFactory):
     title = 'The Odyssey, Edition 1'
     date_of_publication = factory.SubFactory(ExtendedDateFormatFactory)
     place = factory.SubFactory(PlaceFactory)
+    notes = "lorem ipsum"
 
     @factory.post_generation
     def actors(self, create, extracted, **kwargs):
@@ -115,11 +139,22 @@ class ImprintFactory(factory.DjangoModelFactory):
         if create:
             self.language.add(LanguageFactory())
 
+    @factory.post_generation
+    def digital_object(self, create, extracted, **kwargs):
+        if create:
+            self.digital_object.add(DigitalObjectFactory())
+
 
 class BookCopyFactory(factory.DjangoModelFactory):
     FACTORY_FOR = BookCopy
 
     imprint = factory.SubFactory(ImprintFactory)
+    notes = "lorem ipsum"
+
+    @factory.post_generation
+    def digital_object(self, create, extracted, **kwargs):
+        if create:
+            self.digital_object.add(DigitalObjectFactory())
 
 
 class FootprintFactory(factory.DjangoModelFactory):
@@ -137,7 +172,20 @@ class FootprintFactory(factory.DjangoModelFactory):
     call_number = 'call number'
     collection = factory.SubFactory(CollectionFactory)
 
+    notes = "lorem ipsum"
+
+    @factory.post_generation
+    def actors(self, create, extracted, **kwargs):
+        if create:
+            role = RoleFactory()
+            self.actor.add(ActorFactory.create(role=role))
+
     @factory.post_generation
     def language(self, create, extracted, **kwargs):
         if create:
             self.language.add(LanguageFactory())
+
+    @factory.post_generation
+    def digital_object(self, create, extracted, **kwargs):
+        if create:
+            self.digital_object.add(DigitalObjectFactory())

@@ -95,29 +95,6 @@ class Role(models.Model):
     def __unicode__(self):
         return self.name
 
-    def is_author(self):
-        return Role.objects.get_author_role() == self
-
-
-class Name(models.Model):
-    name = models.TextField()
-    sort_by = models.TextField(null=True, blank=True)
-
-    created_by = CreatingUserField(related_name="name_created_by")
-    last_modified_by = LastUserField(related_name="name_last_modified_by")
-
-    class Meta:
-        ordering = ['sort_by', 'name']
-        verbose_name = 'Name'
-
-    def __unicode__(self):
-        return self.name
-
-    def save(self, *args, **kwargs):
-        if self.sort_by is None or len(self.sort_by) < 1:
-            self.sort_by = self.name
-        super(Name, self).save(*args, **kwargs)
-
 
 class Language(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -389,7 +366,7 @@ class Imprint(models.Model):
         label = 'Imprint'
         if self.title:
             label = self.title
-        elif self.work:
+        elif self.work.title:
             label = self.work.title
 
         if self.date_of_publication:

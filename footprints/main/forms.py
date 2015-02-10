@@ -7,7 +7,7 @@ from haystack.forms import ModelSearchForm
 from haystack.utils import get_model_ct
 
 from footprints.main.models import Footprint, Role, DigitalObject, \
-    ExtendedDateFormat, Name, Language, DigitalFormat, \
+    ExtendedDateFormat, Language, DigitalFormat, \
     StandardizedIdentification, Person, Actor, Place, Collection, \
     WrittenWork, Imprint, BookCopy
 
@@ -20,11 +20,6 @@ class RoleForm(ModelForm):
 class ExtendedDateFormatForm(ModelForm):
     class Meta:
         model = ExtendedDateFormat
-
-
-class NameForm(ModelForm):
-    class Meta:
-        model = Name
 
 
 class LanguageForm(ModelForm):
