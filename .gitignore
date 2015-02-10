@@ -17,3 +17,5 @@ ghostdriver.log
 media/CACHE
 reports
 node_modules
+digitalobjects/
+uploads/

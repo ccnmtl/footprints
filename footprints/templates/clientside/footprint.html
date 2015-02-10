@@ -106,7 +106,7 @@
             </a>
         </dd>
         
-        <% if (medium_description.length > 0) { %>
+        <% if (medium_description && medium_description.length > 0) { %>
             <dt>Evidence Type Description</dt>
             <dd class="border-bottom">
                 <a href="#" class="<% if (editable) { %>editable<% } else { %>readonly<% } %>"
@@ -189,7 +189,7 @@
                                 data-params="{csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=id%>,parent_model:'footprint'}" 
                                 data-url="/actor/add/">people related to this footprint, e.g. sellers, owners, curators?</a>
                         </li>
-                    <% if (medium_description.length < 1) { %> 
+                    <% if (!medium_description || medium_description.length < 1) { %> 
                         <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
                             <a href="#" class="<% if (editable) { %>editable<% } %> do-you-know persistant"
                                 data-name="medium_description" data-value=""                                         
