@@ -256,7 +256,6 @@ Place editable input.
     });
 
     Place.defaults = $.extend({}, $.fn.editabletypes.abstractinput.defaults, {
-        tpl: jQuery('#xeditable-place-form').html(),
         inputclass: ''
     });
 

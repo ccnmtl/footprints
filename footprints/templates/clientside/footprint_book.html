@@ -6,7 +6,7 @@
         <dt>Title</dt>
         <dd class="border-bottom">
             <a href="#" class="<% if (editable) { %>editable-title<% } else { %>readonly<% } %>"
-                data-template="#xeditable-title-form"  data-value="<%=imprint.work.title%>"
+                data-value="<%=imprint.work.title%>"
                 data-name="title" data-model-type="WrittenWork"
                 data-type="title" data-pk="<%=imprint.work.id%>"
                 data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
@@ -58,7 +58,7 @@
         <dt>Imprint Title</dt>
         <dd class="border-bottom">
             <a href="#" class="<% if (editable) { %>editable-title<% } else { %>readonly<% } %>"
-             data-template="#xeditable-title-form" data-value="<%=imprint.title%>"
+             data-value="<%=imprint.title%>"
              data-name="title" data-model-type="Imprint"
              data-type="title" data-pk="<%=imprint.id%>"
              data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
@@ -162,7 +162,6 @@
                     <li>
                         <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
                         <a href="#" class="<% if (editable) { %>editable-title<% } %> do-you-know persistant"
-                            data-template="#xeditable-title-form"
                             data-model-type="WrittenWork"
                             data-name="title" data-type="title" data-pk="<%=imprint.work.id%>" data-value=""
                             data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
@@ -171,7 +170,6 @@
                 <% } %>
                 <li class="fixed"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
                     <a href="#" class="<% if (editable) { %>editable-author<% } %> do-you-know persistant" data-name="actor"
-                        data-template="#xeditable-author-form"
                         data-type="actor" data-pk="<%=imprint.work.id%>" data-value=""
                         data-params="{csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=imprint.work.id%>,parent_model:'writtenwork'}" 
                         data-url="/actor/add/">the author of the written work?</a>
@@ -190,7 +188,6 @@
                     <li>
                         <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
                         <a href="#" class="<% if (editable) { %>editable-title<% } %> do-you-know persistant"
-                            data-template="#xeditable-title-form"
                             data-model-type="Imprint"
                             data-name="title" data-type="title" data-pk="<%=imprint.id%>" data-value=""
                             data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
@@ -229,7 +226,6 @@
                 
                 <li class="fixed"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
                     <a href="#" class="<% if (editable) { %>editable-publisher<% } %> do-you-know persistant" data-name="actor"
-                        data-template="#xeditable-publisher-form"
                         data-type="actor" data-pk="<%=imprint.id%>" data-value=""
                         data-params="{csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=imprint.id%>,parent_model:'imprint'}" 
                         data-url="/actor/add/">people associated with the imprint, e.g. printer, publisher, editor?</a>
