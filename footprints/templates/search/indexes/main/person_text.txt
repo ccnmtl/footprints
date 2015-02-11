@@ -1,2 +1,2 @@
-{{object.name.name}}
+{{object.name}}
 {{object.notes}}
