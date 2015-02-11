@@ -59,7 +59,7 @@ class PersonIndex(indexes.SearchIndex, indexes.Indexable):
     object_type = CharField()
     text = indexes.NgramField(document=True, use_template=True)
     name = indexes.NgramField(model_attr='name')
-    sort_by = CharField(model_attr='name')
+    sort_by = CharField()
 
     def get_model(self):
         return Person
@@ -85,4 +85,3 @@ class PlaceIndex(indexes.SearchIndex, indexes.Indexable):
 
     def prepare_sort_by(self, obj):
         return format_sort_by(obj.__unicode__(), remove_articles=True)
-
