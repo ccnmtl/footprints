@@ -34,7 +34,7 @@ class WrittenWorkIndex(indexes.SearchIndex, indexes.Indexable):
         return type(obj).__name__
 
     def prepare_sort_by(self, obj):
-        return format_sort_by(obj.title, remove_articles=True)
+        return format_sort_by(obj.__unicode__(), remove_articles=True)
 
 
 class FootprintIndex(indexes.SearchIndex, indexes.Indexable):
