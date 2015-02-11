@@ -4,7 +4,8 @@ from haystack import indexes
 from haystack.fields import CharField
 from unidecode import unidecode
 
-from footprints.main.models import WrittenWork, Footprint, Person, Place
+from footprints.main.models import WrittenWork, Footprint, Person, Place, \
+    Imprint
 
 
 def format_sort_by(sort_term, remove_articles=False):
@@ -35,6 +36,19 @@ class WrittenWorkIndex(indexes.SearchIndex, indexes.Indexable):
 
     def prepare_sort_by(self, obj):
         return format_sort_by(obj.__unicode__(), remove_articles=True)
+
+
+class ImprintIndex(indexes.SearchIndex, indexes.Indexable):
+    object_id = CharField(model_attr='id')
+    object_type = CharField()
+    text = indexes.NgramField(document=True, use_template=True)
+    title = indexes.NgramField(model_attr='title', null=True)
+
+    def get_model(self):
+        return Imprint
+
+    def prepare_object_type(self, obj):
+        return type(obj).__name__
 
 
 class FootprintIndex(indexes.SearchIndex, indexes.Indexable):
