@@ -42,11 +42,6 @@ class HyperlinkedModelSerializerEx(HyperlinkedModelSerializer):
         return dictionary.get(self.field_name, empty)
 
 
-class TitleSerializer(Serializer):
-    object_type = CharField()
-    title = CharField(max_length=None, min_length=1)
-
-
 class NameSerializer(Serializer):
     object_id = CharField()
     name = CharField(max_length=None, min_length=1)

@@ -19,7 +19,7 @@ from rest_framework.views import APIView
 from footprints.main.models import (
     Footprint, Actor, Person, Role, WrittenWork, Language, ExtendedDateFormat,
     Place, Imprint, BookCopy)
-from footprints.main.serializers import TitleSerializer, NameSerializer
+from footprints.main.serializers import NameSerializer
 from footprints.mixins import (
     JSONResponseMixin, LoggedInMixin, EditableMixin)
 
@@ -283,22 +283,22 @@ class AddPlaceView(LoggedInMixin, EditableMixin,
         return self.render_to_json_response({'success': True})
 
 
-class TitleListView(APIView):
-    renderer_classes = (JSONPRenderer,)
-    permission_classes = (AllowAny,)
+class TitleListView(LoggedInMixin, JSONResponseMixin, View):
 
-    def get(self, request, format=None):
+    def get(self, request, *args, **kwargs):
         sqs = SearchQuerySet().autocomplete(title=request.GET.get('q', ''))
 
         object_type = request.GET.get('object_type', None)
         if object_type:
             sqs = sqs.filter(object_type=object_type)
 
-        serializer = TitleSerializer(sqs, many=True)
-        return Response(serializer.data)
+        titles = list(set(sqs.values_list('title', flat=True)))
+        titles.sort()
+
+        return self.render_to_json_response(titles)
 
 
-class NameListView(APIView):
+class NameListView(LoggedInMixin, APIView):
     renderer_classes = (JSONPRenderer,)
     permission_classes = (AllowAny,)
 

@@ -315,7 +315,7 @@ class WrittenWork(models.Model):
         verbose_name = "Written Work"
 
     def __unicode__(self):
-        return self.title
+        return self.title if self.title else ''
 
     def percent_complete(self):
         required = 3.0
