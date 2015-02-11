@@ -142,6 +142,8 @@ class FootprintSearchForm(ModelSearchForm):
         else:
             sqs = self.searchqueryset.auto_query(self.cleaned_data['q'])
 
+        sqs = sqs.exclude(django_ct__in=["main.imprint"])
+
         if self.load_all:
             sqs = sqs.load_all()
 
