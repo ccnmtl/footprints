@@ -68,8 +68,7 @@
         <dt title="the written work's title exactly as it appears in the of evidence.">Footprint Title Display<br /></dt>
         <dd class="border-bottom">
             <a href="#" class="<% if (editable) { %>editable<% } else { %>readonly<% } %>"
-                data-name="title"
-                data-type="text" data-pk="<%=id%>"
+                data-name="title" data-type="text" data-pk="<%=id%>"
                 data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
                 data-url="/api/footprint/<%=id%>/"><%=title%></a>
         </dd>

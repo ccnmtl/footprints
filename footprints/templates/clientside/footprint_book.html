@@ -4,9 +4,10 @@
     <dt>Book Copy Identifier</dt><dd class="border-bottom"><%=id%>-<%=imprint.id%></dd>
     <% if (imprint.work.title && imprint.work.title.length > 0) { %>
         <dt>Title</dt>
-        <dd class="border-bottom"><a href="#" class="<% if (editable) { %>editable-title<% } else { %>readonly<% } %>"
-                data-attribute-name="title"  data-name="title"
-                data-model-type="WrittenWork"
+        <dd class="border-bottom">
+            <a href="#" class="<% if (editable) { %>editable-title<% } else { %>readonly<% } %>"
+                data-template="#xeditable-title-form"  data-value="<%=imprint.work.title%>"
+                data-name="title" data-model-type="WrittenWork"
                 data-type="title" data-pk="<%=imprint.work.id%>"
                 data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
                 data-url="/api/writtenwork/<%=imprint.work.id%>/">
@@ -44,7 +45,7 @@
         <dt>Notes</dt>
         <dd class="border-bottom">
             <a href="#" class="<% if (editable) { %>editable<% } else { %>readonly<% } %>"
-                data-attribute-name="notes" data-name="notes"
+                data-name="notes"
                 data-type="textarea" data-pk="<%=imprint.work.id%>"
                 data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
                 data-url="/api/writtenwork/<%=imprint.work.id%>/"><%=imprint.work.notes%></a>
@@ -55,9 +56,10 @@
 <dl class="dl-horizontal">
     <% if (imprint.title && imprint.title.length > 0) { %>
         <dt>Imprint Title</dt>
-        <dd class="border-bottom"><a href="#" class="<% if (editable) { %>editable-title<% } else { %>readonly<% } %>"
-             data-attribute-name="title"  data-name="title"
-             data-model-type="Imprint"
+        <dd class="border-bottom">
+            <a href="#" class="<% if (editable) { %>editable-title<% } else { %>readonly<% } %>"
+             data-template="#xeditable-title-form" data-value="<%=imprint.title%>"
+             data-name="title" data-model-type="Imprint"
              data-type="title" data-pk="<%=imprint.id%>"
              data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
              data-url="/api/imprint/<%=imprint.id%>/">
@@ -142,7 +144,7 @@
         <dt>Imprint Notes</dt>
         <dd class="border-bottom">
             <a href="#" class="<% if (editable) { %>editable<% } else { %>readonly<% } %>"
-                data-attribute-name="notes" data-name="notes"
+                data-name="notes"
                 data-type="textarea" data-pk="<%=imprint.id%>"
                 data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
                 data-url="/api/imprint/<%=imprint.id%>/"><%=imprint.notes%></a>

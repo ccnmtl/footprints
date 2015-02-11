@@ -29,7 +29,7 @@ $(function(){
 
     //inherit from Abstract input
     $.fn.editableutils.inherit(Title, $.fn.editabletypes.abstractinput);
-
+    
     $.extend(Title.prototype, {
         /**
         Renders input from tpl
@@ -40,12 +40,14 @@ $(function(){
            var self = this;
 
            this.$input = this.$tpl.find('input[name="title-autocomplete"]');
+           var value = jQuery(this.options.scope).data('value');
+           this.value2input(value);
 
            jQuery(this.$input).autocomplete({
                source: function(request, response) {
                    jQuery.ajax({
                        url: "/api/title/",
-                       dataType: "jsonp",
+                       dataType: "json",
                        data: {
                            q: request.term,
                            object_type: jQuery(self.options.scope).data("model-type")
@@ -54,10 +56,10 @@ $(function(){
                            var titles = [];
                            for (var i=0; i < data.length; i++) {
                                titles.push({
-                                   label: data[i].title
+                                   label: data[i]
                                });
                            }
-                           response(titles);
+                           response(data);
                        }
                    });
                },
@@ -124,6 +126,7 @@ $(function(){
         @param {mixed} value
        **/         
        value2input: function(value) {
+           this.$input.val(value);
        },
 
        

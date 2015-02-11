@@ -155,11 +155,11 @@
 
     <field name="object_type" type="text_en" indexed="true" stored="true" multiValued="false" />
 
-    <field name="role" type="text_en" indexed="true" stored="true" multiValued="false" />
+    <field name="title" type="ngram" indexed="true" stored="true" multiValued="false" />
 
     <field name="object_id" type="text_en" indexed="true" stored="true" multiValued="false" />
 
-    <field name="title" type="ngram" indexed="true" stored="true" multiValued="false" />
+    <field name="sort_by" type="string" indexed="true" stored="true" multiValued="false" />
 
     <field name="name" type="ngram" indexed="true" stored="true" multiValued="false" />
 

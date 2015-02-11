@@ -158,7 +158,22 @@ class DetailViewTest(TestCase):
 
 
 class ListViewTests(TestCase):
+
+    def setUp(self):
+        self.user = UserFactory()
+
+    def test_anonymous(self):
+        response = self.client.get('/api/title/', {'q': 'Foo'},
+                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 302)
+
+        response = self.client.get('/api/name/', {'q': 'Foo'},
+                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 302)
+
     def test_title_listview(self):
+        self.client.login(username=self.user.username, password="test")
+
         WrittenWorkFactory(title='Alpha')
         ImprintFactory(title='Beta')
         FootprintFactory(title='Gamma')
@@ -166,16 +181,19 @@ class ListViewTests(TestCase):
         response = self.client.get('/api/title/', {'q': 'Foo'},
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        self.assertEquals(len(response.data), 0)
+        the_json = loads(response.content)
+        self.assertEquals(len(the_json), 0)
 
-        response = self.client.get('/api/title/',
-                                   {'q': 'Alp'},
+        response = self.client.get('/api/title/', {'q': 'Alp'},
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        self.assertEquals(len(response.data), 1)
-        self.assertEquals(response.data[0]['title'], 'Alpha')
+        the_json = loads(response.content)
+        self.assertEquals(len(the_json), 1)
+        self.assertEquals(the_json[0], 'Alpha')
 
     def test_name_listview(self):
+        self.client.login(username=self.user.username, password="test")
+
         PersonFactory(name='Alpha')
 
         response = self.client.get('/api/name/', {'q': 'Foo'},

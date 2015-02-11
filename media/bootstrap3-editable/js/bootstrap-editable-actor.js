@@ -43,12 +43,9 @@ $(function(){
            this.$roleselect = this.$tpl.find('select[name="role"]');
            this.$actorname =  this.$tpl.find('input[name="actor-name"]');
            jQuery(this.$input).autocomplete({
-               change: function(event, ui) {
-                   self.$input.data('instance', '');
-                   return true;
-               },
                select: function (event, ui) {
-                   self.$input.data('instance', ui.item.object_id);
+                   self.$input.attr('data-instance', ui.item.object_id);
+                   self.$input.attr('data-label', ui.item.label);
                    return true;
                },
                source: function(request, response) {

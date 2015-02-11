@@ -142,12 +142,12 @@ class FootprintSearchForm(ModelSearchForm):
         else:
             sqs = self.searchqueryset.auto_query(self.cleaned_data['q'])
 
-        sqs = sqs.exclude(django_ct__in=["main.name", "main.actor"])
-
         if self.load_all:
             sqs = sqs.load_all()
 
-        return sqs.models(*self.get_models())
+        sqs = sqs.models(*self.get_models())
+        sqs = sqs.order_by('sort_by')
+        return sqs
 
     def get_query_params(self):
         return urllib.urlencode(self.cleaned_data, doseq=True)
