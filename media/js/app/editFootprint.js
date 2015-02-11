@@ -145,7 +145,7 @@
 
             jQuery(this.el).find('.editable-place').editable({
                 namedParams: true,
-                template: '#editable-place-form',
+                tpl: jQuery('#xeditable-place-form').html(),
                 onblur: 'ignore',
                 validate: this.validatePlace,
                 success: this.refresh
@@ -165,9 +165,9 @@
             
             jQuery(this.el).find('.editable-actor').editable({
                 namedParams: true,
-                template: '#xeditable-actor-form',
                 validate: this.validateActor,
-                success: this.refresh
+                success: this.refresh,
+                tpl: jQuery('#xeditable-actor-form').html() 
             });
             
             jQuery(this.el).find('.editable-medium').editable({
@@ -213,14 +213,14 @@
 
             jQuery(this.el).find('.editable-author').editable({
                 namedParams: true,
-                template: '#xeditable-author-form',
+                tpl: jQuery('#xeditable-author-form').html(),
                 validate: this.validateActor,
                 success: this.refresh            
             });
             
             jQuery(this.el).find('.editable-publisher').editable({
                 namedParams: true,
-                template: '#xeditable-publisher-form',
+                tpl: jQuery('#xeditable-publisher-form').html(),
                 validate: this.validateActor,
                 success: this.refresh
             });
@@ -240,7 +240,7 @@
             
             jQuery(this.el).find('.editable-place').editable({
                 namedParams: true,
-                template: '#editable-place-form',
+                tpl: jQuery('#xeditable-place-form').html(),
                 onblur: 'ignore',
                 validate: this.validatePlace,
                 success: this.refresh
@@ -249,7 +249,7 @@
             
             jQuery(this.el).find('.editable-title').editable({
                 namedParams: true,
-                template: '#editable-title',
+                tpl: jQuery('#xeditable-title').html(),
                 onblur: 'ignore',
                 validate: this.validate,
                 success: this.refresh

@@ -22,8 +22,6 @@ $(function(){
     "use strict";
     
     var Title = function (options) {
-        var template = jQuery(options.scope).data("template");
-        Title.defaults.tpl = jQuery(template).html();
         this.init('title', options, Title.defaults);
     };
 
@@ -174,7 +172,6 @@ $(function(){
     });
 
     Title.defaults = $.extend({}, $.fn.editabletypes.abstractinput.defaults, {
-        tpl: undefined,
         inputclass: ''
     });
 
