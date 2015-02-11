@@ -1,0 +1,17 @@
+<script type="text/template" id="xeditable-identifier-form">
+    <div class="editable-identifier">
+        <div class="form-group">
+            <label>Identifier</label><br />
+            <input type="text" class="form-control" name="identifier" placeholder="Type in a standard identifier"></input>
+        </div>
+
+        <div class="form-group">
+            <label>Identifier Type</label><br />
+            <select class="form-control" name="role" placeholder="Type in a role name">
+                {% for choice in identifier_types %}
+                    <option value="{{choice.0}}">{{choice.1}}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+</script>

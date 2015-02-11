@@ -18,7 +18,7 @@ from rest_framework.views import APIView
 
 from footprints.main.models import (
     Footprint, Actor, Person, Role, WrittenWork, Language, ExtendedDateFormat,
-    Place, Imprint, BookCopy)
+    Place, Imprint, BookCopy, IDENTIFIER_TYPES)
 from footprints.main.serializers import NameSerializer
 from footprints.mixins import (
     JSONResponseMixin, LoggedInMixin, EditableMixin)
@@ -80,6 +80,7 @@ class FootprintDetailView(EditableMixin, LoggedInMixin, DetailView):
                                                        self.object)
         context['languages'] = Language.objects.all().order_by('name')
         context['roles'] = Role.objects.all().order_by('name')
+        context['identifier_types'] = IDENTIFIER_TYPES
         return context
 
 
