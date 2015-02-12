@@ -14,11 +14,13 @@ from footprints.main.views import (
     LoginView, LogoutView, AddActorView, CreateFootprintView,
     FootprintDetailView, PersonDetailView, PlaceDetailView,
     WrittenWorkDetailView, TitleListView, NameListView,
-    AddPlaceView, AddDateView, RemoveRelatedView, FootprintListView)
+    AddPlaceView, AddDateView, RemoveRelatedView, FootprintListView,
+    AddIdentifierView)
 from footprints.main.viewsets import (
     BookCopyViewSet, ImprintViewSet, ActorViewSet,
     ExtendedDateFormatViewSet, FootprintViewSet, LanguageViewSet,
-    PersonViewSet, PlaceViewSet, RoleViewSet, WrittenWorkViewSet, UserViewSet)
+    PersonViewSet, PlaceViewSet, RoleViewSet, WrittenWorkViewSet, UserViewSet,
+    StandardizedIdentificationViewSet)
 from footprints.mixins import is_staff
 
 
@@ -40,6 +42,7 @@ router.register(r'writtenwork', WrittenWorkViewSet)
 router.register(r'user', UserViewSet)
 router.register(r'book', BookCopyViewSet)
 router.register(r'imprint', ImprintViewSet)
+router.register(r'identifier', StandardizedIdentificationViewSet)
 
 
 urlpatterns = patterns(
@@ -71,6 +74,8 @@ urlpatterns = patterns(
         AddPlaceView.as_view(), name='add-place-view'),
     url(r'^date/add/$',
         AddDateView.as_view(), name='add-date-view'),
+    url(r'^identifier/add/$',
+        AddIdentifierView.as_view(), name='add-identifier-view'),
 
     url(r'^remove/related/$',
         RemoveRelatedView.as_view(), name='remove-related'),

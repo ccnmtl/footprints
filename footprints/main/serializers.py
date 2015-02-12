@@ -6,7 +6,8 @@ from rest_framework.serializers import Serializer, HyperlinkedModelSerializer
 from rest_framework.utils import html
 
 from footprints.main.models import Footprint, Language, Role, Actor, \
-    ExtendedDateFormat, Person, Place, WrittenWork, Imprint, BookCopy
+    ExtendedDateFormat, Person, Place, WrittenWork, Imprint, BookCopy, \
+    StandardizedIdentification
 
 
 # Fixes a django-restframework bug, patch submitted & will be available 3.0.5
@@ -51,6 +52,23 @@ class UserSerializer(Serializer):
     class Meta:
         model = User
         fields = ('username',)
+
+
+class StandardizedIdentificationSerializer(HyperlinkedModelSerializer):
+    class Meta:
+        model = StandardizedIdentification
+        fields = ('id', 'identifier', 'identifier_type', 'authority')
+
+    def get_queryset(self):
+        return StandardizedIdentification.objects.all()
+
+    @classmethod
+    def many_init(cls, *args, **kwargs):
+        list_kwargs = {'child_relation': cls(*args, **kwargs)}
+        for key in kwargs.keys():
+            if key in MANY_RELATION_KWARGS:
+                list_kwargs[key] = kwargs[key]
+        return ManyRelatedFieldEx(**list_kwargs)
 
 
 class LanguageSerializer(HyperlinkedModelSerializer):
@@ -155,12 +173,14 @@ class ImprintSerializer(HyperlinkedModelSerializerEx):
     actor = ActorSerializer(many=True)
     place = PlaceSerializer()
     date_of_publication = ExtendedDateFormatSerializer()
+    standardized_identifier = StandardizedIdentificationSerializer(many=True)
 
     class Meta:
         model = Imprint
         # @todo digital_object, standardized_identifier
         fields = ('id', 'work', 'title', 'language', 'place',
-                  'date_of_publication', 'actor', 'notes')
+                  'date_of_publication', 'actor', 'notes',
+                  'standardized_identifier')
 
     def update(self, instance, validated_data):
         if 'language' in validated_data:

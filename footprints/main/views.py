@@ -18,7 +18,7 @@ from rest_framework.views import APIView
 
 from footprints.main.models import (
     Footprint, Actor, Person, Role, WrittenWork, Language, ExtendedDateFormat,
-    Place, Imprint, BookCopy, IDENTIFIER_TYPES)
+    Place, Imprint, BookCopy, IDENTIFIER_TYPES, StandardizedIdentification)
 from footprints.main.serializers import NameSerializer
 from footprints.mixins import (
     JSONResponseMixin, LoggedInMixin, EditableMixin)
@@ -171,10 +171,10 @@ class RemoveRelatedView(LoggedInMixin, EditableMixin,
 
         # cheating a bit here. @todo - make this totally generic
         # will need to figure out whether related is FK or M2M
+        success = True
         actor_id = self.request.POST.get('actor_id', None)
         place_id = self.request.POST.get('place_id', None)
-        if actor_id is None and place_id is None:
-            return self.render_to_json_response({'success': False})
+        identifier_id = self.request.POST.get('identifier_id', None)
 
         if actor_id:
             actor = get_object_or_404(Actor, id=actor_id)
@@ -184,8 +184,14 @@ class RemoveRelatedView(LoggedInMixin, EditableMixin,
             if the_parent.place == place:
                 the_parent.place = None
                 the_parent.save()
+        elif identifier_id:
+            identifier = get_object_or_404(StandardizedIdentification,
+                                           id=identifier_id)
+            the_parent.standardized_identifier.remove(identifier)
+        else:
+            success = False
 
-        return self.render_to_json_response({'success': True})
+        return self.render_to_json_response({'success': success})
 
 
 class AddActorView(LoggedInMixin, EditableMixin,
@@ -251,6 +257,34 @@ class AddDateView(LoggedInMixin, EditableMixin,
                 'success': False,
                 'error': 'Please enter a date'
             })
+
+
+class AddIdentifierView(LoggedInMixin, EditableMixin,
+                        JSONResponseMixin, View):
+
+    def post(self, *args, **kwargs):
+        parent_model = self.request.POST.get('parent_model', None)
+        the_model = apps.get_model(app_label='main', model_name=parent_model)
+
+        parent_id = self.request.POST.get('parent_id', None)
+        the_parent = get_object_or_404(the_model, pk=parent_id)
+
+        if not self.has_edit_permission(self.request.user, the_parent):
+            return HttpResponseForbidden()
+
+        identifier_type = self.request.POST.get('identifier_type', None)
+        identifier = self.request.POST.get('identifier', None)
+
+        if identifier is None or identifier_type is None:
+            return self.render_to_json_response({
+                'success': False,
+                'error': 'Please enter identifier information'
+            })
+        else:
+            si = StandardizedIdentification.objects.create(
+                identifier=identifier, identifier_type=identifier_type)
+            the_parent.standardized_identifier.add(si)
+            return self.render_to_json_response({'success': True})
 
 
 class AddPlaceView(LoggedInMixin, EditableMixin,

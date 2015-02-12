@@ -7,7 +7,7 @@
 
         <div class="form-group">
             <label>Identifier Type</label><br />
-            <select class="form-control" name="role" placeholder="Type in a role name">
+            <select class="form-control" name="standardized-identifier" placeholder="Type in a role name">
                 {% for choice in identifier_types %}
                     <option value="{{choice.0}}">{{choice.1}}</option>
                 {% endfor %}

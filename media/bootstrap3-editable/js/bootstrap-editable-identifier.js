@@ -1,34 +1,14 @@
-/**
-Actor editable input.
-
-@class actor
-@extends abstractinput
-@final
-@example
-<a href="#" data-type="name" data-pk="1">Fred Rogers</a>
-<script>
-$(function(){
-    $('#actor').editable({
-        url: '/post',
-        title: 'Enter the actor's name',
-        value: {
-            name: "Fred Rogers"
-        }
-    });
-});
-</script>
-**/
 (function ($) {
     "use strict";
     
-    var Actor = function (options) {
-        this.init('actor', options, Actor.defaults);
+    var Identifier = function (options) {
+        this.init('identifier', options, Identifier.defaults);
     };
 
     //inherit from Abstract input
-    $.fn.editableutils.inherit(Actor, $.fn.editabletypes.abstractinput);
+    $.fn.editableutils.inherit(Identifier, $.fn.editabletypes.abstractinput);
 
-    $.extend(Actor.prototype, {
+    $.extend(Identifier.prototype, {
         /**
         Renders input from tpl
 
@@ -37,42 +17,11 @@ $(function(){
         render: function() {
            var self = this;
 
-           this.$input = this.$tpl.find('input[name="person-autocomplete"]');
-           this.$roleselect = this.$tpl.find('select[name="role"]');
-           this.$actorname =  this.$tpl.find('input[name="actor-name"]');
-           jQuery(this.$input).autocomplete({
-               select: function (event, ui) {
-                   self.$input.attr('data-instance', ui.item.object_id);
-                   self.$input.attr('data-label', ui.item.label);
-                   return true;
-               },
-               source: function(request, response) {
-                   jQuery.ajax({
-                       url: "/api/name/",
-                       dataType: "jsonp",
-                       data: {
-                           q: request.term
-                       },
-                       success: function(data) {
-                           var names = [];
-                           for (var i=0; i < data.length; i++) {
-                               names.push({
-                                   object_id: data[i].object_id,
-                                   label: data[i].name
-                               });
-                           }
-                           response(names);
-                       }
-                   });
-               },
-               minLength: 2,
-               open: function() {
-                   jQuery(this).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
-               },
-               close: function() {
-                   jQuery(this).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
-               }
-           });
+           this.$input = this.$tpl.find('input[name="identifier"]');
+           this.$type = this.$tpl.find('select[name="standardized-identifier"]');
+           
+           var value = jQuery(this.options.scope).data('value');
+           this.value2input(value);
         },
         
         /**
@@ -128,6 +77,8 @@ $(function(){
         @param {mixed} value
        **/         
        value2input: function(value) {
+           this.$input.val(value.identifier);
+           this.$type.val(value.identifier_type);
        },
 
        
@@ -147,10 +98,8 @@ $(function(){
        **/
        value2submit: function(value) {
            return {
-               person_name: this.$input.val(),
-               person_id: this.$input.data('instance'),
-               role: this.$roleselect.val(),
-               alias: this.$actorname.val()
+               identifier: this.$input.val(),
+               identifier_type: this.$type.val()
             }
        },
        
@@ -160,7 +109,7 @@ $(function(){
         @method activate() 
        **/        
        activate: function() {
-            this.$input.filter('[name="person-autocomplete"]').focus();
+            this.$input.filter('[name="identifier"]').focus();
        },  
        
        /**
@@ -177,10 +126,10 @@ $(function(){
        }       
     });
 
-    Actor.defaults = $.extend({}, $.fn.editabletypes.abstractinput.defaults, {
+    Identifier.defaults = $.extend({}, $.fn.editabletypes.abstractinput.defaults, {
         inputclass: ''
     });
 
-    $.fn.editabletypes.actor = Actor;
+    $.fn.editabletypes.identifier = Identifier;
 
 }(window.jQuery));

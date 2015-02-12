@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.test.client import Client, RequestFactory
 
-from footprints.main.models import Footprint, Actor
+from footprints.main.models import Footprint, Actor, Imprint
 from footprints.main.tests.factories import (
     UserFactory, WrittenWorkFactory, ImprintFactory, FootprintFactory,
     PersonFactory, RoleFactory, PlaceFactory, ActorFactory)
@@ -385,6 +385,22 @@ class RemoveRelatedViewTest(TestCase):
         footprint = Footprint.objects.get(id=self.footprint.id)  # refresh
         self.assertIsNone(footprint.place)
 
+    def test_post_remove_identifier(self):
+        imprint = self.footprint.book_copy.imprint
+        identifier = imprint.standardized_identifier.first()
+
+        self.client.login(username=self.staff.username, password="test")
+        response = self.client.post(self.remove_url,
+                                    {'parent_id': imprint.id,
+                                     'parent_model': 'imprint',
+                                     'identifier_id': identifier.id},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        self.assertTrue(loads(response.content)['success'])
+
+        imprint = Imprint.objects.get(id=imprint.id)  # refresh
+        self.assertEquals(imprint.standardized_identifier.count(), 0)
+
 
 class AddDateViewTest(TestCase):
 
@@ -491,3 +507,56 @@ class AddPlaceViewTest(TestCase):
         self.assertEquals(str(footprint.place.position.latitude), '40.752946')
         self.assertEquals(str(footprint.place.position.longitude),
                           '-73.983435')
+
+
+class AddIdentifierViewTest(TestCase):
+
+    def setUp(self):
+        self.user = UserFactory()
+        self.staff = UserFactory(is_staff=True)
+        self.imprint = ImprintFactory()
+
+        self.url = reverse('add-identifier-view')
+
+    def test_post_expected_errors(self):
+        # not logged in
+        self.assertEquals(self.client.post(self.url).status_code, 302)
+
+        self.client.login(username=self.user.username, password="test")
+
+        # no ajax
+        self.assertEquals(self.client.post(self.url).status_code, 405)
+
+        # no permissions
+        response = self.client.post(self.url,
+                                    {'parent_id': self.imprint.id,
+                                     'parent_model': 'imprint'},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 403)
+
+    def test_post_no_data(self):
+        self.client.login(username=self.staff.username, password="test")
+        response = self.client.post(self.url,
+                                    {'parent_id': self.imprint.id,
+                                     'parent_model': 'imprint'},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        the_json = loads(response.content)
+        self.assertFalse(the_json['success'])
+
+    def test_post_success(self):
+        self.assertEquals(self.imprint.standardized_identifier.count(), 1)
+        self.client.login(username=self.staff.username, password="test")
+        response = self.client.post(self.url,
+                                    {'parent_id': self.imprint.id,
+                                     'parent_model': 'imprint',
+                                     'identifier': 'abcdefg',
+                                     'identifier_type': 'LOC'},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        the_json = loads(response.content)
+        self.assertTrue(the_json['success'])
+
+        imprint = Imprint.objects.get(id=self.imprint.id)  # refresh from db
+        identifier = imprint.standardized_identifier.get(identifier='abcdefg')
+        self.assertEquals(identifier.identifier_type, 'LOC')
