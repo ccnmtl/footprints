@@ -77,8 +77,10 @@
         @param {mixed} value
        **/         
        value2input: function(value) {
-           this.$input.val(value.identifier);
-           this.$type.val(value.identifier_type);
+           if (value && typeof value === 'object') {
+               this.$input.val(value.identifier);
+               this.$type.val(value.identifier_type);
+           }
        },
 
        
