@@ -200,7 +200,7 @@
                     <% if (!call_number || call_number.length < 1) { %> 
                         <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
                             <a href="#" class="<% if (editable) { %>editable<% } %> do-you-know persistant" data-name="call_number"
-                                data-type="text" data-pk="<%=id%>"
+                                data-type="text" data-pk="<%=id%>" data-value=""
                                 data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
                                 data-url="/api/footprint/<%=id%>/">the call number of the evidence?</a>
                         </li>

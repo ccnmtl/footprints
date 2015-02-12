@@ -76,8 +76,7 @@ class BasicModelTest(TestCase):
         self.assertEquals(si.__unicode__(), 'foo')
 
         si = StandardizedIdentification.objects.create(
-            identifier='bar', identifier_type='BHB',
-            identifier_text='Barish')
+            identifier='bar', identifier_type='BHB')
 
         self.assertEquals(si.__unicode__(),
                           'bar')

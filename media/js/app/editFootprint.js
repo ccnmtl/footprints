@@ -112,6 +112,15 @@
             } else if (values.country.length < 1) {
                 return "Please specify a country";
             }
+        },
+        validateIdentifier: function(values) {
+            if (!values.hasOwnProperty('identifier') ||
+                    values.identifer.length < 1) {
+                return "Please specify an identifer";
+            } else  if (!values.hasOwnProperty('identifier_type') ||
+                    values.identifer.length < 1) {
+                return "Please select the type of identifier";
+            }
         }
     });
     
@@ -245,17 +254,23 @@
                 validate: this.validatePlace,
                 success: this.refresh
             });
-            
-            
+
             jQuery(this.el).find('.editable-title').editable({
                 namedParams: true,
-                tpl: jQuery('#xeditable-title').html(),
+                tpl: jQuery('#xeditable-title-form').html(),
                 onblur: 'ignore',
                 validate: this.validate,
                 success: this.refresh
             });
 
-            
+            jQuery(this.el).find('.editable-identifier').editable({
+                namedParams: true,
+                tpl: jQuery('#xeditable-identifier-form').html(),
+                onblur: 'ignore',
+                validate: this.validateIdentifer,
+                success: this.refresh
+            });
+
             this.initializeMap();
 
         }

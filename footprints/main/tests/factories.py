@@ -51,9 +51,8 @@ class DigitalObjectFactory(factory.DjangoModelFactory):
 class StandardizedIdentificationFactory(factory.DjangoModelFactory):
     FACTORY_FOR = StandardizedIdentification
 
-    identifier = '002978330'
+    identifier = factory.Sequence(lambda n: "identifier%03d" % n)
     identifier_type = 'BHB'
-    identifier_text = 'The Odyssey / English prose by S.H. Butcher & A. Lang.'
 
 
 class PersonFactory(factory.DjangoModelFactory):

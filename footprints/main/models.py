@@ -144,8 +144,7 @@ class DigitalObject(models.Model):
 class StandardizedIdentification(models.Model):
     identifier = models.CharField(max_length=512)
     identifier_type = models.CharField(max_length=5, choices=IDENTIFIER_TYPES)
-    identifier_text = models.TextField(null=True, blank=True)
-    permalink = models.URLField(null=True)
+    permalink = models.URLField(null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)

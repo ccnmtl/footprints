@@ -140,6 +140,28 @@
             </div>
         </dd>
     <% } %>
+    <% for (var i=0; i < imprint.standardized_identifier.length; i++) { %> 
+        <dt><%=imprint.standardized_identifier[i].authority%></dt>
+        <dd class="border-bottom">
+            <a href="#" class="<% if (editable) { %>editable-identifier<% } else { %>readonly<% } %>"
+                data-type="identifier" data-pk="<%=imprint.standardized_identifier[i].id%>"
+                data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
+                data-url="/api/identifier/<%=imprint.standardized_identifier[i].id%>/"
+                data-value="{identifier:'<%=imprint.standardized_identifier[i].identifier%>',identifier_type:'<%=imprint.standardized_identifier[i].identifier_type%>'}">
+                <%=imprint.standardized_identifier[i].identifier%>
+            </a>
+            <div class="pull-right">
+                <% if (editable) { %>
+                    <a href="#" class="remove-related"
+                     data-params="{identifier_id:'<%=imprint.standardized_identifier[i].id%>',csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=imprint.id%>,parent_model:'imprint'}" 
+                     data-url="/remove/related/"
+                     title="remove identifier">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </a>
+                <% } %>
+            </div>
+        </dd>
+    <% } %>
     <% if (imprint.notes && imprint.notes.length > 0) { %>
         <dt>Imprint Notes</dt>
         <dd class="border-bottom">
@@ -223,6 +245,13 @@
                             data-url="/place/add/">the imprint publication location?</a>
                     </li>
                 <% } %>
+
+                <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                    <a href="#" class="<% if (editable) { %>editable-identifier<% } %> do-you-know persistant editable-refresh"
+                        data-value="" data-type="identifier" data-pk="<%=imprint.id%>"
+                        data-params="{csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=imprint.id%>,parent_model:'imprint'}"
+                        data-url="/identifier/add/">a standardized identifier associated with the imprint?</a>
+                </li>
                 
                 <li class="fixed"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
                     <a href="#" class="<% if (editable) { %>editable-publisher<% } %> do-you-know persistant" data-name="actor"
