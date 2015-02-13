@@ -121,7 +121,7 @@ class DigitalFormat(models.Model):
 class DigitalObject(models.Model):
     name = models.CharField(max_length=500)
     digital_format = models.ForeignKey(DigitalFormat)
-    file = models.FileField(upload_to="digitalobjects/%Y/%m/%d/")
+    file = models.FileField(upload_to="uploads/%Y/%m/%d/")
 
     source_url = models.URLField(null=True, blank=True)
     notes = models.TextField(null=True, blank=True)

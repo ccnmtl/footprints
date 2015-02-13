@@ -148,8 +148,8 @@
         <% } %>
     </dl>
     
-    <!-- FOOTPRINT - DO YOU KNOW -->
     <% if (editable) { %>
+        <!-- FOOTPRINT - DO YOU KNOW -->
         <dl class="dl-horizontal">
             <dt>Do you know...</dt>
             <dd>  
@@ -216,5 +216,19 @@
                 </ul>    
             </dd>
         </dl>
+
+        <dl class="dl-horizontal">
+            <dd>Do you have...</dd>
+            <dt>
+                <ul class="additional-questions">
+                <li>images of the evidence?
+            <ul id="filelist"></ul>
+            <br />
+ 
+            <div>
+                <a id="browse" href="javascript:;">[Browse...]</a>
+                <a id="start-upload" href="javascript:;">[Start Upload]</a>
+            </div>
+        <dl>
     <% } %>
 </script>
