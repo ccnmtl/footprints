@@ -16,6 +16,7 @@ from rest_framework.renderers import JSONPRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+
 from footprints.main.models import (
     Footprint, Actor, Person, Role, WrittenWork, Language, ExtendedDateFormat,
     Place, Imprint, BookCopy, IDENTIFIER_TYPES, StandardizedIdentification)
@@ -194,8 +195,19 @@ class RemoveRelatedView(LoggedInMixin, EditableMixin,
         return self.render_to_json_response({'success': success})
 
 
-class AddActorView(LoggedInMixin, EditableMixin,
-                   JSONResponseMixin, View):
+class AddRelatedRecordView(LoggedInMixin, EditableMixin,
+                           JSONResponseMixin, View):
+
+    def get_parent(self):
+        parent_model = self.request.POST.get('parent_model', None)
+        the_model = apps.get_model(app_label='main', model_name=parent_model)
+
+        parent_id = self.request.POST.get('parent_id', None)
+        the_parent = get_object_or_404(the_model, pk=parent_id)
+        return the_parent
+
+
+class AddActorView(AddRelatedRecordView):
 
     def create_actor(self, person_id, person_name, role, alias):
         try:
@@ -209,11 +221,7 @@ class AddActorView(LoggedInMixin, EditableMixin,
         return Actor.objects.create(person=person, role=role, alias=alias)
 
     def post(self, *args, **kwargs):
-        parent_model = self.request.POST.get('parent_model', None)
-        the_model = apps.get_model(app_label='main', model_name=parent_model)
-
-        parent_id = self.request.POST.get('parent_id', None)
-        the_parent = get_object_or_404(the_model, pk=parent_id)
+        the_parent = self.get_parent()
 
         if not self.has_edit_permission(self.request.user, the_parent):
             return HttpResponseForbidden()
@@ -230,15 +238,10 @@ class AddActorView(LoggedInMixin, EditableMixin,
         return self.render_to_json_response({'success': True})
 
 
-class AddDateView(LoggedInMixin, EditableMixin,
-                  JSONResponseMixin, View):
+class AddDateView(AddRelatedRecordView):
 
     def post(self, *args, **kwargs):
-        parent_model = self.request.POST.get('parent_model', None)
-        the_model = apps.get_model(app_label='main', model_name=parent_model)
-
-        parent_id = self.request.POST.get('parent_id', None)
-        the_parent = get_object_or_404(the_model, pk=parent_id)
+        the_parent = self.get_parent()
 
         attr = self.request.POST.get('attr', None)
 
@@ -259,15 +262,10 @@ class AddDateView(LoggedInMixin, EditableMixin,
             })
 
 
-class AddIdentifierView(LoggedInMixin, EditableMixin,
-                        JSONResponseMixin, View):
+class AddIdentifierView(AddRelatedRecordView):
 
     def post(self, *args, **kwargs):
-        parent_model = self.request.POST.get('parent_model', None)
-        the_model = apps.get_model(app_label='main', model_name=parent_model)
-
-        parent_id = self.request.POST.get('parent_id', None)
-        the_parent = get_object_or_404(the_model, pk=parent_id)
+        the_parent = self.get_parent()
 
         if not self.has_edit_permission(self.request.user, the_parent):
             return HttpResponseForbidden()
@@ -287,15 +285,10 @@ class AddIdentifierView(LoggedInMixin, EditableMixin,
             return self.render_to_json_response({'success': True})
 
 
-class AddPlaceView(LoggedInMixin, EditableMixin,
-                   JSONResponseMixin, View):
+class AddPlaceView(AddRelatedRecordView):
 
     def post(self, *args, **kwargs):
-        parent_model = self.request.POST.get('parent_model', None)
-        the_model = apps.get_model(app_label='main', model_name=parent_model)
-
-        parent_id = self.request.POST.get('parent_id', None)
-        the_parent = get_object_or_404(the_model, pk=parent_id)
+        the_parent = self.get_parent()
 
         if not self.has_edit_permission(self.request.user, the_parent):
             return HttpResponseForbidden()
