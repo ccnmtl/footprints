@@ -89,37 +89,8 @@ ul.wizard-tabs.has-error li.active a {
 
 /* Carousel */
 
-.carousel-control,
-.carousel-control:hover,
-.carousel-control:focus,
-.carousel-control a:hover,
-.carousel-control a:active {
-    background: none !important;
-    text-shadow: none;
-    color: #337ab7;
-    width: 16%;
-}
-
-.carousel-control.left {
-    top: 100%;
-    left: 88%;
-}
-
-.carousel-control.right {
-    top: 100%;
-    left: 92%;
-}
-
-.carousel-control .glyphicon-chevron-right {
-    margin-right: -15px;
-    margin-top: -10px;
-    font-size: 18px;
-}
-
-.carousel-control .glyphicon-chevron-left {
-    margin-right: -15px;
-    margin-top: -9px;
-    font-size: 18px;
+.carousel-controls {
+    margin-bottom: 10px;
 }
 
 /* Object detail pages */

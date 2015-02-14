@@ -14,30 +14,32 @@
     <% if (digital_object && digital_object.length > 0) { %> 
         <div class="well">
             <div id="thumbnails" class="carousel slide">
-                <% var limit=6, i=0; %>
-                <% while (i < digital_object.length) { %>
-                    <div class="carousel-inner">
-                        <div class="item <% if (i < limit) { %>active<% } %>">
-                            <div class="row">
-                                <% for (var j=0; j < limit && i < digital_object.length; j++, i++) { %>
-                                    <div class="col-sm-2">
-                                        <div class="crop">
-                                            <img src="<%=digital_object[i].file%>" alt="Image" class="img-responsive">
+                <div class="carousel-inner">
+                    <% var limit=6, i=0; %>
+                    <% while (i < digital_object.length) { %>
+                            <div class="item <% if (i < limit) { %>active<% } %>">
+                                <div class="row">
+                                    <% for (var j=0; j < limit && i < digital_object.length; j++, i++) { %>
+                                        <div class="col-sm-2">
+                                            <div class="crop">
+                                                <img src="<%=digital_object[i].file%>" alt="Image" class="img-responsive">
+                                            </div>
                                         </div>
-                                    </div>
-                                <% } %>
+                                    <% } %>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                <% } %>
-                <% if (digital_object.length > limit) { %> 
-                    <a class="left carousel-control" href="#thumbnails" data-slide="prev">
-                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-                    </a>
-                    <a class="right carousel-control" href="#thumbnails" data-slide="next">
-                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-                    </a>
-                <% } %>
+                    <% } %>
+                </div>
+            </div>
+            <div class="carousel-controls">
+            <% if (digital_object.length > limit) { %> 
+                <a class="pull-left" href="#thumbnails" data-slide="prev">
+                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                </a>
+                <a class="pull-right" href="#thumbnails" data-slide="next">
+                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                </a>
+            <% } %>
             </div>
         </div>
     <% } %>

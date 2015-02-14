@@ -199,7 +199,7 @@
             });
             
             jQuery('.carousel').carousel({
-                interval: 2000
+                interval: false
             });
             
             this.initializeMap();
