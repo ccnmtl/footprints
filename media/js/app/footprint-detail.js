@@ -130,56 +130,12 @@
         },
         initialize: function(options) {
             _.bindAll(this, 'context', 'refresh', 'render',
-               'confirmRemoveRelated', 'removeRelated',
-               'validate', 'validatePlace', 'validateActor');
+               'confirmRemoveRelated', 'removeRelated');
 
             this.baseContext = options.baseContext;
             this.template = _.template(jQuery(options.template).html());
             this.model.on('change', this.render);
             this.model.fetch();
-        },
-        initializeUploader: function() {
-            var uploader = new plupload.Uploader({
-                browse_button: 'browse', // this can be an id of a DOM element or the DOM element itself
-                url: '/pluploadify/',
-                max_retries: 3,
-                multi_selection: false,
-                runtimes : 'html5,flash,silverlight',
-                flash_swf_url: this.baseContext.static_url + '/Moxie.swf',
-                silverlight_xap_url: this.baseContext.static_url + 'js/Moxie.xap',
-                filters: {
-                    mime_types: [
-                        {title: "Image files", extensions : "jpg,jpeg,png,gif,bmp"}
-                    ]
-                }
-            });
-
-            uploader.bind('FilesAdded', function(up, files) {
-                var html = '';
-                plupload.each(files, function(file) {
-                  html += '<li id="' + file.id + '">' + file.name + ' (' + plupload.formatSize(file.size) + ') <b></b></li>';
-                });
-                document.getElementById('filelist').innerHTML += html;
-
-                // only allow one file at a time, and start uploading automatically
-                $("#browse").replaceWith();
-                up.start();
-            });
-
-            uploader.bind('UploadProgress', function(up, file) {
-                document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
-            });
-
-            uploader.bind('Error', function(up, err) {
-                alert("\nError #" + err.code + ": " + err.message);
-            });
-
-            uploader.bind('FileUploaded', function(up, data, r) {
-                $("#tmpfilename").val(r.response);
-                $("#submit").removeAttr("disabled");
-            });
-
-            uploader.init();    
         },
         render: function() {
             var self = this;
@@ -232,10 +188,21 @@
                 validate: this.validate,
                 success: this.refresh
             });
+
+            var elt = jQuery(this.el).find('.editable-digitalobject');
+            jQuery(elt).editable({
+                namedParams: true,
+                tpl: jQuery('#xeditable-digitalobject-form').html(), 
+                source: this.baseContext.all_mediums,
+                url: function() { return true; },
+                success: this.refresh
+            });
+            
+            jQuery('.carousel').carousel({
+                interval: 2000
+            });
             
             this.initializeMap();
-            
-            this.initializeUploader();
         }
     });
 
@@ -245,8 +212,7 @@
         },
         initialize: function(options) {
             _.bindAll(this, 'context', 'refresh', 'render',
-                      'confirmRemoveRelated', 'removeRelated',
-                      'validate', 'validatePlace', 'validateActor');
+                'confirmRemoveRelated', 'removeRelated');
             
             this.baseContext = options.baseContext;
             this.template = _.template(jQuery(options.template).html());

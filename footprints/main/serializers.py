@@ -7,7 +7,7 @@ from rest_framework.utils import html
 
 from footprints.main.models import Footprint, Language, Role, Actor, \
     ExtendedDateFormat, Person, Place, WrittenWork, Imprint, BookCopy, \
-    StandardizedIdentification
+    StandardizedIdentification, DigitalObject, DigitalFormat
 
 
 # Fixes a django-restframework bug, patch submitted & will be available 3.0.5
@@ -111,6 +111,12 @@ class RoleSerializer(HyperlinkedModelSerializer):
         fields = ('id', 'name',)
 
 
+class DigitalFormatSerializer(HyperlinkedModelSerializer):
+    class Meta:
+        model = DigitalFormat
+        fields = ('id', 'name',)
+
+
 class PersonSerializer(HyperlinkedModelSerializer):
     birth_date = ExtendedDateFormatSerializer()
     death_date = ExtendedDateFormatSerializer()
@@ -129,6 +135,22 @@ class PlaceSerializer(HyperlinkedModelSerializerEx):
         model = Place
         fields = ('id', 'display_title', 'country', 'city',
                   'position', 'latitude', 'longitude')
+
+
+class DigitalObjectSerializer(HyperlinkedModelSerializer):
+    digital_format = DigitalFormatSerializer()
+
+    class Meta:
+        model = DigitalObject
+        fields = ('id', 'name', 'digital_format', 'file')
+
+    @classmethod
+    def many_init(cls, *args, **kwargs):
+        list_kwargs = {'child_relation': cls(*args, **kwargs)}
+        for key in kwargs.keys():
+            if key in MANY_RELATION_KWARGS:
+                list_kwargs[key] = kwargs[key]
+        return ManyRelatedFieldEx(**list_kwargs)
 
 
 class ActorSerializer(HyperlinkedModelSerializer):
@@ -206,13 +228,14 @@ class FootprintSerializer(HyperlinkedModelSerializer):
     language = LanguageSerializer(many=True)
     actor = ActorSerializer(many=True)
     place = PlaceSerializer()
+    digital_object = DigitalObjectSerializer(many=True)
 
     class Meta:
         model = Footprint
         fields = ('id', 'medium', 'medium_description',
                   'provenance', 'title', 'language', 'actor', 'call_number',
                   'notes', 'associated_date', 'place', 'narrative',
-                  'percent_complete')
+                  'percent_complete', 'digital_object')
 
     def update(self, instance, validated_data):
         if 'language' in validated_data:

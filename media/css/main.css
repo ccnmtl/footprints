@@ -87,6 +87,41 @@ ul.wizard-tabs.has-error li.active a {
 }
 
 
+/* Carousel */
+
+.carousel-control,
+.carousel-control:hover,
+.carousel-control:focus,
+.carousel-control a:hover,
+.carousel-control a:active {
+    background: none !important;
+    text-shadow: none;
+    color: #337ab7;
+    width: 16%;
+}
+
+.carousel-control.left {
+    top: 100%;
+    left: 88%;
+}
+
+.carousel-control.right {
+    top: 100%;
+    left: 92%;
+}
+
+.carousel-control .glyphicon-chevron-right {
+    margin-right: -15px;
+    margin-top: -10px;
+    font-size: 18px;
+}
+
+.carousel-control .glyphicon-chevron-left {
+    margin-right: -15px;
+    margin-top: -9px;
+    font-size: 18px;
+}
+
 /* Object detail pages */
 
 .object-detail .breadcrumb {
@@ -186,9 +221,21 @@ ul.wizard-tabs.has-error li.active a {
     width: 85%;
 }
 
+.object-detail .editable-input.wide {
+    width: 94%;
+}
+
 .object-detail .editable-input input[type='text'],
 .object-detail .editable-input textarea {
     width: 100%;
+}
+
+.object-detail .editable-buttons .editable-cancel {
+    margin-left: 0px;
+}
+
+.object-detail .editable-buttons .editable-submit {
+    margin-right: 7px;
 }
 
 .object-detail .remove-footprint-actor {
@@ -214,8 +261,19 @@ ul.wizard-tabs.has-error li.active a {
     margin-top: 2px;
 }
 
-ul.record-checklist li.list-group-item small {
+.object-detail .footprint-map {
+    width: 100%;
+    height: 200px;    
+}
+
+.object-detail ul.record-checklist li.list-group-item small {
     margin-left: 22px;
+}
+
+.object-detail .crop {
+    width: 100px;
+    height: 75px;
+    overflow: hidden;
 }
 
 
@@ -224,15 +282,20 @@ ul.record-checklist li.list-group-item small {
     padding: 20px;
 }
 
-.object-detail .footprint-map {
-    width: 100%;
-    height: 200px;    
-}
-
 .editable-place .map-container {
     width: 116%;
     height: 300px;
     margin-top: 10px;
+}
+
+.editable-digital-object ul.filelist {
+    list-style-type: none;
+    display: inline-block;
+    padding-left: 5px;
+}
+
+.editable-digital-object .editable-upload {
+    float: right;
 }
 
 

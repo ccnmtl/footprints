@@ -1,23 +1,23 @@
-    <script type="text/template" id="xeditable-author-form">
-        <div class="editable-author">
-            <div class="form-group">
-                <label>Author's Name</label><br />
-                <input type="text" class="form-control" name="person-autocomplete" placeholder="Type in a person's name"></input>
-                </div>
-                
-            <div class="form-group">
-                <label>Pseudonym or Alias (if applicable)</label><br />
-                <input type="text" class="form-control" name="actor-name" placeholder="Specify the person's alias"></select>
+<script type="text/template" id="xeditable-author-form">
+    <div class="editable-author">
+        <div class="form-group">
+            <label>Author's Name</label><br />
+            <input type="text" class="form-control" name="person-autocomplete" placeholder="Type in a person's name"></input>
             </div>
-
-            <div class="form-group" style="display: none">
-                <label>Role</label><br />
-                <select class="form-control" name="role" placeholder="Type in a role name" disabled="disabled">
-                    {% with author=roles.get_author_role %}
-                        <option value="{{author.id}}">{{author.name}}</option>
-                    {% endwith %}
-                </select>
-            </div>
+            
+        <div class="form-group">
+            <label>Pseudonym or Alias (if applicable)</label><br />
+            <input type="text" class="form-control" name="actor-name" placeholder="Specify the person's alias"></select>
         </div>
-    </script>
+
+        <div class="form-group" style="display: none">
+            <label>Role</label><br />
+            <select class="form-control" name="role" placeholder="Type in a role name" disabled="disabled">
+                {% with author=roles.get_author_role %}
+                    <option value="{{author.id}}">{{author.name}}</option>
+                {% endwith %}
+            </select>
+        </div>
+    </div>
+</script>
 
