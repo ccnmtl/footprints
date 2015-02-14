@@ -1,9 +1,3 @@
-/**
-DigitalObject editable input.
-
-@class digitalobject
-@extends abstractinput
-**/
 (function ($) {
     "use strict";
     
@@ -35,29 +29,46 @@ DigitalObject editable input.
                 multipart_params: params
             });
 
-            uploader.bind('FilesAdded', function(up, files) {
-                while (uploader.files.length > 1) {
-                    uploader.removeFile(uploader.files[0]);
-                }
-
-                var html = '';
-                plupload.each(files, function(file) {
-                    html += '<li id="' + file.id + '">' + file.name + ' (' + plupload.formatSize(file.size) + ') <b></b></li>';
-                });
-                jQuery(fileList).html(html);
-            });
-
-            uploader.bind('UploadProgress', function(up, file) {
-                document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
-            });
-
-            uploader.bind('Error', function(up, err) {
-                alert("\nError #" + err.code + ": " + err.message);
-            });
-
             uploader.init();
             
             return uploader;
+        },
+        filesAdded: function(up, files) {
+            while (this.uploader.files.length > 1) {
+                this.uploader.removeFile(this.uploader.files[0]);
+            }
+
+            var html = '';
+            plupload.each(files, function(file) {
+                html += '<li id="' + file.id + '">' + file.name + ' (' + plupload.formatSize(file.size) + ') <b></b></li>';
+            });
+            jQuery(this.$list).html(html);
+        },
+        upload: function(evt) {
+            evt.stopPropagation();
+            evt.preventDefault();
+            
+            var rv = this.validate(this.value2submit());
+            if (typeof rv === 'string') {
+                jQuery('.editable-digital-object').parents('.control-group').addClass('has-error');
+                jQuery('.editable-error-block').html(rv).show();
+            } else {
+                this.uploader.start();
+            }
+            
+            return false;
+        },
+        uploadComplete: function(up, data, r) {
+            // wait just for a second
+            setTimeout(function() {
+                jQuery("button.editable-submit").click();
+            }, 500);
+        },
+        uploadError: function(up, err) {
+            alert("\nError #" + err.code + ": " + err.message);
+        },
+        uploadProgress: function(up, file) {
+            document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
         },
         validate: function(values) {
             if (values.count < 1) {
@@ -79,36 +90,27 @@ DigitalObject editable input.
             this.$list =  this.$tpl.find('ul.filelist')[0];
             this.$name =  this.$tpl.find('input[name="name"]')[0];
             
-            // a bit of hacking to do the upload before the xeditable form "submit"
-            // hide the submit button, make the input div wider
+            // hack: steal submit from EditableForm
+            // Hide the submit button, make the input div wider
             jQuery("button.editable-submit").hide();
             jQuery(this.$browse).parents('.editable-input').addClass('wide');
             
+            // additional submit params
             var params = $(this.options.scope).data('params');
             this.uploader = this.initializeUploader(
                this.$browse, this.$list, params);
                         
             jQuery('button.editable-upload').on('click', function(evt) {
-                evt.stopPropagation();
-                evt.preventDefault();
-                
-                var rv = self.validate(self.value2submit())
-                if (typeof rv === 'string') {
-                    jQuery('.editable-digital-object').parents('.control-group').addClass('has-error');
-                    jQuery('.editable-error-block').html(rv).show();
-                } else {
-                    self.uploader.start();
-                }
-                
-                return false;
+                return self.upload(evt);
             });
             
-            this.uploader.bind('UploadComplete', function(up, data, r) {
-                // wait just for a second
-                setTimeout(function() {
-                    jQuery("button.editable-submit").click();
-                }, 500);
+            this.uploader.bind('UploadComplete', this.uploadComplete);
+            this.uploader.bind('FilesAdded', function(up, files) {
+                return self.filesAdded(up, files);
             });
+            this.uploader.bind('UploadProgress', this.uploadProgress);
+
+            this.uploader.bind('Error', this.uploadError);
         },
 
         /**
@@ -183,8 +185,6 @@ DigitalObject editable input.
            @returns {mixed}
        **/
        value2submit: function(value) {
-           console.log(this.uploader.files.length);
-
            return {
                'count': this.uploader.files.length,
                'name': jQuery(this.$name).val()

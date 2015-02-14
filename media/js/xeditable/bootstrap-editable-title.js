@@ -145,7 +145,7 @@ $(function(){
        value2submit: function(value) {
            return {
                title: this.$input.val()
-            }
+            };
        },
        
         /**

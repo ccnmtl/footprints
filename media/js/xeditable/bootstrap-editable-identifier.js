@@ -102,7 +102,7 @@
            return {
                identifier: this.$input.val(),
                identifier_type: this.$type.val()
-            }
+            };
        },
        
         /**

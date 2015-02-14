@@ -1,19 +1,19 @@
 (function () {
-    Footprint = Backbone.Model.extend({
+    window.Footprint = Backbone.Model.extend({
         urlRoot: '/api/footprint/',
         url: function() {
             return this.urlRoot + this.get('id') + '/';
         }
     });
 
-    BookCopy = Backbone.Model.extend({
+    window.BookCopy = Backbone.Model.extend({
         urlRoot: '/api/book/',
         url: function() {
             return this.urlRoot + this.get('id') + '/';
         }
     });
     
-    FootprintBaseView = Backbone.View.extend({
+    window.FootprintBaseView = Backbone.View.extend({
         context: function() {
             var ctx = this.model.toJSON();
             for (var attrname in this.baseContext) {
@@ -124,7 +124,7 @@
         }
     });
     
-    FootprintDetailView = FootprintBaseView.extend({
+    window.FootprintDetailView = window.FootprintBaseView.extend({
         events: {
             'click a.remove-related span.glyphicon-remove': 'confirmRemoveRelated'
         },
@@ -194,7 +194,7 @@
                 namedParams: true,
                 tpl: jQuery('#xeditable-digitalobject-form').html(), 
                 source: this.baseContext.all_mediums,
-                url: function() { return true; },
+                url: function() { return true; /* plupload submits */},
                 success: this.refresh
             });
             
@@ -206,7 +206,7 @@
         }
     });
 
-    BookDetailView = FootprintBaseView.extend({
+    window.BookDetailView = window.FootprintBaseView.extend({
         events: {
             'click a.remove-related span.glyphicon-remove': 'confirmRemoveRelated',
         },
@@ -287,7 +287,7 @@
         }
     });
     
-    FootprintView = Backbone.View.extend({
+    window.FootprintView = Backbone.View.extend({
         initialize: function(options) {
             _.bindAll(this, 'context', 'render');
             
@@ -297,8 +297,8 @@
                 headers: {'X-HTTP-Method-Override': 'PATCH'}
             };
             
-            this.footprint = new Footprint({id: options.footprint.id});
-            this.bookCopy = new BookCopy({id: options.book_copy.id});
+            this.footprint = new window.Footprint({id: options.footprint.id});
+            this.bookCopy = new window.BookCopy({id: options.book_copy.id});
             
             this.footprint.on('change', this.render);
             this.bookCopy.on('change', this.render);
@@ -308,13 +308,13 @@
             this.template = _.template(jQuery(options.progressTemplate).html());
             
             // create child views for each page area 
-            this.detailView = new FootprintDetailView({
+            this.detailView = new window.FootprintDetailView({
                 el: jQuery(this.el).find(".footprint-detail"),
                 model: this.footprint,
                 baseContext: options.baseContext,
                 template: options.detailTemplate
             });
-            this.bookView = new BookDetailView({
+            this.bookView = new window.BookDetailView({
                 el: jQuery(this.el).find(".book-detail"),
                 model: this.bookCopy,
                 baseContext: options.baseContext,

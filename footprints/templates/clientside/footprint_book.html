@@ -1,7 +1,7 @@
 <script type="text/template" id="book-detail-template">
 <div class="breadcrumb">THE BOOK</div>
 <dl class="dl-horizontal">
-    <dt>Book Copy Identifier</dt><dd class="border-bottom"><%=id%>&mdash;<%=imprint.id%>&mdash;<%=imprint.work.id%></dd>
+    <dt>Book Copy Identifier</dt><dd class="border-bottom"><%=imprint.work.id%>-<%=imprint.id%>-<%=id%></dd>
     <% if (imprint.work.title && imprint.work.title.length > 0) { %>
         <dt>Title</dt>
         <dd class="border-bottom">
