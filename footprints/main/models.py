@@ -121,10 +121,10 @@ class DigitalFormat(models.Model):
 class DigitalObject(models.Model):
     name = models.CharField(max_length=500)
     file = models.FileField(upload_to="%Y/%m/%d/")
+    description = models.TextField(null=True, blank=True)
 
     digital_format = models.ForeignKey(DigitalFormat, null=True, blank=True)
     source_url = models.URLField(null=True, blank=True)
-    notes = models.TextField(null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
@@ -135,7 +135,7 @@ class DigitalObject(models.Model):
 
     class Meta:
         verbose_name = "Digital Object"
-        ordering = ['name']
+        ordering = ['-created_at']
 
     def __unicode__(self):
         return self.name

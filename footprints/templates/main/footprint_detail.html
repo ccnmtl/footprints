@@ -20,6 +20,7 @@
     {% include "xeditable/identifier.html" %}
     {% include "clientside/footprint.html" %}
     {% include "clientside/footprint_book.html" %}
+    {% include "clientside/footprint_carousel.html" %}    
     {% include "clientside/footprint_progress.html" %}
 {% endblock %}
 
@@ -48,8 +49,9 @@
                 el: jQuery('div.object-detail'),
                 footprint: {'id': '{{footprint.id}}'},
                 book_copy: {'id': '{{footprint.book_copy.id}}'},
-                detailTemplate: jQuery('#footprint-detail-template'),
                 bookTemplate: jQuery('#book-detail-template'),
+                detailTemplate: jQuery('#footprint-detail-template'),
+                carouselTemplate: jQuery('#carousel-template'), 
                 progressTemplate: jQuery('#progress-sidebar-template'),
                 baseContext: {
                     all_languages: [{% for language in languages %}
@@ -95,5 +97,17 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal" id="carousel-modal" tabindex="-1" role="dialog" aria-labelledby="Carousel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body"></div>
+            </div>
+        </div>
+        </div>
+
     </div>
 {% endblock %}

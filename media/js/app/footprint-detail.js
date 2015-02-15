@@ -288,15 +288,18 @@
     });
     
     window.FootprintView = Backbone.View.extend({
+        events: {
+            'click .carousel img': 'maximizeCarousel'
+        },
         initialize: function(options) {
-            _.bindAll(this, 'context', 'render');
-            
+            _.bindAll(this, 'context', 'render', 'maximizeCarousel');
+
             // Modifying X-Editable default properties
             jQuery.fn.editable.defaults.mode = 'inline';
             jQuery.fn.editable.defaults.ajaxOptions = {
                 headers: {'X-HTTP-Method-Override': 'PATCH'}
             };
-            
+
             this.footprint = new window.Footprint({id: options.footprint.id});
             this.bookCopy = new window.BookCopy({id: options.book_copy.id});
             
@@ -306,6 +309,8 @@
             this.baseContext = options.baseContext;
             this.elProgress = jQuery(this.el).find(".progress-detail");
             this.template = _.template(jQuery(options.progressTemplate).html());
+            
+            this.carouselTemplate = _.template(jQuery(options.carouselTemplate).html());
             
             // create child views for each page area 
             this.detailView = new window.FootprintDetailView({
@@ -331,6 +336,23 @@
             var ctx = this.context();
             var markup = this.template(ctx);
             jQuery(this.elProgress).html(markup);
+        },
+        maximizeCarousel: function(evt) {
+            var self = this;
+            
+            var ctx = this.footprint.toJSON();
+            ctx.active_id = jQuery(evt.currentTarget).data('id');
+            var html = this.carouselTemplate(ctx);
+            jQuery("#carousel-modal").find('.modal-body').html(html);
+            
+            var modal = jQuery("#carousel-modal").modal({
+                'backdrop': 'static',
+                'keyboard': false,
+                'show': true
+            });
+            jQuery('#carousel-fullsize').carousel({
+                interval: false
+            });
         }
     });
 })();

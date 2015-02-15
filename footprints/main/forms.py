@@ -35,7 +35,7 @@ class DigitalFormatForm(ModelForm):
 class DigitalObjectForm(ModelForm):
     class Meta:
         model = DigitalObject
-        fields = ['name', 'file']
+        fields = ['name', 'file', 'description']
 
 
 class StandardizedIdentificationForm(ModelForm):

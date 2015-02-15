@@ -90,7 +90,7 @@ ul.wizard-tabs.has-error li.active a {
 /* Carousel */
 
 .carousel-controls {
-    margin-bottom: 10px;
+    margin: 5px 0 10px 0;
 }
 
 /* Object detail pages */
@@ -247,6 +247,15 @@ ul.wizard-tabs.has-error li.active a {
     overflow: hidden;
 }
 
+#carousel-modal .modal-header .close {
+    margin-top: -12px;
+}
+
+#carousel-modal .item img {
+  width: auto;
+  height: 400px;
+  max-height: 400px;
+}
 
 /** editable fields **/
 .editable-person {

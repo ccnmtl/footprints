@@ -9,7 +9,7 @@
     $.fn.editableutils.inherit(DigitalObject, $.fn.editabletypes.abstractinput);
 
     $.extend(DigitalObject.prototype, {
-        initializeUploader: function(browseButton, fileList, params) {
+        initializeUploader: function(browseButton, fileList) {
             var uploader = new plupload.Uploader({
                 browse_button: browseButton,
                 url: '/digitalobject/add/',
@@ -25,8 +25,7 @@
                     mime_types: [
                         {title: "Image files", extensions: "jpg,jpeg,png,gif,bmp"}
                     ]
-                },
-                multipart_params: params
+                }
             });
 
             uploader.init();
@@ -44,7 +43,7 @@
             });
             jQuery(this.$list).html(html);
         },
-        upload: function(evt) {
+        upload: function(evt, params) {
             evt.stopPropagation();
             evt.preventDefault();
             
@@ -53,6 +52,7 @@
                 jQuery('.editable-digital-object').parents('.control-group').addClass('has-error');
                 jQuery('.editable-error-block').html(rv).show();
             } else {
+                this.uploader.setOption('multipart_params', params);
                 this.uploader.start();
             }
             
@@ -88,20 +88,21 @@
             
             this.$browse =  this.$tpl.find('button.browse')[0];
             this.$list =  this.$tpl.find('ul.filelist')[0];
-            this.$name =  this.$tpl.find('input[name="name"]')[0];
+            this.$description =  this.$tpl.find('input[name="description"]')[0];
             
             // hack: steal submit from EditableForm
             // Hide the submit button, make the input div wider
             jQuery("button.editable-submit").hide();
             jQuery(this.$browse).parents('.editable-input').addClass('wide');
-            
-            // additional submit params
-            var params = $(this.options.scope).data('params');
+
             this.uploader = this.initializeUploader(
-               this.$browse, this.$list, params);
-                        
+                    this.$browse, this.$list);
+
+            // gather additional submit params
+            var params = $(this.options.scope).data('params');
             jQuery('button.editable-upload').on('click', function(evt) {
-                return self.upload(evt);
+                params.description =  jQuery(self.$description).val();
+                return self.upload(evt, params);
             });
             
             this.uploader.bind('UploadComplete', this.uploadComplete);
@@ -187,7 +188,7 @@
        value2submit: function(value) {
            return {
                'count': this.uploader.files.length,
-               'name': jQuery(this.$name).val()
+               'name': jQuery(this.$description).val()
            };
        },
        
@@ -197,7 +198,7 @@
         @method activate() 
        **/        
        activate: function() {
-            this.$name.focus();
+            this.$description.focus();
        },  
        
        /**

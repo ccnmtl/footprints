@@ -22,7 +22,8 @@
                                     <% for (var j=0; j < limit && i < digital_object.length; j++, i++) { %>
                                         <div class="col-sm-2">
                                             <div class="crop">
-                                                <img src="<%=digital_object[i].file%>" alt="Image" class="img-responsive">
+                                                <img src="<%=digital_object[i].file%>" alt="Image"
+                                                    class="img-responsive" data-id="<%=digital_object[i].id%>" />
                                             </div>
                                         </div>
                                     <% } %>
@@ -32,14 +33,14 @@
                 </div>
             </div>
             <div class="carousel-controls">
-            <% if (digital_object.length > limit) { %> 
-                <a class="pull-left" href="#thumbnails" data-slide="prev">
-                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-                </a>
-                <a class="pull-right" href="#thumbnails" data-slide="next">
-                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-                </a>
-            <% } %>
+                <% if (digital_object.length > limit) { %> 
+                    <a class="pull-left" href="#thumbnails" data-slide="prev">
+                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                    </a>
+                    <a class="pull-right" href="#thumbnails" data-slide="next">
+                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                    </a>
+                <% } %>
             </div>
         </div>
     <% } %>

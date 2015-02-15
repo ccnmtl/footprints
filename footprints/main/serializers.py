@@ -138,11 +138,9 @@ class PlaceSerializer(HyperlinkedModelSerializerEx):
 
 
 class DigitalObjectSerializer(HyperlinkedModelSerializer):
-    digital_format = DigitalFormatSerializer()
-
     class Meta:
         model = DigitalObject
-        fields = ('id', 'name', 'digital_format', 'file')
+        fields = ('id', 'name', 'description', 'file')
 
     @classmethod
     def many_init(cls, *args, **kwargs):
