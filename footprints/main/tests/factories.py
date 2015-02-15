@@ -65,11 +65,6 @@ class PersonFactory(factory.DjangoModelFactory):
         StandardizedIdentificationFactory)
     notes = "notes"
 
-    @factory.post_generation
-    def digital_object(self, create, extracted, **kwargs):
-        if create:
-            self.digital_object.add(DigitalObjectFactory())
-
 
 class ActorFactory(factory.DjangoModelFactory):
     FACTORY_FOR = Actor
@@ -138,22 +133,12 @@ class ImprintFactory(factory.DjangoModelFactory):
         if create:
             self.language.add(LanguageFactory())
 
-    @factory.post_generation
-    def digital_object(self, create, extracted, **kwargs):
-        if create:
-            self.digital_object.add(DigitalObjectFactory())
-
 
 class BookCopyFactory(factory.DjangoModelFactory):
     FACTORY_FOR = BookCopy
 
     imprint = factory.SubFactory(ImprintFactory)
     notes = "lorem ipsum"
-
-    @factory.post_generation
-    def digital_object(self, create, extracted, **kwargs):
-        if create:
-            self.digital_object.add(DigitalObjectFactory())
 
 
 class FootprintFactory(factory.DjangoModelFactory):
@@ -183,8 +168,3 @@ class FootprintFactory(factory.DjangoModelFactory):
     def language(self, create, extracted, **kwargs):
         if create:
             self.language.add(LanguageFactory())
-
-    @factory.post_generation
-    def digital_object(self, create, extracted, **kwargs):
-        if create:
-            self.digital_object.add(DigitalObjectFactory())

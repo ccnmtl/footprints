@@ -614,4 +614,4 @@ class AddDigitalObjectViewTest(TestCase):
 
         footprint = Footprint.objects.get(id=self.footprint.id)  # refresh
         self.assertTrue(the_json['success'])
-        self.assertEquals(footprint.digital_object.count(), 2)
+        self.assertEquals(footprint.digital_object.count(), 1)
