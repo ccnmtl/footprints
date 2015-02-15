@@ -247,14 +247,42 @@ ul.wizard-tabs.has-error li.active a {
     overflow: hidden;
 }
 
+#carousel-modal .modal-content {
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    background-color: black;
+    border: 0;
+}
+
+#carousel-modal .modal-header {
+    border-bottom: none;
+}
+
 #carousel-modal .modal-header .close {
     margin-top: -12px;
+    font-size: 20px;
+    color: #fff;
+    opacity: .5;
+}
+
+#carousel-modal .modal-header .close:hover {
+    opacity: 1;
 }
 
 #carousel-modal .item img {
   width: auto;
-  height: 400px;
-  max-height: 400px;
+  height: 500px;
+  max-height: 500px;
+}
+
+#carousel-modal .carousel-control.right {
+    right: -40px;
+    background-image: none;
+}
+
+#carousel-modal .carousel-control.left {
+    background-image: none;
+    left: -40px;
 }
 
 /** editable fields **/
