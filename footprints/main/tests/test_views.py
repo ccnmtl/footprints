@@ -10,6 +10,7 @@ from footprints.main.tests.factories import (
     PersonFactory, RoleFactory, PlaceFactory, ActorFactory)
 from footprints.main.views import (
     CreateFootprintView, AddActorView)
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 
 class BasicTest(TestCase):
@@ -560,3 +561,57 @@ class AddIdentifierViewTest(TestCase):
         imprint = Imprint.objects.get(id=self.imprint.id)  # refresh from db
         identifier = imprint.standardized_identifier.get(identifier='abcdefg')
         self.assertEquals(identifier.identifier_type, 'LOC')
+
+
+class AddDigitalObjectViewTest(TestCase):
+
+    def setUp(self):
+        self.user = UserFactory()
+        self.staff = UserFactory(is_staff=True)
+        self.footprint = FootprintFactory()
+
+        self.url = reverse('add-digital-object-view')
+
+    def test_post_expected_errors(self):
+        # not logged in
+        self.assertEquals(self.client.post(self.url).status_code, 302)
+
+        self.client.login(username=self.user.username, password="test")
+
+        # no ajax
+        self.assertEquals(self.client.post(self.url).status_code, 405)
+
+        # no permissions
+        response = self.client.post(self.url,
+                                    {'parent_id': self.footprint.id,
+                                     'parent_model': 'footprint'},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 403)
+
+    def test_post_no_data(self):
+        self.client.login(username=self.staff.username, password="test")
+        response = self.client.post(self.url,
+                                    {'parent_id': self.footprint.id,
+                                     'parent_model': 'footprint'},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        the_json = loads(response.content)
+        self.assertFalse(the_json['success'])
+
+    def test_post_success(self):
+        f = SimpleUploadedFile("file.txt", "file_content")
+
+        self.client.login(username=self.staff.username, password="test")
+        response = self.client.post(self.url,
+                                    {'parent_id': self.footprint.id,
+                                     'parent_model': 'footprint',
+                                     'name': 'foo.jpg',
+                                     'description': 'Foo Bar',
+                                     'file': f},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        the_json = loads(response.content)
+
+        footprint = Footprint.objects.get(id=self.footprint.id)  # refresh
+        self.assertTrue(the_json['success'])
+        self.assertEquals(footprint.digital_object.count(), 2)

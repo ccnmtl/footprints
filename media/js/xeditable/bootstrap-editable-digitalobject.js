@@ -85,18 +85,17 @@
         **/        
         render: function() {
             var self = this;
-            
+
             this.$browse =  this.$tpl.find('button.browse')[0];
             this.$list =  this.$tpl.find('ul.filelist')[0];
             this.$description =  this.$tpl.find('input[name="description"]')[0];
-            
+
             // hack: steal submit from EditableForm
             // Hide the submit button, make the input div wider
             jQuery("button.editable-submit").hide();
             jQuery(this.$browse).parents('.editable-input').addClass('wide');
 
-            this.uploader = this.initializeUploader(
-                    this.$browse, this.$list);
+            this.uploader = this.initializeUploader(this.$browse, this.$list);
 
             // gather additional submit params
             var params = $(this.options.scope).data('params');
