@@ -2,14 +2,14 @@ MANAGE=./manage.py
 APP=footprints
 FLAKE8=./ve/bin/flake8
 
-jenkins: ./ve/bin/python validate test flake8
+jenkins: ./ve/bin/python validate test flake8 jshint
 
 ./ve/bin/python: requirements.txt bootstrap.py virtualenv.py
 	chmod +x manage.py bootstrap.py
 	./bootstrap.py
 
 jshint: node_modules/jshint/bin/jshint
-	./node_modules/jshint/bin/jshint media/js/app/
+	./node_modules/jshint/bin/jshint media/js/app/ media/js/xeditable
 
 node_modules/jshint/bin/jshint:
 	npm install jshint --prefix .

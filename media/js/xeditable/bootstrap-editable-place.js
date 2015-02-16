@@ -25,7 +25,7 @@ Place editable input.
             },
             mapTypeControl: false,
             streetViewControl: false
-        }
+        };
         
         this.geocoder = new google.maps.Geocoder();
     };
@@ -222,7 +222,7 @@ Place editable input.
                position: this.marker.getPosition().toUrlValue(),
                city: jQuery(this.$city).val(),
                country: jQuery(this.$country).val()
-           }
+           };
        },
        
         /**

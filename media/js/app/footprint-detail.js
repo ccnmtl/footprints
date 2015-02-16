@@ -1,19 +1,19 @@
 (function () {
-    Footprint = Backbone.Model.extend({
+    window.Footprint = Backbone.Model.extend({
         urlRoot: '/api/footprint/',
         url: function() {
             return this.urlRoot + this.get('id') + '/';
         }
     });
 
-    BookCopy = Backbone.Model.extend({
+    window.BookCopy = Backbone.Model.extend({
         urlRoot: '/api/book/',
         url: function() {
             return this.urlRoot + this.get('id') + '/';
         }
     });
     
-    FootprintBaseView = Backbone.View.extend({
+    window.FootprintBaseView = Backbone.View.extend({
         context: function() {
             var ctx = this.model.toJSON();
             for (var attrname in this.baseContext) {
@@ -124,14 +124,13 @@
         }
     });
     
-    FootprintDetailView = FootprintBaseView.extend({
+    window.FootprintDetailView = window.FootprintBaseView.extend({
         events: {
             'click a.remove-related span.glyphicon-remove': 'confirmRemoveRelated'
         },
         initialize: function(options) {
             _.bindAll(this, 'context', 'refresh', 'render',
-               'confirmRemoveRelated', 'removeRelated',
-               'validate', 'validatePlace', 'validateActor');
+               'confirmRemoveRelated', 'removeRelated');
 
             this.baseContext = options.baseContext;
             this.template = _.template(jQuery(options.template).html());
@@ -189,19 +188,31 @@
                 validate: this.validate,
                 success: this.refresh
             });
+
+            var elt = jQuery(this.el).find('.editable-digitalobject');
+            jQuery(elt).editable({
+                namedParams: true,
+                tpl: jQuery('#xeditable-digitalobject-form').html(), 
+                source: this.baseContext.all_mediums,
+                url: function() { return true; /* plupload submits */},
+                success: this.refresh
+            });
+            
+            jQuery('.carousel').carousel({
+                interval: false
+            });
             
             this.initializeMap();
         }
     });
 
-    BookDetailView = FootprintBaseView.extend({
+    window.BookDetailView = window.FootprintBaseView.extend({
         events: {
             'click a.remove-related span.glyphicon-remove': 'confirmRemoveRelated',
         },
         initialize: function(options) {
             _.bindAll(this, 'context', 'refresh', 'render',
-                      'confirmRemoveRelated', 'removeRelated',
-                      'validate', 'validatePlace', 'validateActor');
+                'confirmRemoveRelated', 'removeRelated');
             
             this.baseContext = options.baseContext;
             this.template = _.template(jQuery(options.template).html());
@@ -276,18 +287,21 @@
         }
     });
     
-    FootprintView = Backbone.View.extend({
+    window.FootprintView = Backbone.View.extend({
+        events: {
+            'click .carousel img': 'maximizeCarousel'
+        },
         initialize: function(options) {
-            _.bindAll(this, 'context', 'render');
-            
+            _.bindAll(this, 'context', 'render', 'maximizeCarousel');
+
             // Modifying X-Editable default properties
             jQuery.fn.editable.defaults.mode = 'inline';
             jQuery.fn.editable.defaults.ajaxOptions = {
                 headers: {'X-HTTP-Method-Override': 'PATCH'}
             };
-            
-            this.footprint = new Footprint({id: options.footprint.id});
-            this.bookCopy = new BookCopy({id: options.book_copy.id});
+
+            this.footprint = new window.Footprint({id: options.footprint.id});
+            this.bookCopy = new window.BookCopy({id: options.book_copy.id});
             
             this.footprint.on('change', this.render);
             this.bookCopy.on('change', this.render);
@@ -296,14 +310,16 @@
             this.elProgress = jQuery(this.el).find(".progress-detail");
             this.template = _.template(jQuery(options.progressTemplate).html());
             
+            this.carouselTemplate = _.template(jQuery(options.carouselTemplate).html());
+            
             // create child views for each page area 
-            this.detailView = new FootprintDetailView({
+            this.detailView = new window.FootprintDetailView({
                 el: jQuery(this.el).find(".footprint-detail"),
                 model: this.footprint,
                 baseContext: options.baseContext,
                 template: options.detailTemplate
             });
-            this.bookView = new BookDetailView({
+            this.bookView = new window.BookDetailView({
                 el: jQuery(this.el).find(".book-detail"),
                 model: this.bookCopy,
                 baseContext: options.baseContext,
@@ -320,6 +336,23 @@
             var ctx = this.context();
             var markup = this.template(ctx);
             jQuery(this.elProgress).html(markup);
+        },
+        maximizeCarousel: function(evt) {
+            var self = this;
+            
+            var ctx = this.footprint.toJSON();
+            ctx.active_id = jQuery(evt.currentTarget).data('id');
+            var html = this.carouselTemplate(ctx);
+            jQuery("#carousel-modal").find('.modal-body').html(html);
+            
+            var modal = jQuery("#carousel-modal").modal({
+                'backdrop': 'static',
+                'keyboard': false,
+                'show': true
+            });
+            jQuery('#carousel-fullsize').carousel({
+                interval: false
+            });
         }
     });
 })();

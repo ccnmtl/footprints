@@ -15,12 +15,13 @@ from footprints.main.views import (
     FootprintDetailView, PersonDetailView, PlaceDetailView,
     WrittenWorkDetailView, TitleListView, NameListView,
     AddPlaceView, AddDateView, RemoveRelatedView, FootprintListView,
-    AddIdentifierView)
+    AddIdentifierView, AddDigitalObjectView)
 from footprints.main.viewsets import (
     BookCopyViewSet, ImprintViewSet, ActorViewSet,
     ExtendedDateFormatViewSet, FootprintViewSet, LanguageViewSet,
     PersonViewSet, PlaceViewSet, RoleViewSet, WrittenWorkViewSet, UserViewSet,
-    StandardizedIdentificationViewSet)
+    StandardizedIdentificationViewSet, DigitalFormatViewSet,
+    DigitalObjectViewSet)
 from footprints.mixins import is_staff
 
 
@@ -32,17 +33,19 @@ if hasattr(settings, 'CAS_BASE'):
 
 router = routers.DefaultRouter()
 router.register(r'actor', ActorViewSet)
+router.register(r'book', BookCopyViewSet)
+router.register(r'digitalformat', DigitalFormatViewSet)
+router.register(r'digitalobject', DigitalObjectViewSet)
 router.register(r'edtf', ExtendedDateFormatViewSet)
 router.register(r'footprint', FootprintViewSet)
+router.register(r'identifier', StandardizedIdentificationViewSet)
+router.register(r'imprint', ImprintViewSet)
 router.register(r'language', LanguageViewSet)
 router.register(r'person', PersonViewSet)
 router.register(r'place', PlaceViewSet)
 router.register(r'role', RoleViewSet)
-router.register(r'writtenwork', WrittenWorkViewSet)
 router.register(r'user', UserViewSet)
-router.register(r'book', BookCopyViewSet)
-router.register(r'imprint', ImprintViewSet)
-router.register(r'identifier', StandardizedIdentificationViewSet)
+router.register(r'writtenwork', WrittenWorkViewSet)
 
 
 urlpatterns = patterns(
@@ -76,6 +79,8 @@ urlpatterns = patterns(
         AddDateView.as_view(), name='add-date-view'),
     url(r'^identifier/add/$',
         AddIdentifierView.as_view(), name='add-identifier-view'),
+    url(r'^digitalobject/add/$',
+        AddDigitalObjectView.as_view(), name='add-digital-object-view'),
 
     url(r'^remove/related/$',
         RemoveRelatedView.as_view(), name='remove-related'),

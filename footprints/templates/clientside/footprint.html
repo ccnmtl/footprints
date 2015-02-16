@@ -11,6 +11,39 @@
         </blockquote>
     <% } %>
 
+    <% if (digital_object && digital_object.length > 0) { %> 
+        <div class="well">
+            <div id="thumbnails" class="carousel slide">
+                <div class="carousel-inner">
+                    <% var limit=6, i=0; %>
+                    <% while (i < digital_object.length) { %>
+                            <div class="item <% if (i < limit) { %>active<% } %>">
+                                <div class="row">
+                                    <% for (var j=0; j < limit && i < digital_object.length; j++, i++) { %>
+                                        <div class="col-sm-2">
+                                            <div class="crop">
+                                                <img src="<%=digital_object[i].file%>" alt="Image"
+                                                    class="img-responsive" data-id="<%=digital_object[i].id%>" />
+                                            </div>
+                                        </div>
+                                    <% } %>
+                                </div>
+                            </div>
+                    <% } %>
+                </div>
+            </div>
+            <div class="carousel-controls">
+                <% if (digital_object.length > limit) { %> 
+                    <a class="pull-left" href="#thumbnails" data-slide="prev">
+                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                    </a>
+                    <a class="pull-right" href="#thumbnails" data-slide="next">
+                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                    </a>
+                <% } %>
+            </div>
+        </div>
+    <% } %>
     <dl class="dl-horizontal">
         <% if (associated_date) { %>
             <dt>Footprint Date</dt>
@@ -148,8 +181,8 @@
         <% } %>
     </dl>
     
-    <!-- FOOTPRINT - DO YOU KNOW -->
     <% if (editable) { %>
+        <!-- FOOTPRINT - DO YOU KNOW -->
         <dl class="dl-horizontal">
             <dt>Do you know...</dt>
             <dd>  
@@ -181,13 +214,13 @@
                             data-url="/api/footprint/<%=id%>/">the language(s) of the footprint?</a>
                         </li>
                     <% } %>
-                        <li class="fixed"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
-                            <a href="#" class="<% if (editable) { %>editable-actor<% } %> do-you-know persistant"
-                                data-name="actor" 
-                                data-type="actor" data-pk="<%=id%>" data-value=""
-                                data-params="{csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=id%>,parent_model:'footprint'}" 
-                                data-url="/actor/add/">people related to this footprint, e.g. sellers, owners, curators?</a>
-                        </li>
+                    <li class="fixed"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                        <a href="#" class="<% if (editable) { %>editable-actor<% } %> do-you-know persistant"
+                            data-name="actor" 
+                            data-type="actor" data-pk="<%=id%>" data-value=""
+                            data-params="{csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=id%>,parent_model:'footprint'}" 
+                            data-url="/actor/add/">people related to this footprint, e.g. sellers, owners, curators?</a>
+                    </li>
                     <% if (!medium_description || medium_description.length < 1) { %> 
                         <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
                             <a href="#" class="<% if (editable) { %>editable<% } %> do-you-know persistant"
@@ -213,7 +246,14 @@
                                data-url="/api/footprint/<%=id%>/">any additional notes, clarifications, deductions or oddities?</a>
                         </li>
                     <% } %>
-                </ul>    
+                    <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                        <a href="#" class="editable-digitalobject do-you-know persistant" data-name="digital_object"
+                           data-type="digitalobject" data-pk="<%=id%>" data-value=""
+                           data-params='{"csrfmiddlewaretoken":"<%=csrf_token%>","parent_id":"<%=id%>","parent_model":"footprint"}'>
+                            what the evidence looks like? Add some images
+                        </a>
+                    </li>
+                </ul>
             </dd>
         </dl>
     <% } %>

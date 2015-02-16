@@ -16,7 +16,7 @@ from rest_framework.renderers import JSONPRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-
+from footprints.main.forms import DigitalObjectForm
 from footprints.main.models import (
     Footprint, Actor, Person, Role, WrittenWork, Language, ExtendedDateFormat,
     Place, Imprint, BookCopy, IDENTIFIER_TYPES, StandardizedIdentification)
@@ -308,6 +308,23 @@ class AddPlaceView(AddRelatedRecordView):
         the_parent.place = place
         the_parent.save()
 
+        return self.render_to_json_response({'success': True})
+
+
+class AddDigitalObjectView(AddRelatedRecordView):
+
+    def post(self, *args, **kwargs):
+        the_parent = self.get_parent()
+
+        if not self.has_edit_permission(self.request.user, the_parent):
+            return HttpResponseForbidden()
+
+        form = DigitalObjectForm(self.request.POST, self.request.FILES)
+        if not form.is_valid():
+            return self.render_to_json_response({'success': False})
+        else:
+            the_object = form.save()
+            the_parent.digital_object.add(the_object)
         return self.render_to_json_response({'success': True})
 
 

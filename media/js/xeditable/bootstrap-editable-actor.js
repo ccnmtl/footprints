@@ -151,7 +151,7 @@ $(function(){
                person_id: this.$input.data('instance'),
                role: this.$roleselect.val(),
                alias: this.$actorname.val()
-            }
+            };
        },
        
         /**

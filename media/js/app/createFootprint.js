@@ -5,12 +5,12 @@
         Router: {},
         inst: {},
 
-        initialize: function() {
-            this.inst.router = new CreateFootprintWizard.Router();
+        initialize: function(router) {
+            this.inst.router = router;
         }
     };
     
-    CreateFootprintWizard.Views.BaseView = Backbone.View.extend({
+    window.CreateFootprintWizard.Views.BaseView = Backbone.View.extend({
         onClickDisabled: function(event) {
             event.preventDefault();
             return false;
@@ -30,7 +30,7 @@
         }
     });
     
-    CreateFootprintWizard.Views.TitleView = CreateFootprintWizard.Views.BaseView.extend({
+    window.CreateFootprintWizard.Views.TitleView = window.CreateFootprintWizard.Views.BaseView.extend({
         events: {
             'click li.disabled a': 'onClickDisabled'
         },
@@ -45,7 +45,7 @@
         }
     });
 
-    CreateFootprintWizard.Views.EvidenceTypeView = CreateFootprintWizard.Views.BaseView.extend({
+    window.CreateFootprintWizard.Views.EvidenceTypeView = window.CreateFootprintWizard.Views.BaseView.extend({
         events: {
             'click li.disabled a': 'onClickDisabled',
             'change select[name="footprint-medium"]': 'onMediumChange' 
@@ -84,7 +84,7 @@
         }
     });
 
-    CreateFootprintWizard.Views.EvidenceLocationView = CreateFootprintWizard.Views.BaseView.extend({
+    window.CreateFootprintWizard.Views.EvidenceLocationView = window.CreateFootprintWizard.Views.BaseView.extend({
         events: {
             'click li.disabled a': 'onClickDisabled'
         },
@@ -99,19 +99,19 @@
         }
     });
     
-    var titleView = new CreateFootprintWizard.Views.TitleView({
+    var titleView = new window.CreateFootprintWizard.Views.TitleView({
         el: jQuery("#footprint-form")
     });
 
-    var evidenceTypeView = new CreateFootprintWizard.Views.EvidenceTypeView({
+    var evidenceTypeView = new window.CreateFootprintWizard.Views.EvidenceTypeView({
         el: jQuery("#footprint-form")
     });    
 
-    var evidenceLocationView = new CreateFootprintWizard.Views.EvidenceLocationView({
+    var evidenceLocationView = new window.CreateFootprintWizard.Views.EvidenceLocationView({
         el: jQuery("#footprint-form")
     });
 
-    CreateFootprintWizard.Router = Backbone.Router.extend({
+    window.CreateFootprintWizard.Router = Backbone.Router.extend({
         routes: {
             '': 'title',
             'title': 'title',
@@ -161,6 +161,6 @@
         }
     });
     
-    CreateFootprintWizard.initialize();
+    window.CreateFootprintWizard.initialize(new window.CreateFootprintWizard.Router());
     Backbone.history.start();
 })();

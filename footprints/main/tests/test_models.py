@@ -10,7 +10,7 @@ from footprints.main.models import Language, DigitalFormat, \
 from footprints.main.tests.factories import RoleFactory, \
     ActorFactory, PlaceFactory, CollectionFactory, \
     WrittenWorkFactory, ImprintFactory, BookCopyFactory, FootprintFactory, \
-    PersonFactory
+    PersonFactory, DigitalObjectFactory
 
 
 class BasicModelTest(TestCase):
@@ -85,6 +85,8 @@ class BasicModelTest(TestCase):
         person = PersonFactory(name='Cicero')
         self.assertEquals(person.__unicode__(), "Cicero")
 
+        person.digital_object.add(DigitalObjectFactory())
+
         self.assertEquals(person.percent_complete(), 100)
 
     def test_actor(self):
@@ -134,19 +136,21 @@ class BasicModelTest(TestCase):
         self.assertEquals(imprint.__unicode__(),
                           'The Odyssey, Edition 1 (1984~)')
 
+        imprint.digital_object.add(DigitalObjectFactory())
         self.assertEquals(imprint.percent_complete(), 100)
 
     def test_book_copy(self):
         copy = BookCopyFactory()
         self.assertTrue(
             copy.__unicode__().endswith('The Odyssey, Edition 1 (1984~)'))
-
+        copy.digital_object.add(DigitalObjectFactory())
         self.assertEquals(copy.percent_complete(), 100)
 
     def test_footprint(self):
         footprint = FootprintFactory()
         self.assertEquals(footprint.__unicode__(), 'Provenance')
 
+        footprint.digital_object.add(DigitalObjectFactory())
         self.assertEquals(footprint.percent_complete(), 100)
 
         self.assertEquals(footprint.display_title(), "The Odyssey")
