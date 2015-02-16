@@ -29,11 +29,13 @@
     </head>
 
     <body class="{% block bodyclass %}{% endblock %}" id="{% block bodyid %}{% endblock %}">
-    
+    <div id="wrap">    
     {% block topnavbar %}
-    <nav class="navbar navbar-default navbar-pl navbar-fixed-top" role="navigation">
     
-        <div class="container container-header">
+<div class="container">
+    <nav class="navbar navbar-default" role="navigation">
+    
+        <div class="container-fluid">
         
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle"
@@ -91,6 +93,7 @@
         <!--/.container-header -->
     
     </nav><!--/.navbar-pl -->
+</div>    
     {% endblock %}
     
     {% if request.user.is_anonymous %}
@@ -190,10 +193,12 @@
         </div> <!-- /.content -->
     
     </div> <!-- /.container-pl -->
-    
+ </div>   <!-- /#wrap -->
     {% block footer %}
+    <div class="container">
     <footer class="footer">
     </footer>
+    </div>
     {% endblock %}
     
     <script src="{{STATIC_URL}}js/underscore-min.js"></script>

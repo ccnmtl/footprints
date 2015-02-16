@@ -1,16 +1,19 @@
-html {
+/* Footprints CSS
+ * by Rachelle White
+ * ccnmtl.columbia.edu
+ * 2015
+ */
+
+/* Structure */
+
+body, html {
 	height: 100%;
 }
 
-body {
-  background-color: #eee;
-  height: 100%;
-}
-
-body > .container {
-  background-color: #fff;
-  min-height: 100%;
-  padding-top: 75px;
+#wrap {
+	position: relative;
+	min-height: 100%;
+	margin-bottom: -100px;
 }
 
 #content {
@@ -26,6 +29,30 @@ blockquote {
     font-weight: 300;
     line-height: 1.75;
 }
+
+
+/* Footer */
+
+.clearfooter {
+	height: 50px;
+	clear: both;
+}
+
+.footer {
+	background-color: #171717;
+	height: 100px;
+	position: relative;
+	margin: 1em 0 0 0;
+	bottom: 0;
+}
+
+.footer-interior {
+	padding: 10px 0 0 0;
+	width: 1170px;
+	margin: 0 auto;
+	display: block;
+}
+
 
 /* Record Entry */
 .btn-image-only {
