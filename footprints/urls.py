@@ -15,7 +15,7 @@ from footprints.main.views import (
     FootprintDetailView, PersonDetailView, PlaceDetailView,
     WrittenWorkDetailView, TitleListView, NameListView,
     AddPlaceView, AddDateView, RemoveRelatedView, FootprintListView,
-    AddIdentifierView, AddDigitalObjectView)
+    AddIdentifierView, AddDigitalObjectView, ConnectFootprintView)
 from footprints.main.viewsets import (
     BookCopyViewSet, ImprintViewSet, ActorViewSet,
     ExtendedDateFormatViewSet, FootprintViewSet, LanguageViewSet,
@@ -81,6 +81,9 @@ urlpatterns = patterns(
         AddIdentifierView.as_view(), name='add-identifier-view'),
     url(r'^digitalobject/add/$',
         AddDigitalObjectView.as_view(), name='add-digital-object-view'),
+
+    url(r'^footprint/(?P<pk>\d+)/connect/$',
+        ConnectFootprintView.as_view(), name='connect-footprint-view'),
 
     url(r'^remove/related/$',
         RemoveRelatedView.as_view(), name='remove-related'),

@@ -330,6 +330,9 @@ class WrittenWork(models.Model):
         role = Role.objects.get_author_role()
         return self.actor.filter(role=role)
 
+    def description(self):
+        return self.__unicode__()
+
 
 class Imprint(models.Model):
     work = models.ForeignKey(WrittenWork)
@@ -371,6 +374,9 @@ class Imprint(models.Model):
         if self.date_of_publication:
             label = "%s (%s)" % (label, self.date_of_publication)
         return label
+
+    def description(self):
+        return self.__unicode__()
 
     def percent_complete(self):
         required = 9.0
@@ -432,6 +438,9 @@ class BookCopy(models.Model):
         if self.notes is not None:
             completed += 1
         return int(completed/required * 100)
+
+    def description(self):
+        return self.__unicode__()
 
 
 class Footprint(models.Model):

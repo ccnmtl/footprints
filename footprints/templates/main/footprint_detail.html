@@ -20,7 +20,8 @@
     {% include "xeditable/identifier.html" %}
     {% include "clientside/footprint.html" %}
     {% include "clientside/footprint_book.html" %}
-    {% include "clientside/footprint_carousel.html" %}    
+    {% include "clientside/footprint_carousel.html" %}
+    {% include "clientside/footprint_connect.html" %}
     {% include "clientside/footprint_progress.html" %}
 {% endblock %}
 
@@ -51,6 +52,7 @@
                 book_copy: {'id': '{{footprint.book_copy.id}}'},
                 bookTemplate: jQuery('#book-detail-template'),
                 detailTemplate: jQuery('#footprint-detail-template'),
+                connectTemplate: jQuery('#connect-record-template'),
                 carouselTemplate: jQuery('#carousel-template'), 
                 progressTemplate: jQuery('#progress-sidebar-template'),
                 baseContext: {
@@ -79,6 +81,7 @@
             </div>
             <div class="col-md-4">
                 <div class="progress-detail"></div>
+                <div class="connect-record"></div>
             </div>
         </div>
     

@@ -93,6 +93,44 @@ ul.wizard-tabs.has-error li.active a {
     margin: 5px 0 10px 0;
 }
 
+#carousel-modal .modal-content {
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    background-color: black;
+    border: 0;
+}
+
+#carousel-modal .modal-header {
+    border-bottom: none;
+}
+
+#carousel-modal .modal-header .close {
+    margin-top: -12px;
+    font-size: 20px;
+    color: #fff;
+    opacity: .5;
+}
+
+#carousel-modal .modal-header .close:hover {
+    opacity: 1;
+}
+
+#carousel-modal .item img {
+  width: auto;
+  height: 500px;
+  max-height: 500px;
+}
+
+#carousel-modal .carousel-control.right {
+    right: -40px;
+    background-image: none;
+}
+
+#carousel-modal .carousel-control.left {
+    background-image: none;
+    left: -40px;
+}
+
 /* Object detail pages */
 
 .object-detail .breadcrumb {
@@ -247,45 +285,28 @@ ul.wizard-tabs.has-error li.active a {
     overflow: hidden;
 }
 
-#carousel-modal .modal-content {
-    box-shadow: none;
-    -webkit-box-shadow: none;
-    background-color: black;
-    border: 0;
+.object-detail .connect-record-container .select2-container {
+    width: 100%;
+    font-size: 12px;
+    display: block;
 }
 
-#carousel-modal .modal-header {
-    border-bottom: none;
+.object-detail .connect-record-container .select2-container.book .select2-chosen,
+.object-detail .connect-record-container .select2-container.imprint .select2-chosen {
+    color: black;
 }
 
-#carousel-modal .modal-header .close {
-    margin-top: -12px;
-    font-size: 20px;
-    color: #fff;
-    opacity: .5;
+.object-detail .connect-record-container .select-object {
+    width: 100%;
+    font-size: 14px;
 }
 
-#carousel-modal .modal-header .close:hover {
-    opacity: 1;
+.object-detail .connect-record-container .save-connection {
+    margin-left: 10px;
 }
 
-#carousel-modal .item img {
-  width: auto;
-  height: 500px;
-  max-height: 500px;
-}
 
-#carousel-modal .carousel-control.right {
-    right: -40px;
-    background-image: none;
-}
-
-#carousel-modal .carousel-control.left {
-    background-image: none;
-    left: -40px;
-}
-
-/** editable fields **/
+/** xeditable fields **/
 .editable-person {
     padding: 20px;
 }
