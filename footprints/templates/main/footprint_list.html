@@ -58,10 +58,10 @@
                         {% endfor %}
                     </td>
                     <td>
-                        {% if footprint.book_copy.imprint.publishers.count > 0 %}
+                        {% if footprint.book_copy.imprint.printers.count > 0 %}
                             <div>
-                                {% for publisher in footprint.book_copy.imprint.publishers %}
-                                    {{publisher.display_name}}
+                                {% for printer in footprint.book_copy.imprint.printers %}
+                                    {{printer.display_name}}
                                     {% if not forloop.last %},{% endif %}
                                 {% endfor %}
                             </div>

@@ -33,18 +33,21 @@ class BasicModelTest(TestCase):
         owner = RoleFactory(name="Owner", level=FOOTPRINT_LEVEL)
         publisher = RoleFactory(name="Publisher", level=IMPRINT_LEVEL)
         author = RoleFactory(name="Author", level=WRITTENWORK_LEVEL)
+        printer = RoleFactory(name="Printer", level=IMPRINT_LEVEL)
 
         self.assertEquals(author, Role.objects.get_author_role())
         self.assertEquals(owner, Role.objects.get_owner_role())
         self.assertEquals(publisher, Role.objects.get_publisher_role())
+        self.assertEquals(printer, Role.objects.get_printer_role())
 
         qs = Role.objects.for_footprint()
         self.assertEquals(qs.count(), 1)
         self.assertEquals(qs.first(), owner)
 
-        qs = Role.objects.for_imprint()
-        self.assertEquals(qs.count(), 1)
-        self.assertEquals(qs.first(), publisher)
+        qs = Role.objects.for_imprint().order_by('name')
+        self.assertEquals(qs.count(), 2)
+        self.assertEquals(qs[0], printer)
+        self.assertEquals(qs[1], publisher)
 
         qs = Role.objects.for_work()
         self.assertEquals(qs.count(), 1)
@@ -138,6 +141,19 @@ class BasicModelTest(TestCase):
 
         imprint.digital_object.add(DigitalObjectFactory())
         self.assertEquals(imprint.percent_complete(), 100)
+
+        publisher = RoleFactory(name="Publisher", level=IMPRINT_LEVEL)
+        printer = RoleFactory(name="Printer", level=IMPRINT_LEVEL)
+
+        imprint.actor.add(ActorFactory(alias="Publisher", role=publisher))
+        imprint.actor.add(ActorFactory(alias="Printer", role=printer))
+        printers = imprint.printers()
+        self.assertEquals(len(printers), 1)
+        self.assertEquals(printers[0].alias, "Printer")
+
+        publishers = imprint.publishers()
+        self.assertEquals(len(publishers), 1)
+        self.assertEquals(publishers[0].alias, "Publisher")
 
     def test_book_copy(self):
         copy = BookCopyFactory()

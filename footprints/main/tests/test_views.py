@@ -1,5 +1,6 @@
 from json import loads
 
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.test.client import Client, RequestFactory
@@ -7,10 +8,9 @@ from django.test.client import Client, RequestFactory
 from footprints.main.models import Footprint, Actor, Imprint
 from footprints.main.tests.factories import (
     UserFactory, WrittenWorkFactory, ImprintFactory, FootprintFactory,
-    PersonFactory, RoleFactory, PlaceFactory, ActorFactory)
+    PersonFactory, RoleFactory, PlaceFactory, ActorFactory, BookCopyFactory)
 from footprints.main.views import (
     CreateFootprintView, AddActorView)
-from django.core.files.uploadedfile import SimpleUploadedFile
 
 
 class BasicTest(TestCase):
@@ -207,6 +207,64 @@ class ListViewTests(TestCase):
         self.assertEquals(response.status_code, 200)
         self.assertEquals(len(response.data), 1)
         self.assertEquals(response.data[0]['name'], 'Alpha')
+
+
+class ConnectFootprintViewTest(TestCase):
+
+    def setUp(self):
+        self.book = BookCopyFactory()
+        self.imprint = ImprintFactory()
+        self.work = WrittenWorkFactory()
+        self.footprint = FootprintFactory()
+
+        self.user = UserFactory()
+        self.staff = UserFactory(is_staff=True)
+
+        self.url = reverse('connect-footprint-view',
+                           kwargs={'pk': self.footprint.pk})
+
+    def test_post_expected_errors(self):
+        # not logged in
+        self.assertEquals(self.client.post(self.url).status_code, 302)
+
+        self.client.login(username=self.user.username, password="test")
+
+        # no permissions
+        response = self.client.post(self.url, {'book': self.book.id})
+        self.assertEquals(response.status_code, 403)
+
+    def test_post_update_book(self):
+        self.client.login(username=self.staff.username, password="test")
+
+        data = {'work': self.work.id,
+                'imprint': self.imprint.id,
+                'book': self.book.id}
+        response = self.client.post(self.url, data)
+        self.assertEquals(response.status_code, 302)
+
+        fp = Footprint.objects.get(id=self.footprint.id)
+        self.assertEquals(fp.book_copy, self.book)
+
+    def test_post_update_imprint(self):
+        self.client.login(username=self.staff.username, password="test")
+
+        data = {'work': self.work.id,
+                'imprint': self.imprint.id}
+        response = self.client.post(self.url, data)
+        self.assertEquals(response.status_code, 302)
+
+        fp = Footprint.objects.get(id=self.footprint.id)
+        self.assertEquals(fp.book_copy.imprint, self.imprint)
+
+    def test_post_update_work(self):
+        self.client.login(username=self.staff.username, password="test")
+
+        data = {'work': self.work.id}
+        response = self.client.post(self.url, data)
+        self.assertEquals(response.status_code, 302)
+
+        fp = Footprint.objects.get(id=self.footprint.id)
+        self.assertEquals(fp.book_copy.imprint.work, self.work)
 
 
 class CreateFootprintViewTest(TestCase):

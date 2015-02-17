@@ -45,6 +45,10 @@ class RoleQuerySet(models.query.QuerySet):
         role, created = self.get_or_create(name='Publisher')
         return role
 
+    def get_printer_role(self):
+        role, created = self.get_or_create(name='Printer')
+        return role
+
     def for_footprint(self):
         return self.filter(level=FOOTPRINT_LEVEL)
 
@@ -71,6 +75,9 @@ class RoleManager(models.Manager):
 
     def get_publisher_role(self):
         return self.get_query_set().get_publisher_role()
+
+    def get_printer_role(self):
+        return self.get_query_set().get_printer_role()
 
     def for_footprint(self):
         return self.get_query_set().for_footprint()
@@ -330,6 +337,9 @@ class WrittenWork(models.Model):
         role = Role.objects.get_author_role()
         return self.actor.filter(role=role)
 
+    def description(self):
+        return self.__unicode__()
+
 
 class Imprint(models.Model):
     work = models.ForeignKey(WrittenWork)
@@ -372,6 +382,9 @@ class Imprint(models.Model):
             label = "%s (%s)" % (label, self.date_of_publication)
         return label
 
+    def description(self):
+        return self.__unicode__()
+
     def percent_complete(self):
         required = 9.0
         completed = 0
@@ -399,6 +412,10 @@ class Imprint(models.Model):
     def publishers(self):
         publisher = Role.objects.get_publisher_role()
         return self.actor.filter(role=publisher)
+
+    def printers(self):
+        printer = Role.objects.get_printer_role()
+        return self.actor.filter(role=printer)
 
 
 class BookCopy(models.Model):
@@ -432,6 +449,9 @@ class BookCopy(models.Model):
         if self.notes is not None:
             completed += 1
         return int(completed/required * 100)
+
+    def description(self):
+        return self.__unicode__()
 
 
 class Footprint(models.Model):
