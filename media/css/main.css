@@ -141,6 +141,10 @@ ul.wizard-tabs.has-error li.active a {
     text-transform: uppercase;
 }
 
+.object-detail .breadcrumb a {
+    text-transform: none;
+}
+
 .object-detail h1 {
     padding: 10px;
     color: #373e4d;

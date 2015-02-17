@@ -154,6 +154,37 @@ class CreateFootprintView(LoggedInMixin, TemplateView):
         return HttpResponseRedirect(url)
 
 
+class ConnectFootprint2BookView(LoggedInMixin, EditableMixin, View):
+
+    def post(self, *args, **kwargs):
+        fp = get_object_or_404(Footprint, pk=kwargs.get('pk', None))
+        if not self.has_edit_permission(self.request.user, fp):
+            return HttpResponseForbidden()
+
+        pk = self.request.POST.get('book', None)
+        book = get_object_or_404(BookCopy, pk=pk) if pk else None
+
+        pk = self.request.POST.get('imprint', None)
+        imprint = get_object_or_404(Imprint, pk=pk) if pk else None
+
+        if not book:
+            # swap existing book copy for another book copy
+            fp.book_copy = book
+        elif imprint:
+            # create a new book copy with the existing imprint
+            book = BookCopy.objects.create(imprint=imprint)
+            fp.book_copy = book
+        else:
+            # create a new book copy with an empty imprint
+            book = BookCopy.objects.create()
+            fp.book_copy = book
+
+        fp.save()
+
+        url = reverse('footprint-detail-view', kwargs={'pk': fp.pk})
+        return HttpResponseRedirect(url)
+
+
 class ConnectFootprintView(LoggedInMixin, EditableMixin, View):
 
     def post(self, *args, **kwargs):

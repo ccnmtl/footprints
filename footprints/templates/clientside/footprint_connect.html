@@ -10,7 +10,7 @@
                 Can you relate this footprint to existing records?
             </p>
             <br />
-            <form action="/footprint/<%=footprint_id%>/connect/" method="post">
+            <form action="/connect/footprint/<%=footprint_id%>/" method="post">
                 <input type="hidden" name="csrfmiddlewaretoken" value="<%=csrf_token%>" />
                 <div class="form-group writtenwork">
                     <label>Find Book Title</label>
