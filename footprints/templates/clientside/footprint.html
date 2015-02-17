@@ -5,9 +5,12 @@
         <div class="clearfix"></div>
     </h1>
     <div class="breadcrumb">A FOOTPRINT</div>
-    <% if (narrative) { %>
+    <% if (narrative && narrative.length > 0) { %>
         <blockquote class="blockquote">
-            <%=narrative%>
+            <a href="#" class="<% if (editable) { %>editable<% } else { %>readonly<% } %>"
+                data-name="narrative" data-type="textarea" data-pk="<%=id%>"
+                data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
+                data-url="/api/footprint/<%=id%>/"><%=narrative%></a>
         </blockquote>
     <% } %>
 
@@ -253,6 +256,15 @@
                             what the evidence looks like? Add some images
                         </a>
                     </li>
+                    <% if (!narrative || narrative.length < 1) { %>
+                    <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                        <a href="#" class="editable do-you-know persistant" data-name="narrative"
+                           data-type="textarea" data-pk="<%=id%>" data-value=""
+                           data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
+                           data-url="/api/footprint/<%=id%>/">a narrative for this footprint?</a>
+                        </a>
+                    </li>
+                    <% } %>
                 </ul>
             </dd>
         </dl>
