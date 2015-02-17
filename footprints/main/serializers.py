@@ -184,7 +184,7 @@ class WrittenWorkSerializer(HyperlinkedModelSerializerEx):
 
     class Meta:
         model = WrittenWork
-        fields = ('id', 'title', 'actor', 'notes')
+        fields = ('id', 'title', 'actor', 'notes', 'description')
 
 
 class ImprintSerializer(HyperlinkedModelSerializerEx):
@@ -200,7 +200,7 @@ class ImprintSerializer(HyperlinkedModelSerializerEx):
         # @todo digital_object, standardized_identifier
         fields = ('id', 'work', 'title', 'language', 'place',
                   'date_of_publication', 'actor', 'notes',
-                  'standardized_identifier')
+                  'standardized_identifier', 'description')
 
     def update(self, instance, validated_data):
         if 'language' in validated_data:
@@ -218,7 +218,7 @@ class BookCopySerializer(HyperlinkedModelSerializer):
 
     class Meta:
         model = BookCopy
-        fields = ('id', 'imprint', 'notes')
+        fields = ('id', 'imprint', 'notes', 'description')
 
 
 class FootprintSerializer(HyperlinkedModelSerializer):

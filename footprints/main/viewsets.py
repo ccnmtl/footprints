@@ -69,15 +69,33 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class ImprintViewSet(viewsets.ModelViewSet):
-    queryset = Imprint.objects.all()
+    model = Imprint
     serializer_class = ImprintSerializer
     permission_classes = (IsStaffOrReadOnly,)
 
+    def get_queryset(self):
+        qs = Imprint.objects.all()
+
+        work_id = self.request.GET.get('work', None)
+        if work_id:
+            qs = qs.filter(work__id=work_id)
+
+        return qs
+
 
 class BookCopyViewSet(viewsets.ModelViewSet):
-    queryset = BookCopy.objects.all()
+    model = BookCopy
     serializer_class = BookCopySerializer
     permission_classes = (IsStaffOrReadOnly,)
+
+    def get_queryset(self):
+        qs = BookCopy.objects.all()
+
+        imprint_id = self.request.GET.get('imprint', None)
+        if imprint_id:
+            qs = qs.filter(imprint__id=imprint_id)
+
+        return qs
 
 
 class StandardizedIdentificationViewSet(viewsets.ModelViewSet):

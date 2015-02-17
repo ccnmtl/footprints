@@ -208,7 +208,7 @@
 
     window.BookDetailView = window.FootprintBaseView.extend({
         events: {
-            'click a.remove-related span.glyphicon-remove': 'confirmRemoveRelated',
+            'click a.remove-related span.glyphicon-remove': 'confirmRemoveRelated'
         },
         initialize: function(options) {
             _.bindAll(this, 'context', 'refresh', 'render',
@@ -283,10 +283,94 @@
             });
 
             this.initializeMap();
-
         }
     });
     
+    window.ConnectRecordView = window.FootprintBaseView.extend({
+        initialize: function(options) {
+            _.bindAll(this, 'context', 'data', 'onClear', 'onSelect',
+                'refresh', 'render');
+            this.baseContext = options.baseContext;
+            this.template = _.template(jQuery(options.template).html());
+            this.footprint = options.footprint;
+            this.model.on('change', this.render);
+            this.model.fetch();
+        },
+        data: function(term, page) {
+            return {
+                work: jQuery(this.eltWork).val(),
+                imprint: jQuery(this.eltImprint).val()
+            };
+        },
+        render: function() {
+            var self = this;
+
+            var ctx = this.context();
+            ctx.footprint_id = this.footprint.id;
+            
+            var markup = this.template(ctx);
+            jQuery(this.el).html(markup);
+            this.delegateEvents();
+            
+            // Initialize select2
+            jQuery(this.el).find("input.select-object").each(function() {
+                jQuery(this).select2({
+                    allowClear: true,
+                    minimumInputLength: 0,
+                    ajax: {
+                        url: jQuery(this).data('url'),
+                        dataType: 'json',
+                        delay: 250,
+                        data: self.data,
+                        results: self.processResults,
+                        cache: true
+                    }
+                });
+                jQuery(this).on('change', self.onSelect);
+                jQuery(this).on('select2-clearing', self.onClear);
+            });
+            
+            this.eltWork = jQuery(this.el).find('input.select-object.work')[0];
+            this.eltImprint = jQuery(this.el).find('input.select-object.imprint')[0];
+            this.eltBook =  jQuery(this.el).find('input.select-object.book')[0];
+            this.eltSave = jQuery(this.el).find('input.save-connection')[0];
+        },
+        onClear: function(evt) {
+            var elt;
+            if (jQuery(evt.currentTarget).hasClass('work')) {
+                jQuery(this.eltImprint).parents('.form-group').fadeOut();
+                jQuery(this.eltBook).parents('.form-group').fadeOut();
+            } else if (jQuery(evt.currentTarget).hasClass('imprint')) {
+                jQuery(this.eltBook).parents('.form-group').fadeOut();
+            }
+        },
+        onSelect: function(evt, added, removed) {
+            var elt;
+            if (jQuery(evt.currentTarget).val().length > 0) {
+                jQuery(this.eltSave).fadeIn();
+                if (jQuery(evt.currentTarget).hasClass('work')) {
+                    jQuery(this.eltImprint).parents('.form-group').fadeIn();
+                } else if (jQuery(evt.currentTarget).hasClass('imprint')) {
+                    jQuery(this.eltBook).parents('.form-group').fadeIn();
+                }
+            }
+        },
+        processResults: function(data, page, query) {
+            var results = [];
+
+            for (var i=0; i < data.results.length; i++) {
+                if (data.results[i].description &&
+                        data.results[i].description.length > 0) {
+                    results.push({
+                        id: data.results[i].id,
+                        text: data.results[i].description
+                    });
+                }
+            }
+            return {results: results, more: data.next};
+        }
+    });
+
     window.FootprintView = Backbone.View.extend({
         events: {
             'click .carousel img': 'maximizeCarousel'
@@ -302,7 +386,7 @@
 
             this.footprint = new window.Footprint({id: options.footprint.id});
             this.bookCopy = new window.BookCopy({id: options.book_copy.id});
-            
+
             this.footprint.on('change', this.render);
             this.bookCopy.on('change', this.render);
             
@@ -324,6 +408,13 @@
                 model: this.bookCopy,
                 baseContext: options.baseContext,
                 template: options.bookTemplate
+            });
+            this.connectView = new window.ConnectRecordView({
+                el: jQuery(this.el).find(".connect-record"),
+                model: this.bookCopy,
+                footprint: this.footprint,
+                baseContext: options.baseContext,
+                template: options.connectTemplate
             });
         },
         context: function() {
