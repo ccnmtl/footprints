@@ -45,6 +45,10 @@ class RoleQuerySet(models.query.QuerySet):
         role, created = self.get_or_create(name='Publisher')
         return role
 
+    def get_printer_role(self):
+        role, created = self.get_or_create(name='Printer')
+        return role
+
     def for_footprint(self):
         return self.filter(level=FOOTPRINT_LEVEL)
 
@@ -71,6 +75,9 @@ class RoleManager(models.Manager):
 
     def get_publisher_role(self):
         return self.get_query_set().get_publisher_role()
+
+    def get_printer_role(self):
+        return self.get_query_set().get_printer_role()
 
     def for_footprint(self):
         return self.get_query_set().for_footprint()
@@ -399,6 +406,10 @@ class Imprint(models.Model):
     def publishers(self):
         publisher = Role.objects.get_publisher_role()
         return self.actor.filter(role=publisher)
+
+    def printers(self):
+        printer = Role.objects.get_printer_role()
+        return self.actor.filter(role=printer)
 
 
 class BookCopy(models.Model):
