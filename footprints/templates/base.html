@@ -33,11 +33,13 @@
     <div id="wrap">    
     {% block topnavbar %}
     
-<div class="container">
-    <nav class="navbar navbar-default" role="navigation">
+<div class="container header">
+    <div class="logo">
+         
+    </div>
     
-        <div class="container-fluid">
-        
+    <nav class="navbar navbar-default" role="navigation">
+
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle"
                     data-toggle="collapse"
@@ -50,16 +52,16 @@
                  {% comment %}
                  {% if request.user.is_anonymous %}
                     <a class="navbar-brand" href="/" title="Footprints">
-                        <img class="img-responsive" style="display: inline-block;" src="{{STATIC_URL}}img/logo_footprints.png" alt="Footprints" />
+                        <img class="img-responsive" style="display: inline-block;" src="{{STATIC_URL}}img/fp_header_logo.png" alt="Footprints" />
                     </a>
                  {% else %}
                     <span class="navbar-logo">
-                        <img class="img-responsive" style="display: inline-block;" src="{{STATIC_URL}}img/logo_footprints.png" alt="Footprints" />
+                        <img class="img-responsive" style="display: inline-block;" src="{{STATIC_URL}}img/fp_header_logo.png" alt="Footprints" />
                     </span>
                  {% endif %}
                  {% endcomment %}
                  
-                 <a class="navbar-brand" href="/"><span class="glyphicon glyphicon-home"></span></a>
+                 <a class="navbar-brand" href="/"><img class="img-responsive" style="display: inline-block;" src="{{STATIC_URL}}img/fp_header_logo.png" alt="Footprints" /></a>
             </div>
 
             <!--/.navbar-header -->
@@ -81,17 +83,13 @@
                             <li><a href="/browse/footprints/">Browse</a></li>
                             <li><a href="/search/">Search</a></li>
                         {% endif %}
-                        <li><a href="/about/">About</a></li>
-                        <li><a href="/credits/">Credits</a></li>
-                        <li><a href="/contact/">Contact</a></li>
-                        <li><a href="/help/">Help</a></li>
+                        
                     {% endblock %}
                  </ul>
             </div>
             <!--/.nav-collapse -->
               
-           </div>
-        <!--/.container-header -->
+ 
     
     </nav><!--/.navbar-pl -->
 </div>    
@@ -197,13 +195,20 @@
     <div class="clearfooter"></div>
  </div>   <!-- /#wrap -->
     {% block footer %}
-    
+    <div class="container foot">
     <footer class="footer">
             <div class="row">
-                <div class="col-md-12"></div>           
+                <div class="col-md-12">
+                    <ul class="nav navbar-nav">
+                        <li><a href="/about/">About</a></li>
+                        <li><a href="/credits/">Credits</a></li>
+                        <li><a href="/contact/">Contact</a></li>
+                        <li><a href="/help/">Help</a></li>
+                    </ul>                    
+                </div>           
         </div>
     </footer>
-    
+    </div>
     {% endblock %}
     
     <script src="{{STATIC_URL}}js/underscore-min.js"></script>
