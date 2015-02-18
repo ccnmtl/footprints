@@ -162,6 +162,25 @@ class BasicModelTest(TestCase):
         copy.digital_object.add(DigitalObjectFactory())
         self.assertEquals(copy.percent_complete(), 100)
 
+    def test_book_copy_owners(self):
+        copy = BookCopyFactory()
+        owner = RoleFactory(name="Owner", level=FOOTPRINT_LEVEL)
+        owner1 = ActorFactory(role=owner)
+        owner2 = ActorFactory(role=owner)
+        owner3 = ActorFactory(role=owner)
+
+        footprint1 = FootprintFactory(book_copy=copy)
+        footprint1.actor.add(owner1)
+        footprint2 = FootprintFactory(book_copy=copy)
+        footprint2.actor.add(owner2)
+        footprint3 = FootprintFactory()
+        footprint3.actor.add(owner3)
+
+        owners = copy.owners()
+        self.assertEquals(owners.count(), 2)
+        self.assertIsNotNone(owners.get(id=owner1.id))
+        self.assertIsNotNone(owners.get(id=owner2.id))
+
     def test_footprint(self):
         footprint = FootprintFactory()
         self.assertEquals(footprint.__unicode__(), 'Provenance')
