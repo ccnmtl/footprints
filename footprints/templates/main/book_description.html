@@ -1,0 +1,11 @@
+<div style="border-bottom: dotted black 1px; padding-bottom: 5px;">
+<div>{{book.identifier}}, {{book.footprint_set.first.provenance}}</div>
+<div>
+    {% if book.owners.count > 0 %}
+    Owners: 
+        {% for owner in book.owners %}
+            {{owner.display_name}}{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    {% endif %}
+</div>
+</div>
