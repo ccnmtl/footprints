@@ -24,8 +24,9 @@ body {
 	background-color: #fafafa;
 }
 
-#content {
+.content {
   min-height: 100%;
+  margin: 1em 0 0 0;
 }
 
 blockquote {
@@ -51,6 +52,13 @@ a.navbar-brand {
 	float: left;
 	margin: 1em 0 0 0;
 	height: inherit;
+	opacity: .8;
+	-webkit-transition: opacity 1s; /* For Safari 3.1 to 6.0 */
+    transition: opacity 1s;
+}
+
+a.navbar-brand:hover {
+	opacity: 1;
 }
 
 .container.header .navbar-default {
@@ -90,6 +98,18 @@ a.navbar-brand {
 	color: #edebe6;
 	background-color: transparent;
 }
+
+
+/* Homepage */
+
+.col-md-12.featured {
+	height: 500px;
+	margin-top: -1em;
+	background-image: url("../img/fp_home_feat_bg.jpg");
+	background-repeat: no-repeat;
+	background-size: 100%;
+}
+
 
 
 /* Record Entry */
