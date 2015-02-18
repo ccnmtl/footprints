@@ -44,7 +44,7 @@ blockquote {
 .container.header {
 	background-image: url("../img/fp_header_bg.jpg");
 	background-repeat: repeat;
-	height: 175px;
+	height: 145px;
 }
 
 a.navbar-brand {
@@ -67,7 +67,7 @@ a.navbar-brand:hover {
 }
 
 .container.header .navbar-right {
-	margin: 110px 0 0 0;
+	margin: 90px 0 0 0;
 }
 
 
@@ -109,6 +109,17 @@ a.navbar-brand:hover {
 	background-repeat: no-repeat;
 	background-size: 100%;
 }
+
+/* All pages */
+
+.col-md-12.page {
+	margin-top: -1em;
+	background-image: url("../img/fp_page_header_bg.png");
+	background-repeat: no-repeat;
+	background-position: center top;
+	background-size: 100%;
+}
+
 
 
 
