@@ -114,21 +114,21 @@ a.navbar-brand:hover {
 
 .page-header {
 	border: none;
-	margin: 0;
+	margin: 1em 0;
 	background-image: url("../img/fp_page_title_bg.png");
 	background-repeat: repeat;
+	padding: 0;
 }
 
 .page-header h1 {
 	background-image: url("../img/fp_page_title_bg2.png");
 	background-repeat: repeat;
-	padding: 1em 1em .5em .5em;
+	padding: .5em 1em .5em .5em;
 	position: relative;
-	top: 20px;
-	left: 20px;
+	top: -5px;
+	left: -5px;
+	font-size: 1.5em;
 }
-
-
 
 .col-md-12.page {
 	margin-top: -1em;
@@ -138,7 +138,7 @@ a.navbar-brand:hover {
 	background-size: 100%;
 }
 
-
+.col-md-3 
 
 
 /* Record Entry */
