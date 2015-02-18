@@ -215,10 +215,11 @@ class ImprintSerializer(HyperlinkedModelSerializerEx):
 
 class BookCopySerializer(HyperlinkedModelSerializer):
     imprint = ImprintSerializer()
+    owners = ActorSerializer(many=True)
 
     class Meta:
         model = BookCopy
-        fields = ('id', 'imprint', 'notes', 'description')
+        fields = ('id', 'imprint', 'notes', 'description', 'owners')
 
 
 class FootprintSerializer(HyperlinkedModelSerializer):

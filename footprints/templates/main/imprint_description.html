@@ -1,0 +1,17 @@
+<div style="border-bottom: dotted black 1px; padding-bottom: 5px;">
+    <div>
+        {% if not imprint.display_title %}
+            Imprint
+        {% else %}
+            {{imprint.display_title}}
+        {% endif %}
+    </div>
+    <div>
+        {% if imprint.date_of_publication %}
+            {{imprint.date_of_publication}}{% if imprint.place %},{% endif %}
+        {% endif %}
+        {% if imprint.place %}
+            {{imprint.place}}
+        {% endif %}
+    </div>
+</div>

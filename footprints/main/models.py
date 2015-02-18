@@ -1,6 +1,8 @@
-from django.db import models
-from geoposition.fields import GeopositionField
 from audit_log.models.fields import LastUserField, CreatingUserField
+from django.db import models
+from django.template import loader
+from django.template.context import Context
+from geoposition.fields import GeopositionField
 
 
 IDENTIFIER_TYPES = (
@@ -372,18 +374,24 @@ class Imprint(models.Model):
         verbose_name = "Imprint"
 
     def __unicode__(self):
-        label = 'Imprint'
-        if self.title:
-            label = self.title
-        elif self.work.title:
-            label = self.work.title
+        label = self.display_title() or "Imprint"
 
         if self.date_of_publication:
             label = "%s (%s)" % (label, self.date_of_publication)
         return label
 
+    def display_title(self):
+        if self.title:
+            return self.title
+        elif self.work.title:
+            return self.work.title
+        else:
+            return None
+
     def description(self):
-        return self.__unicode__()
+        template = loader.get_template('main/imprint_description.html')
+        ctx = Context({'imprint': self})
+        return template.render(ctx)
 
     def percent_complete(self):
         required = 9.0
@@ -450,8 +458,18 @@ class BookCopy(models.Model):
             completed += 1
         return int(completed/required * 100)
 
+    def identifier(self):
+        return "%s-%s-%s" % (self.imprint.work.id, self.imprint.id, self.id)
+
     def description(self):
-        return self.__unicode__()
+        template = loader.get_template('main/book_description.html')
+        ctx = Context({'book': self})
+        return template.render(ctx)
+
+    def owners(self):
+        footprints = Footprint.objects.filter(book_copy=self)
+        role = Role.objects.get_owner_role()
+        return Actor.objects.filter(role=role, footprint__in=footprints)
 
 
 class Footprint(models.Model):
