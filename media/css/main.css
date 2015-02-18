@@ -43,20 +43,24 @@ blockquote {
 .container.header {
 	background-image: url("../img/fp_header_bg.jpg");
 	background-repeat: repeat;
-	height: 200px;
+	height: 175px;
 }
 
-.container.header .logo {
+a.navbar-brand {
 	display: block;
 	float: left;
+	margin: 1em 0 0 0;
+	height: inherit;
 }
-
 
 .container.header .navbar-default {
 	background-color: transparent;
 	border: none;
 }
 
+.container.header .navbar-right {
+	margin: 110px 0 0 0;
+}
 
 
 /* Footer */

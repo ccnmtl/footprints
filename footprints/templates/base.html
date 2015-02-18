@@ -52,22 +52,25 @@
                  {% comment %}
                  {% if request.user.is_anonymous %}
                     <a class="navbar-brand" href="/" title="Footprints">
-                        <img class="img-responsive" style="display: inline-block;" src="{{STATIC_URL}}img/fp_header_logo.png" alt="Footprints" />
+                        <img class="img-responsive" src="{{STATIC_URL}}img/fp_header_logo.png" alt="Footprints" />
                     </a>
                  {% else %}
                     <span class="navbar-logo">
-                        <img class="img-responsive" style="display: inline-block;" src="{{STATIC_URL}}img/fp_header_logo.png" alt="Footprints" />
+                        <img class="img-responsive" src="{{STATIC_URL}}img/fp_header_logo.png" alt="Footprints" />
                     </span>
                  {% endif %}
                  {% endcomment %}
                  
-                 <a class="navbar-brand" href="/"><img class="img-responsive" style="display: inline-block;" src="{{STATIC_URL}}img/fp_header_logo.png" alt="Footprints" /></a>
+                 <a class="navbar-brand" href="/"><img class="img-responsive" src="{{STATIC_URL}}img/fp_header_logo.png" alt="Footprints" /></a>
             </div>
 
             <!--/.navbar-header -->
             <div class="collapse navbar-collapse" id="navbar-collapse-pl">
                 <ul class="nav navbar-nav navbar-right navbar-nav-pl">
                     {% block usernav %}
+                     <li><a href="/footprint/create/">Create</a></li>
+                            <li><a href="/browse/footprints/">Browse</a></li>
+                            <li><a href="/search/">Search</a></li>
                         {% if request.user.is_anonymous %}
                             <li><a id="login-link" href="#" data-toggle="modal" data-target="#login-modal">Log In</a></li>
                         {% else %}
@@ -79,9 +82,7 @@
                                 <li><a href="/accounts/password_change/">Change Password</a></li>
                             {% endif %}
 
-                            <li><a href="/footprint/create/">Create</a></li>
-                            <li><a href="/browse/footprints/">Browse</a></li>
-                            <li><a href="/search/">Search</a></li>
+                           
                         {% endif %}
                         
                     {% endblock %}
