@@ -85,13 +85,12 @@ class PlaceFactory(factory.DjangoModelFactory):
 class CollectionFactory(factory.DjangoModelFactory):
     FACTORY_FOR = Collection
 
-    name = 'Judaica Collection'
+    name = factory.Sequence(lambda n: "Collection%03d" % n)
 
     @factory.post_generation
     def actors(self, create, extracted, **kwargs):
         if create:
-            role = Role.objects.create(name='Caretaker')
-            self.actor.add(ActorFactory(role=role))
+            self.actor.add(ActorFactory())
 
 
 class WrittenWorkFactory(factory.DjangoModelFactory):

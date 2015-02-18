@@ -324,7 +324,8 @@
                         data: self.data,
                         results: self.processResults,
                         cache: true
-                    }
+                    },
+                    escapeMarkup: function (markup) { return markup; }
                 });
                 jQuery(this).on('change', self.onSelect);
                 jQuery(this).on('select2-clearing', self.onClear);
@@ -336,21 +337,26 @@
             this.eltSave = jQuery(this.el).find('input.save-connection')[0];
         },
         onClear: function(evt) {
-            var elt;
             if (jQuery(evt.currentTarget).hasClass('work')) {
                 jQuery(this.eltImprint).parents('.form-group').fadeOut();
                 jQuery(this.eltBook).parents('.form-group').fadeOut();
+                jQuery(this.eltImprint).select2('val', '');
+                jQuery(this.eltBook).select2('val', '');
             } else if (jQuery(evt.currentTarget).hasClass('imprint')) {
                 jQuery(this.eltBook).parents('.form-group').fadeOut();
+                jQuery(this.eltBook).select2('val', '');
             }
         },
         onSelect: function(evt, added, removed) {
-            var elt;
             if (jQuery(evt.currentTarget).val().length > 0) {
                 jQuery(this.eltSave).fadeIn();
                 if (jQuery(evt.currentTarget).hasClass('work')) {
                     jQuery(this.eltImprint).parents('.form-group').fadeIn();
+                    jQuery(this.eltImprint).select2('val', '');
+                    jQuery(this.eltBook).parents('.form-group').fadeOut();
+                    jQuery(this.eltBook).select2('val', '');
                 } else if (jQuery(evt.currentTarget).hasClass('imprint')) {
+                    jQuery(this.eltBook).select2('val', '');
                     jQuery(this.eltBook).parents('.form-group').fadeIn();
                 }
             }
