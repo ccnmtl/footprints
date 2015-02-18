@@ -112,6 +112,24 @@ a.navbar-brand:hover {
 
 /* All pages */
 
+.page-header {
+	border: none;
+	margin: 0;
+	background-image: url("../img/fp_page_title_bg.png");
+	background-repeat: repeat;
+}
+
+.page-header h1 {
+	background-image: url("../img/fp_page_title_bg2.png");
+	background-repeat: repeat;
+	padding: 1em 1em .5em .5em;
+	position: relative;
+	top: 20px;
+	left: 20px;
+}
+
+
+
 .col-md-12.page {
 	margin-top: -1em;
 	background-image: url("../img/fp_page_header_bg.png");
