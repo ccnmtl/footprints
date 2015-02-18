@@ -291,10 +291,7 @@
 <div class="breadcrumb">
     THE COPY
     <% if (editable) { %> 
-        <a href="#" class="editable-book-copy pull-right"
-            data-type="bookcopy" data-pk="<%=id%>"
-            data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
-            data-url="/connect/footprint/<%=id%>/book/">
+        <a class="pull-right show-connect-book-modal">
             <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
             Connect Copy
         </a>

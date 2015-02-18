@@ -111,7 +111,38 @@
                 </div>
             </div>
         </div>
-        
-        {% include "main/connect_bookcopy.html" %}
+
+        <div class="modal" id="connect-book-modal" taxindex="-1" role="dialog" aria-labelledby="Book Copy" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Connect Book Copy</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Connect to an existing book copy or create a new copy</p>
+                        <form action="/connect/footprint/{{footprint.id}}/" method="post">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="<%=csrf_token%>" />
+                            <div class="form-group writtenwork">
+                                <label>Book</label>
+                                <input value="{{footprint.book_copy.imprint.work.id}}" type="hidden" name="work" class="select-object work" data-url="/api/writtenwork/" placeholder="Select a book" />
+                            </div>
+                            <div class="form-group imprint">
+                                <label>Imprint</label>
+                                <input value="{{footprint.book_copy.imprint.id}}" type="hidden" name="imprint" class="select-object imprint"  data-url="/api/imprint/" placeholder="New Imprint"  />
+                            </div>
+                            <div class="form-group">
+                                <label>Physical Copy</label>
+                                <input value="{{footprint.book_copy.id}}" type="hidden" name="book" class="select-object book"  data-url="/api/book/" placeholder="New Book Copy"  />
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default btn-cancel" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary btn-confirm" data-dismiss="modal">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
