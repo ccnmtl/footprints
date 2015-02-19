@@ -86,13 +86,6 @@ urlpatterns = patterns(
     url(r'^connect/footprint/(?P<pk>\d+)/book/$',
         ConnectFootprint2BookView.as_view(),
         name='connect-footprint-book-view'),
-#     url(r'^connect/footprint/(?P<pk>\d+)/imrpint/$',
-#         ConnectFootprint2ImprintView.as_view(),
-#         name='connect-footprint-book-view'),
-#     url(r'^connect/footprint/(?P<pk>\d+)/work/$',
-#         ConnectFootprint2WorkView.as_view(),
-#         name='connect-footprint-work-view'),
-
 
     url(r'^connect/footprint/(?P<pk>\d+)/$',
         ConnectFootprintView.as_view(), name='connect-footprint-view'),

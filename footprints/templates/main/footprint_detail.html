@@ -10,6 +10,19 @@
 
 {% block extrahead %}
     <link href="{{STATIC_URL}}select2-3.5.2/select2.css" rel="stylesheet" />
+    {% comment %}
+        inline styles for this branch to prevent styling conflicts
+    {% endcomment %}
+    <style>
+        .object-detail .breadcrumb a {
+            text-transform: none;
+        }
+
+        .separator {
+            border-bottom: dotted black 1px;
+            padding-bottom: 5px;
+        }
+    </style>
     
     {% include "xeditable/actor.html" %}
     {% include "xeditable/author.html" %}
@@ -112,34 +125,39 @@
             </div>
         </div>
 
-        <div class="modal" id="connect-book-modal" taxindex="-1" role="dialog" aria-labelledby="Book Copy" aria-hidden="true">
+        <div class="modal" id="connect-records-modal" taxindex="-1" role="dialog" aria-labelledby="Connect Records" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title">Connect Book Copy</h4>
+                        <h4 class="modal-title">Connect Records</h4>
                     </div>
                     <div class="modal-body">
-                        <p>Connect to an existing book copy or create a new copy</p>
                         <form action="/connect/footprint/{{footprint.id}}/" method="post">
                             <input type="hidden" name="csrfmiddlewaretoken" value="<%=csrf_token%>" />
                             <div class="form-group writtenwork">
-                                <label>Book</label>
-                                <input value="{{footprint.book_copy.imprint.work.id}}" type="hidden" name="work" class="select-object work" data-url="/api/writtenwork/" placeholder="Select a book" />
+                                <div><label>Select Book</label></div>
+                                <div style="display: none">{{footprint.book_copy.imprint.work.description}}</div>
+                                <input value="{{footprint.book_copy.imprint.work.id}}" type="hidden" name="work" class="select-object work"
+                                    data-url="/api/writtenwork/" placeholder="Select a book"/>
                             </div>
                             <div class="form-group imprint">
-                                <label>Imprint</label>
-                                <input value="{{footprint.book_copy.imprint.id}}" type="hidden" name="imprint" class="select-object imprint"  data-url="/api/imprint/" placeholder="New Imprint"  />
+                                <div><label>Select Imprint</label></div>
+                                <div style="display: none">{{footprint.book_copy.imprint.description}}</div>
+                                <input value="{{footprint.book_copy.imprint.id}}" type="hidden" name="imprint" class="select-object imprint"
+                                    data-url="/api/imprint/" placeholder="Choose an existing imprint or New Imprint"  />
                             </div>
                             <div class="form-group">
-                                <label>Physical Copy</label>
-                                <input value="{{footprint.book_copy.id}}" type="hidden" name="book" class="select-object book"  data-url="/api/book/" placeholder="New Book Copy"  />
+                                <div><label>Select Physical Copy</label></div>
+                                <div style="display: none">{{footprint.book_copy.description}}</div>
+                                <input value="{{footprint.book_copy.id}}" type="hidden" name="book" class="select-object book" 
+                                    data-url="/api/book/" placeholder="Choose an existing book copy or New Copy"  />
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default btn-cancel" data-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary btn-confirm" data-dismiss="modal">Save</button>
+                        <button type="button" class="btn btn-primary btn-confirm" data-dismiss="modal">Confirm</button>
                     </div>
                 </div>
             </div>

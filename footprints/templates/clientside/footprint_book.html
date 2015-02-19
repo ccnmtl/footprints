@@ -1,11 +1,8 @@
 <script type="text/template" id="book-detail-template">
 <div class="breadcrumb">
     THE BOOK
-    <% if (editable) { %> 
-    <a href="#" class="editable-book-copy pull-right"
-        data-type="bookcopy" data-pk="<%=id%>"
-        data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
-        data-url="/connect/footprint/<%=id%>/book/">
+    <% if (editable) { %>
+    <a href="#" class="pull-right connect-records imprint">
         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
         Connect Book
     </a>
@@ -14,20 +11,15 @@
 <dl class="dl-horizontal">
     <% if (imprint.work.title && imprint.work.title.length > 0) { %>
         <dt>Title</dt>
-        <dd>
-            <a href="#" class="<% if (editable) { %>editable-title<% } else { %>readonly<% } %>"
-                data-value="<%=imprint.work.title%>"
-                data-name="title" data-model-type="WrittenWork"
-                data-type="title" data-pk="<%=imprint.work.id%>"
-                data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
-                data-url="/api/writtenwork/<%=imprint.work.id%>/">
+        <dd class="border-bottom">
+            <a href="/writtenwork/<%=imprint.work.id%>/">
                 <%=imprint.work.title%>
             </a>
         </dd>
     <% } %>
     <% for (var i=0; i < imprint.work.actor.length; i++) { %> 
         <dt><%=imprint.work.actor[i].role.name%></dt>
-        <dd>
+        <dd class="border-bottom">
             <span><%=imprint.work.actor[i].person.name%><% if (imprint.work.actor[i].alias) { %>  as <%=imprint.work.actor[i].alias%> <% } %></span> 
             <div class="pull-right">
                 <% if (editable) { %>
@@ -38,10 +30,6 @@
                         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                     </a>
                 <% } %>
-                &nbsp;
-                <a href="/person/<%=imprint.work.actor[i].person.id%>/" title="see details" class="foreign-key">
-                    <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
-                </a>
             </div>
         </dd>
     <% } %>
@@ -84,10 +72,7 @@
 <div class="breadcrumb">
     THE IMPRINT
     <% if (editable) { %> 
-        <a href="#" class="editable-book-copy pull-right"
-            data-type="bookcopy" data-pk="<%=id%>"
-            data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
-            data-url="/connect/footprint/<%=id%>/imprint/">
+        <a href="#" class="pull-right connect-records imprint">
             <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
             Connect Imprint
         </a>
@@ -291,7 +276,7 @@
 <div class="breadcrumb">
     THE COPY
     <% if (editable) { %> 
-        <a class="pull-right show-connect-book-modal">
+        <a href="#" class="pull-right connect-records book">
             <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
             Connect Copy
         </a>

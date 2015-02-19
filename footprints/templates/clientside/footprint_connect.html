@@ -13,15 +13,15 @@
             <form action="/connect/footprint/<%=footprint_id%>/" method="post">
                 <input type="hidden" name="csrfmiddlewaretoken" value="<%=csrf_token%>" />
                 <div class="form-group writtenwork">
-                    <label>Find Book Title</label>
+                    <label>Select Book Title</label>
                     <input type="hidden" name="work" class="select-object work" data-url="/api/writtenwork/" placeholder="Select a book" />
                 </div>
                 <div class="form-group imprint" style="display: none">
-                    <label>Find Imprint</label>
+                    <label>Select Imprint</label>
                     <input type="hidden" name="imprint" class="select-object imprint"  data-url="/api/imprint/" placeholder="New Imprint"  />
                 </div>
                 <div class="form-group" style="display: none">
-                    <label>Find Physical Copy</label>
+                    <label>Select Physical Copy</label>
                     <input type="hidden" name="book" class="select-object book"  data-url="/api/book/" placeholder="New Book Copy"  />
                 </div>
                 <input style="display: none" type="submit" class="save-connection btn btn-default btn-primary pull-right" value="Save" />
