@@ -116,7 +116,8 @@
                     editable: {% if editable %}true{% else %}false{% endif %},
                     csrf_token: '{{csrf_token}}',
                     static_url: '{{STATIC_URL}}',
-                    is_bare:  {% if footprint.is_bare %}true{% else %}false{% endif %}
+                    is_bare:  {% if footprint.is_bare %}true{% else %}false{% endif %},
+                    work_id: '{{footprint.book_copy.imprint.work.id}}'
                 }
             });
         });
