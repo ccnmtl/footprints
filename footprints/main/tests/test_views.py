@@ -460,6 +460,33 @@ class RemoveRelatedViewTest(TestCase):
         imprint = Imprint.objects.get(id=imprint.id)  # refresh
         self.assertEquals(imprint.standardized_identifier.count(), 0)
 
+    def test_post_remove_date(self):
+        imprint = self.footprint.book_copy.imprint
+        date1 = self.footprint.associated_date
+        date2 = self.footprint.book_copy.imprint.date_of_publication
+
+        self.client.login(username=self.staff.username, password="test")
+
+        response = self.client.post(self.remove_url,
+                                    {'parent_id': self.footprint.id,
+                                     'parent_model': 'footprint',
+                                     'associateddate_id': date1.id},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        self.assertTrue(loads(response.content)['success'])
+
+        response = self.client.post(self.remove_url,
+                                    {'parent_id': imprint.id,
+                                     'parent_model': 'imprint',
+                                     'publicationdate_id': date2.id},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        self.assertTrue(loads(response.content)['success'])
+
+        footprint = Footprint.objects.get(id=self.footprint.id)  # refresh
+        self.assertIsNone(footprint.associated_date)
+        self.assertIsNone(footprint.book_copy.imprint.date_of_publication)
+
 
 class AddDateViewTest(TestCase):
 

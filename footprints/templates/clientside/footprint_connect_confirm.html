@@ -5,9 +5,13 @@
         <li>Connect a new imprint</li>
         <li>Connect a new book copy.</li> 
     <% } else if (work.id != current_book.imprint.work.id) { %>
-        <li>
-            Change written work from <b><%=current_book.imprint.work.title%></b> to <b><%= work.text %></b>
-        </li> 
+        <% if (is_bare) { %>
+            <li>Connect to <b><%= work.text %></b></li>
+        <% } else { %>
+            <li>
+                Change written work from <b><%=current_book.imprint.work.title%></b> to <b><%= work.text %></b>
+            </li>
+        <% } %>
     <% } else { %>
         <li>Keep connection to the written work<br /><b><%= work.text %></b></li> 
     <% } %>

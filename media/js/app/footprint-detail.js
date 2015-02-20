@@ -126,7 +126,7 @@
     
     window.FootprintDetailView = window.FootprintBaseView.extend({
         events: {
-            'click a.remove-related span.glyphicon-remove': 'confirmRemoveRelated'
+            'click a.remove-related span.glyphicon-trash': 'confirmRemoveRelated'
         },
         initialize: function(options) {
             _.bindAll(this, 'context', 'refresh', 'render',
@@ -147,10 +147,13 @@
             // Initialize X-editable fields
             jQuery(this.el).find('.editable').editable({
                 namedParams: true,
+                success: this.refresh
+            });
+            jQuery(this.el).find('.editable-required').editable({
+                namedParams: true,
                 success: this.refresh,
                 validate: this.validate
             });
-
             jQuery(this.el).find('.editable-place').editable({
                 namedParams: true,
                 tpl: jQuery('#xeditable-place-form').html(),
@@ -208,7 +211,7 @@
 
     window.BookDetailView = window.FootprintBaseView.extend({
         events: {
-            'click a.remove-related span.glyphicon-remove': 'confirmRemoveRelated'
+            'click a.remove-related span.glyphicon-trash': 'confirmRemoveRelated'
         },
         initialize: function(options) {
             _.bindAll(this, 'context', 'refresh', 'render',
@@ -227,10 +230,13 @@
             // Initialize X-editable fields
             jQuery(this.el).find('.editable').editable({
                 namedParams: true,
+                success: this.refresh
+            });
+            jQuery(this.el).find('.editable-required').editable({
+                namedParams: true,
                 success: this.refresh,
                 validate: this.validate
             });
-
             jQuery(this.el).find('.editable-author').editable({
                 namedParams: true,
                 tpl: jQuery('#xeditable-author-form').html(),
@@ -254,8 +260,7 @@
                     placeholder: 'Select language(s)',
                     allowClear: true
                 },
-                success: this.refresh,
-                validate: this.validate
+                success: this.refresh
             });
             
             jQuery(this.el).find('.editable-place').editable({
