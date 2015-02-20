@@ -286,18 +286,35 @@
         }
     });
     
-    window.ConnectModalView = window.FootprintBaseView.extend({
-        initialize: function(options) {
-            _.bindAll(this, 'data', 'initializeSelect2', 'onClear', 'onSelect');
-            this.initializeSelect2();
+    window.ConnectRecordView = window.FootprintBaseView.extend({
+        events: {
+            'click button.btn-next': 'validate',
+            'click button.btn-prev': 'navigate',
+            'click button.btn-submit': 'submit'
         },
-        data: function(term, page) {
+        createId: '0',
+        initialize: function(options) {
+            _.bindAll(this, 'context', 'initChoices', 'results',
+                'onListSelect',
+                'validate', 'navigate', 'reset', 'submit');
+
+            this.baseContext = options.baseContext;
+            this.initChoices();
+            this.eltWork = jQuery(this.el).find('input.select-object.work')[0];
+            this.eltImprint = jQuery(this.el).find('input.select-object.imprint')[0];
+            this.eltCopy =  jQuery(this.el).find('input.select-object.copy')[0];
+            
+            this.template = _.template(jQuery(options.template).html());
+
+            jQuery(this.el).on('show.bs.modal', this.reset);
+        },
+        context: function(term, page) {
             return {
                 work: jQuery(this.eltWork).val(),
                 imprint: jQuery(this.eltImprint).val()
             };
         },
-        initializeSelect2: function() {
+        initChoices: function() {
             var self = this;
             
             // Initialize select2
@@ -313,8 +330,8 @@
                         url: dataUrl,
                         dataType: 'json',
                         delay: 250,
-                        data: self.data,
-                        results: self.processResults,
+                        data: self.context,
+                        results: self.results,
                         cache: true
                     },
                     escapeMarkup: function (markup) { return markup; },
@@ -325,51 +342,46 @@
                         return object.text;
                     }
                 });
-                jQuery(this).on('change', self.onSelect);
-                jQuery(this).on('select2-clearing', self.onClear);
+                jQuery(this).on('change', self.onListSelect);
+                jQuery(this).on('select2-clearing', self.onListClear);
             });
-            
-            this.eltWork = jQuery(this.el).find('input.select-object.work')[0];
-            this.eltImprint = jQuery(this.el).find('input.select-object.imprint')[0];
-            this.eltBook =  jQuery(this.el).find('input.select-object.book')[0];
-            this.eltSave = jQuery(this.el).find('input.save-connection')[0];
+
         },
-        onClear: function(evt) {
-            if (jQuery(evt.currentTarget).hasClass('work')) {
-                jQuery(this.eltImprint).parents('.form-group').fadeOut();
-                jQuery(this.eltBook).parents('.form-group').fadeOut();
-                jQuery(this.eltImprint).select2('val', '');
-                jQuery(this.eltBook).select2('val', '');
-                jQuery(this.eltSave).fadeOut();
-            } else if (jQuery(evt.currentTarget).hasClass('imprint')) {
-                jQuery(this.eltBook).parents('.form-group').fadeOut();
-                jQuery(this.eltBook).select2('val', '');
-            }
-        },
-        onSelect: function(evt, added, removed) {
-            if (jQuery(evt.currentTarget).val().length > 0) {
-                jQuery(this.eltSave).fadeIn();
+        onListSelect: function(evt, added, removed) {
+            var value = jQuery(evt.currentTarget).val();
+            if (value.length > 0) {
                 if (jQuery(evt.currentTarget).hasClass('work')) {
-                    jQuery(this.eltImprint).parents('.form-group').fadeIn();
+                    // Written Work Selection
+                    
+                    // clear & hide copy
+                    jQuery(this.eltCopy).select2('val', '');
+                    jQuery(this.eltCopy).parents('.form-group').fadeOut();
+                    
+                    // clear & maybe hide imprint
                     jQuery(this.eltImprint).select2('val', '');
-                    jQuery(this.eltBook).parents('.form-group').fadeOut();
-                    jQuery(this.eltBook).select2('val', '');
+                    if (value === this.createId) {
+                        jQuery(this.eltImprint).parents('.form-group').fadeOut();
+                    } else {
+                        jQuery(this.eltImprint).parents('.form-group').fadeIn();
+                    }
                 } else if (jQuery(evt.currentTarget).hasClass('imprint')) {
-                    jQuery(this.eltBook).select2('val', '');
-                    jQuery(this.eltBook).parents('.form-group').fadeIn();
+                    // Imprint Selection
+                    
+                    // clear & maybe hide copy
+                    jQuery(this.eltCopy).select2('val', '');
+                    if (value === this.createId) {
+                        jQuery(this.eltCopy).parents('.form-group').fadeOut();
+                    } else {
+                        jQuery(this.eltCopy).parents('.form-group').fadeIn();
+                    }
                 }
-            } else {
-                this.onClear(evt);
             }
         },
-        processResults: function(data, page, query) {
-            var results = [];
-            if (query.element[0].name !== 'work') {
-                results.push({
-                    id: '',
-                    text: '<div class="separator">Create new ' + query.element[0].name + '</div>'
-                });
-            }
+        results: function(data, page, query) {
+            var results = [{
+                id: this.createId,
+                text: '<div class="separator">Create new ' + query.element[0].name + '</div>'
+            }];
 
             for (var i=0; i < data.results.length; i++) {
                 if (data.results[i].description &&
@@ -381,52 +393,45 @@
                 }
             }
             return {results: results, more: data.next};
-        }
-    });
-    
-    window.ConnectRecordView = window.ConnectModalView.extend({
-        initialize: function(options) {
-            _.bindAll(this, 'context', 'data', 'onClear', 'onSelect', 'refresh', 'render');
-            this.baseContext = options.baseContext;
-            this.template = _.template(jQuery(options.template).html());
-            this.footprint = options.footprint;
-            this.model.on('change', this.render);
-            this.model.fetch();
         },
-        render: function() {
-            var self = this;
+        validateField: function(elt) {
+            var parent = jQuery(elt).parents('.form-group');
+            if (jQuery(parent).is(":visible") && jQuery(elt).val().length === 0) {
+                jQuery(parent).addClass("has-error");
+                return false;
+            } else {
+                jQuery(parent).removeClass("has-error");
+                return true;
+            }
+        },
+        validate: function(evt) {
+            if (this.validateField(this.eltWork) &&
+                this.validateField(this.eltImprint) &&
+                    this.validateField(this.eltCopy)) {
 
-            var ctx = this.context();
-            ctx.footprint_id = this.footprint.id;
-            
-            var markup = this.template(ctx);
-            jQuery(this.el).html(markup);
-            this.delegateEvents();
-            
-            // Initialize select2
-            jQuery(this.el).find("input.select-object").each(function() {
-                jQuery(this).select2({
-                    allowClear: true,
-                    minimumInputLength: 0,
-                    ajax: {
-                        url: jQuery(this).data('url'),
-                        dataType: 'json',
-                        delay: 250,
-                        data: self.data,
-                        results: self.processResults,
-                        cache: true
-                    },
-                    escapeMarkup: function (markup) { return markup; }
-                });
-                jQuery(this).on('change', self.onSelect);
-                jQuery(this).on('select2-clearing', self.onClear);
-            });
-            
-            this.eltWork = jQuery(this.el).find('input.select-object.work')[0];
-            this.eltImprint = jQuery(this.el).find('input.select-object.imprint')[0];
-            this.eltBook =  jQuery(this.el).find('input.select-object.book')[0];
-            this.eltSave = jQuery(this.el).find('input.save-connection')[0];
+                var ctx = this.baseContext;
+                ctx.work = jQuery(this.eltWork).select2('data');
+                ctx.imprint = jQuery(this.eltImprint).select2('data');
+                ctx.copy = jQuery(this.eltCopy).select2('data');
+                ctx.createId = this.createId;
+                ctx.current_book = this.model.toJSON();
+                
+                var markup = this.template(ctx);
+                jQuery(this.el).find(".page2 p").html(markup);
+                this.navigate();
+            }
         },
+        navigate: function(evt) {
+            jQuery(".page1, .page2").toggle();
+        },
+        reset: function() {
+            jQuery(this.el).find(".page1").show();
+            jQuery(this.el).find(".page2").hide();
+        },
+        submit: function(evt) {
+            var form = jQuery(this.el).find('form');
+            form.submit();
+        }
     });
 
     window.FootprintView = Backbone.View.extend({
@@ -435,8 +440,7 @@
             'click a.connect-records': 'connectRecords'
         },
         initialize: function(options) {
-            _.bindAll(this, 'connectRecords', 'context', 'render',
-               'maximizeCarousel');
+            _.bindAll(this, 'connectRecords', 'context', 'render', 'maximizeCarousel');
 
             // Modifying X-Editable default properties
             jQuery.fn.editable.defaults.mode = 'inline';
@@ -471,16 +475,11 @@
                 baseContext: options.baseContext,
                 template: options.bookTemplate
             });
-            this.connectView = new window.ConnectRecordView({
-                el: jQuery(this.el).find(".connect-record"),
+            this.connectBookView = new window.ConnectRecordView({
+                el: jQuery(this.el).find("#connect-records-modal"),
                 model: this.bookCopy,
-                footprint: this.footprint,
                 baseContext: options.baseContext,
                 template: options.connectTemplate
-            });
-            this.connectBookView = new window.ConnectModalView({
-                el: jQuery(this.el).find("#connect-records-modal"),
-                model: this.bookCopy
             });
         },
         connectRecords: function() {
@@ -491,7 +490,6 @@
         context: function() {
             var ctx = this.baseContext;
             ctx.footprint = this.footprint.toJSON();
-            ctx.book = this.bookCopy.toJSON();
             return ctx;
         },
         render: function() {

@@ -4,7 +4,7 @@
     <% if (editable) { %>
     <a href="#" class="pull-right connect-records imprint">
         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-        Connect Book
+        Connect
     </a>
 <% } %>    
 </div>
@@ -12,7 +12,12 @@
     <% if (imprint.work.title && imprint.work.title.length > 0) { %>
         <dt>Title</dt>
         <dd class="border-bottom">
-            <a href="/writtenwork/<%=imprint.work.id%>/">
+            <a href="#" class="<% if (editable) { %>editable-title<% } else { %>readonly<% } %>"
+                data-value="<%=imprint.work.title%>"
+                data-name="title" data-model-type="WrittenWork"
+                data-type="title" data-pk="<%=imprint.work.id%>"
+                data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
+                data-url="/api/writtenwork/<%=imprint.work.id%>/">
                 <%=imprint.work.title%>
             </a>
         </dd>
@@ -74,7 +79,7 @@
     <% if (editable) { %> 
         <a href="#" class="pull-right connect-records imprint">
             <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-            Connect Imprint
+            Connect
         </a>
     <% } %>
 </div>
@@ -278,7 +283,7 @@
     <% if (editable) { %> 
         <a href="#" class="pull-right connect-records book">
             <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-            Connect Copy
+            Connect
         </a>
     <% } %>
 </div>

@@ -1,0 +1,53 @@
+<script type="text/template" id="connect-confirm-template">
+<ul>
+    <% if (work.id === createId) { %>
+        <li>Connect a new written work</li>
+        <li>Connect a new imprint</li>
+        <li>Connect a new book copy.</li> 
+    <% } else if (work.id != current_book.imprint.work.id) { %>
+        <li>
+            Change written work from <b><%=current_book.imprint.work.title%></b> to <b><%= work.text %></b>
+        </li> 
+    <% } else { %>
+        <li>Keep connection to the written work<br /><b><%= work.text %></b></li> 
+    <% } %>
+
+    <% if (imprint) { %>
+        <% if (imprint.id === createId) { %>
+            <li>Connect a new imprint</li>
+            <li>Connect a new book copy</li>
+        <% } else if (imprint.id != current_book.imprint.id) { %>
+            <% if (is_bare) { %>
+                <li>
+                    Connect to <b><%= imprint.text %></b>
+                </li>
+            <% } else { %>
+                <li>
+                    Change imprint from <b><%=current_book.imprint.description%></b> to <b><%= imprint.text %></b>
+                </li>
+            <% } %>
+        <% } else { %>
+            <li>Keep connection to the imprint <b><%= imprint.text %></b></li>
+        <% } %>
+    <% } %>
+
+    <% if (copy) { %>
+    
+        <% if (copy.id === createId) { %>
+            <li>Connect a new book copy</li>
+        <% } else if (copy.id != current_book.id) { %>
+            <% if (is_bare) { %>
+                <li>
+                    Connect to <b><%= copy.text %></b>
+                </li>
+            <% } else { %>
+                <li>
+                    Change book copy from <b><%=current_book.description%></b> to <b><%= copy.text %></b>
+                </li>
+            <% } %> 
+        <% } else { %>
+            <li>Keep connection to the copy <b><%= copy.text %></b></li>
+        <% } %>
+    <% } %>
+</ul>
+</script>

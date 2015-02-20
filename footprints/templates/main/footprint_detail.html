@@ -22,6 +22,44 @@
             border-bottom: dotted black 1px;
             padding-bottom: 5px;
         }
+        
+        .connect-record-prompt {
+            width: 25%;
+            min-width: 250px;
+        }
+        
+        .connect-record-prompt p {
+            margin-bottom: 20px;
+        }
+        
+        .connect-record-prompt span.emphasis {
+            font-size: 125%;
+            font-weight: 400;
+        }
+
+        .connect-record-prompt a {
+            font-size: 125%;
+        }
+        
+        #connect-records-modal form .form-group .error-block {
+            display: none;
+            color: #a94442;
+            margin: 5px 0 0 0;
+        }
+
+        #connect-records-modal .form-group.has-error .error-block {
+            display: block;
+        }
+        
+        #connect-records-modal .page2 ul {
+            margin: 20px 0 0 0;
+        }
+        #connect-records-modal .page2 ul li {
+            margin-bottom: 20px;
+        }
+        #connect-records-modal .page2 ul li .separator {
+            border-bottom: 0;
+        }
     </style>
     
     {% include "xeditable/actor.html" %}
@@ -34,7 +72,7 @@
     {% include "clientside/footprint.html" %}
     {% include "clientside/footprint_book.html" %}
     {% include "clientside/footprint_carousel.html" %}
-    {% include "clientside/footprint_connect.html" %}
+    {% include "clientside/footprint_connect_confirm.html" %}
     {% include "clientside/footprint_progress.html" %}
 {% endblock %}
 
@@ -65,7 +103,7 @@
                 book_copy: {'id': '{{footprint.book_copy.id}}'},
                 bookTemplate: jQuery('#book-detail-template'),
                 detailTemplate: jQuery('#footprint-detail-template'),
-                connectTemplate: jQuery('#connect-record-template'),
+                connectTemplate: jQuery('#connect-confirm-template'),
                 carouselTemplate: jQuery('#carousel-template'), 
                 progressTemplate: jQuery('#progress-sidebar-template'),
                 baseContext: {
@@ -77,7 +115,8 @@
                                    {% endfor %}],
                     editable: {% if editable %}true{% else %}false{% endif %},
                     csrf_token: '{{csrf_token}}',
-                    static_url: '{{STATIC_URL}}'
+                    static_url: '{{STATIC_URL}}',
+                    is_bare:  {% if footprint.is_bare %}true{% else %}false{% endif %}
                 }
             });
         });
@@ -93,10 +132,33 @@
                 <div class="book-detail"></div>
             </div>
             <div class="col-md-4">
-                <div class="progress-detail"></div>
-                <div class="connect-record"></div>
+                {% if footprint.is_bare %}
+                    <div data-spy="affix" class="connect-record-prompt">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <h4>Ready to get started?</h4>
+                                <p>This footprint has minimal information. Help complete this record in two ways.</p>
+                                <p>
+                                    <a href="#" class="connect-records">
+                                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Connect
+                                    </a> 
+                                    this footprint to an existing written work, imprint or physical copy.
+                                </p>
+                                <p>
+                                    <span class="emphasis"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> Answer</span> 
+                                    questions about people, places and events in each section.
+                                </p>
+                                
+                             </li>
+                         </ul>
+                    </div>
+                {% else %}
+                    <div class="progress-detail"></div>
+                {% endif %}
             </div>
         </div>
+        
+        {% include "main/footprint_connect.html" %}
     
         <div class="modal" id="confirm-modal" tabindex="-1" role="dialog" aria-labelledby="Confirm" aria-hidden="true">
             <div class="modal-dialog">
@@ -121,44 +183,6 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     </div>
                     <div class="modal-body"></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal" id="connect-records-modal" taxindex="-1" role="dialog" aria-labelledby="Connect Records" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title">Connect Records</h4>
-                    </div>
-                    <div class="modal-body">
-                        <form action="/connect/footprint/{{footprint.id}}/" method="post">
-                            <input type="hidden" name="csrfmiddlewaretoken" value="<%=csrf_token%>" />
-                            <div class="form-group writtenwork">
-                                <div><label>Select Book</label></div>
-                                <div style="display: none">{{footprint.book_copy.imprint.work.description}}</div>
-                                <input value="{{footprint.book_copy.imprint.work.id}}" type="hidden" name="work" class="select-object work"
-                                    data-url="/api/writtenwork/" placeholder="Select a book"/>
-                            </div>
-                            <div class="form-group imprint">
-                                <div><label>Select Imprint</label></div>
-                                <div style="display: none">{{footprint.book_copy.imprint.description}}</div>
-                                <input value="{{footprint.book_copy.imprint.id}}" type="hidden" name="imprint" class="select-object imprint"
-                                    data-url="/api/imprint/" placeholder="Choose an existing imprint or New Imprint"  />
-                            </div>
-                            <div class="form-group">
-                                <div><label>Select Physical Copy</label></div>
-                                <div style="display: none">{{footprint.book_copy.description}}</div>
-                                <input value="{{footprint.book_copy.id}}" type="hidden" name="book" class="select-object book" 
-                                    data-url="/api/book/" placeholder="Choose an existing book copy or New Copy"  />
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default btn-cancel" data-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary btn-confirm" data-dismiss="modal">Confirm</button>
-                    </div>
                 </div>
             </div>
         </div>
