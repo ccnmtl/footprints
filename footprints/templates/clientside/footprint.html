@@ -4,7 +4,13 @@
         <span class="pull-left object-title" data-name='display-title'><%=title%></span>
         <div class="clearfix"></div>
     </h1>
-    <div class="breadcrumb">A FOOTPRINT</div>
+    <div class="breadcrumb">
+        A FOOTPRINT
+        <div class="pull-right">
+            <a href="/writtenwork/<%=work_id%>/">
+            <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>&nbsp;View All</a>
+        </div>
+    </div>
     <% if (narrative && narrative.length > 0) { %>
         <blockquote class="blockquote">
             <a href="#" class="<% if (editable) { %>editable<% } else { %>readonly<% } %>"
