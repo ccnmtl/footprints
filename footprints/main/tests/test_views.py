@@ -238,7 +238,7 @@ class ConnectFootprintViewTest(TestCase):
 
         data = {'work': self.work.id,
                 'imprint': self.imprint.id,
-                'book': self.book.id}
+                'copy': self.book.id}
         response = self.client.post(self.url, data)
         self.assertEquals(response.status_code, 302)
 

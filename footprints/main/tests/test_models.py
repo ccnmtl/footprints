@@ -6,7 +6,7 @@ from django.test import TestCase
 from footprints.main.models import Language, DigitalFormat, \
     ExtendedDateFormat, StandardizedIdentification, \
     Actor, Imprint, FOOTPRINT_LEVEL, IMPRINT_LEVEL, WRITTENWORK_LEVEL, Role, \
-    Place
+    Place, Footprint, WrittenWork, BookCopy
 from footprints.main.tests.factories import RoleFactory, \
     ActorFactory, PlaceFactory, CollectionFactory, \
     WrittenWorkFactory, ImprintFactory, BookCopyFactory, FootprintFactory, \
@@ -184,6 +184,7 @@ class BasicModelTest(TestCase):
     def test_footprint(self):
         footprint = FootprintFactory()
         self.assertEquals(footprint.__unicode__(), 'Provenance')
+        self.assertFalse(footprint.is_bare())
 
         footprint.digital_object.add(DigitalObjectFactory())
         self.assertEquals(footprint.percent_complete(), 100)
@@ -193,3 +194,11 @@ class BasicModelTest(TestCase):
         owner_role = Role.objects.get_owner_role()
         footprint.actor.add(ActorFactory(role=owner_role))
         self.assertEquals(footprint.owners().count(), 1)
+
+        work = WrittenWork.objects.create()
+        imprint = Imprint.objects.create(work=work)
+        book_copy = BookCopy.objects.create(imprint=imprint)
+        footprint = Footprint.objects.create(medium="Medium",
+                                             provenance="Provenance",
+                                             book_copy=book_copy)
+        self.assertTrue(footprint.is_bare())

@@ -1,7 +1,14 @@
 <script type="text/template" id="book-detail-template">
-<div class="breadcrumb">THE BOOK</div>
+<div class="breadcrumb">
+    THE BOOK
+    <% if (editable) { %>
+    <a href="#" class="pull-right connect-records imprint">
+        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+        Connect
+    </a>
+<% } %>    
+</div>
 <dl class="dl-horizontal">
-    <dt>Book Copy Identifier</dt><dd class="border-bottom"><%=imprint.work.id%>-<%=imprint.id%>-<%=id%></dd>
     <% if (imprint.work.title && imprint.work.title.length > 0) { %>
         <dt>Title</dt>
         <dd class="border-bottom">
@@ -13,14 +20,8 @@
                 data-url="/api/writtenwork/<%=imprint.work.id%>/">
                 <%=imprint.work.title%>
             </a>
-            <div class="pull-right">
-                <a href="/writtenwork/<%=imprint.work.id%>/" title="see details" class="foreign-key">
-                    <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
-                </a>
-            </div>
         </dd>
     <% } %>
-
     <% for (var i=0; i < imprint.work.actor.length; i++) { %> 
         <dt><%=imprint.work.actor[i].role.name%></dt>
         <dd class="border-bottom">
@@ -34,16 +35,12 @@
                         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                     </a>
                 <% } %>
-                &nbsp;
-                <a href="/person/<%=imprint.work.actor[i].person.id%>/" title="see details" class="foreign-key">
-                    <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
-                </a>
             </div>
         </dd>
     <% } %>
     <% if (imprint.work.notes && imprint.work.notes.length > 0) { %>
         <dt>Notes</dt>
-        <dd class="border-bottom">
+        <dd>
             <a href="#" class="<% if (editable) { %>editable<% } else { %>readonly<% } %>"
                 data-name="notes"
                 data-type="textarea" data-pk="<%=imprint.work.id%>"
@@ -52,7 +49,40 @@
         </dd>
     <% } %>
 </dl>
+<dl class="dl-horizontal">
+    <dt>Do you know...</dt>
+    <dd>  
+        <ul class="additional-questions">
+            <% if (!imprint.work.title || imprint.work.title.length < 1) { %>
+                <li>
+                    <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                    <a href="#" class="<% if (editable) { %>editable-title<% } %> do-you-know persistant"
+                        data-model-type="WrittenWork"
+                        data-name="title" data-type="title" data-pk="<%=imprint.work.id%>" data-value=""
+                        data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
+                        data-url="/api/writtenwork/<%=imprint.work.id%>/">the title of the written work?</a>
+                </li>
+            <% } %>
+            <li class="fixed"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                <a href="#" class="<% if (editable) { %>editable-author<% } %> do-you-know persistant" data-name="actor"
+                    data-type="actor" data-pk="<%=imprint.work.id%>" data-value=""
+                    data-params="{csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=imprint.work.id%>,parent_model:'writtenwork'}" 
+                    data-url="/actor/add/">the author?</a>
+            </li>
+       </ul>
+    </dd>
+</dl>
 
+
+<div class="breadcrumb">
+    THE IMPRINT
+    <% if (editable) { %> 
+        <a href="#" class="pull-right connect-records imprint">
+            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+            Connect
+        </a>
+    <% } %>
+</div>
 <dl class="dl-horizontal">
     <% if (imprint.title && imprint.title.length > 0) { %>
         <dt>Imprint Title</dt>
@@ -107,10 +137,6 @@
                         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                     </a>
                 <% } %>
-                &nbsp;
-                <a href="/place/<%=imprint.place.id%>/" title="see details" class="foreign-key">
-                    <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
-                </a>
             </div>
             <div class="clearfix"></div>
             <div class="footprint-map"
@@ -133,10 +159,6 @@
                         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                     </a>
                 <% } %>
-                &nbsp;
-                <a href="/person/<%=imprint.actor[i].person.id%>/" title="see details" class="foreign-key">
-                    <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
-                </a>
             </div>
         </dd>
     <% } %>
@@ -180,23 +202,6 @@
         <dt>Do you know...</dt>
         <dd>  
             <ul class="additional-questions">
-                <% if (!imprint.work.title || imprint.work.title.length < 1) { %>
-                    <li>
-                        <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
-                        <a href="#" class="<% if (editable) { %>editable-title<% } %> do-you-know persistant"
-                            data-model-type="WrittenWork"
-                            data-name="title" data-type="title" data-pk="<%=imprint.work.id%>" data-value=""
-                            data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
-                            data-url="/api/writtenwork/<%=imprint.work.id%>/">the title of the written work?</a>
-                    </li>
-                <% } %>
-                <li class="fixed"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
-                    <a href="#" class="<% if (editable) { %>editable-author<% } %> do-you-know persistant" data-name="actor"
-                        data-type="actor" data-pk="<%=imprint.work.id%>" data-value=""
-                        data-params="{csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=imprint.work.id%>,parent_model:'writtenwork'}" 
-                        data-url="/actor/add/">the author of the written work?</a>
-                </li>
-                
                 <% if (imprint.work.notes && imprint.work.notes.length < 1) { %>
                     <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
                         <a href="#" class="editable do-you-know persistant" data-name="notes"
@@ -269,7 +274,22 @@
                     </li>
                 <% } %>
             </ul>
-       </dd>
+        </dd>
     </dl>
 <% } %>
+    
+<div class="breadcrumb">
+    THE COPY
+    <% if (editable) { %> 
+        <a href="#" class="pull-right connect-records book">
+            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+            Connect
+        </a>
+    <% } %>
+</div>
+<dl class="dl-horizontal">
+    <dt>Book Copy Identifier</dt>
+    <dd><%=imprint.work.id%>-<%=imprint.id%>-<%=id%></dd>
+</dl>
+
 </script>

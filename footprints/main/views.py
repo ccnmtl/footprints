@@ -155,30 +155,48 @@ class CreateFootprintView(LoggedInMixin, TemplateView):
 
 
 class ConnectFootprintView(LoggedInMixin, EditableMixin, View):
+    CREATE_ID = '0'
+
+    def get_or_create_work(self, pk):
+        if pk == self.CREATE_ID:
+            work = WrittenWork.objects.create()
+        else:
+            work = get_object_or_404(WrittenWork, pk=pk)
+
+        return work
+
+    def get_or_create_imprint(self, pk, work):
+        if pk == self.CREATE_ID or len(pk) == 0:
+            imprint = Imprint.objects.create(work=work)
+        else:
+            imprint = get_object_or_404(Imprint, pk=pk)
+
+        return imprint
+
+    def get_or_create_copy(self, pk, imprint):
+        if pk == self.CREATE_ID or len(pk) == 0:
+            copy = BookCopy.objects.create(imprint=imprint)
+        else:
+            copy = get_object_or_404(BookCopy, pk=pk)
+
+        return copy
 
     def post(self, *args, **kwargs):
         fp = get_object_or_404(Footprint, pk=kwargs.get('pk', None))
         if not self.has_edit_permission(self.request.user, fp):
             return HttpResponseForbidden()
 
-        pk = self.request.POST.get('book', None)
-        book = get_object_or_404(BookCopy, pk=pk) if pk else None
+        pk = self.request.POST.get('work', self.CREATE_ID)
+        work = self.get_or_create_work(pk)
 
-        pk = self.request.POST.get('imprint', None)
-        imprint = get_object_or_404(Imprint, pk=pk) if pk else None
+        pk = self.request.POST.get('imprint', self.CREATE_ID)
+        imprint = self.get_or_create_imprint(pk, work)
 
-        pk = self.request.POST.get('work', None)
-        work = get_object_or_404(WrittenWork, pk=pk) if pk else None
+        pk = self.request.POST.get('copy', self.CREATE_ID)
+        copy = self.get_or_create_copy(pk, imprint)
 
-        if book:
-            fp.book_copy = book
-            fp.save()
-        elif imprint:
-            fp.book_copy.imprint = imprint
-            fp.book_copy.save()
-        elif work:
-            fp.book_copy.imprint.work = work
-            fp.book_copy.imprint.save()
+        fp.book_copy = copy
+        fp.save()
 
         url = reverse('footprint-detail-view', kwargs={'pk': fp.pk})
         return HttpResponseRedirect(url)

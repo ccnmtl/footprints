@@ -327,8 +327,10 @@ class WrittenWork(models.Model):
 
     def percent_complete(self):
         required = 3.0
-        complete = 1  # title is required
+        complete = 0
 
+        if self.title is not None and len(self.title) > 0:
+            complete += 1
         if self.actor.count() > 0:
             complete += 1
         if self.notes is not None and len(self.notes) > 0:
@@ -487,7 +489,7 @@ class Footprint(models.Model):
         "Subscription list in imprint"
     ]
 
-    book_copy = models.ForeignKey(BookCopy, null=True, blank=True)
+    book_copy = models.ForeignKey(BookCopy)
     medium = models.CharField(
         "Medium of Evidence", max_length=256,
         help_text='''Where the footprint is derived or deduced from, e.g.
@@ -566,3 +568,6 @@ class Footprint(models.Model):
     def owners(self):
         role = Role.objects.get_owner_role()
         return self.actor.filter(role=role)
+
+    def is_bare(self):
+        return self.book_copy.imprint.work.percent_complete() == 0
