@@ -1,23 +1,3 @@
-/**
-Actor editable input.
-
-@class actor
-@extends abstractinput
-@final
-@example
-<a href="#" data-type="name" data-pk="1">Fred Rogers</a>
-<script>
-$(function(){
-    $('#actor').editable({
-        url: '/post',
-        title: 'Enter the actor's name',
-        value: {
-            name: "Fred Rogers"
-        }
-    });
-});
-</script>
-**/
 (function ($) {
     "use strict";
     
@@ -160,7 +140,7 @@ $(function(){
         @method activate() 
        **/        
        activate: function() {
-            this.$input.filter('[name="person-autocomplete"]').focus();
+            this.$roleselect.focus();
        },  
        
        /**
