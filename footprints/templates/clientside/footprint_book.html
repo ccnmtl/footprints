@@ -32,7 +32,7 @@
                      data-params="{actor_id:'<%=imprint.work.actor[i].id%>',csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=imprint.work.id%>,parent_model:'writtenwork'}" 
                      data-url="/remove/related/"
                      title="remove author">
-                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                     </a>
                 <% } %>
             </div>
@@ -115,13 +115,23 @@
     <% if (imprint.date_of_publication) { %>
         <dt>Publication Date</dt>
         <dd class="border-bottom">
-            <a href="#" class="<% if (editable) { %>editable<% } else { %>readonly<% } %>"
+            <a href="#" class="<% if (editable) { %>editable-required<% } else { %>readonly<% } %>"
              data-name="edtf_format"
              data-type="text" data-pk="<%=imprint.date_of_publication.id%>"
              data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
              data-url="/api/edtf/<%=imprint.date_of_publication.id%>/">
                 <%=imprint.date_of_publication.edtf_format%>
             </a>
+            <% if (editable) { %>
+                <div class="pull-right">
+                <a href="#" class="remove-related"
+                    data-params="{publicationdate_id:'<%=imprint.date_of_publication.id%>',csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=imprint.id%>,parent_model:'imprint'}" 
+                    data-url="/remove/related/"
+                    title="remove date">
+                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                </a>
+                </div>
+        <% } %>            
         </dd>
     <% } %>
     <% if (imprint.place) { %>
@@ -134,7 +144,7 @@
                         data-params="{place_id:'<%=imprint.place.id%>',csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=imprint.id%>,parent_model:'imprint'}" 
                         data-url="/remove/related/"
                         title="remove place">
-                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                     </a>
                 <% } %>
             </div>
@@ -156,7 +166,7 @@
                      data-params="{actor_id:'<%=imprint.actor[i].id%>',csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=imprint.id%>,parent_model:'imprint'}" 
                      data-url="/remove/related/"
                      title="remove author">
-                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                     </a>
                 <% } %>
             </div>
@@ -178,7 +188,7 @@
                      data-params="{identifier_id:'<%=imprint.standardized_identifier[i].id%>',csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=imprint.id%>,parent_model:'imprint'}" 
                      data-url="/remove/related/"
                      title="remove identifier">
-                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                     </a>
                 <% } %>
             </div>

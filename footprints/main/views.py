@@ -222,12 +222,26 @@ class RemoveRelatedView(LoggedInMixin, EditableMixin,
         # will need to figure out whether related is FK or M2M
         success = True
         actor_id = self.request.POST.get('actor_id', None)
-        place_id = self.request.POST.get('place_id', None)
+        associateddate_id = self.request.POST.get('associateddate_id', None)
+        publicationdate_id = self.request.POST.get('publicationdate_id', None)
         identifier_id = self.request.POST.get('identifier_id', None)
+        place_id = self.request.POST.get('place_id', None)
 
         if actor_id:
             actor = get_object_or_404(Actor, id=actor_id)
             the_parent.actor.remove(actor)
+        elif associateddate_id:
+            the_date = get_object_or_404(ExtendedDateFormat,
+                                         id=associateddate_id)
+            if the_parent.associated_date == the_date:
+                the_parent.associated_date = None
+                the_parent.save()
+        elif publicationdate_id:
+            the_date = get_object_or_404(ExtendedDateFormat,
+                                         id=publicationdate_id)
+            if the_parent.date_of_publication == the_date:
+                the_parent.date_of_publication = None
+                the_parent.save()
         elif place_id:
             place = get_object_or_404(Place, id=place_id)
             if the_parent.place == place:

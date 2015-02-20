@@ -51,13 +51,23 @@
         <% if (associated_date) { %>
             <dt>Footprint Date</dt>
             <dd class="border-bottom">
-                <a href="#" class="<% if (editable) { %>editable<% } else { %>readonly<% } %>"
+                <a href="#" class="<% if (editable) { %>editable-required<% } else { %>readonly<% } %> required"
                  data-name="edtf_format"
                  data-type="text" data-pk="<%=associated_date.id%>"
                  data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
                  data-url="/api/edtf/<%=associated_date.id%>/">
                     <%=associated_date.edtf_format%>
                 </a>
+                <% if (editable) { %>
+                    <div class="pull-right">
+                    <a href="#" class="remove-related"
+                        data-params="{associateddate_id:'<%=associated_date.id%>',csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=id%>,parent_model:'footprint'}" 
+                        data-url="/remove/related/"
+                        title="remove date">
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                    </a>
+                    </div>
+                <% } %>
             </dd>
         <% } %>
         <% if (place) { %>
@@ -70,13 +80,9 @@
                             data-params="{place_id:'<%=place.id%>',csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=id%>,parent_model:'footprint'}" 
                             data-url="/remove/related/"
                             title="remove place">
-                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                         </a>
                     <% } %>
-                    &nbsp;
-                    <a href="/place/<%=place.id%>/" title="see details" class="foreign-key">
-                        <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
-                    </a>
                 </div>
                 <div class="clearfix"></div>
                 <div class="footprint-map"
@@ -103,7 +109,7 @@
         <% } %>
         <dt title="the written work's title exactly as it appears in the of evidence.">Footprint Title Display<br /></dt>
         <dd class="border-bottom">
-            <a href="#" class="<% if (editable) { %>editable<% } else { %>readonly<% } %>"
+            <a href="#" class="<% if (editable) { %>editable-required<% } else { %>readonly<% } %>"
                 data-name="title" data-type="text" data-pk="<%=id%>"
                 data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
                 data-url="/api/footprint/<%=id%>/"><%=title%></a>
@@ -118,12 +124,8 @@
                             data-params="{actor_id:'<%=actor[i].id%>',csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=id%>,parent_model:'footprint'}" 
                             data-url="/remove/related/"
                             title="remove actor">
-                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
                     <% } %>
-                    &nbsp;
-                    <a href="/person/<%=actor[i].person.id%>/" title="see details" class="foreign-key">
-                        <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
-                    </a>
                 </div>
             </dd>
         <% } %> 
@@ -154,7 +156,7 @@
         
         <dt>Evidence Location</dt>
         <dd class="border-bottom">
-            <a href="#" class="<% if (editable) { %>editable<% } else { %>readonly<% } %>"
+            <a href="#" class="<% if (editable) { %>editable-required<% } else { %>readonly<% } %>"
                 data-name="provenance"
                 data-type="text" data-pk="<%=id%>"
                 data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
