@@ -1,0 +1,15 @@
+<script type="text/template" id="xeditable-imprint-title-form">
+    {% with references=footprint.book_copy.imprint.references %}
+    {% if references > 1 %}
+        <div class="alert alert-danger" role="alert">
+            <strong>Important!</strong> This imprint is referenced by {{references|add:"-1"}} other footprints.<br />
+            Changing the imprint title will change those records too.<br />
+            Are you sure?
+        </div>
+    {% endif %}
+    {% endwith %}
+
+    <div class="editable-title">
+        <input type="text" class="form-control" name="title" placeholder="Type in a title"></input>
+    </div>
+</script>

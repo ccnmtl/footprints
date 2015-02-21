@@ -12,7 +12,7 @@
     <% if (imprint.work.title && imprint.work.title.length > 0) { %>
         <dt>Title</dt>
         <dd class="border-bottom">
-            <a href="#" class="<% if (editable) { %>editable-title<% } else { %>readonly<% } %>"
+            <a href="#" class="<% if (editable) { %>editable-work-title<% } else { %>readonly<% } %>"
                 data-value="<%=imprint.work.title%>"
                 data-name="title" data-model-type="WrittenWork"
                 data-type="title" data-pk="<%=imprint.work.id%>"
@@ -56,7 +56,7 @@
             <% if (!imprint.work.title || imprint.work.title.length < 1) { %>
                 <li>
                     <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
-                    <a href="#" class="<% if (editable) { %>editable-title<% } %> do-you-know persistant"
+                    <a href="#" class="<% if (editable) { %>editable-work-title<% } %> do-you-know persistant"
                         data-model-type="WrittenWork"
                         data-name="title" data-type="title" data-pk="<%=imprint.work.id%>" data-value=""
                         data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
@@ -87,7 +87,7 @@
     <% if (imprint.title && imprint.title.length > 0) { %>
         <dt>Imprint Title</dt>
         <dd class="border-bottom">
-            <a href="#" class="<% if (editable) { %>editable-title<% } else { %>readonly<% } %>"
+            <a href="#" class="<% if (editable) { %>editable-imprint-title<% } else { %>readonly<% } %>"
              data-value="<%=imprint.title%>"
              data-name="title" data-model-type="Imprint"
              data-type="title" data-pk="<%=imprint.id%>"
@@ -220,11 +220,11 @@
                             data-url="/api/writtenwork/<%=imprint.work.id%>/">any additional notes about the written work?</a>
                     </li>
                 <% } %>
-                
+
                 <% if (!imprint.title || imprint.title.length < 1) { %>
                     <li>
                         <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
-                        <a href="#" class="<% if (editable) { %>editable-title<% } %> do-you-know persistant"
+                        <a href="#" class="<% if (editable) { %>editable-imprint-title<% } %> do-you-know persistant"
                             data-model-type="Imprint"
                             data-name="title" data-type="title" data-pk="<%=imprint.id%>" data-value=""
                             data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"

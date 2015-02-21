@@ -58,26 +58,7 @@
                             <div class="search-result {% cycle 'odd' 'even' %}" data-href="/{{result.model_name}}/{{result.object.id}}/">
                                 {% ifequal result.model_name 'footprint' %}
                                     <h4><img src="{{STATIC_URL}}img/footprint.png" />{{result.object.display_title}}</h4>
-                                    <dl class="dl-horizontal">
-                                     {% if result.object.associated_date %}
-                                        <dt>Footprint Date</dt>
-                                        <dd>{{result.object.associated_date}}</dd>
-                                     {% endif %}
-                                     {% if result.object.place %}
-                                        <dt>Footprint Place</dt>
-                                        <dd>{{result.object.place}}</dd>
-                                     {% endif %}
-                                    {% with authors=result.object.book_copy.imprint.work.authors %}
-                                        {% for actor in authors %}
-                                            <dt>Author</dt><dd>{{actor.display_name}}</dd>
-                                        {% endfor %}
-                                    {% endwith %}
-                                     {% with owners=result.object.owners %}
-                                        {% for actor in owners %}
-                                            <dt>Owner</dt><dd>{{actor.display_name}}</dd>
-                                        {% endfor %}
-                                     {% endwith %}
-                                     </dl>
+                                    {{result.object.description}}
                                 {% else %}{% ifequal result.model_name 'person' %}
                                     <h4><span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{result.object}}</h4>
                                 {% else %}{% ifequal result.model_name 'place' %}
