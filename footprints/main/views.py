@@ -4,6 +4,8 @@ from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import logout as auth_logout_view
 from django.core.urlresolvers import reverse
+from django.db.models.fields import FieldDoesNotExist
+from django.db.models.fields.related import ManyToManyField
 from django.http.response import HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 from django.views.generic.base import TemplateView, View
@@ -19,8 +21,7 @@ from rest_framework.views import APIView
 from footprints.main.forms import DigitalObjectForm
 from footprints.main.models import (
     Footprint, Actor, Person, Role, WrittenWork, Language, ExtendedDateFormat,
-    Place, Imprint, BookCopy, IDENTIFIER_TYPES, StandardizedIdentification,
-    DigitalObject)
+    Place, Imprint, BookCopy, IDENTIFIER_TYPES, StandardizedIdentification)
 from footprints.main.serializers import NameSerializer
 from footprints.mixins import (
     JSONResponseMixin, LoggedInMixin, EditableMixin)
@@ -206,60 +207,45 @@ class ConnectFootprintView(LoggedInMixin, EditableMixin, View):
 class RemoveRelatedView(LoggedInMixin, EditableMixin,
                         JSONResponseMixin, View):
 
+    def removeForeignKey(self, the_parent, the_child, attr):
+        current = getattr(the_parent, attr)
+        if current != the_child:
+            return self.render_to_json_response({'success': False})
+        else:
+            setattr(the_parent, attr, None)
+            the_parent.save()
+            return self.render_to_json_response({'success': True})
+
+    def removeManyToMany(self, the_parent, the_child, attr):
+        m2m = getattr(the_parent, attr)
+        m2m.remove(the_child)
+        return self.render_to_json_response({'success': True})
+
     def post(self, *args, **kwargs):
         try:
             model_name = self.request.POST.get('parent_model', None)
             the_model = apps.get_model(app_label='main', model_name=model_name)
-
             the_parent = get_object_or_404(
                 the_model, pk=self.request.POST.get('parent_id', None))
-        except ValueError:
+
+            if not self.has_edit_permission(self.request.user, the_parent):
+                return HttpResponseForbidden()
+
+            attr = self.request.POST.get('attr', None)
+            field = the_model._meta.get_field_by_name(attr)
+
+            model_name = field[0].rel.to._meta.model_name
+            the_model = apps.get_model(app_label='main', model_name=model_name)
+            the_child = get_object_or_404(
+                the_model, pk=self.request.POST.get('child_id', None))
+
+            # m2m?
+            if isinstance(field[0], ManyToManyField):
+                return self.removeManyToMany(the_parent, the_child, attr)
+            else:
+                return self.removeForeignKey(the_parent, the_child, attr)
+        except (ValueError, FieldDoesNotExist):
             return self.render_to_json_response({'success': False})
-
-        if not self.has_edit_permission(self.request.user, the_parent):
-            return HttpResponseForbidden()
-
-        # cheating a bit here. @todo - make this totally generic
-        # will need to figure out whether related is FK or M2M
-        success = True
-        actor_id = self.request.POST.get('actor_id', None)
-        associateddate_id = self.request.POST.get('associateddate_id', None)
-        publicationdate_id = self.request.POST.get('publicationdate_id', None)
-        identifier_id = self.request.POST.get('identifier_id', None)
-        place_id = self.request.POST.get('place_id', None)
-        digitalobject_id = self.request.POST.get('digitalobject_id', None)
-
-        if actor_id:
-            actor = get_object_or_404(Actor, id=actor_id)
-            the_parent.actor.remove(actor)
-        elif associateddate_id:
-            the_date = get_object_or_404(ExtendedDateFormat,
-                                         id=associateddate_id)
-            if the_parent.associated_date == the_date:
-                the_parent.associated_date = None
-                the_parent.save()
-        elif publicationdate_id:
-            the_date = get_object_or_404(ExtendedDateFormat,
-                                         id=publicationdate_id)
-            if the_parent.date_of_publication == the_date:
-                the_parent.date_of_publication = None
-                the_parent.save()
-        elif place_id:
-            place = get_object_or_404(Place, id=place_id)
-            if the_parent.place == place:
-                the_parent.place = None
-                the_parent.save()
-        elif identifier_id:
-            identifier = get_object_or_404(StandardizedIdentification,
-                                           id=identifier_id)
-            the_parent.standardized_identifier.remove(identifier)
-        elif digitalobject_id:
-            obj = get_object_or_404(DigitalObject, id=digitalobject_id)
-            the_parent.digital_object.remove(obj)
-        else:
-            success = False
-
-        return self.render_to_json_response({'success': success})
 
 
 class AddRelatedRecordView(LoggedInMixin, EditableMixin,

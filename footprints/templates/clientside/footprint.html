@@ -41,7 +41,7 @@
                                             <% if (editable) { %>
                                                 <div class="edit-digital-object" style="display: none">
                                                     <a href="#" class="remove-related"
-                                                        data-params="{digitalobject_id:'<%=digital_object[i].id%>',csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=id%>,parent_model:'footprint'}" 
+                                                        data-params="{attr:'digital_object',child_id:'<%=digital_object[i].id%>',csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=id%>,parent_model:'footprint'}" 
                                                         data-url="/remove/related/"
                                                         title="remove image">
                                                         <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
@@ -81,7 +81,7 @@
                 <% if (editable) { %>
                     <div class="pull-right">
                     <a href="#" class="remove-related"
-                        data-params="{associateddate_id:'<%=associated_date.id%>',csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=id%>,parent_model:'footprint'}" 
+                        data-params="{attr:'associated_date',child_id:'<%=associated_date.id%>',csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=id%>,parent_model:'footprint'}" 
                         data-url="/remove/related/"
                         title="remove date">
                         <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
@@ -97,7 +97,7 @@
                 <div class="pull-right">
                     <% if (editable) { %>
                         <a href="#" class="remove-related"
-                            data-params="{place_id:'<%=place.id%>',csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=id%>,parent_model:'footprint'}" 
+                            data-params="{attr:'place',child_id:'<%=place.id%>',csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=id%>,parent_model:'footprint'}" 
                             data-url="/remove/related/"
                             title="remove place">
                             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
@@ -141,7 +141,7 @@
                 <div class="pull-right">
                     <% if (editable) { %>
                         <a href="#" class="remove-related"
-                            data-params="{actor_id:'<%=actor[i].id%>',csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=id%>,parent_model:'footprint'}" 
+                            data-params="{attr:'actor',child_id:'<%=actor[i].id%>',csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=id%>,parent_model:'footprint'}" 
                             data-url="/remove/related/"
                             title="remove actor">
                             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>

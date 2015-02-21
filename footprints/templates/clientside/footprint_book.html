@@ -29,7 +29,7 @@
             <div class="pull-right">
                 <% if (editable) { %>
                     <a href="#" class="remove-related"
-                     data-params="{actor_id:'<%=imprint.work.actor[i].id%>',csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=imprint.work.id%>,parent_model:'writtenwork'}" 
+                     data-params="{attr:'actor',child_id:'<%=imprint.work.actor[i].id%>',csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=imprint.work.id%>,parent_model:'writtenwork'}" 
                      data-url="/remove/related/"
                      title="remove author">
                         <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
@@ -125,7 +125,7 @@
             <% if (editable) { %>
                 <div class="pull-right">
                 <a href="#" class="remove-related"
-                    data-params="{publicationdate_id:'<%=imprint.date_of_publication.id%>',csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=imprint.id%>,parent_model:'imprint'}" 
+                    data-params="{attr:'date_of_publication',child_id:'<%=imprint.date_of_publication.id%>',csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=imprint.id%>,parent_model:'imprint'}" 
                     data-url="/remove/related/"
                     title="remove date">
                     <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
@@ -141,7 +141,7 @@
             <div class="pull-right">
                 <% if (editable) { %>
                     <a href="#" class="remove-related"
-                        data-params="{place_id:'<%=imprint.place.id%>',csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=imprint.id%>,parent_model:'imprint'}" 
+                        data-params="{attr:'place',child_id:'<%=imprint.place.id%>',csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=imprint.id%>,parent_model:'imprint'}" 
                         data-url="/remove/related/"
                         title="remove place">
                         <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
@@ -163,7 +163,7 @@
             <div class="pull-right">
                 <% if (editable) { %>
                     <a href="#" class="remove-related"
-                     data-params="{actor_id:'<%=imprint.actor[i].id%>',csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=imprint.id%>,parent_model:'imprint'}" 
+                     data-params="{attr:'actor',child_id:'<%=imprint.actor[i].id%>',csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=imprint.id%>,parent_model:'imprint'}" 
                      data-url="/remove/related/"
                      title="remove author">
                         <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
@@ -185,7 +185,7 @@
             <div class="pull-right">
                 <% if (editable) { %>
                     <a href="#" class="remove-related"
-                     data-params="{identifier_id:'<%=imprint.standardized_identifier[i].id%>',csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=imprint.id%>,parent_model:'imprint'}" 
+                     data-params="{attr:'standardized_identifier',child_id:'<%=imprint.standardized_identifier[i].id%>',csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=imprint.id%>,parent_model:'imprint'}" 
                      data-url="/remove/related/"
                      title="remove identifier">
                         <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
