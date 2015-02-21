@@ -126,11 +126,13 @@
     
     window.FootprintDetailView = window.FootprintBaseView.extend({
         events: {
-            'click a.remove-related span.glyphicon-trash': 'confirmRemoveRelated'
+            'click a.remove-related span.glyphicon-trash': 'confirmRemoveRelated',
+            'click .toggle-edit-digital-object': 'toggleEditDigitalObject'
         },
         initialize: function(options) {
             _.bindAll(this, 'context', 'refresh', 'render',
-               'confirmRemoveRelated', 'removeRelated');
+               'confirmRemoveRelated', 'removeRelated',
+               'toggleEditDigitalObject');
 
             this.baseContext = options.baseContext;
             this.template = _.template(jQuery(options.template).html());
@@ -206,6 +208,10 @@
             });
             
             this.initializeMap();
+        },
+        toggleEditDigitalObject: function(evt) {
+            jQuery(this.el).find('.edit-digital-object').toggle();
+            return false;
         }
     });
 

@@ -19,7 +19,8 @@ from rest_framework.views import APIView
 from footprints.main.forms import DigitalObjectForm
 from footprints.main.models import (
     Footprint, Actor, Person, Role, WrittenWork, Language, ExtendedDateFormat,
-    Place, Imprint, BookCopy, IDENTIFIER_TYPES, StandardizedIdentification)
+    Place, Imprint, BookCopy, IDENTIFIER_TYPES, StandardizedIdentification,
+    DigitalObject)
 from footprints.main.serializers import NameSerializer
 from footprints.mixins import (
     JSONResponseMixin, LoggedInMixin, EditableMixin)
@@ -226,6 +227,7 @@ class RemoveRelatedView(LoggedInMixin, EditableMixin,
         publicationdate_id = self.request.POST.get('publicationdate_id', None)
         identifier_id = self.request.POST.get('identifier_id', None)
         place_id = self.request.POST.get('place_id', None)
+        digitalobject_id = self.request.POST.get('digitalobject_id', None)
 
         if actor_id:
             actor = get_object_or_404(Actor, id=actor_id)
@@ -251,6 +253,9 @@ class RemoveRelatedView(LoggedInMixin, EditableMixin,
             identifier = get_object_or_404(StandardizedIdentification,
                                            id=identifier_id)
             the_parent.standardized_identifier.remove(identifier)
+        elif digitalobject_id:
+            obj = get_object_or_404(DigitalObject, id=digitalobject_id)
+            the_parent.digital_object.remove(obj)
         else:
             success = False
 
