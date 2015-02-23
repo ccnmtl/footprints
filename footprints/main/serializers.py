@@ -228,8 +228,8 @@ class FootprintSerializer(HyperlinkedModelSerializer):
     actor = ActorSerializer(many=True)
     place = PlaceSerializer()
     digital_object = DigitalObjectSerializer(many=True)
-    created_by = UserSerializer()
-    last_modified_by = UserSerializer()
+    created_by = UserSerializer(read_only=True)
+    last_modified_by = UserSerializer(read_only=True)
 
     class Meta:
         model = Footprint
