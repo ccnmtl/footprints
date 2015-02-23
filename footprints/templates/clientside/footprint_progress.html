@@ -14,4 +14,27 @@
             <div class="clearfix"></div>
         </li>
     </ul>
+    
+    <div class="sidebar-box">
+        <h4>Recordkeeping</h4>
+        <div>
+            <b>Last Modified</b><br />
+            <% if (footprint.last_modified_by.last_name.length > 0) { %>
+                by <%=footprint.last_modified_by.first_name%> <%=footprint.last_modified_by.last_name %><br />
+            <% } else { %>
+                by <%=footprint.last_modified_by.username%><br /> 
+            <% } %>
+            at <%=footprint.modified_at%>
+        </div>
+        <br />
+        <div>
+            <b>Created</b><br />
+            <% if (footprint.created_by.last_name.length > 0) { %>
+                by <%=footprint.created_by.first_name%> <%=footprint.created_by.last_name %><br />
+            <% } else { %>
+                by <%=footprint.created_by.username%><br /> 
+            <% } %>
+            at <%=footprint.created_at%>
+        </div>
+    </div>
 </script>

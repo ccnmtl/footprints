@@ -199,7 +199,8 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'footprints.main.permissions.IsOwnerOrReadOnly'
     ],
-    'PAGINATE_BY': 30
+    'PAGINATE_BY': 30,
+    'DATETIME_FORMAT': '%m/%d/%y %I:%M %p'
 }
 
 if 'test' in sys.argv or 'jenkins' in sys.argv:
