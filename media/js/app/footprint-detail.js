@@ -271,14 +271,18 @@
                 success: this.refresh
             });
 
-            jQuery(this.el).find('.editable-title').editable({
+            jQuery(this.el).find('.editable-work-title').editable({
                 namedParams: true,
-                tpl: jQuery('#xeditable-title-form').html(),
+                tpl: jQuery('#xeditable-work-title-form').html(),
                 onblur: 'ignore',
-                validate: this.validate,
                 success: this.refresh
             });
-
+            jQuery(this.el).find('.editable-imprint-title').editable({
+                namedParams: true,
+                tpl: jQuery('#xeditable-imprint-title-form').html(),
+                onblur: 'ignore',
+                success: this.refresh
+            });
             jQuery(this.el).find('.editable-identifier').editable({
                 namedParams: true,
                 tpl: jQuery('#xeditable-identifier-form').html(),

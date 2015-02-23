@@ -1,23 +1,3 @@
-/**
-Title editable input.
-
-@class title
-@extends abstractinput
-@final
-@example
-<a href="#" data-type="title" data-pk="1">The Cat In The Hat</a>
-<script>
-$(function(){
-    $('#title').editable({
-        url: '/post',
-        title: 'Enter the title',
-        value: {
-            name: "The Cat In The Hat"
-        }
-    });
-});
-</script>
-**/
 (function ($) {
     "use strict";
     
@@ -37,38 +17,9 @@ $(function(){
         render: function() {
            var self = this;
 
-           this.$input = this.$tpl.find('input[name="title-autocomplete"]');
+           this.$input = this.$tpl.find('input[name="title"]');
            var value = jQuery(this.options.scope).data('value');
            this.value2input(value);
-
-           jQuery(this.$input).autocomplete({
-               source: function(request, response) {
-                   jQuery.ajax({
-                       url: "/api/title/",
-                       dataType: "json",
-                       data: {
-                           q: request.term,
-                           object_type: jQuery(self.options.scope).data("model-type")
-                       },
-                       success: function(data) {
-                           var titles = [];
-                           for (var i=0; i < data.length; i++) {
-                               titles.push({
-                                   label: data[i]
-                               });
-                           }
-                           response(data);
-                       }
-                   });
-               },
-               minLength: 2,
-               open: function() {
-                   jQuery(this).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
-               },
-               close: function() {
-                   jQuery(this).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
-               }
-           });
         },
         
         /**
@@ -154,7 +105,7 @@ $(function(){
         @method activate() 
        **/        
        activate: function() {
-            this.$input.filter('[name="title-autocomplete"]').focus();
+            this.$input.filter('[name="title"]').focus();
        },  
        
        /**

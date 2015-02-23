@@ -344,6 +344,10 @@ class WrittenWork(models.Model):
     def description(self):
         return self.__unicode__()
 
+    def references(self):
+        # how many footprints reference this work?
+        return Footprint.objects.filter(book_copy__imprint__work=self).count()
+
 
 class Imprint(models.Model):
     work = models.ForeignKey(WrittenWork)
@@ -426,6 +430,10 @@ class Imprint(models.Model):
     def printers(self):
         printer = Role.objects.get_printer_role()
         return self.actor.filter(role=printer)
+
+    def references(self):
+        # how many footprints reference this imprint?
+        return Footprint.objects.filter(book_copy__imprint=self).count()
 
 
 class BookCopy(models.Model):
@@ -571,3 +579,8 @@ class Footprint(models.Model):
 
     def is_bare(self):
         return self.book_copy.imprint.work.percent_complete() == 0
+
+    def description(self):
+        template = loader.get_template('main/footprint_description.html')
+        ctx = Context({'footprint': self})
+        return template.render(ctx)

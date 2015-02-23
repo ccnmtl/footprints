@@ -57,7 +57,10 @@
                                     {% if copy.footprint_set.count > 0 %}
                                         <ul>
                                         {% for fp in copy.footprint_set.all %}
-                                            <li>Footprint: <a href="/footprint/{{fp.id}}/"> {{fp}}</a></li>
+                                            <li>
+                                                Footprint: <a href="/footprint/{{fp.id}}/"> {{fp.title}}</a>
+                                                <div>{{fp.description}}</div>
+                                            </li>
                                         {% endfor %}
                                         </ul>
                                     {% endif %}

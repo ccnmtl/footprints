@@ -131,6 +131,14 @@ class BasicModelTest(TestCase):
         work.actor.add(ActorFactory(role=author_role))
         self.assertEquals(work.authors().count(), 1)
 
+        # references
+        self.assertEquals(work.references(), 0)
+        copy = BookCopyFactory(imprint=ImprintFactory(work=work))
+        FootprintFactory(book_copy=copy)
+        FootprintFactory(book_copy=copy)
+        FootprintFactory()  # noise
+        self.assertEquals(work.references(), 2)
+
     def test_imprint(self):
         imprint = Imprint.objects.create(work=WrittenWorkFactory())
         self.assertEquals(imprint.__unicode__(), 'The Odyssey')
@@ -154,6 +162,14 @@ class BasicModelTest(TestCase):
         publishers = imprint.publishers()
         self.assertEquals(len(publishers), 1)
         self.assertEquals(publishers[0].alias, "Publisher")
+
+        # references
+        self.assertEquals(imprint.references(), 0)
+        copy = BookCopyFactory(imprint=imprint)
+        FootprintFactory(book_copy=copy)
+        FootprintFactory(book_copy=copy)
+        FootprintFactory()  # noise
+        self.assertEquals(imprint.references(), 2)
 
     def test_book_copy(self):
         copy = BookCopyFactory()
