@@ -8,7 +8,8 @@ from django.test.client import Client, RequestFactory
 from footprints.main.models import Footprint, Actor, Imprint
 from footprints.main.tests.factories import (
     UserFactory, WrittenWorkFactory, ImprintFactory, FootprintFactory,
-    PersonFactory, RoleFactory, PlaceFactory, ActorFactory, BookCopyFactory)
+    PersonFactory, RoleFactory, PlaceFactory, ActorFactory, BookCopyFactory,
+    ExtendedDateFormatFactory)
 from footprints.main.views import (
     CreateFootprintView, AddActorView)
 
@@ -402,21 +403,55 @@ class RemoveRelatedViewTest(TestCase):
         self.assertEquals(self.client.post(self.remove_url).status_code, 405)
 
         # no permissions
+        response = self.client.post(self.remove_url, {
+            'parent_id': self.footprint.id,
+            'parent_model': 'footprint'},
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 403)
+
+    def test_post_missing_params(self):
+        self.client.login(username=self.staff.username, password="test")
+
         response = self.client.post(self.remove_url,
                                     {'parent_id': self.footprint.id,
                                      'parent_model': 'footprint'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 403)
+        self.assertEquals(response.status_code, 200)
+        self.assertFalse(loads(response.content)['success'])
 
-        # invalid actor id
-        bad_remove_url = reverse('remove-related')
+    def test_post_remove_invalid_child_id(self):
+        dt = ExtendedDateFormatFactory()
+
         self.client.login(username=self.staff.username, password="test")
-        response = self.client.post(bad_remove_url,
-                                    {'parent_id': self.footprint.id,
-                                     'parent_model': 'footprint',
-                                     'actor_id': 500},
-                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 404)
+
+        response = self.client.post(self.remove_url, {
+            'parent_id': self.footprint.id,
+            'parent_model': 'footprint',
+            'child_id': dt.id,
+            'attr': 'associated_date'},
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+
+        self.assertEquals(response.status_code, 200)
+        self.assertFalse(loads(response.content)['success'])
+
+        footprint = Footprint.objects.get(id=self.footprint.id)  # refresh
+        self.assertIsNotNone(footprint.associated_date)
+
+    def test_post_remove_success(self):
+        self.client.login(username=self.staff.username, password="test")
+
+        response = self.client.post(self.remove_url, {
+            'parent_id': self.footprint.id,
+            'parent_model': 'footprint',
+            'child_id': self.footprint.associated_date.id,
+            'attr': 'associated_date'},
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+
+        self.assertEquals(response.status_code, 200)
+        self.assertTrue(loads(response.content)['success'])
+
+        footprint = Footprint.objects.get(id=self.footprint.id)  # refresh
+        self.assertIsNone(footprint.associated_date)
 
     def test_post_remove_actor(self):
         self.assertEquals(self.footprint.actor.count(), 2)
@@ -425,24 +460,12 @@ class RemoveRelatedViewTest(TestCase):
         response = self.client.post(self.remove_url,
                                     {'parent_id': self.footprint.id,
                                      'parent_model': 'footprint',
-                                     'actor_id': self.actor.id},
+                                     'child_id': self.actor.id,
+                                     'attr': 'actor'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
         self.assertTrue(loads(response.content)['success'])
         self.assertEquals(self.footprint.actor.count(), 1)
-
-    def test_post_remove_place(self):
-        self.client.login(username=self.staff.username, password="test")
-        response = self.client.post(self.remove_url,
-                                    {'parent_id': self.footprint.id,
-                                     'parent_model': 'footprint',
-                                     'place_id': self.footprint.place.id},
-                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
-        self.assertTrue(loads(response.content)['success'])
-
-        footprint = Footprint.objects.get(id=self.footprint.id)  # refresh
-        self.assertIsNone(footprint.place)
 
     def test_post_remove_identifier(self):
         imprint = self.footprint.book_copy.imprint
@@ -452,40 +475,14 @@ class RemoveRelatedViewTest(TestCase):
         response = self.client.post(self.remove_url,
                                     {'parent_id': imprint.id,
                                      'parent_model': 'imprint',
-                                     'identifier_id': identifier.id},
+                                     'child_id': identifier.id,
+                                     'attr': 'standardized_identifier'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
         self.assertTrue(loads(response.content)['success'])
 
         imprint = Imprint.objects.get(id=imprint.id)  # refresh
         self.assertEquals(imprint.standardized_identifier.count(), 0)
-
-    def test_post_remove_date(self):
-        imprint = self.footprint.book_copy.imprint
-        date1 = self.footprint.associated_date
-        date2 = self.footprint.book_copy.imprint.date_of_publication
-
-        self.client.login(username=self.staff.username, password="test")
-
-        response = self.client.post(self.remove_url,
-                                    {'parent_id': self.footprint.id,
-                                     'parent_model': 'footprint',
-                                     'associateddate_id': date1.id},
-                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
-        self.assertTrue(loads(response.content)['success'])
-
-        response = self.client.post(self.remove_url,
-                                    {'parent_id': imprint.id,
-                                     'parent_model': 'imprint',
-                                     'publicationdate_id': date2.id},
-                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
-        self.assertTrue(loads(response.content)['success'])
-
-        footprint = Footprint.objects.get(id=self.footprint.id)  # refresh
-        self.assertIsNone(footprint.associated_date)
-        self.assertIsNone(footprint.book_copy.imprint.date_of_publication)
 
 
 class AddDateViewTest(TestCase):
