@@ -3,8 +3,11 @@
     {% if references > 1 %}
         <div class="alert alert-danger" role="alert">
             <strong>Important!</strong> This imprint is referenced by {{references|add:"-1"}} other footprints.<br />
-            Changing the imprint title will change those records too.<br />
-            Are you sure?
+            Changing the imprint title will change those records too.<br /><br />
+
+            Click <a href="#" class="connect-records imprint">
+                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                Connect</a> to create a new imprint or connect to a different imprint.
         </div>
     {% endif %}
     {% endwith %}
