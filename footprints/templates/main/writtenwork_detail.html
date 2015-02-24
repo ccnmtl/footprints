@@ -24,12 +24,11 @@
                 <div class="breadcrumb">WRITTEN WORK</div>
                 <h2>
                     <span class="glyphicon glyphicon-book pull-left" aria-hidden="true"></span>
-                    <span class="pull-left object-title">{{work}}</span>
+                    <span class="pull-left object-title">&nbsp;{{work}}</span>
                     <div class="clearfix"></div>
                 </h2>
-
+                <br />
                 {% if work.actor.count > 0 %}
-                <h3>People</h3>
                 <dl class="dl-horizontal">
                     {% for actor in work.actor.all %}
                         <dt>{{actor.role}}</dt><dd><a href="/person/{{actor.person.id}}/">{{actor}}</a></dd>
@@ -42,20 +41,33 @@
                     {{work.notes|safe}}
                 {% endif %}
 
-                <h3>Imprints</h3>
+                <div class="breadcrumb">
+                    IMPRINTS
+                </div>
+
                 <ul>
                 {% for imprint in work.imprint_set.all %}
                     <li>
-                        <a href="/imprint/{{imprint.id}}/">{{imprint}}</a>
+                        {{imprint.description|safe}}
                     
                         {% if imprint.bookcopy_set.count > 0 %}
-                            <h5>Book Copies ({{imprint.bookcopy_set.count}})</h5>
                             <ol>
                             {% for copy in imprint.bookcopy_set.all %}
-                                <li><a href="/book/{{copy.id}}/">{{copy}}</a></li>
+                                <li>{{copy.description|safe}}</li>
+                                    {% if copy.footprint_set.count > 0 %}
+                                        <ul>
+                                        {% for fp in copy.footprint_set.all %}
+                                            <li>
+                                                Footprint: <a href="/footprint/{{fp.id}}/"> {{fp.title}}</a>
+                                                <div>{{fp.description}}</div>
+                                            </li>
+                                        {% endfor %}
+                                        </ul>
+                                    {% endif %}
                             {% endfor %}
                             </ol>
                         {% endif %}
+                        <br /><br />
                     </li>
                 {% endfor %}
                 </ul>
@@ -73,15 +85,6 @@
                             </div>
                             <div class="progress-report pull-right">{{complete}}% complete</div>
                         </div>
-                        <div class="clearfix"></div>
-                        {% if editable %}
-                        <div>
-                            <strong>Do you know something important?</strong>
-                            <p>Praesent fringilla sit amet dolor at congue. Fusce pretium neque rutrum luctus dictum.</p>
-                            <button class="btn btn-sm btn-primary pull-right">Save</button>&nbsp;
-                            <button class="btn btn-sm btn-default pull-right" style="margin-right: 6px;">Skip</button>
-                        </div>
-                        {% endif %}
                     {% endwith %}
                     <div class="clearfix"></div>
                 </div>

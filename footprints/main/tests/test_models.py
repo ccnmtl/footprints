@@ -6,7 +6,7 @@ from django.test import TestCase
 from footprints.main.models import Language, DigitalFormat, \
     ExtendedDateFormat, StandardizedIdentification, \
     Actor, Imprint, FOOTPRINT_LEVEL, IMPRINT_LEVEL, WRITTENWORK_LEVEL, Role, \
-    Place
+    Place, Footprint, WrittenWork, BookCopy
 from footprints.main.tests.factories import RoleFactory, \
     ActorFactory, PlaceFactory, CollectionFactory, \
     WrittenWorkFactory, ImprintFactory, BookCopyFactory, FootprintFactory, \
@@ -131,6 +131,14 @@ class BasicModelTest(TestCase):
         work.actor.add(ActorFactory(role=author_role))
         self.assertEquals(work.authors().count(), 1)
 
+        # references
+        self.assertEquals(work.references(), 0)
+        copy = BookCopyFactory(imprint=ImprintFactory(work=work))
+        FootprintFactory(book_copy=copy)
+        FootprintFactory(book_copy=copy)
+        FootprintFactory()  # noise
+        self.assertEquals(work.references(), 2)
+
     def test_imprint(self):
         imprint = Imprint.objects.create(work=WrittenWorkFactory())
         self.assertEquals(imprint.__unicode__(), 'The Odyssey')
@@ -154,6 +162,14 @@ class BasicModelTest(TestCase):
         publishers = imprint.publishers()
         self.assertEquals(len(publishers), 1)
         self.assertEquals(publishers[0].alias, "Publisher")
+
+        # references
+        self.assertEquals(imprint.references(), 0)
+        copy = BookCopyFactory(imprint=imprint)
+        FootprintFactory(book_copy=copy)
+        FootprintFactory(book_copy=copy)
+        FootprintFactory()  # noise
+        self.assertEquals(imprint.references(), 2)
 
     def test_book_copy(self):
         copy = BookCopyFactory()
@@ -184,6 +200,7 @@ class BasicModelTest(TestCase):
     def test_footprint(self):
         footprint = FootprintFactory()
         self.assertEquals(footprint.__unicode__(), 'Provenance')
+        self.assertFalse(footprint.is_bare())
 
         footprint.digital_object.add(DigitalObjectFactory())
         self.assertEquals(footprint.percent_complete(), 100)
@@ -193,3 +210,11 @@ class BasicModelTest(TestCase):
         owner_role = Role.objects.get_owner_role()
         footprint.actor.add(ActorFactory(role=owner_role))
         self.assertEquals(footprint.owners().count(), 1)
+
+        work = WrittenWork.objects.create()
+        imprint = Imprint.objects.create(work=work)
+        book_copy = BookCopy.objects.create(imprint=imprint)
+        footprint = Footprint.objects.create(medium="Medium",
+                                             provenance="Provenance",
+                                             book_copy=book_copy)
+        self.assertTrue(footprint.is_bare())

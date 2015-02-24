@@ -48,10 +48,10 @@ class NameSerializer(Serializer):
     name = CharField(max_length=None, min_length=1)
 
 
-class UserSerializer(Serializer):
+class UserSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ('username',)
+        fields = ('first_name', 'last_name', 'username')
 
 
 class StandardizedIdentificationSerializer(HyperlinkedModelSerializer):
@@ -228,13 +228,17 @@ class FootprintSerializer(HyperlinkedModelSerializer):
     actor = ActorSerializer(many=True)
     place = PlaceSerializer()
     digital_object = DigitalObjectSerializer(many=True)
+    created_by = UserSerializer(read_only=True)
+    last_modified_by = UserSerializer(read_only=True)
 
     class Meta:
         model = Footprint
         fields = ('id', 'medium', 'medium_description',
                   'provenance', 'title', 'language', 'actor', 'call_number',
                   'notes', 'associated_date', 'place', 'narrative',
-                  'percent_complete', 'digital_object')
+                  'percent_complete', 'digital_object',
+                  'created_at', 'modified_at',
+                  'created_by', 'last_modified_by')
 
     def update(self, instance, validated_data):
         if 'language' in validated_data:

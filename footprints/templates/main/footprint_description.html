@@ -1,0 +1,20 @@
+ <dl class="dl-horizontal">
+ {% if footprint.associated_date %}
+    <dt>Footprint Date</dt>
+    <dd>{{footprint.associated_date}}</dd>
+ {% endif %}
+ {% if footprint.place %}
+    <dt>Footprint Place</dt>
+    <dd>{{footprint.place}}</dd>
+ {% endif %}
+{% with authors=footprint.book_copy.imprint.work.authors %}
+    {% for actor in authors %}
+        <dt>Author</dt><dd>{{actor.display_name}}</dd>
+    {% endfor %}
+{% endwith %}
+ {% with owners=footprint.owners %}
+    {% for actor in owners %}
+        <dt>Owner</dt><dd>{{actor.display_name}}</dd>
+    {% endfor %}
+ {% endwith %}
+</dl>

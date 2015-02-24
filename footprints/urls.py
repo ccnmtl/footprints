@@ -82,13 +82,12 @@ urlpatterns = patterns(
     url(r'^digitalobject/add/$',
         AddDigitalObjectView.as_view(), name='add-digital-object-view'),
 
-    url(r'^footprint/(?P<pk>\d+)/connect/$',
-        ConnectFootprintView.as_view(), name='connect-footprint-view'),
-
     url(r'^remove/related/$',
         RemoveRelatedView.as_view(), name='remove-related'),
 
     (r'^footprint/create/$', CreateFootprintView.as_view()),
+    url(r'^footprint/connect/(?P<pk>\d+)/$', ConnectFootprintView.as_view(),
+        name='connect-footprint-view'),
 
     url(r'^footprint/(?P<pk>\d+)/$',
         FootprintDetailView.as_view(), name='footprint-detail-view'),
@@ -98,7 +97,6 @@ urlpatterns = patterns(
         PlaceDetailView.as_view(), name='place-detail-view'),
     url(r'^writtenwork/(?P<pk>[-_\w]+)/$',
         WrittenWorkDetailView.as_view(), name='writtenwork-detail-view'),
-
 
     url(r'^browse/footprints/$', FootprintListView.as_view(),
         name='browse-footprint-list'),

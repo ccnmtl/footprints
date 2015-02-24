@@ -4,6 +4,8 @@ from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import logout as auth_logout_view
 from django.core.urlresolvers import reverse
+from django.db.models.fields import FieldDoesNotExist
+from django.db.models.fields.related import ManyToManyField
 from django.http.response import HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 from django.views.generic.base import TemplateView, View
@@ -87,7 +89,7 @@ class FootprintDetailView(EditableMixin, LoggedInMixin, DetailView):
 
 class FootprintListView(LoggedInMixin, ListView):
     model = Footprint
-    default_sort = ['book_copy__imprint__work__title', 'title']
+    default_sort = ['title']
     paginate_by = 20
 
     def get_context_data(self, **kwargs):
@@ -155,30 +157,48 @@ class CreateFootprintView(LoggedInMixin, TemplateView):
 
 
 class ConnectFootprintView(LoggedInMixin, EditableMixin, View):
+    CREATE_ID = '0'
+
+    def get_or_create_work(self, pk):
+        if pk == self.CREATE_ID:
+            work = WrittenWork.objects.create()
+        else:
+            work = get_object_or_404(WrittenWork, pk=pk)
+
+        return work
+
+    def get_or_create_imprint(self, pk, work):
+        if pk == self.CREATE_ID or len(pk) == 0:
+            imprint = Imprint.objects.create(work=work)
+        else:
+            imprint = get_object_or_404(Imprint, pk=pk)
+
+        return imprint
+
+    def get_or_create_copy(self, pk, imprint):
+        if pk == self.CREATE_ID or len(pk) == 0:
+            copy = BookCopy.objects.create(imprint=imprint)
+        else:
+            copy = get_object_or_404(BookCopy, pk=pk)
+
+        return copy
 
     def post(self, *args, **kwargs):
         fp = get_object_or_404(Footprint, pk=kwargs.get('pk', None))
         if not self.has_edit_permission(self.request.user, fp):
             return HttpResponseForbidden()
 
-        pk = self.request.POST.get('book', None)
-        book = get_object_or_404(BookCopy, pk=pk) if pk else None
+        pk = self.request.POST.get('work', self.CREATE_ID)
+        work = self.get_or_create_work(pk)
 
-        pk = self.request.POST.get('imprint', None)
-        imprint = get_object_or_404(Imprint, pk=pk) if pk else None
+        pk = self.request.POST.get('imprint', self.CREATE_ID)
+        imprint = self.get_or_create_imprint(pk, work)
 
-        pk = self.request.POST.get('work', None)
-        work = get_object_or_404(WrittenWork, pk=pk) if pk else None
+        pk = self.request.POST.get('copy', self.CREATE_ID)
+        copy = self.get_or_create_copy(pk, imprint)
 
-        if book:
-            fp.book_copy = book
-            fp.save()
-        elif imprint:
-            fp.book_copy.imprint = imprint
-            fp.book_copy.save()
-        elif work:
-            fp.book_copy.imprint.work = work
-            fp.book_copy.imprint.save()
+        fp.book_copy = copy
+        fp.save()
 
         url = reverse('footprint-detail-view', kwargs={'pk': fp.pk})
         return HttpResponseRedirect(url)
@@ -187,42 +207,45 @@ class ConnectFootprintView(LoggedInMixin, EditableMixin, View):
 class RemoveRelatedView(LoggedInMixin, EditableMixin,
                         JSONResponseMixin, View):
 
+    def removeForeignKey(self, the_parent, the_child, attr):
+        current = getattr(the_parent, attr)
+        if current != the_child:
+            return self.render_to_json_response({'success': False})
+        else:
+            setattr(the_parent, attr, None)
+            the_parent.save()
+            return self.render_to_json_response({'success': True})
+
+    def removeManyToMany(self, the_parent, the_child, attr):
+        m2m = getattr(the_parent, attr)
+        m2m.remove(the_child)
+        return self.render_to_json_response({'success': True})
+
     def post(self, *args, **kwargs):
         try:
             model_name = self.request.POST.get('parent_model', None)
             the_model = apps.get_model(app_label='main', model_name=model_name)
-
             the_parent = get_object_or_404(
                 the_model, pk=self.request.POST.get('parent_id', None))
-        except ValueError:
+
+            if not self.has_edit_permission(self.request.user, the_parent):
+                return HttpResponseForbidden()
+
+            attr = self.request.POST.get('attr', None)
+            field = the_model._meta.get_field_by_name(attr)
+
+            model_name = field[0].rel.to._meta.model_name
+            the_model = apps.get_model(app_label='main', model_name=model_name)
+            the_child = get_object_or_404(
+                the_model, pk=self.request.POST.get('child_id', None))
+
+            # m2m?
+            if isinstance(field[0], ManyToManyField):
+                return self.removeManyToMany(the_parent, the_child, attr)
+            else:
+                return self.removeForeignKey(the_parent, the_child, attr)
+        except (ValueError, FieldDoesNotExist):
             return self.render_to_json_response({'success': False})
-
-        if not self.has_edit_permission(self.request.user, the_parent):
-            return HttpResponseForbidden()
-
-        # cheating a bit here. @todo - make this totally generic
-        # will need to figure out whether related is FK or M2M
-        success = True
-        actor_id = self.request.POST.get('actor_id', None)
-        place_id = self.request.POST.get('place_id', None)
-        identifier_id = self.request.POST.get('identifier_id', None)
-
-        if actor_id:
-            actor = get_object_or_404(Actor, id=actor_id)
-            the_parent.actor.remove(actor)
-        elif place_id:
-            place = get_object_or_404(Place, id=place_id)
-            if the_parent.place == place:
-                the_parent.place = None
-                the_parent.save()
-        elif identifier_id:
-            identifier = get_object_or_404(StandardizedIdentification,
-                                           id=identifier_id)
-            the_parent.standardized_identifier.remove(identifier)
-        else:
-            success = False
-
-        return self.render_to_json_response({'success': success})
 
 
 class AddRelatedRecordView(LoggedInMixin, EditableMixin,
