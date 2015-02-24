@@ -39,7 +39,36 @@ blockquote {
     line-height: 1.75;
 }
 
-/* Header */
+/* Header FRONT PAGE ONLY */
+
+.container.header.front {
+	background-image: url("../img/fp_header_bg.jpg");
+	background-repeat: repeat;
+	height: 215px;
+}
+
+.container.header.front > .navbar-default {
+	background-color: transparent;
+	border: none;
+	display: block;
+}
+
+.navbar-header.front {
+	width: 100%;
+	text-align: center;
+	display: block;
+}
+
+a.navbar-brand.front {
+	display: block;
+	float: none;
+	width: 355px;
+	margin: 1em auto;
+}
+
+
+
+/* Header 
 
 .container.header {
 	background-image: url("../img/fp_header_bg.jpg");
@@ -49,17 +78,11 @@ blockquote {
 
 a.navbar-brand {
 	display: block;
-	float: left;
 	margin: 1em 0 0 0;
 	height: inherit;
-	opacity: .8;
-	-webkit-transition: opacity 1s; /* For Safari 3.1 to 6.0 */
-    transition: opacity 1s;
+
 }
 
-a.navbar-brand:hover {
-	opacity: 1;
-}
 
 .container.header .navbar-default {
 	background-color: transparent;
@@ -69,7 +92,7 @@ a.navbar-brand:hover {
 .container.header .navbar-right {
 	margin: 90px 0 0 0;
 }
-
+*/
 
 /* Footer */
 
@@ -128,14 +151,6 @@ a.navbar-brand:hover {
 	top: -5px;
 	left: -5px;
 	font-size: 1.5em;
-}
-
-.col-md-12.page {
-	margin-top: -1em;
-	background-image: url("../img/fp_page_header_bg.png");
-	background-repeat: no-repeat;
-	background-position: center top;
-	background-size: 100%;
 }
 
 .col-md-3 

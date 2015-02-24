@@ -19,3 +19,4 @@ reports
 node_modules
 digitalobjects/
 uploads/
+.DS_Store
