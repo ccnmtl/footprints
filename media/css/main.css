@@ -273,7 +273,7 @@ ul.wizard-tabs.has-error li.active a {
 	background-image: url("../img/fp_section_bg.png");
 	background-repeat: repeat;
 	padding: 10px 20px;
-	margin: 10px 0;
+	margin: 0 0 10px 0;
 }
 
 .fp-qa h4 {
