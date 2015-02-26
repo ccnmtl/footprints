@@ -73,7 +73,11 @@ blockquote {
 
 /* All pages */
 
+
 .container.header {
+	background-image: url("../img/fp_header_bg.jpg");
+	background-repeat: repeat;
+	height: 80px;
 	padding: 0;
 }
 
@@ -99,13 +103,23 @@ blockquote {
 
  
 .collapse.navbar-collapse {
-	background-color: #97421b;
-	height: 25px!important;
+background-color: #97421b;
+height: 25px!important;
+display: block!important;
+float: left;
+width: 100%;
 }
 
 .container.header .navbar-right {
 	height: 25px;
 }
+
+
+.container.header .navbar-default {
+	background-color: transparent;
+	border: none;
+}
+
 
 .navbar-nav>li>a {
 	padding-top: 3px;
@@ -130,32 +144,29 @@ blockquote {
 .container.header.front {
 	background-image: url("../img/fp_header_bg.jpg");
 	background-repeat: repeat;
-	height: 215px;
+	height: 235px;
 }
 
 .container.header.front > .navbar-default {
 	background-color: transparent;
 	border: none;
 	display: block;
+	height: 195px;
 }
 
 .navbar-header.front {
 	width: 100%;
 	text-align: center;
 	display: block;
+	height: 195px;
+	float: left;
 }
 
 a.navbar-brand.front {
 	display: block;
 	float: none;
 	width: 355px;
-	margin: 1em auto;
-}
-
-.container.header {
-	background-image: url("../img/fp_header_bg.jpg");
-	background-repeat: repeat;
-	height: 80px;
+	margin: 2em auto;
 }
 
 
@@ -164,12 +175,22 @@ a.navbar-brand {
 	margin: 0;
 }
 
-.container.header .navbar-default {
-	background-color: transparent;
-	border: none;
+ul.front.navbar-nav {
+	text-align: center;
+	margin: 0 auto;
+	float: none;
 }
 
+ul.front.navbar-nav li {
+	padding: 0 30px 0 0;
+	float: none;
+	display: inline-block;
+}
 
+ul.front>li>a:hover {
+text-decoration: none;
+background-color: transparent;
+}
 
 /* Footer */
 

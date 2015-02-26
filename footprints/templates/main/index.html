@@ -45,31 +45,37 @@
    
             <!--/.nav-collapse -->
     </nav><!--/.navbar-->
+         <div class="collapse navbar-collapse" id="navbar-collapse-pl">
+                <ul class="front nav navbar-nav navbar-nav-pl">
+                    {% block usernav %}
+                     <li><a href="/footprint/create/">Create</a></li>
+                            <li><a href="/browse/footprints/">Browse</a></li>
+                            <li><a href="/search/">Search</a></li>
+                        {% if request.user.is_anonymous %}
+                            <li><a id="login-link" href="#" data-toggle="modal" data-target="#login-modal">Log In</a></li>
+                        {% else %}
+                            <li class="logged-in-greeting">
+                                <a href="/accounts/logout/?next=/"><span title="Log Out">Log Out</span></a>
+                            </li>
+
+                            {% if user.has_usable_password %}
+                                <li><a href="/accounts/password_change/">Change Password</a></li>
+                            {% endif %}
+
+                           
+                        {% endif %}
+                        
+                    {% endblock %}
+                 </ul>
+            </div>
+            <!--/.nav-collapse -->
+            <!--/.nav-collapse -->
 </div>    
 {% endblock %}
 
 
 {% block content %}
-<div class="row">
-    <div class="col-md-12">
-    {% block usernav %}
-        <li><a href="/footprint/create/">Create</a></li>
-        <li><a href="/browse/footprints/">Browse</a></li>
-        <li><a href="/search/">Search</a></li>
-        {% if request.user.is_anonymous %}
-            <li><a id="login-link" href="#" data-toggle="modal" data-target="#login-modal">Log In</a></li>
-        {% else %}
-            <li class="logged-in-greeting">
-        <a href="/accounts/logout/?next=/"><span title="Log Out">Log Out</span></a>
-        </li>
-        
-        {% if user.has_usable_password %}
-            <li><a href="/accounts/password_change/">Change Password</a></li>
-        {% endif %}
-        {% endif %}
-    {% endblock %}
-    <!--endblock usernav -->
-    </div>    
+
     <div class="col-md-12">
 
         <blockquote>
