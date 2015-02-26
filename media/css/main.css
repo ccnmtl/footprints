@@ -1,20 +1,63 @@
-html {
-	height: 100%;
+/* Footprints CSS
+ * by Rachelle White
+ * ccnmtl.columbia.edu
+ * 2015
+ */
+
+
+/* General Typography */
+
+body, html {
+	font-family: 'Asap', Helvetica, Arial, sans-serif;
+	}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+	font-family: 'Asap', Arial, Helvetica;
 }
+
+a {
+color: #2e5367;
+text-decoration: none;
+}
+
+p.info {
+	color: #737373;
+}
+
+/* Structure */
+
+body, html {
+	height: 100%;
+	}
 
 body {
-  background-color: #eee;
-  height: 100%;
+	background-color: #edeae6;
 }
 
-body > .container {
-  background-color: #fff;
-  min-height: 100%;
-  padding-top: 75px;
+#wrap {
+	position: relative;
+	min-height: 100%;
+	margin-bottom: -45px;
 }
 
-#content {
+#outer-container {
+	background-color: #fafafa;
+}
+
+.content {
   min-height: 100%;
+  margin: 1em 0 1em 0;
 }
 
 blockquote {
@@ -26,6 +69,169 @@ blockquote {
     font-weight: 300;
     line-height: 1.75;
 }
+
+
+/* All pages */
+
+
+.container.header {
+	background-image: url("../img/fp_header_bg.jpg");
+	background-repeat: repeat;
+	height: 80px;
+	padding: 0;
+}
+
+.navbar-header {
+	width: 100%;
+	text-align: center;
+	display: block;
+	float: none;
+	padding: 0;
+	height: 77px;
+}
+
+.page-header {
+	border: none;
+	padding-bottom: 0;
+	margin:20px 0 0 0;
+}
+
+.page-header h1 {
+	color: #202836;
+	padding: 0 10px;
+}
+
+ 
+.collapse.navbar-collapse {
+background-color: #97421b;
+height: 25px!important;
+display: block!important;
+float: left;
+width: 100%;
+}
+
+.container.header .navbar-right {
+	height: 25px;
+}
+
+
+.container.header .navbar-default {
+	background-color: transparent;
+	border: none;
+}
+
+
+.navbar-nav>li>a {
+	padding-top: 3px;
+	color: #d3c1a2!important;
+	text-transform: uppercase;
+	font-weight: 600;
+	font-size: .95em;
+	letter-spacing: 1px;
+}
+
+.navbar-nav>li>a:hover {
+	padding-top: 3px;
+	color: #edebe6!important;
+	text-transform: uppercase;
+	font-weight: 600;
+	font-size: .95em;
+	letter-spacing: 1px;
+}
+
+/* Header FRONT PAGE ONLY */
+
+.container.header.front {
+	background-image: url("../img/fp_header_bg.jpg");
+	background-repeat: repeat;
+	height: 235px;
+}
+
+.container.header.front > .navbar-default {
+	background-color: transparent;
+	border: none;
+	display: block;
+	height: 195px;
+}
+
+.navbar-header.front {
+	width: 100%;
+	text-align: center;
+	display: block;
+	height: 195px;
+	float: left;
+}
+
+a.navbar-brand.front {
+	display: block;
+	float: none;
+	width: 355px;
+	margin: 2em auto;
+}
+
+
+a.navbar-brand {
+	display: block;
+	margin: 0;
+}
+
+ul.front.navbar-nav {
+	text-align: center;
+	margin: 0 auto;
+	float: none;
+}
+
+ul.front.navbar-nav li {
+	padding: 0 30px 0 0;
+	float: none;
+	display: inline-block;
+}
+
+ul.front>li>a:hover {
+text-decoration: none;
+background-color: transparent;
+}
+
+/* Footer */
+
+.container.foot {
+	background-color: #171717;
+}
+
+.clearfooter {
+	height: 50px;
+	clear: both;
+}
+
+.footer {
+	background-color: #171717;
+	height: 100px;
+	position: relative;
+	margin: 1em 0 0 0;
+	bottom: 0;
+}
+
+.footer .nav li>a {
+	color: #c8c3b7;
+}
+
+.footer .nav li>a:hover {
+	color: #edebe6;
+	background-color: transparent;
+}
+
+
+/* Homepage */
+
+.col-md-12.featured {
+	height: 500px;
+	margin-top: -1em;
+	background-image: url("../img/fp_home_feat_bg.jpg");
+	background-repeat: no-repeat;
+	background-size: 100%;
+}
+
+
 
 /* Record Entry */
 .btn-image-only {
@@ -52,6 +258,41 @@ ul.selected-authors li {
     cursor: pointer;
 }
 
+
+
+/* Form Overrides */
+
+input.form-control {
+	display: block;
+	width: 100%;
+	height: 45px;
+	padding: 6px 12px;
+	font-size: 16px;
+	line-height: 1.42857143;
+	color: #555;
+	background-color: #efeeee;
+	background-image: none;
+	border: 1px solid #fff;
+	border-radius: 4px;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+	box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+	-webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+	-o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+	transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
+.btn-primary, .btn-default {
+	color: #fff;
+	background-color: #2e5367;
+	border-color: #2e5367;
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary.focus, .btn-primary:active, .btn-primary.active, .open>.dropdown-toggle.btn-primary {
+	color: #fff;
+	background-color: #406777;
+	border-color: #406777;
+}
+
 /* Create Footprint */
 
 ul.wizard-tabs.has-error li.active a {
@@ -59,11 +300,12 @@ ul.wizard-tabs.has-error li.active a {
 }
 
 .footprint-form .form-content {
-    height: 400px;
+    
 }
 
 .footprint-form .form-content h3 {
     margin-top: 10px;
+    color: #836737;
 }
 
 .footprint-form .form-group .error-block {
@@ -84,6 +326,51 @@ ul.wizard-tabs.has-error li.active a {
 .footprint-form input[name='footprint-medium-other'] {
     margin-top: 5px;
     width: 50%;
+}
+
+.fp-qa {
+	background-image: url("../img/fp_section_bg.png");
+	background-repeat: repeat;
+	padding: 10px 20px;
+	margin: 0 0 10px 0;
+}
+
+.fp-qa h4 {
+	color: #2e5367
+}
+
+.fp-qa span.qa {
+	font-size: 18px;
+	color: #836737;
+	
+}
+
+.tab-content.well {
+	border: none;
+	background-image: url("../img/fp_section_bg.png");
+	background-repeat: repeat;
+	box-shadow: none;
+}
+
+
+/* Footprint Details */
+
+
+.footprint-detail {
+	border-radius: 4px;
+	background-image: url("../img/fp_section_bg.png");
+	background-repeat: repeat;
+	box-shadow: none;
+	margin: 0 0 20px 0;
+	padding: 10px 20px 10px 10px;
+}
+
+img.footicon {
+	height: 40px;
+}
+
+.footprint-detail > span.object-title {
+	color: #202836;
 }
 
 
@@ -133,12 +420,20 @@ ul.wizard-tabs.has-error li.active a {
 
 /* Object detail pages */
 
+.object-detail {
+	padding-top: 1em;
+}
+
 .object-detail .breadcrumb {
-    margin-bottom: 10px;
-    background: #f6f7f8; 
-    color: #666;
-    font: bold 12px "Helvetica Neue", "Helvetica Narrow", Arial, sans-serif;
-    text-transform: uppercase;
+	margin-bottom: 10px;
+	background: transparent;
+	color: #836737;
+	font-weight: normal;
+	font-size: 20px;
+}
+
+.object-detail .breadcrumb a {
+	font-size: 14px;
 }
 
 .object-detail h1 {
@@ -174,14 +469,14 @@ ul.wizard-tabs.has-error li.active a {
 }
 
 .object-detail dl dd {
-    margin-left: 0;
-    padding-left: 180px;
-    padding-top: 5px;
-    padding-bottom: 2px;
+	margin-left: 0;
+	padding-left: 200px;
+	padding-top: 5px;
+	padding-bottom: 2px;
 }
 
 .object-detail dl dd.border-bottom {
-    border-bottom: dotted black 1px;
+    border-bottom: dotted 1px #ccc;
 }
 
 .object-detail .sidebar-box {
@@ -193,6 +488,42 @@ ul.wizard-tabs.has-error li.active a {
 .object-detail .progress {
     height: 10px;
     width: 65%;
+}
+
+.list-group-item.checklist {
+	background-image: url("../img/fp_section_bg.png");
+	background-repeat: repeat;
+	box-shadow: none;
+	margin: 0 0 20px 0;
+	padding: 10px 20px 20px 20px;
+	border: none;
+	border-radius: 4px;
+}
+
+.progress-bar {
+	float: left;
+	width: 0;
+	height: 100%;
+	font-size: 12px;
+	line-height: 20px;
+	color: #fff;
+	text-align: center;
+	background-color: #2e5367;
+	-webkit-box-shadow: inset 0 -1px 0 rgba(0,0,0,.15);
+	box-shadow: inset 0 -1px 0 rgba(0,0,0,.15);
+	-webkit-transition: width .6s ease;
+	-o-transition: width .6s ease;
+	transition: width .6s ease;
+}
+
+.sidebar-box.recordkeeping {
+	background-image: url("../img/fp_section_bg.png");
+	background-repeat: repeat;
+	box-shadow: none;
+	margin: 0 0 20px 0;
+	padding: 10px 20px 20px 20px;
+	border: none;
+	border-radius: 4px;
 }
 
 .object-detail .progress-report {
@@ -256,7 +587,7 @@ ul.wizard-tabs.has-error li.active a {
 }
 
 .object-detail .do-you-know {
-    color: #337ab7;
+    color: #97421b;
     text-decoration: none;
 }
 
@@ -285,6 +616,33 @@ ul.wizard-tabs.has-error li.active a {
     overflow: hidden;
 }
 
+
+.connect-record-prompt {
+	width: 350px!important;
+	min-width: 250px;
+	border-radius: 4px;
+	background-image: url("../img/fp_section_bg.png");
+	background-repeat: repeat;
+	box-shadow: none;
+	margin: 0 0 20px 0;
+	padding: 10px;
+} 
+
+.connect-record-prompt .list-group-item {
+	border: none;
+	background-image: url("../img/fp_section_bg.png");
+	background-repeat: repeat;
+	box-shadow: none;
+	margin: 0 0 20px 0;
+	padding: 10px;
+}
+
+
+.connect-record-prompt h4 {
+	color: #836737;
+}
+
+
 .object-detail .connect-record-container .select2-container {
     width: 100%;
     font-size: 12px;
@@ -304,6 +662,17 @@ ul.wizard-tabs.has-error li.active a {
 .object-detail .connect-record-container .save-connection {
     margin-left: 10px;
 }
+
+
+.book-detail {
+	border-radius: 4px;
+	background-image: url("../img/fp_section_bg.png");
+	background-repeat: repeat;
+	box-shadow: none;
+	margin: 0 0 20px 0;
+	padding: 10px 20px 10px 10px;
+}
+
 
 
 /** xeditable fields **/

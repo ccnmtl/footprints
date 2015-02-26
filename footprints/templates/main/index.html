@@ -12,12 +12,71 @@
     </script>
 {% endblock %}
 
+{% block topnavbar %}
+    
+<div class="container header front">
+ 
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="navbar-header front">
+                <button type="button" class="navbar-toggle"
+                    data-toggle="collapse"
+                    data-target="#navbar-collapse-pl"  style="border: 1px solid #ccc;">
+                    <span class="sr-only">Toggle Navigation</span> <span
+                        class="icon-bar"></span> <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                 </button>
+                 
+                 {% comment %}
+                 {% if request.user.is_anonymous %}
+                    <a class="navbar-brand front" href="/" title="Footprints">
+                        <img class="img-responsive" src="{{STATIC_URL}}img/fp_header_logo_center.png" alt="Footprints" />
+                    </a>
+                 {% else %}
+                    <span class="navbar-logo">
+                        <img class="img-responsive" src="{{STATIC_URL}}img/fp_header_logo_center.png" alt="Footprints" />
+                    </span>
+                 {% endif %}
+                 {% endcomment %}
+                 
+                 <a class="navbar-brand front" href="/"><img src="{{STATIC_URL}}img/fp_header_logo_center.png" alt="Footprints" /></a>
+            </div>
+
+            <!--/.navbar-header -->
+   
+            <!--/.nav-collapse -->
+    </nav><!--/.navbar-->
+         <div class="collapse navbar-collapse" id="navbar-collapse-pl">
+                <ul class="front nav navbar-nav navbar-nav-pl">
+                    {% block usernav %}
+                     <li><a href="/footprint/create/">Create</a></li>
+                            <li><a href="/browse/footprints/">Browse</a></li>
+                            <li><a href="/search/">Search</a></li>
+                        {% if request.user.is_anonymous %}
+                            <li><a id="login-link" href="#" data-toggle="modal" data-target="#login-modal">Log In</a></li>
+                        {% else %}
+                            <li class="logged-in-greeting">
+                                <a href="/accounts/logout/?next=/"><span title="Log Out">Log Out</span></a>
+                            </li>
+
+                            {% if user.has_usable_password %}
+                                <li><a href="/accounts/password_change/">Change Password</a></li>
+                            {% endif %}
+
+                           
+                        {% endif %}
+                        
+                    {% endblock %}
+                 </ul>
+            </div>
+            <!--/.nav-collapse -->
+            <!--/.nav-collapse -->
+</div>    
+{% endblock %}
+
+
 {% block content %}
-<div class="row">
+
     <div class="col-md-12">
-        <div class="jumbotron">
-            <h1>Footprints</h1>
-        </div>
 
         <blockquote>
             <p>A footprint is evidence of a book copy at a moment in time and space, e.g.</p>
@@ -34,3 +93,4 @@
     </div>
 </div>
 {% endblock %}
+<!--endblock content -->
