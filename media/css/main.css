@@ -4,6 +4,38 @@
  * 2015
  */
 
+
+/* General Typography */
+
+body, html {
+	font-family: 'Asap', Helvetica, Arial, sans-serif;
+	}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+	font-family: 'Asap', Arial, Helvetica;
+}
+
+a {
+color: #2e5367;
+text-decoration: none;
+}
+
+p.info {
+	font-size: .875em;
+	color: #444;
+}
+
 /* Structure */
 
 body, html {
@@ -180,30 +212,11 @@ ul.selected-authors li {
     cursor: pointer;
 }
 
-/* General Typography */
 
-body, html {
-	font-family: 'Asap', Helvetica, Arial, sans-serif;
-	}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-.h1,
-.h2,
-.h3,
-.h4,
-.h5,
-.h6 {
-	font-family: 'Asap', Arial, Helvetica;
-}
 
 /* Form Overrides */
 
-.form-control {
+input.form-control {
 	display: block;
 	width: 100%;
 	height: 45px;
@@ -222,7 +235,7 @@ h6,
 	transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 }
 
-.btn-primary {
+.btn-primary, .btn-default {
 	color: #fff;
 	background-color: #2e5367;
 	border-color: #2e5367;
@@ -294,6 +307,26 @@ ul.wizard-tabs.has-error li.active a {
 }
 
 
+/* Footprint Details */
+
+
+.footprint-detail {
+	border-radius: 4px;
+	background-image: url("../img/fp_section_bg.png");
+	background-repeat: repeat;
+	box-shadow: none;
+	margin: 0 0 20px 0;
+	padding: 10px;
+}
+
+img.footicon {
+	height: 40px;
+}
+
+.footprint-detail > span.object-title {
+	color: #202836;
+}
+
 
 /* Carousel */
 
@@ -341,12 +374,20 @@ ul.wizard-tabs.has-error li.active a {
 
 /* Object detail pages */
 
+.object-detail {
+	padding-top: 1em;
+}
+
 .object-detail .breadcrumb {
-    margin-bottom: 10px;
-    background: #f6f7f8; 
-    color: #666;
-    font: bold 12px "Helvetica Neue", "Helvetica Narrow", Arial, sans-serif;
-    text-transform: uppercase;
+	margin-bottom: 10px;
+	background: transparent;
+	color: #836737;
+	font-weight: normal;
+	font-size: 20px;
+}
+
+.object-detail .breadcrumb a {
+	font-size: 14px;
 }
 
 .object-detail h1 {
@@ -382,14 +423,14 @@ ul.wizard-tabs.has-error li.active a {
 }
 
 .object-detail dl dd {
-    margin-left: 0;
-    padding-left: 180px;
-    padding-top: 5px;
-    padding-bottom: 2px;
+	margin-left: 0;
+	padding-left: 200px;
+	padding-top: 5px;
+	padding-bottom: 2px;
 }
 
 .object-detail dl dd.border-bottom {
-    border-bottom: dotted black 1px;
+    border-bottom: dotted 1px #ccc;
 }
 
 .object-detail .sidebar-box {
@@ -464,7 +505,7 @@ ul.wizard-tabs.has-error li.active a {
 }
 
 .object-detail .do-you-know {
-    color: #337ab7;
+    color: #97421b;
     text-decoration: none;
 }
 
@@ -493,6 +534,33 @@ ul.wizard-tabs.has-error li.active a {
     overflow: hidden;
 }
 
+
+.connect-record-prompt {
+	width: 350px!important;
+	min-width: 250px;
+	border-radius: 4px;
+	background-image: url("../img/fp_section_bg.png");
+	background-repeat: repeat;
+	box-shadow: none;
+	margin: 0 0 20px 0;
+	padding: 10px;
+} 
+
+.connect-record-prompt .list-group-item {
+	border: none;
+	background-image: url("../img/fp_section_bg.png");
+	background-repeat: repeat;
+	box-shadow: none;
+	margin: 0 0 20px 0;
+	padding: 10px;
+}
+
+
+.connect-record-prompt h4 {
+	color: #836737;
+}
+
+
 .object-detail .connect-record-container .select2-container {
     width: 100%;
     font-size: 12px;
@@ -512,6 +580,17 @@ ul.wizard-tabs.has-error li.active a {
 .object-detail .connect-record-container .save-connection {
     margin-left: 10px;
 }
+
+
+.book-detail {
+	border-radius: 4px;
+	background-image: url("../img/fp_section_bg.png");
+	background-repeat: repeat;
+	box-shadow: none;
+	margin: 0 0 20px 0;
+	padding: 10px;
+}
+
 
 
 /** xeditable fields **/
