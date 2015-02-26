@@ -57,7 +57,7 @@ body {
 
 .content {
   min-height: 100%;
-  margin: 0 0 1em 0;
+  margin: 1em 0 1em 0;
 }
 
 blockquote {
@@ -68,6 +68,61 @@ blockquote {
     font-size: 15.5px;
     font-weight: 300;
     line-height: 1.75;
+}
+
+
+/* All pages */
+
+.container.header {
+	padding: 0;
+}
+
+.navbar-header {
+	width: 100%;
+	text-align: center;
+	display: block;
+	float: none;
+	padding: 0;
+	height: 77px;
+}
+
+.page-header {
+	border: none;
+	padding-bottom: 0;
+	margin:20px 0 0 0;
+}
+
+.page-header h1 {
+	color: #202836;
+	padding: 0 10px;
+}
+
+ 
+.collapse.navbar-collapse {
+	background-color: #97421b;
+	height: 25px!important;
+}
+
+.container.header .navbar-right {
+	height: 25px;
+}
+
+.navbar-nav>li>a {
+	padding-top: 3px;
+	color: #d3c1a2!important;
+	text-transform: uppercase;
+	font-weight: 600;
+	font-size: .95em;
+	letter-spacing: 1px;
+}
+
+.navbar-nav>li>a:hover {
+	padding-top: 3px;
+	color: #edebe6!important;
+	text-transform: uppercase;
+	font-weight: 600;
+	font-size: .95em;
+	letter-spacing: 1px;
 }
 
 /* Header FRONT PAGE ONLY */
@@ -97,20 +152,16 @@ a.navbar-brand.front {
 	margin: 1em auto;
 }
 
-
-
-
-
 .container.header {
 	background-image: url("../img/fp_header_bg.jpg");
 	background-repeat: repeat;
 	height: 80px;
 }
 
+
 a.navbar-brand {
 	display: block;
 	margin: 0;
-	height: inherit;
 }
 
 .container.header .navbar-default {
@@ -118,17 +169,6 @@ a.navbar-brand {
 	border: none;
 }
 
-.container.header .navbar-right {
-	margin: 30px 0 0 0;
-}
-
-.container.header .navbar-right a {
-	color: #848b98;
-}
-
-.container.header .navbar-right a:hover {
-	color: #707886;
-}
 
 
 /* Footer */
@@ -170,20 +210,6 @@ a.navbar-brand {
 	background-size: 100%;
 }
 
-/* All pages */
-
-.page-header {
-	border: none;
-	padding-bottom: 0;
-	margin:20px 0 0 0;
-}
-
-.page-header h1 {
-	color: #202836;
-	padding: 0 10px;
-}
-
- 
 
 
 /* Record Entry */
