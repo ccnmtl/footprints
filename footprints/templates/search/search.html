@@ -24,7 +24,12 @@
                 <br />
                 <div class="form-group">
                     <label for="models">Filter By Record Type</label>
-                    {{form.models}}
+                    <ul id="id_models">
+                    <li><label for="id_models_0"><input class="regDropDown" id="id_models_0" name="models" type="checkbox" value="main.footprint"> Footprint</label></li>
+                    <li><label for="id_models_1"><input class="regDropDown" id="id_models_1" name="models" type="checkbox" value="main.place"> Place</label></li>
+                    <li><label for="id_models_2"><input class="regDropDown" id="id_models_2" name="models" type="checkbox" value="main.person"> Person</label></li>
+                    <li><label for="id_models_3"><input class="regDropDown" id="id_models_3" name="models" type="checkbox" value="main.writtenwork"> Literary Work</label></li>
+                    </ul>
                 </div>
                 <input class="btn btn-default" type="reset" value="Clear"></input>
                 <input class="btn btn-primary" type="submit" value="Search"></input>

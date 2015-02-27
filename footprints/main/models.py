@@ -320,7 +320,7 @@ class WrittenWork(models.Model):
 
     class Meta:
         ordering = ['title']
-        verbose_name = "Written Work"
+        verbose_name = "Literary Work"
 
     def __unicode__(self):
         return self.title if self.title else ''

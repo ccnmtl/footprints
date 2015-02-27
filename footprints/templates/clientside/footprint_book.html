@@ -1,12 +1,12 @@
 <script type="text/template" id="book-detail-template">
 <div class="breadcrumb">
-The Book
+The Literary Work
     <% if (editable) { %>
     <a href="#" class="pull-right connect-records imprint">
         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
         Connect
     </a>
-<% } %>    
+<% } %>
 </div>
 <dl class="dl-horizontal">
     <% if (imprint.work.title && imprint.work.title.length > 0) { %>
@@ -60,14 +60,14 @@ The Book
                         data-model-type="WrittenWork"
                         data-name="title" data-type="title" data-pk="<%=imprint.work.id%>" data-value=""
                         data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
-                        data-url="/api/writtenwork/<%=imprint.work.id%>/">the title of the written work?</a>
+                        data-url="/api/writtenwork/<%=imprint.work.id%>/">the title of the literary work?</a>
                 </li>
             <% } %>
             <li class="fixed"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
                 <a href="#" class="<% if (editable) { %>editable-author<% } %> do-you-know persistant" data-name="actor"
                     data-type="actor" data-pk="<%=imprint.work.id%>" data-value=""
                     data-params="{csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=imprint.work.id%>,parent_model:'writtenwork'}" 
-                    data-url="/actor/add/">the author?</a>
+                    data-url="/actor/add/">the author(s) of the literary work?</a>
             </li>
        </ul>
     </dd>
@@ -289,7 +289,7 @@ The Book
 <% } %>
     
 <div class="breadcrumb">
-    The Copy
+    The Physical Copy
     <% if (editable) { %> 
         <a href="#" class="pull-right connect-records book">
             <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
@@ -298,7 +298,7 @@ The Book
     <% } %>
 </div>
 <dl class="dl-horizontal">
-    <dt>Book Copy Identifier</dt>
+    <dt>Copy Identifier</dt>
     <dd><%=imprint.work.id%>-<%=imprint.id%>-<%=id%></dd>
 </dl>
 

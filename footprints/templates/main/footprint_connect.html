@@ -10,7 +10,7 @@
                     {% csrf_token %}
                     <div class="page1">
                         <div class="form-group writtenwork">
-                            <div><label>Written Work</label></div>
+                            <div><label>Literary Work</label></div>
                             <div style="display: none">{{footprint.book_copy.imprint.work.description}}</div>
                             <input {% if not footprint.is_bare %}value="{{footprint.book_copy.imprint.work.id}}"{% endif %} type="hidden" name="work" class="select-object work"
                                 data-url="/api/writtenwork/" />
