@@ -31,7 +31,7 @@
     <div class="table-responsive">
         <table class="table table-striped table-footprints">
             <tr>
-                <th class="title">Footprint Title</th>
+                <th class="title">Literary Work</th>
                 <th class="footprint-date">Footprint</th>
                 <th class="evidence-type">Evidence Type</th>
                 <th class="evidence-location">Evidence Location</th>
@@ -41,10 +41,10 @@
             {% for footprint in object_list %}
                 <tr>
                     <td>
-                        <a href="/footprint/{{footprint.id}}">{{footprint.title}}</a>
-                            <p><small>{{footprint.book_copy.imprint.work.title}}</small></p>
+                        <a href="/footprint/{{footprint.id}}">{{footprint.book_copy.imprint.work.title|default:"n/a"}}</a>
                     </td>
                     <td>
+                        <div>{{footprint.title}}</div>
                         {% if footprint.associated_date %}
                             <div>{{footprint.associated_date}}</div>
                         {% endif %}

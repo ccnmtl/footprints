@@ -89,7 +89,7 @@ class FootprintDetailView(EditableMixin, LoggedInMixin, DetailView):
 
 class FootprintListView(LoggedInMixin, ListView):
     model = Footprint
-    default_sort = ['title']
+    default_sort = ['book_copy__imprint__work__title', 'title']
     paginate_by = 20
 
     def get_context_data(self, **kwargs):
