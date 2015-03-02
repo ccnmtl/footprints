@@ -69,7 +69,13 @@
     <% } %>
     <dl class="dl-horizontal">
         <% if (associated_date) { %>
-            <dt>Footprint Date</dt>
+            <dt>
+                <a href="#" data-toggle="tooltip" data-placement="left"
+                    title="The footprint's date describes when the literary work was identified for this footprint, e.g. a bill of sale dated June 30, 1659.">
+                    <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                </a>
+                Footprint Date
+            </dt>
             <dd class="border-bottom">
                 <a href="#" class="<% if (editable) { %>editable-required<% } else { %>readonly<% } %> required"
                  data-name="edtf_format"
@@ -91,7 +97,14 @@
             </dd>
         <% } %>
         <% if (place) { %>
-            <dt>Footprint Place</dt>
+            <dt>
+                <a href="#" data-toggle="tooltip" data-placement="left"
+                    title="The footprint place describes where the literary work was located in time, e.g. a French bookseller may have recorded the sale of a literary work in Paris.">
+                    <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                </a>
+            
+                Footprint Place
+            </dt>
             <dd class="border-bottom footprint-place">
                 <span><%=place.display_title%></span>
                 <div class="pull-right">
@@ -113,7 +126,13 @@
             </dd>
         <% } %>
         <% if (language.length > 0) { %>
-            <dt>Footprint Language</dt>
+            <dt>
+                <a href="#" data-toggle="tooltip" data-placement="left"
+                    title="The footprint's language describes how the literary work was identified, e.g. an owner's inscription may have been written in Hebrew.">
+                    <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                </a>
+                Footprint Language
+            </dt>
             <dd class="border-bottom">
                 <a href="#" class="<% if (editable) { %>editable-language<% } else { %>readonly<% } %>"
                     data-name="language"
@@ -127,7 +146,13 @@
                 </a>
             </dd>
         <% } %>
-        <dt title="the written work's title exactly as it appears in the of evidence.">Footprint Title Display<br /></dt>
+        <dt>
+            <a href="#" data-toggle="tooltip" data-placement="left"
+                title="The literary work's title exactly as it appears in the evidence. Abbreviations and alternate spellings are expected. Footprint titles can be entered in any language.">
+                <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+            </a>
+            Footprint Title
+        </dt>
         <dd class="border-bottom">
             <a href="#" class="<% if (editable) { %>editable-required<% } else { %>readonly<% } %>"
                 data-name="title" data-type="text" data-pk="<%=id%>"
@@ -152,7 +177,13 @@
     </dl>
     
     <dl class="dl-horizontal">
-        <dt>Evidence Type</dt>
+        <dt>
+            <a href="#" data-toggle="tooltip" data-placement="left"
+                title="The evidence type is where the footprint is derived or deduced from, e.g., an extant copy with an owner’s signature, a library mark, a book list or catalog,  a reference to a book coming into someone’s possession in a paratext to another work.">
+                <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+            </a>
+            Evidence Type
+        </dt>
         <dd class="border-bottom">
             <a href="#" class="<% if (editable) { %>editable-medium<% } else { %>readonly<% } %>"
                 data-name="medium"
@@ -164,7 +195,14 @@
         </dd>
         
         <% if (medium_description && medium_description.length > 0) { %>
-            <dt>Evidence Type Description</dt>
+            <dt>
+                <a href="#" data-toggle="tooltip" data-placement="left"
+                    title="The evidence description contains additional information about the evidence, e.g. an auction catalog title or the text of an owner's inscription.">
+                    <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                </a>
+            
+                Evidence Description
+            </dt>
             <dd class="border-bottom">
                 <a href="#" class="<% if (editable) { %>editable<% } else { %>readonly<% } %>"
                     data-name="medium_description"
@@ -174,7 +212,13 @@
              </dd>
         <% } %>
         
-        <dt>Evidence Location</dt>
+        <dt>
+            <a href="#" data-toggle="tooltip" data-placement="left"
+                title="The evidence location describes where one can find the evidence now. Options include a particular library, archive, a printed book, a journal article, a collection, e.g. Jewish Theological Seminary, New York, New York.">
+                <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+            </a>
+            Evidence Location
+        </dt>
         <dd class="border-bottom">
             <a href="#" class="<% if (editable) { %>editable-required<% } else { %>readonly<% } %>"
                 data-name="provenance"
@@ -214,7 +258,7 @@
                 <ul class="additional-questions">
                     <% if (!place) { %> 
                         <li>
-                            <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                            <span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
                             <a href="#" class="<% if (editable) { %>editable-place<% } %> do-you-know persistant"
                                 data-name="place" data-pk="<%=id%>" data-type="place"
                                 data-params="{csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=id%>,parent_model:'footprint'}"
@@ -222,7 +266,7 @@
                         </li>
                     <% } %>
                     <% if (!associated_date) { %> 
-                        <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                        <li><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
                         <a href="#" class="<% if (editable) { %>editable<% } %> do-you-know persistant editable-refresh"
                             data-name="date_string" data-type="text" data-pk="<%=id%>"
                             data-value=""
@@ -231,7 +275,7 @@
                         </li>
                     <% } %>
                     <% if (language.length < 1) { %> 
-                        <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                        <li><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
                             <a href="#" class="<% if (editable) { %>editable-language<% } %> do-you-know persistant"
                                 data-name="language"
                                 data-type="select2" data-pk="<%=id%>" data-value=""
@@ -239,7 +283,7 @@
                             data-url="/api/footprint/<%=id%>/">the language(s) of the footprint?</a>
                         </li>
                     <% } %>
-                    <li class="fixed"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                    <li class="fixed"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
                         <a href="#" class="<% if (editable) { %>editable-actor<% } %> do-you-know persistant"
                             data-name="actor" 
                             data-type="actor" data-pk="<%=id%>" data-value=""
@@ -247,16 +291,16 @@
                             data-url="/actor/add/">people related to this footprint, e.g. sellers, owners, curators?</a>
                     </li>
                     <% if (!medium_description || medium_description.length < 1) { %> 
-                        <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                        <li><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
                             <a href="#" class="<% if (editable) { %>editable<% } %> do-you-know persistant"
                                 data-name="medium_description" data-value=""                                         
                                 data-type="text" data-pk="<%=id%>"
                                 data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
-                                data-url="/api/footprint/<%=id%>/">details about the evidence type, e.g. a catalog title?</a>
+                                data-url="/api/footprint/<%=id%>/">details about the evidence, e.g. a catalog title?</a>
                         </li>
                     <% } %>
                     <% if (!call_number || call_number.length < 1) { %> 
-                        <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                        <li><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
                             <a href="#" class="<% if (editable) { %>editable<% } %> do-you-know persistant" data-name="call_number"
                                 data-type="text" data-pk="<%=id%>" data-value=""
                                 data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
@@ -264,14 +308,14 @@
                         </li>
                     <% } %>
                     <% if (notes.length < 1) { %> 
-                        <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                        <li><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
                             <a href="#" class="editable do-you-know persistant" data-name="notes"
                                data-type="textarea" data-pk="<%=id%>" data-value=""
                                data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
                                data-url="/api/footprint/<%=id%>/">any additional notes, clarifications, deductions or oddities?</a>
                         </li>
                     <% } %>
-                    <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                    <li><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
                         <a href="#" class="editable-digitalobject do-you-know persistant" data-name="digital_object"
                            data-type="digitalobject" data-pk="<%=id%>" data-value=""
                            data-params='{"csrfmiddlewaretoken":"<%=csrf_token%>","parent_id":"<%=id%>","parent_model":"footprint"}'>
@@ -279,11 +323,11 @@
                         </a>
                     </li>
                     <% if (!narrative || narrative.length < 1) { %>
-                    <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                    <li><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
                         <a href="#" class="editable do-you-know persistant" data-name="narrative"
                            data-type="textarea" data-pk="<%=id%>" data-value=""
                            data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
-                           data-url="/api/footprint/<%=id%>/">a narrative for this footprint?</a>
+                           data-url="/api/footprint/<%=id%>/">a one-sentence narrative for this footprint?</a>
                         </a>
                     </li>
                     <% } %>

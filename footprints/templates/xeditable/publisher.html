@@ -1,5 +1,17 @@
 <script type="text/template" id="xeditable-publisher-form">
     <div class="editable-actor">
+        <div class="helpblock alert alert-info">Enter a person's role, name and alias, then click the <i class="glyphicon glyphicon-ok"></i> button.
+        Information about each person should be added separately.</div>
+
+        <div class="form-group">
+            <label>Role</label><br />
+            <select class="form-control" name="role" placeholder="Type in a role name">
+                {% for role in roles.for_imprint %}
+                    <option value="{{role.id}}">{{role.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+
         <div class="form-group">
             <label>Person's Name</label><br />
             <input type="text" class="form-control" name="person-autocomplete" placeholder="Type in a person's name"></input>
@@ -10,13 +22,5 @@
             <input type="text" class="form-control" name="actor-name" placeholder="Specify the person's alias"></select>
         </div>
 
-        <div class="form-group">
-            <label>Role</label><br />
-            <select class="form-control" name="role" placeholder="Type in a role name">
-                {% for role in roles.for_imprint %}
-                    <option value="{{role.id}}">{{role.name}}</option>
-                {% endfor %}
-            </select>
-        </div>
     </div>
 </script>

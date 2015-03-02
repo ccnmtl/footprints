@@ -479,6 +479,15 @@ img.footicon {
     border-bottom: dotted 1px #ccc;
 }
 
+.object-detail dl dt span.glyphicon-question-sign {
+    color: #d3c1a2;
+}
+
+.object-detail span.glyphicon-asterisk {
+    color: #97421b;
+    font-size: .65em;
+}
+
 .object-detail .sidebar-box {
     border: 1px solid #e9eaed;
     padding: 10px 20px;
