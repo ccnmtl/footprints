@@ -110,8 +110,6 @@
             if (!values.hasOwnProperty('latitude') ||
                     !values.hasOwnProperty('longitude')) {
                 return "Please select a location on the map";
-            } else  if (values.city.length < 1) {
-                return "Please specify a city";
             } else if (values.country.length < 1) {
                 return "Please specify a country";
             }

@@ -1,3 +1,5 @@
 {{object.title}}
 {{object.notes}}
 {{object.book_copy.imprint.written_work.title}}
+{{object.place.city}} {{object.place.country}}
+{{object.book_copy.imprint.place.city}} {{object.book_copy.imprint.place.country}}
