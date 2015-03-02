@@ -55,7 +55,7 @@ The Literary Work
         <ul class="additional-questions">
             <% if (!imprint.work.title || imprint.work.title.length < 1) { %>
                 <li>
-                    <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                    <span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
                     <a href="#" class="<% if (editable) { %>editable-work-title<% } %> do-you-know persistant"
                         data-model-type="WrittenWork"
                         data-name="title" data-type="title" data-pk="<%=imprint.work.id%>" data-value=""
@@ -63,7 +63,7 @@ The Literary Work
                         data-url="/api/writtenwork/<%=imprint.work.id%>/">the standardized English title of the literary work?</a>
                 </li>
             <% } %>
-            <li class="fixed"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+            <li class="fixed"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
                 <a href="#" class="<% if (editable) { %>editable-author<% } %> do-you-know persistant" data-name="actor"
                     data-type="actor" data-pk="<%=imprint.work.id%>" data-value=""
                     data-params="{csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=imprint.work.id%>,parent_model:'writtenwork'}" 
@@ -213,7 +213,7 @@ The Literary Work
         <dd>  
             <ul class="additional-questions">
                 <% if (imprint.work.notes && imprint.work.notes.length < 1) { %>
-                    <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                    <li><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
                         <a href="#" class="editable do-you-know persistant" data-name="notes"
                             data-type="textarea" data-pk="<%=imprint.work.id%>" data-value=""
                             data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
@@ -223,7 +223,7 @@ The Literary Work
 
                 <% if (!imprint.title || imprint.title.length < 1) { %>
                     <li>
-                        <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                        <span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
                         <a href="#" class="<% if (editable) { %>editable-imprint-title<% } %> do-you-know persistant"
                             data-model-type="Imprint"
                             data-name="title" data-type="title" data-pk="<%=imprint.id%>" data-value=""
@@ -233,7 +233,7 @@ The Literary Work
                 <% } %>
                 
                 <% if (imprint.language.length < 1) { %> 
-                    <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                    <li><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
                         <a href="#" class="<% if (editable) { %>editable-language<% } %> do-you-know persistant"
                             data-name="language"
                             data-type="select2" data-pk="<%=imprint.id%>" data-value=""
@@ -242,7 +242,7 @@ The Literary Work
                     </li>
                 <% } %>
                 <% if (!imprint.date_of_publication) { %> 
-                    <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                    <li><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
                     <a href="#" class="<% if (editable) { %>editable<% } %> do-you-know persistant editable-refresh"
                         data-name="date_string" data-type="text" data-pk="<%=imprint.id%>"
                         data-value=""
@@ -253,7 +253,7 @@ The Literary Work
                 
                 <% if (!imprint.place) { %> 
                     <li>
-                        <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                        <span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
                         <a href="#" class="<% if (editable) { %>editable-place<% } %> do-you-know persistant"
                             data-name="place" data-pk="<%=imprint.id%>" data-type="place"
                             data-params="{csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=imprint.id%>,parent_model:'imprint'}"
@@ -261,14 +261,14 @@ The Literary Work
                     </li>
                 <% } %>
 
-                <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                <li><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
                     <a href="#" class="<% if (editable) { %>editable-identifier<% } %> do-you-know persistant editable-refresh"
                         data-value="" data-type="identifier" data-pk="<%=imprint.id%>"
                         data-params="{csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=imprint.id%>,parent_model:'imprint'}"
                         data-url="/identifier/add/">a standardized identifier associated with the imprint?</a>
                 </li>
                 
-                <li class="fixed"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                <li class="fixed"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
                     <a href="#" class="<% if (editable) { %>editable-publisher<% } %> do-you-know persistant" data-name="actor"
                         data-type="actor" data-pk="<%=imprint.id%>" data-value=""
                         data-params="{csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=imprint.id%>,parent_model:'imprint'}" 
@@ -276,7 +276,7 @@ The Literary Work
                 </li>
                 
                 <% if (!imprint.notes || imprint.notes.length < 1) { %>
-                    <li><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                    <li><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
                         <a href="#" class="editable do-you-know persistant" data-name="notes"
                             data-type="textarea" data-pk="<%=imprint.id%>" data-value=""
                             data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"

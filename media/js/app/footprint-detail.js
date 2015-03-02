@@ -53,6 +53,9 @@
                 }
             }
         },
+        initializeTooltips: function() {
+            jQuery(this.el).find('[data-toggle="tooltip"]').tooltip();
+        },
         refresh: function(response, newValue) {
             this.model.fetch();
         },
@@ -208,6 +211,8 @@
             });
             
             this.initializeMap();
+            
+            this.initializeTooltips();
         },
         toggleEditDigitalObject: function(evt) {
             jQuery(this.el).find('.edit-digital-object').toggle();
