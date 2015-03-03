@@ -41,16 +41,17 @@
             {% for footprint in object_list %}
                 <tr>
                     <td>
-                        <a href="/footprint/{{footprint.id}}">{{footprint.book_copy.imprint.work.title|default:"n/a"}}</a>
+                        <a href="/writtenwork/{{footprint.book_copy.imprint.work.id}}">{{footprint.book_copy.imprint.work.title|default:"n/a"}}</a>
                     </td>
                     <td>
+                        <a href="/footprint/{{footprint.id}}">
                         <div>{{footprint.title}}</div>
                         {% if footprint.associated_date %}
                             <div>{{footprint.associated_date}}</div>
                         {% endif %}
                         {% if footprint.place %}
                             <div>{{footprint.place}}</div>
-                        {% endif %}
+                        {% endif %}</a>
                     </td>
                     <td>{{footprint.medium}}</td>
                     <td>{{footprint.provenance}}</td>

@@ -499,12 +499,12 @@ class Footprint(models.Model):
 
     book_copy = models.ForeignKey(BookCopy)
     medium = models.CharField(
-        "Medium of Evidence", max_length=256,
+        "Evidence Type", max_length=256,
         help_text='''Where the footprint is derived or deduced from, e.g.
             an extant copy with an owner's signature''')
     medium_description = models.TextField(null=True, blank=True)
     provenance = models.CharField(
-        "Provenance of Evidence", max_length=256,
+        "Evidence Location", max_length=256,
         help_text='''Where can one find the evidence now: a particular
         library, archive, a printed book, a journal article etc.''')
 

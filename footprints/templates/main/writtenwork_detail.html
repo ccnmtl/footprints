@@ -21,51 +21,104 @@
     <div class="object-detail writtenwork">
         <div class="row">
             <div class="col-md-12">
-                <div class="breadcrumb">WRITTEN WORK</div>
-                <h2>
+                <h1>
                     <span class="glyphicon glyphicon-book pull-left" aria-hidden="true"></span>
                     <span class="pull-left object-title">&nbsp;{{work}}</span>
                     <div class="clearfix"></div>
-                </h2>
-                <br />
-                {% if work.actor.count > 0 %}
-                    <dl class="dl-horizontal">
+                </h1>
+                <div class="breadcrumb">THE LITERARY WORK</div>
+                <dl class="dl-horizontal">
+                    {% if work.actor.count > 0 %}
                         {% for actor in work.actor.all %}
                             <dt>{{actor.role}}</dt><dd>{{actor}}</dd>
                         {% endfor %}
-                    </dl>
-                {% endif %}
+                    {% endif %}
                 
-                {% if work.notes %}
-                    <h3>Notes</h3>
-                    {{work.notes|safe}}
-                {% endif %}
+                    {% if work.notes %}
+                        <dt>Notes</dt>
+                        <dd>{{work.notes|safe}}</dd>
+                    {% endif %}
+                </dl>
 
                 <div class="breadcrumb">
                     IMPRINTS
                 </div>
 
-                <table class="table table-striped table-footprints">
                 {% for imprint in work.imprint_set.all %}
-                    <tr>
-
+                    <div class="imprint-list-item">
+                        <dl class="dl-horizontal">
+                            
+                            {% if imprint.title and imprint.title|length > 0 %}
+                                <dt>Imprint Title</dt>
+                                <dd>
+                                    {{imprint.title}}
+                                </dd>
+                            {% endif %}
+                            {% if imprint.date_of_publication %}
+                                <dt>Publication Date</dt>
+                                <dd>
+                                    {{imprint.date_of_publication.edtf_format}}
+                                </dd>
+                            {% endif %}
+                            {% if imprint.place %}
+                                <dt>Imprint Location</dt>
+                                <dd class="footprint-place">
+                                    <span>{{imprint.place}}</span>
+                                </dd>
+                            {% endif %}
+                            {% if imprint.language.count > 0 %}
+                                <dt>Imprint Language</dt>
+                                <dd>
+                                    {% for language in imprint.language.all %} 
+                                        {{ language.name }}{% if not forloop.last %} , {% endif %}
+                                    {% endfor %}
+                                </dd>
+                            {% endif %}
+                            {% for actor in imprint.actor.all %} 
+                                <dt>{{actor.role.name}}</dt>
+                                <dd>
+                                    <span>{{actor.person.name}}{% if actor.alias %}  as {{actor.alias}} {% endif %}</span> 
+                                </dd>
+                            {% endfor %}
+                            {% for ident in imprint.standardized_identifier.all %} 
+                                <dt>{{ident.authority}}</dt>
+                                <dd>
+                                    {{ident.identifier}}
+                                </dd>
+                            {% endfor %}
+                            {% if imprint.notes and imprint.notes|length > 0 %}
+                                <dt>Imprint Notes</dt>
+                                <dd>
+                                    {{imprint.notes|safe}}</a>
+                                </dd>
+                            {% endif %}
+                        </dl>
                     
                         {% if imprint.bookcopy_set.count > 0 %}
-                            {% for copy in imprint.bookcopy_set.all %}
-                                <div>{{copy.description|safe}}</div>
+                            <table class="table table-striped">
+                                <caption>FOOTPRINTS</caption>
+                                <tr><th>Book Copy Identifier</th><th>Footprint Date</th><th>Footprint Title</th><th>Evidence Type</th><th>Evidence Location</th></tr>
+                                {% for copy in imprint.bookcopy_set.all %}
                                     {% if copy.footprint_set.count > 0 %}
-                                        <table class="table">
                                         {% for fp in copy.footprint_set.all %}
                                             <tr>
-                                                <td><a href="/footprint/{{fp.id}}/"> {{fp.title}}</a></td>
+                                            <td>{{copy.identifier}}</td>
+                                            <td>{{fp.associated_date|default:""}}</td>                                                
+                                            <td><a href="/footprint/{{fp.id}}/">{{fp.title}}</a></td>
+                                            <td>{{fp.medium}}</td>
+                                            <td style="width: 30%;">{{fp.provenance}}</td>
                                             </tr>
                                         {% endfor %}
-                                        </table>
+                                    {% else %}
+                                        <tr>
+                                            <td>{{copy.identifier}}</td>
+                                            <td colspan="4">No Footprints Recorded</td>
+                                        </tr>
                                     {% endif %}
-                            {% endfor %}
-                            </ol>
+                                {% endfor %}
+                            </table>
                         {% endif %}
-                    </tr>
+                    </div>
                 {% endfor %}
             </div>
         </div>
