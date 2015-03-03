@@ -123,8 +123,6 @@ class FootprintSearchForm(ModelSearchForm):
 
         choices = [
             (get_model_ct(Footprint), 'Footprint'),
-            (get_model_ct(Place), 'Place'),
-            (get_model_ct(Person), 'Person'),
             (get_model_ct(WrittenWork), 'Written Work'),
         ]
         self.fields['models'] = forms.MultipleChoiceField(
@@ -143,7 +141,9 @@ class FootprintSearchForm(ModelSearchForm):
         else:
             sqs = self.searchqueryset.auto_query(self.cleaned_data['q'])
 
-        sqs = sqs.exclude(django_ct__in=["main.imprint"])
+        sqs = sqs.exclude(django_ct__in=["main.imprint",
+                                         "main.place",
+                                         "main.person"])
 
         if self.load_all:
             sqs = sqs.load_all()
