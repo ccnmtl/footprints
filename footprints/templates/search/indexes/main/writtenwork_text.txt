@@ -3,3 +3,6 @@
 {% for imprint in object.imprint_set.all %}
     {{imprint.place.city}} {{imprint.place.country}}
 {% endfor %}
+{% for author in object.authors %}
+    {{author.person.name}} {{author.alias}}
+{% endfor %}
