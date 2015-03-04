@@ -3,10 +3,15 @@
     {% if references > 1 %}
         <div class="alert alert-danger" role="alert">
             <strong>Important!</strong> This work is referenced by <b>{{references|add:"-1"}} other footprint(s).<br />
-            Changing the work title will change those records too.<br /><br />
+            Changing the standardized work title will change those records too.<br /><br />
             Click <a href="#" class="connect-records imprint">
                 <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                 Connect</a> to create a new work or connect to a different work.
+        </div>
+    {% else %}
+        <div class="alert alert-info" role="alert">
+            <strong>Hint</strong> &nbsp;Search the <a href="http://authorities.loc.gov">Library of Congress Authorities</a> to find the standardized English representation of the title.<br/>
+            <br />If the title is not found in the LOC authorities, transliterate to the best of your ability using <a href="http://library.princeton.edu/departments/tsd/katmandu/hebrew/trheb.html">The Princeton Guide to Hebrew Transliteration</a>. 
         </div>
     {% endif %}
     {% endwith %}
@@ -14,4 +19,4 @@
     <div class="editable-title">
         <input type="text" class="form-control" name="title" placeholder="Type in a title"></input>
     </div>
-</script>>
+</script>

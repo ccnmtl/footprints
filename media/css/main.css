@@ -356,6 +356,7 @@ ul.wizard-tabs.has-error li.active a {
 /* Footprint Details */
 
 
+.writtenwork,
 .footprint-detail {
 	border-radius: 4px;
 	background-image: url("../img/fp_section_bg.png");
@@ -477,6 +478,15 @@ img.footicon {
 
 .object-detail dl dd.border-bottom {
     border-bottom: dotted 1px #ccc;
+}
+
+.object-detail dl dt span.glyphicon-question-sign {
+    color: #d3c1a2;
+}
+
+.object-detail span.glyphicon-asterisk {
+    color: #97421b;
+    font-size: .65em;
 }
 
 .object-detail .sidebar-box {
@@ -673,7 +683,19 @@ img.footicon {
 	padding: 10px 20px 10px 10px;
 }
 
+.object-detail.writtenwork .imprint-list-item {
+    padding: 20px;
+    margin: 20px 20px;
+    border: 1px solid #eee;
+    border-left-width: 5px;
+    border-radius: 3px;
+    background-color: white;
+}
 
+.object-detail.writtenwork .imprint-list-item table {
+    margin: 0 50px;
+    width: 90%;
+}
 
 /** xeditable fields **/
 .editable-person {
