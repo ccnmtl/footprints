@@ -22,10 +22,11 @@
         "connect",
         "milestoneActionItemTargets",
         "milestoneBugTargets",
-	"Bloodhound",
-	"Backbone",
-	"_",
-	"google",
-	"plupload"
+	   "Bloodhound",
+	   "Backbone",
+	   "_",
+	   "google",
+	   "plupload",
+	   "MarkerClusterer"
     ]
 }
