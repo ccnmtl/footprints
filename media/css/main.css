@@ -71,6 +71,17 @@ blockquote {
 }
 
 
+/* Login Modal */
+#login-modal .login-uni-button {
+  border: 0;
+  padding-right: 10px;
+  color: #fff;
+}
+#login-modal .login-uni-button:hover{
+	color: #fff;
+	background-color: #406777;
+	border-color: #406777;
+}
 /* All pages */
 
 
@@ -190,6 +201,11 @@ ul.front.navbar-nav li {
 ul.front>li>a:hover {
 text-decoration: none;
 background-color: transparent;
+}
+
+.nav>li>a:focus {
+  text-decoration: none;
+ background-color: transparent;
 }
 
 /* Footer */
