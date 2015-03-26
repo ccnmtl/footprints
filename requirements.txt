@@ -29,10 +29,10 @@ logilab-common==0.62.1
 logilab-astng==0.24.3
 astroid==1.2.1
 pylint==1.4.1
-six==1.8.0
+six==1.9.0
 factory_boy==2.4.1
 python-ldap==2.4.18
-sqlparse==0.1.13
+sqlparse==0.1.14
 
 djangowind==0.13.2
 sorl==3.1
@@ -52,7 +52,7 @@ django-debug-toolbar==1.1
 django-waffle==0.10.1
 django-jenkins==0.16.3
 django-smoketest==0.3.0
-django-extensions==1.4.5
+django-extensions==1.4.9
 django-stagingcontext==0.1.0
 django-ga-context==0.1.0
 django-impersonate==0.9
