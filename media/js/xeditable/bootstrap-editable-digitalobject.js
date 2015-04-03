@@ -24,7 +24,8 @@
                 filters: {
                     mime_types: [
                         {title: "Image files", extensions: "jpg,jpeg,png,gif,bmp"}
-                    ]
+                    ],
+                    max_file_size: "7500000"
                 }
             });
 
