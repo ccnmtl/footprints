@@ -1,6 +1,18 @@
 (function ($) {
     "use strict";
     
+    plupload.addFileFilter('max_file_size', function(maxSize, file, cb) {
+        var undef;
+       
+        // Invalid file size
+        if (file.size !== undef && maxSize && file.size > maxSize) {
+            alert("too big");
+            cb(false);
+        } else {
+            cb(true);
+        }
+      });
+    
     var DigitalObject = function (options) {
         this.init('digitalobject', options, DigitalObject.defaults);
     };
@@ -25,7 +37,7 @@
                     mime_types: [
                         {title: "Image files", extensions: "jpg,jpeg,png,gif,bmp"}
                     ],
-                    max_file_size: "7500000"
+                    max_file_size: "3000000"
                 }
             });
 
