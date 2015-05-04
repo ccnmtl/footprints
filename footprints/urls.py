@@ -100,7 +100,8 @@ urlpatterns = patterns(
 
     url(r'^browse/footprints/$', FootprintListView.as_view(),
         name='browse-footprint-list'),
-
+    url(r'^browse/footprints/(?P<sort_by>\w+)/$', FootprintListView.as_view(),
+        name='browse-footprint-list'),
 
     url(r'^search/',
         login_required(SearchView(template="search/search.html",

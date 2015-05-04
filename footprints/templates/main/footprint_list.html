@@ -9,40 +9,59 @@
 </div>
 
 <div class="object-browse">
-    <div>
-        {% if paginator.num_pages > 1 %}
-            <ul class="pagination pagination-sm pull-right">
-                {% for a_page in paginator.page_range %}
-                    {% ifequal page_obj.number a_page %}
-                        <li class="active"><a class="page-link disabled"
-                    {% else %}
-                        <li><a class="page-link"
-                    {% endifequal %}
-                        href="?page={{ a_page }}">{{a_page}}</a></li>
+    <div class="row tools">
+        <div class="col-sm-6">
+            <div class="btn-group">
+              <button type="button" class="btn btn-default dropdown-toggle"
+                data-toggle="dropdown" aria-expanded="false">
+                Sort By {{sort_selected}} <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" role="menu">
+                {% for key, value in sort_options.items %}
+                    <li>
+                        <a href="{% url 'browse-footprint-list' key %}">
+                            {{value.label}}
+                            {% ifequal sort_selected value.label %}<span class="glyphicon glyphicon-ok" aria-hidden="true"></span> {% endifequal %} 
+                            
+                        </a>
+                    </li>
                 {% endfor %}
-            </ul>
-        {% endif %}
-        <div class="pull-right page-count">
-            {{page_obj.start_index}} - {{page_obj.end_index}} of {{paginator.count}} items
+              </ul>
+            </div>
         </div>
-        <div class="clearfix"></div>
+        <div class="col-sm-6">
+            {% if paginator.num_pages > 1 %}
+                <ul class="pagination pagination-sm pull-right">
+                    {% for a_page in paginator.page_range %}
+                        {% ifequal page_obj.number a_page %}
+                            <li class="active"><a class="page-link disabled"
+                        {% else %}
+                            <li><a class="page-link"
+                        {% endifequal %}
+                            href="?page={{ a_page }}">{{a_page}}</a></li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <div class="pull-right page-count">
+                {{page_obj.start_index}} - {{page_obj.end_index}} of {{paginator.count}} items
+            </div>
+            <div class="clearfix"></div>
+        </div>
     </div>
 
     <div class="table-responsive">
         <table class="table table-striped table-footprints">
             <tr>
-                <th class="title">Literary Work</th>
                 <th class="footprint-date">Footprint</th>
-                <th class="evidence-type">Evidence Type</th>
                 <th class="evidence-location">Evidence Location</th>
                 <th class="owners">Owners</th>
+                <th class="title">Literary Work</th>
                 <th class="imprint-date">Imprint</th>
+                <th class="added">Added</th>
+                <th class="complete">Progress</th>
             </tr>
             {% for footprint in object_list %}
                 <tr>
-                    <td>
-                        <a href="/writtenwork/{{footprint.book_copy.imprint.work.id}}">{{footprint.book_copy.imprint.work.title|default:"n/a"}}</a>
-                    </td>
                     <td>
                         <a href="/footprint/{{footprint.id}}">
                         <div>{{footprint.title}}</div>
@@ -53,13 +72,17 @@
                             <div>{{footprint.place}}</div>
                         {% endif %}</a>
                     </td>
-                    <td>{{footprint.medium}}</td>
                     <td>{{footprint.provenance}}</td>
                     <td>
                         {% for owner in footprint.owners %}
                             {{owner.display_name}}
                             {% if not forloop.last %},{% endif %}
                         {% endfor %}
+                    </td>
+                    <td>
+                        <a href="/writtenwork/{{footprint.book_copy.imprint.work.id}}">
+                            {{footprint.book_copy.imprint.work.title|default:"n/a"}}
+                        </a><br />                     
                     </td>
                     <td>
                         {% if footprint.book_copy.imprint.printers.count > 0 %}
@@ -76,6 +99,12 @@
                         {% if footprint.book_copy.imprint.place %}
                             <div>{{footprint.book_copy.imprint.place}}</div>
                         {% endif %}
+                    </td>
+                    <td>
+                        {{footprint.created_at|date:"m/d/y"}}
+                    </td>
+                    <td>
+                        {{footprint.percent_complete}}
                     </td>
                 </tr>
             {% endfor %}

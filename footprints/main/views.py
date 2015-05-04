@@ -89,16 +89,39 @@ class FootprintDetailView(EditableMixin, LoggedInMixin, DetailView):
 
 class FootprintListView(LoggedInMixin, ListView):
     model = Footprint
-    default_sort = ['book_copy__imprint__work__title', 'title']
+    sort_options = {
+        'wtitle': {
+            'label': 'Literary Work',
+            'q': ['book_copy__imprint__work__title']
+        },
+        'ftitle': {
+            'label': 'Footprint',
+            'q': ['title']
+        },
+        'recent': {
+            'label': 'Recently Added',
+            'q': ['-created_at']
+        },
+        'elocation': {
+            'label': 'Evidence Location',
+            'q': ['provenance']
+        }
+    }
     paginate_by = 20
 
     def get_context_data(self, **kwargs):
         context = super(FootprintListView, self).get_context_data(**kwargs)
+        context['sort_options'] = self.sort_options
+
+        sort_by = self.kwargs.get('sort_by', 'ftitle')
+        context['sort_selected'] = self.sort_options[sort_by]['label']
         return context
 
     def get_queryset(self):
         qs = super(FootprintListView, self).get_queryset()
-        qs = qs.order_by(*self.default_sort)
+
+        sort_by = self.kwargs.get('sort_by', 'ftitle')
+        qs = qs.order_by(*self.sort_options[sort_by]['q'])
         return qs
 
 
