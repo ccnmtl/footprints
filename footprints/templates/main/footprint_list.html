@@ -22,7 +22,6 @@
                         <a href="{% url 'browse-footprint-list' key %}">
                             {{value.label}}
                             {% ifequal sort_selected value.label %}<span class="glyphicon glyphicon-ok" aria-hidden="true"></span> {% endifequal %} 
-                            
                         </a>
                     </li>
                 {% endfor %}
@@ -52,13 +51,12 @@
     <div class="table-responsive">
         <table class="table table-striped table-footprints">
             <tr>
-                <th class="footprint-date">Footprint</th>
+                <th class="footprint-title">Footprint</th>
                 <th class="evidence-location">Evidence Location</th>
                 <th class="owners">Owners</th>
                 <th class="title">Literary Work</th>
                 <th class="imprint-date">Imprint</th>
                 <th class="added">Added</th>
-                <th class="complete">Progress</th>
             </tr>
             {% for footprint in object_list %}
                 <tr>
@@ -102,9 +100,6 @@
                     </td>
                     <td>
                         {{footprint.created_at|date:"m/d/y"}}
-                    </td>
-                    <td>
-                        {{footprint.percent_complete}}
                     </td>
                 </tr>
             {% endfor %}

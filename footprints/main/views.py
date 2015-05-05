@@ -120,8 +120,7 @@ class FootprintListView(ListView):
         qs = super(FootprintListView, self).get_queryset()
 
         sort_by = self.kwargs.get('sort_by', 'ftitle')
-        qs = qs.order_by(*self.sort_options[sort_by]['q'])
-        return qs
+        return qs.order_by(*self.sort_options[sort_by]['q'])
 
 
 class PlaceDetailView(EditableMixin, DetailView):

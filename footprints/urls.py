@@ -98,7 +98,7 @@ urlpatterns = patterns(
         WrittenWorkDetailView.as_view(), name='writtenwork-detail-view'),
 
     url(r'^browse/footprints/$', FootprintListView.as_view(),
-        name='browse-footprint-list'),
+        name='browse-footprint-list-default'),
     url(r'^browse/footprints/(?P<sort_by>\w+)/$', FootprintListView.as_view(),
         name='browse-footprint-list'),
 
