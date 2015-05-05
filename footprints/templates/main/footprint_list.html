@@ -1,6 +1,31 @@
 {% extends 'base.html' %}
+{% load compress %}
 
 {% block title %}Browse{% endblock %}
+
+{% block js %}
+    {% compress js %}
+        <script src="{{STATIC_URL}}js/jquery-circle-progress/circle-progress.js"></script>
+    {% endcompress %}
+
+    <script type="text/javascript">    
+        jQuery(document).ready(function() {
+            jQuery('.percent-complete').each(function() {
+                var pct = parseInt(jQuery(this).data('value'), 10) / 100;
+                jQuery(this).circleProgress({
+                    animation: false,
+                    value: pct,
+                    size: 50,
+                    startAngle: -Math.PI/2,
+                    label: jQuery(this).data('value') + '%',
+                    fill: {
+                        color: '#97421b'  //'#2e5367'
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}
 
 {% block content %}
 
@@ -54,9 +79,10 @@
                 <th class="footprint-title">Footprint</th>
                 <th class="evidence-location">Evidence Location</th>
                 <th class="owners">Owners</th>
-                <th class="title">Literary Work</th>
+                <th class="work-title">Literary Work</th>
                 <th class="imprint-date">Imprint</th>
                 <th class="added">Added</th>
+                <th class="percent-complete-header">Complete</th>
             </tr>
             {% for footprint in object_list %}
                 <tr>
@@ -100,6 +126,10 @@
                     </td>
                     <td>
                         {{footprint.created_at|date:"m/d/y"}}
+                    </td>
+                    <td class="percent-complete-cell">
+                        <div class="percent-complete" data-value="{{footprint.percent_complete}}">
+                        </div> 
                     </td>
                 </tr>
             {% endfor %}
