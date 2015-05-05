@@ -16,7 +16,7 @@ admin.site.register(Person)
 
 
 def person_name(obj):
-    return '' if obj.person.name is None else obj.person.name
+    return obj.person.name
 
 
 class ActorAdmin(admin.ModelAdmin):
@@ -42,10 +42,7 @@ admin.site.register(BookCopy, BookCopyAdmin)
 
 
 def work_title(obj):
-    if obj.work:
-        return obj.work.title
-    else:
-        return ''
+    return obj.work.title if obj.work else ''
 
 work_title.short_description = 'Written Work Title'
 
