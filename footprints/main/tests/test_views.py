@@ -143,11 +143,11 @@ class DetailViewTest(TestCase):
                                         kwargs={'pk': FootprintFactory().id})
 
     def test_get_logged_out(self):
-        self.assertEquals(self.client.get(self.person_detail).status_code, 302)
-        self.assertEquals(self.client.get(self.place_detail).status_code, 302)
-        self.assertEquals(self.client.get(self.work_detail).status_code, 302)
+        self.assertEquals(self.client.get(self.person_detail).status_code, 200)
+        self.assertEquals(self.client.get(self.place_detail).status_code, 200)
+        self.assertEquals(self.client.get(self.work_detail).status_code, 200)
         self.assertEquals(self.client.get(self.footprint_detail).status_code,
-                          302)
+                          200)
 
     def test_get_logged_in(self):
         self.client.login(username=self.user.username, password="test")
@@ -227,12 +227,6 @@ class ConnectFootprintViewTest(TestCase):
     def test_post_expected_errors(self):
         # not logged in
         self.assertEquals(self.client.post(self.url).status_code, 302)
-
-        self.client.login(username=self.user.username, password="test")
-
-        # no permissions
-        response = self.client.post(self.url, {'book': self.book.id})
-        self.assertEquals(response.status_code, 403)
 
     def test_post_update_book(self):
         self.client.login(username=self.staff.username, password="test")
@@ -338,18 +332,9 @@ class AddActorViewTest(TestCase):
         # not logged in
         self.assertEquals(self.client.post(self.add_url).status_code, 302)
 
-        self.client.login(username=self.user.username, password="test")
-
         # no ajax
+        self.client.login(username=self.user.username, password="test")
         self.assertEquals(self.client.post(self.add_url).status_code, 405)
-
-        # no permissions
-        response = self.client.post(self.add_url,
-                                    {'parent_id': self.footprint.id,
-                                     'parent_model': 'footprint',
-                                     'role': self.role.id},
-                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 403)
 
     def test_post_invalid_role(self):
         # invalid role id
@@ -397,17 +382,9 @@ class RemoveRelatedViewTest(TestCase):
         # not logged in
         self.assertEquals(self.client.post(self.remove_url).status_code, 302)
 
-        self.client.login(username=self.user.username, password="test")
-
         # no ajax
+        self.client.login(username=self.user.username, password="test")
         self.assertEquals(self.client.post(self.remove_url).status_code, 405)
-
-        # no permissions
-        response = self.client.post(self.remove_url, {
-            'parent_id': self.footprint.id,
-            'parent_model': 'footprint'},
-            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 403)
 
     def test_post_missing_params(self):
         self.client.login(username=self.staff.username, password="test")
@@ -498,17 +475,9 @@ class AddDateViewTest(TestCase):
         # not logged in
         self.assertEquals(self.client.post(self.url).status_code, 302)
 
-        self.client.login(username=self.user.username, password="test")
-
         # no ajax
+        self.client.login(username=self.user.username, password="test")
         self.assertEquals(self.client.post(self.url).status_code, 405)
-
-        # no permissions
-        response = self.client.post(self.url,
-                                    {'parent_id': self.footprint.id,
-                                     'parent_model': 'footprint'},
-                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 403)
 
     def test_post_no_data(self):
         self.client.login(username=self.staff.username, password="test")
@@ -549,17 +518,9 @@ class AddPlaceViewTest(TestCase):
         # not logged in
         self.assertEquals(self.client.post(self.url).status_code, 302)
 
-        self.client.login(username=self.user.username, password="test")
-
         # no ajax
+        self.client.login(username=self.user.username, password="test")
         self.assertEquals(self.client.post(self.url).status_code, 405)
-
-        # no permissions
-        response = self.client.post(self.url,
-                                    {'parent_id': self.footprint.id,
-                                     'parent_model': 'footprint'},
-                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 403)
 
     def test_post_no_data(self):
         self.client.login(username=self.staff.username, password="test")
@@ -605,17 +566,9 @@ class AddIdentifierViewTest(TestCase):
         # not logged in
         self.assertEquals(self.client.post(self.url).status_code, 302)
 
-        self.client.login(username=self.user.username, password="test")
-
         # no ajax
+        self.client.login(username=self.user.username, password="test")
         self.assertEquals(self.client.post(self.url).status_code, 405)
-
-        # no permissions
-        response = self.client.post(self.url,
-                                    {'parent_id': self.imprint.id,
-                                     'parent_model': 'imprint'},
-                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 403)
 
     def test_post_no_data(self):
         self.client.login(username=self.staff.username, password="test")
@@ -658,17 +611,9 @@ class AddDigitalObjectViewTest(TestCase):
         # not logged in
         self.assertEquals(self.client.post(self.url).status_code, 302)
 
-        self.client.login(username=self.user.username, password="test")
-
         # no ajax
+        self.client.login(username=self.user.username, password="test")
         self.assertEquals(self.client.post(self.url).status_code, 405)
-
-        # no permissions
-        response = self.client.post(self.url,
-                                    {'parent_id': self.footprint.id,
-                                     'parent_model': 'footprint'},
-                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 403)
 
     def test_post_no_data(self):
         self.client.login(username=self.staff.username, password="test")

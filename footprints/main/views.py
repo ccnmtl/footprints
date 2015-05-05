@@ -6,7 +6,7 @@ from django.contrib.auth.views import logout as auth_logout_view
 from django.core.urlresolvers import reverse
 from django.db.models.fields import FieldDoesNotExist
 from django.db.models.fields.related import ManyToManyField
-from django.http.response import HttpResponseRedirect, HttpResponseForbidden
+from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
@@ -60,7 +60,7 @@ class LogoutView(LoggedInMixin, View):
             return auth_logout_view(request, "/")
 
 
-class PersonDetailView(EditableMixin, LoggedInMixin, DetailView):
+class PersonDetailView(EditableMixin, DetailView):
 
     model = Person
 
@@ -71,7 +71,7 @@ class PersonDetailView(EditableMixin, LoggedInMixin, DetailView):
         return context
 
 
-class FootprintDetailView(EditableMixin, LoggedInMixin, DetailView):
+class FootprintDetailView(EditableMixin, DetailView):
 
     model = Footprint
 
@@ -79,15 +79,14 @@ class FootprintDetailView(EditableMixin, LoggedInMixin, DetailView):
         context = super(FootprintDetailView, self).get_context_data(**kwargs)
 
         context['related'] = []
-        context['editable'] = self.has_edit_permission(self.request.user,
-                                                       self.object)
+        context['editable'] = self.has_edit_permission(self.request.user)
         context['languages'] = Language.objects.all().order_by('name')
         context['roles'] = Role.objects.all().order_by('name')
         context['identifier_types'] = IDENTIFIER_TYPES
         return context
 
 
-class FootprintListView(LoggedInMixin, ListView):
+class FootprintListView(ListView):
     model = Footprint
     default_sort = ['book_copy__imprint__work__title', 'title']
     paginate_by = 20
@@ -102,7 +101,7 @@ class FootprintListView(LoggedInMixin, ListView):
         return qs
 
 
-class PlaceDetailView(EditableMixin, LoggedInMixin, DetailView):
+class PlaceDetailView(EditableMixin, DetailView):
 
     model = Place
 
@@ -110,12 +109,11 @@ class PlaceDetailView(EditableMixin, LoggedInMixin, DetailView):
         context = super(PlaceDetailView, self).get_context_data(**kwargs)
 
         context['related'] = []
-        context['editable'] = self.has_edit_permission(self.request.user,
-                                                       self.object)
+        context['editable'] = self.has_edit_permission(self.request.user)
         return context
 
 
-class WrittenWorkDetailView(EditableMixin, LoggedInMixin, DetailView):
+class WrittenWorkDetailView(EditableMixin, DetailView):
 
     model = WrittenWork
 
@@ -123,8 +121,7 @@ class WrittenWorkDetailView(EditableMixin, LoggedInMixin, DetailView):
         context = super(WrittenWorkDetailView, self).get_context_data(**kwargs)
 
         context['related'] = []
-        context['editable'] = self.has_edit_permission(self.request.user,
-                                                       self.object)
+        context['editable'] = self.has_edit_permission(self.request.user)
         return context
 
 
@@ -185,8 +182,6 @@ class ConnectFootprintView(LoggedInMixin, EditableMixin, View):
 
     def post(self, *args, **kwargs):
         fp = get_object_or_404(Footprint, pk=kwargs.get('pk', None))
-        if not self.has_edit_permission(self.request.user, fp):
-            return HttpResponseForbidden()
 
         pk = self.request.POST.get('work', self.CREATE_ID)
         work = self.get_or_create_work(pk)
@@ -227,9 +222,6 @@ class RemoveRelatedView(LoggedInMixin, EditableMixin,
             the_model = apps.get_model(app_label='main', model_name=model_name)
             the_parent = get_object_or_404(
                 the_model, pk=self.request.POST.get('parent_id', None))
-
-            if not self.has_edit_permission(self.request.user, the_parent):
-                return HttpResponseForbidden()
 
             attr = self.request.POST.get('attr', None)
             field = the_model._meta.get_field_by_name(attr)
@@ -276,9 +268,6 @@ class AddActorView(AddRelatedRecordView):
     def post(self, *args, **kwargs):
         the_parent = self.get_parent()
 
-        if not self.has_edit_permission(self.request.user, the_parent):
-            return HttpResponseForbidden()
-
         role = get_object_or_404(Role, pk=self.request.POST.get('role', None))
 
         person_name = self.request.POST.get('person_name', None)
@@ -297,9 +286,6 @@ class AddDateView(AddRelatedRecordView):
         the_parent = self.get_parent()
 
         attr = self.request.POST.get('attr', None)
-
-        if not self.has_edit_permission(self.request.user, the_parent):
-            return HttpResponseForbidden()
 
         date_string = self.request.POST.get('date_string', None)
         if date_string is not None:
@@ -320,9 +306,6 @@ class AddIdentifierView(AddRelatedRecordView):
     def post(self, *args, **kwargs):
         the_parent = self.get_parent()
 
-        if not self.has_edit_permission(self.request.user, the_parent):
-            return HttpResponseForbidden()
-
         identifier_type = self.request.POST.get('identifier_type', None)
         identifier = self.request.POST.get('identifier', None)
 
@@ -342,9 +325,6 @@ class AddPlaceView(AddRelatedRecordView):
 
     def post(self, *args, **kwargs):
         the_parent = self.get_parent()
-
-        if not self.has_edit_permission(self.request.user, the_parent):
-            return HttpResponseForbidden()
 
         position = self.request.POST.get('position', '')
         if len(position) < 1:
@@ -368,9 +348,6 @@ class AddDigitalObjectView(AddRelatedRecordView):
 
     def post(self, *args, **kwargs):
         the_parent = self.get_parent()
-
-        if not self.has_edit_permission(self.request.user, the_parent):
-            return HttpResponseForbidden()
 
         form = DigitalObjectForm(self.request.POST, self.request.FILES)
         if not form.is_valid():
