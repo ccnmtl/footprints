@@ -47,7 +47,6 @@ body {
 
 #wrap {
 	position: relative;
-	min-height: 100%;
 	margin-bottom: -45px;
 }
 
@@ -139,6 +138,7 @@ width: 100%;
 	font-weight: 600;
 	font-size: .95em;
 	letter-spacing: 1px;
+	outline: none;
 }
 
 .navbar-nav>li>a:hover {
@@ -228,12 +228,27 @@ background-color: transparent;
 }
 
 .footer .nav li>a {
-	color: #c8c3b7;
+	color: white !important;
+	text-transform: none !important;
+	font-weight: inherit;
 }
 
 .footer .nav li>a:hover {
 	color: #edebe6;
 	background-color: transparent;
+}
+
+.footer .footer-branding {
+    color: white;
+}
+
+.footer .footer-branding a {
+    color: #d3c1a2;    
+}
+
+.footer .footer-branding a:hover {
+    color: #edebe6;
+    text-decoration: none;
 }
 
 
@@ -563,6 +578,7 @@ img.footicon {
     text-decoration: none;
     border-bottom: 0;
     color: #333;
+    cursor: text;
 }
 
 .object-detail .editable,

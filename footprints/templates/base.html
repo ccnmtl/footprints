@@ -67,8 +67,11 @@
             <!--/.navbar-header -->
             <div class="collapse navbar-collapse" id="navbar-collapse-pl">
                 <ul class="nav navbar-nav navbar-right navbar-nav-pl">
-                    {% block usernav %}
-                     <li><a href="/footprint/create/">Create</a></li>
+                        {% block usernav %}
+                            <li><a href="/about/">About</a></li>
+                            {% if not request.user.is_anonymous %}
+                                <li><a href="/footprint/create/">Create</a></li>
+                            {% endif %}
                             <li><a href="/browse/footprints/">Browse</a></li>
                             <li><a href="/search/">Search</a></li>
                         {% if request.user.is_anonymous %}
@@ -77,21 +80,15 @@
                             <li class="logged-in-greeting">
                                 <a href="/accounts/logout/?next=/"><span title="Log Out">Log Out</span></a>
                             </li>
-
                             {% if user.has_usable_password %}
                                 <li><a href="/accounts/password_change/">Change Password</a></li>
                             {% endif %}
-
-                           
                         {% endif %}
                         
                     {% endblock %}
                  </ul>
             </div>
             <!--/.nav-collapse -->
-              
- 
-    
     </nav><!--/.navbar-pl -->
 </div>    
     {% endblock %}
@@ -198,15 +195,24 @@
     {% block footer %}
     <div class="container foot">
     <footer class="footer">
-            <div class="row">
-                <div class="col-md-12">
-                    <ul class="nav navbar-nav">
-                        <li><a href="/about/">About</a></li>
-                        <li><a href="/credits/">Credits</a></li>
-                        <li><a href="/contact/">Contact</a></li>
-                        <li><a href="/help/">Help</a></li>
-                    </ul>                    
-                </div>           
+        <div class="row">
+            <div class="col-md-5">
+                <ul class="nav navbar-nav">
+                    <li><a href="/about/">About</a></li>
+                    <li><a href="/credits/">Credits</a></li>
+                    <li><a href="/contact/">Contact</a></li>
+                    <li><a href="/help/">Help</a></li>
+                </ul>                    
+            </div>
+            <div class="col-md-7">
+                <div class="pull-right footer-branding">
+                Footprints was developed through a collaboration of researchers from the
+                <a href="http://www.jtsa.edu/">Jewish Theological Seminary</a>, 
+                <a href="http://ccnmtl.columbia.edu">Columbia University</a>, 
+                <a href="http://http://www.pitt.edu/">University of Pittsburgh</a> and
+                <a href="http://www.stonybrook.edu/">Stony Brook University</a>,
+                as well as other partner institutions.</div>
+            </div>
         </div>
     </footer>
     </div>
