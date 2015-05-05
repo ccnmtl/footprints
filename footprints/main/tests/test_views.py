@@ -12,6 +12,7 @@ from footprints.main.tests.factories import (
     ExtendedDateFormatFactory)
 from footprints.main.views import (
     CreateFootprintView, AddActorView)
+from footprints.main.viewsets import ImprintViewSet, BookCopyViewSet
 
 
 class BasicTest(TestCase):
@@ -642,3 +643,40 @@ class AddDigitalObjectViewTest(TestCase):
         footprint = Footprint.objects.get(id=self.footprint.id)  # refresh
         self.assertTrue(the_json['success'])
         self.assertEquals(footprint.digital_object.count(), 1)
+
+
+class ViewsetsTest(TestCase):
+
+    def test_imprint_viewset(self):
+        viewset = ImprintViewSet()
+        imprint1 = ImprintFactory()
+        imprint2 = ImprintFactory()
+
+        viewset.request = RequestFactory().get('/', {})
+        qs = viewset.get_queryset()
+        self.assertEquals(qs.count(), 2)
+        self.assertEquals(qs[0], imprint1)
+        self.assertEquals(qs[1], imprint2)
+
+        data = {'work': imprint1.work.id}
+        viewset.request = RequestFactory().get('/', data)
+        qs = viewset.get_queryset()
+        self.assertEquals(qs.count(), 1)
+        self.assertEquals(qs.first(), imprint1)
+
+    def test_bookcopy_viewset(self):
+        viewset = BookCopyViewSet()
+        book1 = BookCopyFactory()
+        book2 = BookCopyFactory()
+
+        viewset.request = RequestFactory().get('/', {})
+        qs = viewset.get_queryset()
+        self.assertEquals(qs.count(), 2)
+        self.assertEquals(qs[0], book1)
+        self.assertEquals(qs[1], book2)
+
+        data = {'imprint': book1.imprint.id}
+        viewset.request = RequestFactory().get('/', data)
+        qs = viewset.get_queryset()
+        self.assertEquals(qs.count(), 1)
+        self.assertEquals(qs.first(), book1)
