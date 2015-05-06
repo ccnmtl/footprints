@@ -806,29 +806,16 @@ ul.additional-questions .editable-container {
     margin-top: 20px;
 }
 
-.object-browse table th.title {
-    width: 16%;
-}
-
-.object-browse table th.footprint-date {
-    width: 16%;
-}
-
-.object-browse table th.evidence-type {
-    width: 16%;
-}
-
-.object-browse table th.evidence-location {
-    width: 16%;
-}
-
-.object-browse table th.owners {
-    width: 16%;
-}
-
+.object-browse table th.evidence-location,
+.object-browse table th.owners,
 .object-browse table th.imprint-date {
     width: 16%;
 }
+
+.object-browse table td.percent-complete-cell {
+    text-align: center;
+}
+
 
 .object-browse .page-count {
     font-size: 16px;

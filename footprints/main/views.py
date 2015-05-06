@@ -104,6 +104,10 @@ class FootprintListView(ListView):
         'elocation': {
             'label': 'Evidence Location',
             'q': ['provenance']
+        },
+        'pct': {
+            'label': 'Complete',
+            'q': ['-percent_complete']
         }
     }
     paginate_by = 20

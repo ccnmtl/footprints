@@ -532,6 +532,8 @@ class Footprint(models.Model):
 
     narrative = models.TextField(null=True, blank=True)
 
+    percent_complete = models.IntegerField(default=0)
+
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
@@ -545,25 +547,29 @@ class Footprint(models.Model):
     def __unicode__(self):
         return self.provenance
 
-    def percent_complete(self):
-        required = 11.0  # not including call_number & collection
-        completed = 4  # book copy, title, medium & provenance are required
+    def calculate_percent_complete(self):
+        try:
+            required = 11.0  # not including call_number & collection
+            completed = 4  # book copy, title, medium & provenance are required
 
-        if self.language is not None:
-            completed += 1
-        if self.call_number is not None:
-            completed += 1
-        if self.place is not None:
-            completed += 1
-        if self.associated_date is not None:
-            completed += 1
-        if self.digital_object.count() > 0:
-            completed += 1
-        if self.actor.count() > 0:
-            completed += 1
-        if self.notes is not None and len(self.notes) > 0:
-            completed += 1
-        return int(completed/required * 100)
+            if self.language.count() > 0:
+                completed += 1
+            if self.call_number is not None:
+                completed += 1
+            if self.place is not None:
+                completed += 1
+            if self.associated_date is not None:
+                completed += 1
+            if self.digital_object.count() > 0:
+                completed += 1
+            if self.actor.count() > 0:
+                completed += 1
+            if self.notes is not None and len(self.notes) > 0:
+                completed += 1
+            return int(completed/required * 100)
+        except ValueError:
+            # factoryboy construction may throw ValueErrors
+            return 0
 
     def display_title(self):
         # return written work title OR the footprint title ?
@@ -584,3 +590,7 @@ class Footprint(models.Model):
         template = loader.get_template('main/footprint_description.html')
         ctx = Context({'footprint': self})
         return template.render(ctx)
+
+    def save(self, *args, **kwargs):
+        self.percent_complete = self.calculate_percent_complete()
+        super(Footprint, self).save(*args, **kwargs)
