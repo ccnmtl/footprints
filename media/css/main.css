@@ -456,6 +456,10 @@ img.footicon {
 	padding-top: 1em;
 }
 
+.footprint.object-detail {
+    min-height: 700px;
+}
+
 .object-detail .breadcrumb {
 	margin-bottom: 10px;
 	background: transparent;
