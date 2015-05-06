@@ -133,12 +133,12 @@
 {% endblock %}
 
 {% block content %}
-    <div class="object-detail">
+    <div class="footprint object-detail">
         {% csrf_token %}
         <div class="row">
             <div class="col-md-8">
-                <div class="footprint-detail"></div>
-                <div class="book-detail"></div>
+                <div class="footprint-detail" style="display: none"></div>
+                <div class="book-detail" style="display: none"></div>
             </div>
             <div class="col-md-4">
                 {% if footprint.is_bare and editable %}
