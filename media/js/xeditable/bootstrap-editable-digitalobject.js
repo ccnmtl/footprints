@@ -66,11 +66,12 @@
             }, 500);
         },
         uploadError: function(up, err) {
+	    var $elt;
             if (err.code === -600) {
-                var $elt =  this.$tpl.find('.filesize.alert')[0];
+                $elt =  this.$tpl.find('.filesize.alert')[0];
                 jQuery($elt).fadeIn();
             } else {
-                var $elt =  this.$tpl.find('.general.alert')[0];
+                $elt =  this.$tpl.find('.general.alert')[0];
                 jQuery($elt).fadeIn();                
             }
         },
