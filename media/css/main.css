@@ -664,7 +664,6 @@ img.footicon {
     overflow: hidden;
 }
 
-
 .connect-record-prompt {
 	width: 350px!important;
 	min-width: 250px;
@@ -791,6 +790,29 @@ ul.additional-questions .editable-container {
     color: #2e5367;
 }
 
+.object-browse .btn-sort-direction {
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;    
+}
+
+.object-browse .btn-sort-direction.asc {
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.object-browse .btn-sort-direction.desc {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    margin-left: -3px;
+}
+
+.object-browse .btn-sort-direction.active {
+  color: #333;
+  background-color: #e6e6e6;
+  border-color: #adadad;
+}
+
 .object-browse .pagination>.active>a,
 .object-browse .pagination>.active>span,
 .object-browse .pagination>.active>a:hover,
@@ -804,16 +826,70 @@ ul.additional-questions .editable-container {
 
 .object-browse table {
     margin-top: 20px;
+    width: 99.9%;
 }
 
-.object-browse table th.evidence-location,
-.object-browse table th.owners,
-.object-browse table th.imprint-date {
+.object-browse table .subtext {
+    font-size: 13px;
+}
+
+.object-browse th {
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+}
+
+.object-browse th.sortable {
+    background-image: url(../img/bg.gif);
+    background-repeat: no-repeat;
+    background-position: center right;
+    cursor: pointer;
+}
+
+.object-browse th.selected {
+    background-color: #efeeee;
+}
+
+.object-browse th.sortable.asc {
+    background-image: url(../img/asc.gif);
+}
+
+.object-browse th.sortable.desc {
+    background-image: url(../img/desc.gif);
+}
+
+.object-browse th.ftitle,
+.object-browse th.wtitle {
+    width: 20%;
+}
+
+.object-browse th.elocation,
+.object-browse th.owners {
     width: 16%;
 }
 
-.object-browse table td.percent-complete-cell {
+.object-browse th.added,
+.object-browse th.complete {
+    width: 7%;
+}
+
+.object-browse td.added {
     text-align: center;
+}
+
+.object-browse table td.complete {
+    text-align: center;
+    position: relative;
+}
+
+.object-browse table td.complete .progress-circle strong {
+    position: absolute;
+    top: 13px;
+    left: 2px;
+    width: 100%;
+    text-align: center;
+    line-height: 40px;
+    font-size: 13px;
+    color: #333;
 }
 
 
