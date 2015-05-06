@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import password_change, password_change_done, \
     password_reset_done, password_reset_confirm, password_reset_complete
 from django.views.generic import TemplateView
@@ -99,12 +98,13 @@ urlpatterns = patterns(
         WrittenWorkDetailView.as_view(), name='writtenwork-detail-view'),
 
     url(r'^browse/footprints/$', FootprintListView.as_view(),
+        name='browse-footprint-list-default'),
+    url(r'^browse/footprints/(?P<sort_by>\w+)/$', FootprintListView.as_view(),
         name='browse-footprint-list'),
 
-
     url(r'^search/',
-        login_required(SearchView(template="search/search.html",
-                                  form_class=FootprintSearchForm)),
+        SearchView(template="search/search.html",
+                   form_class=FootprintSearchForm),
         name='search'),
 
     url(r'^api-auth/', include('rest_framework.urls',

@@ -54,12 +54,8 @@ class JSONResponseMixin(object):
 
 class EditableMixin(object):
 
-    def has_edit_permission(self, user, the_object):
-        if user.is_staff:
-            return True
-
-        return (hasattr(the_object, 'created_by') and
-                the_object.created_by == user)
+    def has_edit_permission(self, user):
+        return user.is_authenticated()
 
 
 class LoggedInMixin(object):

@@ -12,6 +12,7 @@ from footprints.main.tests.factories import (
     ExtendedDateFormatFactory)
 from footprints.main.views import (
     CreateFootprintView, AddActorView)
+from footprints.main.viewsets import ImprintViewSet, BookCopyViewSet
 
 
 class BasicTest(TestCase):
@@ -143,11 +144,11 @@ class DetailViewTest(TestCase):
                                         kwargs={'pk': FootprintFactory().id})
 
     def test_get_logged_out(self):
-        self.assertEquals(self.client.get(self.person_detail).status_code, 302)
-        self.assertEquals(self.client.get(self.place_detail).status_code, 302)
-        self.assertEquals(self.client.get(self.work_detail).status_code, 302)
+        self.assertEquals(self.client.get(self.person_detail).status_code, 200)
+        self.assertEquals(self.client.get(self.place_detail).status_code, 200)
+        self.assertEquals(self.client.get(self.work_detail).status_code, 200)
         self.assertEquals(self.client.get(self.footprint_detail).status_code,
-                          302)
+                          200)
 
     def test_get_logged_in(self):
         self.client.login(username=self.user.username, password="test")
@@ -159,7 +160,46 @@ class DetailViewTest(TestCase):
                           200)
 
 
-class ListViewTests(TestCase):
+class FootprintListViewTest(TestCase):
+    def setUp(self):
+        self.user = UserFactory()
+        self.footprint1 = FootprintFactory(title='Alpha', provenance='one')
+        self.footprint2 = FootprintFactory(title='Beta', provenance='two')
+        self.footprint3 = FootprintFactory(title='Delta', provenance='three')
+        self.footprint4 = FootprintFactory(title='Epsilon', provenance='four')
+
+    def test_default_sort(self):
+        url = reverse('browse-footprint-list-default')
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+
+        ctx = response.context_data
+        self.assertTrue('paginator' in ctx)
+        self.assertTrue('sort_options' in ctx)
+        self.assertEquals(ctx['sort_selected'], 'Footprint')
+
+        self.assertEquals(ctx['object_list'][0], self.footprint1)
+        self.assertEquals(ctx['object_list'][1], self.footprint2)
+        self.assertEquals(ctx['object_list'][2], self.footprint3)
+        self.assertEquals(ctx['object_list'][3], self.footprint4)
+
+    def test_alternate_sort(self):
+        url = reverse('browse-footprint-list', args=['elocation'])
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+
+        ctx = response.context_data
+        self.assertTrue('paginator' in ctx)
+        self.assertTrue('sort_options' in ctx)
+        self.assertEquals(ctx['sort_selected'], 'Evidence Location')
+
+        self.assertEquals(ctx['object_list'][0], self.footprint4)
+        self.assertEquals(ctx['object_list'][1], self.footprint1)
+        self.assertEquals(ctx['object_list'][2], self.footprint3)
+        self.assertEquals(ctx['object_list'][3], self.footprint2)
+
+
+class ApiViewTests(TestCase):
 
     def setUp(self):
         self.user = UserFactory()
@@ -227,12 +267,6 @@ class ConnectFootprintViewTest(TestCase):
     def test_post_expected_errors(self):
         # not logged in
         self.assertEquals(self.client.post(self.url).status_code, 302)
-
-        self.client.login(username=self.user.username, password="test")
-
-        # no permissions
-        response = self.client.post(self.url, {'book': self.book.id})
-        self.assertEquals(response.status_code, 403)
 
     def test_post_update_book(self):
         self.client.login(username=self.staff.username, password="test")
@@ -338,18 +372,9 @@ class AddActorViewTest(TestCase):
         # not logged in
         self.assertEquals(self.client.post(self.add_url).status_code, 302)
 
-        self.client.login(username=self.user.username, password="test")
-
         # no ajax
+        self.client.login(username=self.user.username, password="test")
         self.assertEquals(self.client.post(self.add_url).status_code, 405)
-
-        # no permissions
-        response = self.client.post(self.add_url,
-                                    {'parent_id': self.footprint.id,
-                                     'parent_model': 'footprint',
-                                     'role': self.role.id},
-                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 403)
 
     def test_post_invalid_role(self):
         # invalid role id
@@ -397,17 +422,9 @@ class RemoveRelatedViewTest(TestCase):
         # not logged in
         self.assertEquals(self.client.post(self.remove_url).status_code, 302)
 
-        self.client.login(username=self.user.username, password="test")
-
         # no ajax
+        self.client.login(username=self.user.username, password="test")
         self.assertEquals(self.client.post(self.remove_url).status_code, 405)
-
-        # no permissions
-        response = self.client.post(self.remove_url, {
-            'parent_id': self.footprint.id,
-            'parent_model': 'footprint'},
-            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 403)
 
     def test_post_missing_params(self):
         self.client.login(username=self.staff.username, password="test")
@@ -498,17 +515,9 @@ class AddDateViewTest(TestCase):
         # not logged in
         self.assertEquals(self.client.post(self.url).status_code, 302)
 
-        self.client.login(username=self.user.username, password="test")
-
         # no ajax
+        self.client.login(username=self.user.username, password="test")
         self.assertEquals(self.client.post(self.url).status_code, 405)
-
-        # no permissions
-        response = self.client.post(self.url,
-                                    {'parent_id': self.footprint.id,
-                                     'parent_model': 'footprint'},
-                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 403)
 
     def test_post_no_data(self):
         self.client.login(username=self.staff.username, password="test")
@@ -549,17 +558,9 @@ class AddPlaceViewTest(TestCase):
         # not logged in
         self.assertEquals(self.client.post(self.url).status_code, 302)
 
-        self.client.login(username=self.user.username, password="test")
-
         # no ajax
+        self.client.login(username=self.user.username, password="test")
         self.assertEquals(self.client.post(self.url).status_code, 405)
-
-        # no permissions
-        response = self.client.post(self.url,
-                                    {'parent_id': self.footprint.id,
-                                     'parent_model': 'footprint'},
-                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 403)
 
     def test_post_no_data(self):
         self.client.login(username=self.staff.username, password="test")
@@ -605,17 +606,9 @@ class AddIdentifierViewTest(TestCase):
         # not logged in
         self.assertEquals(self.client.post(self.url).status_code, 302)
 
-        self.client.login(username=self.user.username, password="test")
-
         # no ajax
+        self.client.login(username=self.user.username, password="test")
         self.assertEquals(self.client.post(self.url).status_code, 405)
-
-        # no permissions
-        response = self.client.post(self.url,
-                                    {'parent_id': self.imprint.id,
-                                     'parent_model': 'imprint'},
-                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 403)
 
     def test_post_no_data(self):
         self.client.login(username=self.staff.username, password="test")
@@ -658,17 +651,9 @@ class AddDigitalObjectViewTest(TestCase):
         # not logged in
         self.assertEquals(self.client.post(self.url).status_code, 302)
 
-        self.client.login(username=self.user.username, password="test")
-
         # no ajax
+        self.client.login(username=self.user.username, password="test")
         self.assertEquals(self.client.post(self.url).status_code, 405)
-
-        # no permissions
-        response = self.client.post(self.url,
-                                    {'parent_id': self.footprint.id,
-                                     'parent_model': 'footprint'},
-                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 403)
 
     def test_post_no_data(self):
         self.client.login(username=self.staff.username, password="test")
@@ -697,3 +682,40 @@ class AddDigitalObjectViewTest(TestCase):
         footprint = Footprint.objects.get(id=self.footprint.id)  # refresh
         self.assertTrue(the_json['success'])
         self.assertEquals(footprint.digital_object.count(), 1)
+
+
+class ViewsetsTest(TestCase):
+
+    def test_imprint_viewset(self):
+        viewset = ImprintViewSet()
+        imprint1 = ImprintFactory(title='Alpha')
+        imprint2 = ImprintFactory(title='Beta')
+
+        viewset.request = RequestFactory().get('/', {})
+        qs = viewset.get_queryset()
+        self.assertEquals(qs.count(), 2)
+        self.assertEquals(qs[0], imprint1)
+        self.assertEquals(qs[1], imprint2)
+
+        data = {'work': imprint1.work.id}
+        viewset.request = RequestFactory().get('/', data)
+        qs = viewset.get_queryset()
+        self.assertEquals(qs.count(), 1)
+        self.assertEquals(qs.first(), imprint1)
+
+    def test_bookcopy_viewset(self):
+        viewset = BookCopyViewSet()
+        book1 = BookCopyFactory()
+        book2 = BookCopyFactory()
+
+        viewset.request = RequestFactory().get('/', {})
+        qs = viewset.get_queryset()
+        self.assertEquals(qs.count(), 2)
+        self.assertEquals(qs[0], book1)
+        self.assertEquals(qs[1], book2)
+
+        data = {'imprint': book1.imprint.id}
+        viewset.request = RequestFactory().get('/', data)
+        qs = viewset.get_queryset()
+        self.assertEquals(qs.count(), 1)
+        self.assertEquals(qs.first(), book1)

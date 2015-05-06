@@ -203,7 +203,7 @@ class BasicModelTest(TestCase):
         self.assertFalse(footprint.is_bare())
 
         footprint.digital_object.add(DigitalObjectFactory())
-        self.assertEquals(footprint.percent_complete(), 100)
+        self.assertEquals(footprint.calculate_percent_complete(), 100)
 
         self.assertEquals(footprint.display_title(), "The Odyssey")
 
