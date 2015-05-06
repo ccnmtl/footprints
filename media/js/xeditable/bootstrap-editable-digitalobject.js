@@ -1,18 +1,6 @@
 (function ($) {
     "use strict";
     
-    plupload.addFileFilter('max_file_size', function(maxSize, file, cb) {
-        var undef;
-       
-        // Invalid file size
-        if (file.size !== undef && maxSize && file.size > maxSize) {
-            alert("too big");
-            cb(false);
-        } else {
-            cb(true);
-        }
-      });
-    
     var DigitalObject = function (options) {
         this.init('digitalobject', options, DigitalObject.defaults);
     };
@@ -37,7 +25,7 @@
                     mime_types: [
                         {title: "Image files", extensions: "jpg,jpeg,png,gif,bmp"}
                     ],
-                    max_file_size: "3000000"
+                    max_file_size: "7500000"
                 }
             });
 
@@ -78,10 +66,18 @@
             }, 500);
         },
         uploadError: function(up, err) {
-            alert("\nError #" + err.code + ": " + err.message);
+            if (err.code === -600) {
+                var $elt =  this.$tpl.find('.filesize.alert')[0];
+                jQuery($elt).fadeIn();
+            } else {
+                var $elt =  this.$tpl.find('.general.alert')[0];
+                jQuery($elt).fadeIn();                
+            }
         },
         uploadProgress: function(up, file) {
-            document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
+            var fileId = document.getElementById(file.id);
+            var elt = jQuery(fileId).getElementsByTagName('b')[0];
+            elt.innerHTML = '<span>' + file.percent + "%</span>";
         },
         validate: function(values) {
             if (values.count < 1) {
@@ -122,8 +118,7 @@
                 return self.filesAdded(up, files);
             });
             this.uploader.bind('UploadProgress', this.uploadProgress);
-
-            this.uploader.bind('Error', this.uploadError);
+            this.uploader.bind('Error', this.uploadError, this);
         },
 
         /**
