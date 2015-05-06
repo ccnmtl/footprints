@@ -97,34 +97,41 @@ class FootprintListView(ListView):
             'label': 'Footprint',
             'q': ['title']
         },
-        'recent': {
-            'label': 'Recently Added',
+        'added': {
+            'label': 'Added',
             'q': ['-created_at']
         },
         'elocation': {
             'label': 'Evidence Location',
             'q': ['provenance']
         },
-        'pct': {
+        'complete': {
             'label': 'Complete',
-            'q': ['-percent_complete']
+            'q': ['percent_complete']
         }
     }
-    paginate_by = 20
+    paginate_by = 15
 
     def get_context_data(self, **kwargs):
         context = super(FootprintListView, self).get_context_data(**kwargs)
         context['sort_options'] = self.sort_options
 
         sort_by = self.kwargs.get('sort_by', 'ftitle')
-        context['sort_selected'] = self.sort_options[sort_by]['label']
+        context['selected_sort'] = sort_by
+        context['selected_sort_label'] = self.sort_options[sort_by]['label']
+        context['direction'] = self.request.GET.get('direction', 'asc')
         return context
 
     def get_queryset(self):
-        qs = super(FootprintListView, self).get_queryset()
-
         sort_by = self.kwargs.get('sort_by', 'ftitle')
-        return qs.order_by(*self.sort_options[sort_by]['q'])
+        direction = self.request.GET.get('direction', 'asc')
+
+        qs = super(FootprintListView, self).get_queryset()
+        qs = qs.order_by(*self.sort_options[sort_by]['q'])
+        if direction == 'asc':
+            return qs
+        else:
+            return qs.reverse()
 
 
 class PlaceDetailView(EditableMixin, DetailView):

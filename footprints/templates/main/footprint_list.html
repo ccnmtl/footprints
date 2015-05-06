@@ -10,18 +10,40 @@
 
     <script type="text/javascript">    
         jQuery(document).ready(function() {
-            jQuery('.percent-complete').each(function() {
+            jQuery('.progress-circle').each(function() {
                 var pct = parseInt(jQuery(this).data('value'), 10) / 100;
                 jQuery(this).circleProgress({
                     animation: false,
                     value: pct,
                     size: 50,
                     startAngle: -Math.PI/2,
-                    label: jQuery(this).data('value') + '%',
+                    emptyFill: '#D7D6D6',
                     fill: {
                         color: '#97421b'  //'#2e5367'
                     }
                 });
+            });
+            
+            var selected_direction = "{{direction}}";
+            var selected_sort = "{{selected_sort}}";
+            var base_url = "{% url 'browse-footprint-list-default' %}";
+
+            jQuery('th.sortable').each(function() {
+                var sort_by = jQuery(this).data('sort-by');
+                if (sort_by === selected_sort) {
+                    jQuery(this).addClass('selected').addClass(selected_direction);
+                }
+            });
+
+            jQuery('th.sortable').click(function() {
+                var direction = 'asc';
+                var sort_by = jQuery(this).data('sort-by');
+                if (sort_by === selected_sort) {
+                    direction = selected_direction === 'asc' ? 'desc' : 'asc';
+                }
+                
+                var url = base_url + sort_by + '/?direction=' + direction;
+                window.location = url;
             });
         });
     </script>
@@ -35,25 +57,36 @@
 
 <div class="object-browse">
     <div class="row tools">
-        <div class="col-sm-6">
+        <!-- div class="col-sm-6">
             <div class="btn-group">
               <button type="button" class="btn btn-default dropdown-toggle"
                 data-toggle="dropdown" aria-expanded="false">
-                Sort By {{sort_selected}} <span class="caret"></span>
+                Sort By {{selected_sort_label }} <span class="caret"></span>
               </button>
               <ul class="dropdown-menu" role="menu">
                 {% for key, value in sort_options.items %}
                     <li>
                         <a href="{% url 'browse-footprint-list' key %}">
                             {{value.label}}
-                            {% ifequal sort_selected value.label %}<span class="glyphicon glyphicon-ok" aria-hidden="true"></span> {% endifequal %} 
+                            {% ifequal selected_sort_label  value.label %}<span class="glyphicon glyphicon-ok" aria-hidden="true"></span> {% endifequal %} 
                         </a>
                     </li>
                 {% endfor %}
               </ul>
             </div>
-        </div>
-        <div class="col-sm-6">
+              
+            &nbsp;&nbsp;
+            <a href="{% url 'browse-footprint-list' selected_sort %}?direction=asc"
+                    class="btn btn-sort-direction asc {% ifequal direction 'asc' %}active{% endifequal %}">
+                <span class="glyphicon glyphicon-sort-by-attributes" aria-hidden="true"></span>
+            </a>
+            
+            <a href="{% url 'browse-footprint-list' selected_sort %}?direction=desc"
+                    class="btn btn-sort-direction desc {% ifequal direction 'desc' %}active{% endifequal %}">
+                <span class="glyphicon glyphicon-sort-by-attributes-alt" aria-hidden="true"></span>
+            </a>
+        </div-->
+        <div class="col-sm-12">
             {% if paginator.num_pages > 1 %}
                 <ul class="pagination pagination-sm pull-right">
                     {% for a_page in paginator.page_range %}
@@ -76,24 +109,30 @@
     <div class="table-responsive">
         <table class="table table-striped table-footprints">
             <tr>
-                <th class="footprint-title">Footprint</th>
-                <th class="evidence-location">Evidence Location</th>
+                <th data-sort-by="ftitle" class="sortable ftitle">
+                    Footprint
+                </th>
+                <th data-sort-by="elocation" class="sortable elocation">
+                    Evidence Location
+                </th>
                 <th class="owners">Owners</th>
-                <th class="work-title">Literary Work</th>
-                <th class="imprint-date">Imprint</th>
-                <th class="added">Added</th>
-                <th class="percent-complete-header">Complete</th>
+                <th data-sort-by="wtitle" class="sortable wtitle">Literary Work</th>
+                <th data-sort-by="added" class="sortable added">Added</th>
+                <th data-sort-by="complete" class="sortable complete">Complete</th>
             </tr>
             {% for footprint in object_list %}
                 <tr>
                     <td>
-                        <a href="/footprint/{{footprint.id}}">
-                        <div>{{footprint.title}}</div>
+                        <div>
+                            <a href="/footprint/{{footprint.id}}">
+                                {{footprint.title}}
+                            </a>
+                        </div>
                         {% if footprint.associated_date %}
-                            <div>{{footprint.associated_date}}</div>
+                            <div class="subtext">{{footprint.associated_date}}</div>
                         {% endif %}
                         {% if footprint.place %}
-                            <div>{{footprint.place}}</div>
+                            <div class="subtext">{{footprint.place}}</div>
                         {% endif %}</a>
                     </td>
                     <td>{{footprint.provenance}}</td>
@@ -106,29 +145,33 @@
                     <td>
                         <a href="/writtenwork/{{footprint.book_copy.imprint.work.id}}">
                             {{footprint.book_copy.imprint.work.title|default:"n/a"}}
-                        </a><br />                     
-                    </td>
-                    <td>
+                        </a><br />
+                        {% if footprint.book_copy.imprint.title|length > 0 and footprint.book_copy.imprint.work.title != footprint.book_copy.imprint.title %}
+                            <div class="subtext">as {{footprint.book_copy.imprint.title}}</div>
+                        {% endif %} 
                         {% if footprint.book_copy.imprint.printers.count > 0 %}
-                            <div>
+                            <div class="subtext">
                                 {% for printer in footprint.book_copy.imprint.printers %}
                                     {{printer.display_name}}
                                     {% if not forloop.last %},{% endif %}
                                 {% endfor %}
                             </div>
                         {% endif %}
-                        {% if footprint.book_copy.imprint.date_of_publication %}
-                            <div>{{footprint.book_copy.imprint.date_of_publication}}</div>
-                        {% endif %}
-                        {% if footprint.book_copy.imprint.place %}
-                            <div>{{footprint.book_copy.imprint.place}}</div>
-                        {% endif %}
+                        <div class="subtext">
+                            {% if footprint.book_copy.imprint.date_of_publication %}
+                                {{footprint.book_copy.imprint.date_of_publication}}{% if footprint.book_copy.imprint.place %}, {% endif %}
+                            {% endif %}
+                            {% if footprint.book_copy.imprint.place %}
+                                {{footprint.book_copy.imprint.place}}
+                            {% endif %}
+                        </div>
                     </td>
-                    <td>
+                    <td class="added">
                         {{footprint.created_at|date:"m/d/y"}}
                     </td>
-                    <td class="percent-complete-cell">
-                        <div class="percent-complete" data-value="{{footprint.percent_complete}}">
+                    <td class="complete">
+                        <div class="progress-circle" data-value="{{footprint.percent_complete}}">
+                            <strong>{{footprint.percent_complete}}<i>%</i></strong>
                         </div> 
                     </td>
                 </tr>
