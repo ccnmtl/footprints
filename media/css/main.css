@@ -778,8 +778,28 @@ ul.additional-questions .editable-container {
     padding: 0;
 }
 
+.object-browse .tools {
+    margin: 20px 0;
+}
+
 .object-browse .pagination {
     margin: -4px 0 0 30px;
+}
+
+.object-browse .pagination>li>a,
+.object-browse .pagination>li>span {
+    color: #2e5367;
+}
+
+.object-browse .pagination>.active>a,
+.object-browse .pagination>.active>span,
+.object-browse .pagination>.active>a:hover,
+.object-browse .pagination>.active>span:hover,
+.object-browse .pagination>.active>a:focus,
+.object-browse .pagination>.active>span:focus {
+  color: #fff;
+  background-color: #2e5367;
+  border-color: #2e5367;
 }
 
 .object-browse table {
