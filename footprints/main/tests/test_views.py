@@ -160,7 +160,46 @@ class DetailViewTest(TestCase):
                           200)
 
 
-class ListViewTests(TestCase):
+class FootprintListViewTest(TestCase):
+    def setUp(self):
+        self.user = UserFactory()
+        self.footprint1 = FootprintFactory(title='Alpha', provenance='one')
+        self.footprint2 = FootprintFactory(title='Beta', provenance='two')
+        self.footprint3 = FootprintFactory(title='Delta', provenance='three')
+        self.footprint4 = FootprintFactory(title='Epsilon', provenance='four')
+
+    def test_default_sort(self):
+        url = reverse('browse-footprint-list-default')
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+
+        ctx = response.context_data
+        self.assertTrue('paginator' in ctx)
+        self.assertTrue('sort_options' in ctx)
+        self.assertEquals(ctx['sort_selected'], 'Footprint')
+
+        self.assertEquals(ctx['object_list'][0], self.footprint1)
+        self.assertEquals(ctx['object_list'][1], self.footprint2)
+        self.assertEquals(ctx['object_list'][2], self.footprint3)
+        self.assertEquals(ctx['object_list'][3], self.footprint4)
+
+    def test_alternate_sort(self):
+        url = reverse('browse-footprint-list', args=['elocation'])
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+
+        ctx = response.context_data
+        self.assertTrue('paginator' in ctx)
+        self.assertTrue('sort_options' in ctx)
+        self.assertEquals(ctx['sort_selected'], 'Evidence Location')
+
+        self.assertEquals(ctx['object_list'][0], self.footprint4)
+        self.assertEquals(ctx['object_list'][1], self.footprint1)
+        self.assertEquals(ctx['object_list'][2], self.footprint3)
+        self.assertEquals(ctx['object_list'][3], self.footprint2)
+
+
+class ApiViewTests(TestCase):
 
     def setUp(self):
         self.user = UserFactory()
@@ -649,8 +688,8 @@ class ViewsetsTest(TestCase):
 
     def test_imprint_viewset(self):
         viewset = ImprintViewSet()
-        imprint1 = ImprintFactory()
-        imprint2 = ImprintFactory()
+        imprint1 = ImprintFactory(title='Alpha')
+        imprint2 = ImprintFactory(title='Beta')
 
         viewset.request = RequestFactory().get('/', {})
         qs = viewset.get_queryset()
