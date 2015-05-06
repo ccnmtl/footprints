@@ -688,8 +688,8 @@ class ViewsetsTest(TestCase):
 
     def test_imprint_viewset(self):
         viewset = ImprintViewSet()
-        imprint1 = ImprintFactory()
-        imprint2 = ImprintFactory()
+        imprint1 = ImprintFactory(title='Alpha')
+        imprint2 = ImprintFactory(title='Beta')
 
         viewset.request = RequestFactory().get('/', {})
         qs = viewset.get_queryset()
