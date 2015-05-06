@@ -15,7 +15,7 @@ node_modules/jshint/bin/jshint:
 	npm install jshint --prefix .
 
 test: ./ve/bin/python
-	$(MANAGE) jenkins --pep8-exclude=migrations --enable-coverage --coverage-rcfile=.coveragerc
+	$(MANAGE) jenkins --pep8-exclude=migrations --enable-coverage --coverage-rcfile=.coveragerc --coverage-html-report the_report
 
 flake8: ./ve/bin/python
 	$(FLAKE8) $(APP) --max-complexity=12
