@@ -150,9 +150,23 @@ class DigitalObject(models.Model):
         return self.name
 
 
+class StandardizedIdentificationType(models.Model):
+    name = models.CharField(max_length=256, unique=True)
+    level = models.CharField(max_length=25, choices=LEVEL_TYPES)
+
+    class Meta:
+        ordering = ['name']
+        verbose_name = 'Standardized Identification Type'
+
+    def __unicode__(self):
+        return self.name
+
+
 class StandardizedIdentification(models.Model):
     identifier = models.CharField(max_length=512)
     identifier_type = models.CharField(max_length=5, choices=IDENTIFIER_TYPES)
+    new_identifier_type = models.ForeignKey(StandardizedIdentificationType,
+                                            null=True, blank=True)
     permalink = models.URLField(null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
