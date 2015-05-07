@@ -176,12 +176,24 @@ class FootprintListViewTest(TestCase):
         ctx = response.context_data
         self.assertTrue('paginator' in ctx)
         self.assertTrue('sort_options' in ctx)
-        self.assertEquals(ctx['sort_selected'], 'Footprint')
+        self.assertEquals(ctx['selected_sort'], 'ftitle')
+        self.assertEquals(ctx['selected_sort_label'], 'Footprint')
 
         self.assertEquals(ctx['object_list'][0], self.footprint1)
         self.assertEquals(ctx['object_list'][1], self.footprint2)
         self.assertEquals(ctx['object_list'][2], self.footprint3)
         self.assertEquals(ctx['object_list'][3], self.footprint4)
+
+        # reverse the sort
+        url += '?direction=desc'
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+
+        ctx = response.context_data
+        self.assertEquals(ctx['object_list'][0], self.footprint4)
+        self.assertEquals(ctx['object_list'][1], self.footprint3)
+        self.assertEquals(ctx['object_list'][2], self.footprint2)
+        self.assertEquals(ctx['object_list'][3], self.footprint1)
 
     def test_alternate_sort(self):
         url = reverse('browse-footprint-list', args=['elocation'])
@@ -191,12 +203,25 @@ class FootprintListViewTest(TestCase):
         ctx = response.context_data
         self.assertTrue('paginator' in ctx)
         self.assertTrue('sort_options' in ctx)
-        self.assertEquals(ctx['sort_selected'], 'Evidence Location')
+        self.assertEquals(ctx['selected_sort'], 'elocation')
+        self.assertEquals(ctx['selected_sort_label'], 'Evidence Location')
 
         self.assertEquals(ctx['object_list'][0], self.footprint4)
         self.assertEquals(ctx['object_list'][1], self.footprint1)
         self.assertEquals(ctx['object_list'][2], self.footprint3)
         self.assertEquals(ctx['object_list'][3], self.footprint2)
+
+        # reverse the sort
+        url += '?direction=desc'
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+
+        ctx = response.context_data
+
+        self.assertEquals(ctx['object_list'][0], self.footprint2)
+        self.assertEquals(ctx['object_list'][1], self.footprint3)
+        self.assertEquals(ctx['object_list'][2], self.footprint1)
+        self.assertEquals(ctx['object_list'][3], self.footprint4)
 
 
 class ApiViewTests(TestCase):

@@ -1,13 +1,18 @@
 <script type="text/template" id="xeditable-digitalobject-form">
-    <div class="editable-digital-object">
+    <div class="editable-digital-object">    
         <button type="button" class="btn btn-primary btn-sm editable-upload">
             <i class="glyphicon glyphicon-ok"></i>
         </button>
         <div class="form-group">
+            <div class="filesize alert alert-danger" role="alert" style="display: none">
+                The file size is too large. Please select a file that is less than 7 megabytes.
+            </div>
+            <div class="general alert alert-danger" role="alert" style="display: none">
+                An error occurred when attempting to upload your file. Please try again.
+            </div>        
             <label>Select Image File</label><br />
             <button class="browse btn btn-default form-control">Browse...</button> <ul class="filelist"></ul>
         </div>
-
         <div class="form-group">
             <label>Short Description</label><br />
             <input type="text" class="form-control" name="description" placeholder="Type in a short description"></input>

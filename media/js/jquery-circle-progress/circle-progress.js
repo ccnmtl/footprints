@@ -18,8 +18,6 @@ License: MIT
          * @type {number}
          */
         value: 0.0,
-        
-        label: '',
 
         /**
          * Size of the circle / canvas in pixels
@@ -252,9 +250,6 @@ License: MIT
             this.ctx.clearRect(0, 0, this.size, this.size);
             this.drawEmptyArc(v);
             this.drawArc(v);
-            this.ctx.textAlign = 'center';
-            this.ctx.font = '12px Arial';
-            this.ctx.fillText(this.label, 27, 27);
         },
 
         /**

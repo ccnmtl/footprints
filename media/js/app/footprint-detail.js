@@ -208,9 +208,10 @@
                 interval: false
             });
             
-            this.initializeMap();
-            
-            this.initializeTooltips();
+            jQuery(this.el).fadeIn(function() {
+                self.initializeMap();
+                self.initializeTooltips();
+            });
         },
         toggleEditDigitalObject: function(evt) {
             jQuery(this.el).find('.edit-digital-object').toggle();
@@ -232,6 +233,8 @@
             this.model.fetch();
         },
         render: function() {
+            var self = this;
+
             var markup = this.template(this.context());
             jQuery(this.el).html(markup);
             this.delegateEvents();
@@ -300,7 +303,10 @@
                 success: this.refresh
             });
 
-            this.initializeMap();
+            
+            jQuery(this.el).fadeIn(function() {
+                self.initializeMap();
+            });
         }
     });
     

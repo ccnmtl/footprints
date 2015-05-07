@@ -24,7 +24,8 @@
                 filters: {
                     mime_types: [
                         {title: "Image files", extensions: "jpg,jpeg,png,gif,bmp"}
-                    ]
+                    ],
+                    max_file_size: "7500000"
                 }
             });
 
@@ -37,6 +38,8 @@
                 this.uploader.removeFile(this.uploader.files[0]);
             }
 
+            this.$tpl.find('.alert').hide();
+            
             var html = '';
             plupload.each(files, function(file) {
                 html += '<li id="' + file.id + '">' + file.name + ' (' + plupload.formatSize(file.size) + ') <b></b></li>';
@@ -65,10 +68,19 @@
             }, 500);
         },
         uploadError: function(up, err) {
-            alert("\nError #" + err.code + ": " + err.message);
+            var $elt;
+            if (err.code === -600) {
+                $elt =  this.$tpl.find('.filesize.alert')[0];
+                jQuery($elt).fadeIn();
+            } else {
+                $elt =  this.$tpl.find('.general.alert')[0];
+                jQuery($elt).fadeIn();                
+            }
         },
         uploadProgress: function(up, file) {
-            document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
+            var fileId = document.getElementById(file.id);
+            var elt = fileId.getElementsByTagName('b')[0];
+            elt.innerHTML = '<span>' + file.percent + "%</span>";
         },
         validate: function(values) {
             if (values.count < 1) {
@@ -109,8 +121,7 @@
                 return self.filesAdded(up, files);
             });
             this.uploader.bind('UploadProgress', this.uploadProgress);
-
-            this.uploader.bind('Error', this.uploadError);
+            this.uploader.bind('Error', this.uploadError, this);
         },
 
         /**
