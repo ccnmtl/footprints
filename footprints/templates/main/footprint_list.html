@@ -146,7 +146,7 @@
                         <a href="/writtenwork/{{footprint.book_copy.imprint.work.id}}">
                             {{footprint.book_copy.imprint.work.title|default:"n/a"}}
                         </a><br />
-                        {% if footprint.book_copy.imprint.title|length > 0 and footprint.book_copy.imprint.work.title != footprint.book_copy.imprint.title %}
+                        {% if footprint.book_copy.imprint.title and footprint.book_copy.imprint.title|length > 0 and footprint.book_copy.imprint.work.title != footprint.book_copy.imprint.title %}
                             <div class="subtext">as {{footprint.book_copy.imprint.title}}</div>
                         {% endif %} 
                         {% if footprint.book_copy.imprint.printers.count > 0 %}
