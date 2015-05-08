@@ -295,15 +295,21 @@
                 onblur: 'ignore',
                 success: this.refresh
             });
-            jQuery(this.el).find('.editable-identifier').editable({
+            jQuery(this.el).find('.editable-imprint-identifier').editable({
                 namedParams: true,
-                tpl: jQuery('#xeditable-identifier-form').html(),
+                tpl: jQuery('#xeditable-imprint-identifier-form').html(),
+                onblur: 'ignore',
+                validate: this.validateIdentifer,
+                success: this.refresh
+            });
+            jQuery(this.el).find('.editable-work-identifier').editable({
+                namedParams: true,
+                tpl: jQuery('#xeditable-work-identifier-form').html(),
                 onblur: 'ignore',
                 validate: this.validateIdentifer,
                 success: this.refresh
             });
 
-            
             jQuery(this.el).fadeIn(function() {
                 self.initializeMap();
             });

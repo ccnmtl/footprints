@@ -21,7 +21,8 @@ from rest_framework.views import APIView
 from footprints.main.forms import DigitalObjectForm
 from footprints.main.models import (
     Footprint, Actor, Person, Role, WrittenWork, Language, ExtendedDateFormat,
-    Place, Imprint, BookCopy, IDENTIFIER_TYPES, StandardizedIdentification)
+    Place, Imprint, BookCopy, StandardizedIdentification,
+    StandardizedIdentificationType)
 from footprints.main.serializers import NameSerializer
 from footprints.mixins import (
     JSONResponseMixin, LoggedInMixin, EditableMixin)
@@ -82,7 +83,8 @@ class FootprintDetailView(EditableMixin, DetailView):
         context['editable'] = self.has_edit_permission(self.request.user)
         context['languages'] = Language.objects.all().order_by('name')
         context['roles'] = Role.objects.all().order_by('name')
-        context['identifier_types'] = IDENTIFIER_TYPES
+        context['identifier_types'] = \
+            StandardizedIdentificationType.objects.all().order_by('name')
         return context
 
 
@@ -339,7 +341,9 @@ class AddIdentifierView(AddRelatedRecordView):
     def post(self, *args, **kwargs):
         the_parent = self.get_parent()
 
-        identifier_type = self.request.POST.get('identifier_type', None)
+        slug = self.request.POST.get('identifier_type', None)
+        identifier_type = get_object_or_404(StandardizedIdentificationType,
+                                            slug=slug)
         identifier = self.request.POST.get('identifier', None)
 
         if identifier is None or identifier_type is None:

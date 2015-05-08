@@ -4,23 +4,18 @@ from django.template import loader
 from django.template.context import Context
 from geoposition.fields import GeopositionField
 
-
-IDENTIFIER_TYPES = (
-    ('LOC', 'Library of Congress'),
-    ('BHB', 'Bibliography of the Hebrew Book'),
-    ('WLD', 'WorldCat (OCLC)'),
-    ('VIAF', 'VIAF Identifier'),
-    ('GETT', 'The Getty Thesaurus of Geographic Names')
-)
-
 FOOTPRINT_LEVEL = 'footprint'
 IMPRINT_LEVEL = 'imprint'
 WRITTENWORK_LEVEL = 'writtenwork'
+PLACE_LEVEL = 'place'
+PERSON_LEVEL = 'person'
 
 LEVEL_TYPES = (
     (FOOTPRINT_LEVEL, 'Footprint'),
     (IMPRINT_LEVEL, 'Imprint'),
-    (WRITTENWORK_LEVEL, 'WrittenWork')
+    (WRITTENWORK_LEVEL, 'WrittenWork'),
+    (PLACE_LEVEL, 'Place'),
+    (PERSON_LEVEL, 'Person')
 )
 
 
@@ -150,8 +145,36 @@ class DigitalObject(models.Model):
         return self.name
 
 
+class StandardizedIdentificationTypeQuerySet(models.query.QuerySet):
+
+    def for_imprint(self):
+        return self.filter(level=IMPRINT_LEVEL)
+
+    def for_work(self):
+        return self.filter(level=WRITTENWORK_LEVEL)
+
+
+class StandardizedIdentificationTypeManager(models.Manager):
+    def __init__(self, fields=None, *args, **kwargs):
+        super(StandardizedIdentificationTypeManager, self).__init__(
+            *args, **kwargs)
+        self._fields = fields
+
+    def get_query_set(self):
+        return StandardizedIdentificationTypeQuerySet(self.model, self._fields)
+
+    def for_imprint(self):
+        return self.get_query_set().for_imprint()
+
+    def for_work(self):
+        return self.get_query_set().for_work()
+
+
 class StandardizedIdentificationType(models.Model):
+    objects = StandardizedIdentificationTypeManager()
+
     name = models.CharField(max_length=256, unique=True)
+    slug = models.CharField(max_length=5, unique=True)
     level = models.CharField(max_length=25, choices=LEVEL_TYPES)
 
     class Meta:
@@ -164,9 +187,8 @@ class StandardizedIdentificationType(models.Model):
 
 class StandardizedIdentification(models.Model):
     identifier = models.CharField(max_length=512)
-    identifier_type = models.CharField(max_length=5, choices=IDENTIFIER_TYPES)
-    new_identifier_type = models.ForeignKey(StandardizedIdentificationType,
-                                            null=True, blank=True)
+    identifier_type = models.ForeignKey(StandardizedIdentificationType,
+                                        null=True, blank=True)
     permalink = models.URLField(null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -184,7 +206,7 @@ class StandardizedIdentification(models.Model):
         return self.identifier
 
     def authority(self):
-        return dict(IDENTIFIER_TYPES)[self.identifier_type]
+        return self.identifier_type.name
 
 
 class Person(models.Model):
@@ -324,6 +346,9 @@ class WrittenWork(models.Model):
         Actor, null=True, blank=True,
         help_text="The author or creator of the work. ")
     notes = models.TextField(null=True, blank=True)
+
+    standardized_identifier = models.ManyToManyField(
+        StandardizedIdentification, null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
