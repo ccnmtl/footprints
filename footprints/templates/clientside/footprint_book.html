@@ -2,11 +2,11 @@
 <div class="breadcrumb">
 The Literary Work
     <% if (editable) { %>
-    <a href="javascript:void(0);" class="pull-right connect-records imprint">
-        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-        Connect
-    </a>
-<% } %>
+        <a href="javascript:void(0);" class="pull-right connect-records imprint">
+            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+            Connect
+        </a>
+    <% } %>
 </div>
 <dl class="dl-horizontal">
     <% if (imprint.work.title && imprint.work.title.length > 0) { %>
@@ -42,17 +42,27 @@ The Literary Work
             </div>
         </dd>
     <% } %>
-    <% if (imprint.work.notes && imprint.work.notes.length > 0) { %>
-        <dt>Notes</dt>
-        <dd>
+    <% for (var i=0; i < imprint.work.standardized_identifier.length; i++) { %> 
+        <dt><%=imprint.work.standardized_identifier[i].authority%></dt>
+        <dd class="border-bottom">
             <% if (editable) { %>
-                <a href="javascript:void(0);" class="editable"
-                    data-name="notes"
-                    data-type="textarea" data-pk="<%=imprint.work.id%>"
-                    data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
-                    data-url="/api/writtenwork/<%=imprint.work.id%>/"><%=imprint.work.notes%></a>
+                <a href="javascript:void(0);" class="editable-work-identifier"
+                    data-type="identifier" data-pk="<%=imprint.work.standardized_identifier[i].id%>"
+                    data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
+                    data-url="/api/identifier/<%=imprint.work.standardized_identifier[i].id%>/"
+                    data-value="{identifier:'<%=imprint.work.standardized_identifier[i].identifier%>',identifier_type:'<%=imprint.work.standardized_identifier[i].identifier_type%>'}">
+                    <%=imprint.work.standardized_identifier[i].identifier%>
+                </a>
+                <div class="pull-right">
+                    <a href="javascript:void(0);" class="remove-related"
+                     data-params="{attr:'standardized_identifier',child_id:'<%=imprint.work.standardized_identifier[i].id%>',csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=imprint.work.id%>,parent_model:'writtenwork'}" 
+                     data-url="/remove/related/"
+                     title="remove identifier">
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                    </a>
+                </div>
             <% } else { %>
-                <%=imprint.work.notes%>
+                <%=imprint.work.standardized_identifier[i].identifier%>
             <% } %>
         </dd>
     <% } %>
@@ -77,6 +87,12 @@ The Literary Work
                         data-type="actor" data-pk="<%=imprint.work.id%>" data-value=""
                         data-params="{csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=imprint.work.id%>,parent_model:'writtenwork'}" 
                         data-url="/actor/add/">the author(s) of the literary work?</a>
+                </li>
+                <li><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
+                    <a href="javascript:void(0);" class="editable-work-identifier do-you-know persistant editable-refresh"
+                        data-value="" data-type="identifier" data-pk="<%=imprint.work.id%>"
+                        data-params="{csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=imprint.work.id%>,parent_model:'writtenwork'}"
+                        data-url="/identifier/add/">the Library of Congress identifier associated with the literary work?</a>
                 </li>
            </ul>
         </dd>
@@ -195,7 +211,7 @@ The Literary Work
         <dt><%=imprint.standardized_identifier[i].authority%></dt>
         <dd class="border-bottom">
             <% if (editable) { %>
-                <a href="javascript:void(0);" class="editable-identifier"
+                <a href="javascript:void(0);" class="editable-imprint-identifier"
                     data-type="identifier" data-pk="<%=imprint.standardized_identifier[i].id%>"
                     data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
                     data-url="/api/identifier/<%=imprint.standardized_identifier[i].id%>/"
@@ -287,7 +303,7 @@ The Literary Work
                 <% } %>
 
                 <li><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
-                    <a href="javascript:void(0);" class="editable-identifier do-you-know persistant editable-refresh"
+                    <a href="javascript:void(0);" class="editable-imprint-identifier do-you-know persistant editable-refresh"
                         data-value="" data-type="identifier" data-pk="<%=imprint.id%>"
                         data-params="{csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=imprint.id%>,parent_model:'imprint'}"
                         data-url="/identifier/add/">a standardized identifier associated with the imprint?</a>

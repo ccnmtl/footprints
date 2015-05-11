@@ -4,14 +4,15 @@ from rest_framework import viewsets
 from footprints.main.models import (
     Footprint, Actor, Person, Role, WrittenWork, Language, ExtendedDateFormat,
     Place, Imprint, BookCopy, StandardizedIdentification, DigitalFormat,
-    DigitalObject)
+    DigitalObject, StandardizedIdentificationType)
 from footprints.main.permissions import IsLoggedInOrReadOnly
 from footprints.main.serializers import (
     FootprintSerializer, LanguageSerializer, RoleSerializer,
     ExtendedDateFormatSerializer, ActorSerializer, PersonSerializer,
     PlaceSerializer, WrittenWorkSerializer, UserSerializer, ImprintSerializer,
     BookCopySerializer, StandardizedIdentificationSerializer,
-    DigitalFormatSerializer, DigitalObjectSerializer)
+    DigitalFormatSerializer, DigitalObjectSerializer,
+    StandardizedIdentificationTypeSerializer)
 
 
 class FootprintViewSet(viewsets.ModelViewSet):
@@ -101,6 +102,12 @@ class BookCopyViewSet(viewsets.ModelViewSet):
 class StandardizedIdentificationViewSet(viewsets.ModelViewSet):
     queryset = StandardizedIdentification.objects.all()
     serializer_class = StandardizedIdentificationSerializer
+    permission_classes = (IsLoggedInOrReadOnly,)
+
+
+class StandardizedIdentificationTypeViewSet(viewsets.ModelViewSet):
+    queryset = StandardizedIdentificationType.objects.all()
+    serializer_class = StandardizedIdentificationTypeSerializer
     permission_classes = (IsLoggedInOrReadOnly,)
 
 

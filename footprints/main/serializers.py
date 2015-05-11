@@ -7,7 +7,8 @@ from rest_framework.utils import html
 
 from footprints.main.models import Footprint, Language, Role, Actor, \
     ExtendedDateFormat, Person, Place, WrittenWork, Imprint, BookCopy, \
-    StandardizedIdentification, DigitalObject, DigitalFormat
+    StandardizedIdentification, DigitalObject, DigitalFormat, \
+    StandardizedIdentificationType
 
 
 # Fixes a django-restframework bug, patch submitted & will be available 3.0.5
@@ -54,7 +55,18 @@ class UserSerializer(HyperlinkedModelSerializer):
         fields = ('first_name', 'last_name', 'username')
 
 
+class StandardizedIdentificationTypeSerializer(HyperlinkedModelSerializer):
+    class Meta:
+        model = StandardizedIdentificationType
+        fields = ('id', 'name', 'slug')
+
+    def get_queryset(self):
+        return StandardizedIdentificationType.objects.all()
+
+
 class StandardizedIdentificationSerializer(HyperlinkedModelSerializer):
+    identifier_type = StandardizedIdentificationTypeSerializer
+
     class Meta:
         model = StandardizedIdentification
         fields = ('id', 'identifier', 'identifier_type', 'authority')
@@ -181,10 +193,12 @@ class ActorSerializer(HyperlinkedModelSerializer):
 
 class WrittenWorkSerializer(HyperlinkedModelSerializerEx):
     actor = ActorSerializer(many=True)
+    standardized_identifier = StandardizedIdentificationSerializer(many=True)
 
     class Meta:
         model = WrittenWork
-        fields = ('id', 'title', 'actor', 'notes', 'description')
+        fields = ('id', 'title', 'actor', 'notes', 'description',
+                  'standardized_identifier')
 
 
 class ImprintSerializer(HyperlinkedModelSerializerEx):

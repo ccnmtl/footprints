@@ -6,7 +6,8 @@ import factory
 from footprints.main.models import (
     Language, ExtendedDateFormat, Role, DigitalFormat,
     StandardizedIdentification, Person, Actor, Place, Collection, WrittenWork,
-    Imprint, BookCopy, Footprint, DigitalObject)
+    Imprint, BookCopy, Footprint, DigitalObject, IMPRINT_LEVEL,
+    StandardizedIdentificationType)
 
 
 TEST_MEDIA_PATH = os.path.join(os.path.dirname(__file__), 'test.txt')
@@ -48,11 +49,19 @@ class DigitalObjectFactory(factory.DjangoModelFactory):
                                     filename=TEST_MEDIA_PATH)
 
 
+class StandardizedIdentificationTypeFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = StandardizedIdentificationType
+
+    name = factory.Sequence(lambda n: "name%03d" % n)
+    slug = factory.Sequence(lambda n: "%03d" % n)
+    level = IMPRINT_LEVEL
+
+
 class StandardizedIdentificationFactory(factory.DjangoModelFactory):
     FACTORY_FOR = StandardizedIdentification
 
     identifier = factory.Sequence(lambda n: "identifier%03d" % n)
-    identifier_type = 'BHB'
+    identifier_type = factory.SubFactory(StandardizedIdentificationTypeFactory)
 
 
 class PersonFactory(factory.DjangoModelFactory):

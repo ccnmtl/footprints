@@ -5,7 +5,8 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.test.client import Client, RequestFactory
 
-from footprints.main.models import Footprint, Actor, Imprint
+from footprints.main.models import Footprint, Actor, Imprint, \
+    StandardizedIdentificationType
 from footprints.main.tests.factories import (
     UserFactory, WrittenWorkFactory, ImprintFactory, FootprintFactory,
     PersonFactory, RoleFactory, PlaceFactory, ActorFactory, BookCopyFactory,
@@ -641,9 +642,7 @@ class AddIdentifierViewTest(TestCase):
                                     {'parent_id': self.imprint.id,
                                      'parent_model': 'imprint'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
-        the_json = loads(response.content)
-        self.assertFalse(the_json['success'])
+        self.assertEquals(response.status_code, 404)
 
     def test_post_success(self):
         self.assertEquals(self.imprint.standardized_identifier.count(), 1)
@@ -660,7 +659,9 @@ class AddIdentifierViewTest(TestCase):
 
         imprint = Imprint.objects.get(id=self.imprint.id)  # refresh from db
         identifier = imprint.standardized_identifier.get(identifier='abcdefg')
-        self.assertEquals(identifier.identifier_type, 'LOC')
+        self.assertEquals(
+            identifier.identifier_type,
+            StandardizedIdentificationType.objects.get(slug='LOC'))
 
 
 class AddDigitalObjectViewTest(TestCase):

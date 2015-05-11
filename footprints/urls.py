@@ -20,7 +20,7 @@ from footprints.main.viewsets import (
     ExtendedDateFormatViewSet, FootprintViewSet, LanguageViewSet,
     PersonViewSet, PlaceViewSet, RoleViewSet, WrittenWorkViewSet, UserViewSet,
     StandardizedIdentificationViewSet, DigitalFormatViewSet,
-    DigitalObjectViewSet)
+    DigitalObjectViewSet, StandardizedIdentificationTypeViewSet)
 from footprints.mixins import is_staff
 
 
@@ -37,6 +37,7 @@ router.register(r'digitalformat', DigitalFormatViewSet)
 router.register(r'digitalobject', DigitalObjectViewSet)
 router.register(r'edtf', ExtendedDateFormatViewSet)
 router.register(r'footprint', FootprintViewSet)
+router.register(r'identifiertype', StandardizedIdentificationTypeViewSet)
 router.register(r'identifier', StandardizedIdentificationViewSet)
 router.register(r'imprint', ImprintViewSet)
 router.register(r'language', LanguageViewSet)

@@ -6,7 +6,7 @@ from django.test import TestCase
 from footprints.main.models import Language, DigitalFormat, \
     ExtendedDateFormat, StandardizedIdentification, \
     Actor, Imprint, FOOTPRINT_LEVEL, IMPRINT_LEVEL, WRITTENWORK_LEVEL, Role, \
-    Place, Footprint, WrittenWork, BookCopy
+    Place, Footprint, WrittenWork, BookCopy, StandardizedIdentificationType
 from footprints.main.tests.factories import RoleFactory, \
     ActorFactory, PlaceFactory, CollectionFactory, \
     WrittenWorkFactory, ImprintFactory, BookCopyFactory, FootprintFactory, \
@@ -73,16 +73,12 @@ class BasicModelTest(TestCase):
             pass  # expected
 
     def test_standardized_identification(self):
+        stt = StandardizedIdentificationType.objects.create(
+            name="Sample", slug="SSS", level=IMPRINT_LEVEL)
         si = StandardizedIdentification.objects.create(identifier='foo',
-                                                       identifier_type='LOC')
+                                                       identifier_type=stt)
 
         self.assertEquals(si.__unicode__(), 'foo')
-
-        si = StandardizedIdentification.objects.create(
-            identifier='bar', identifier_type='BHB')
-
-        self.assertEquals(si.__unicode__(),
-                          'bar')
 
     def test_person(self):
         person = PersonFactory(name='Cicero')
