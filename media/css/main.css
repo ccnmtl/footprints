@@ -256,15 +256,98 @@ background-color: transparent;
 
 /* Block outercontainer */
 
-.container.home {
-	height: 500px;
-	margin-top: -1em;
-	background-image: url("../img/fp_home_feat_bg.jpg");
-	background-repeat: no-repeat;
-	background-size: 100%;
+/* Block outercontainer Mobile */
+	.container.home {
+		background-image: url("../img/fp_home_feat_bg.jpg");
+		background-repeat: no-repeat;
+		background-size: 100%;
+	}
+	
+	.home-intro {
+	  display: block;
+	  background-image: url("../img/fp_home_intro_bg.png");
+	  padding: 1em 2em;
+	}
+	.home-intro-one {
+	  font-family: Arvo;
+	  font-weight: 400;
+	  font-size: 2em;
+	  color: #202836;
+	  line-height: 1.2em;
+	  text-align: center;
+	}
+	.home-intro-two {
+	  font-family: Asap;
+	  font-weight: 400;
+	  color: #202836;
+	  font-size: 1em;
+	  line-height: 1.5em;
+	  margin: 1em 0;
+	}
+	
+
+
+/* Block outercontainer Tablet */
+@media (min-width: 768px) {
+	.container.home {
+		background-image: url("../img/fp_home_feat_bg.jpg");
+		background-repeat: no-repeat;
+		background-size: 100%;
+	}
+	
+	.home-intro {
+		display: block;
+	  background-image: url("../img/fp_home_intro_bg.png");
+	}
+	.home-intro-one {
+	  font-family: Arvo;
+	  font-weight: 400;
+	  font-size: 2.75em;
+	  color: #202836;
+	  line-height: 1.2em;
+	  text-align: left;
+	}
+	.home-intro-two {
+	  font-family: Arvo;
+	  font-weight: 400;
+	  color: #202836;
+	  font-size: 1.15em;
+	  line-height: 1.85em;
+	  margin: 1em 0;
+	}
 }
 
-
+/* Block outercontainer Desktop */
+@media (min-width: 1200px) {
+	.container.home {
+		background-image: url("../img/fp_home_feat_bg.jpg");
+		background-repeat: no-repeat;
+		background-size: 100%;
+	}
+	
+	.home-intro {
+		display: block;
+	  background-image: url("../img/fp_home_intro_bg.png");
+	  margin: 2em 0 0 3em;
+	  padding: 2em;
+	}
+	.home-intro-one {
+	  font-family: Arvo;
+	  font-weight: 400;
+	  font-size: 2.75em;
+	  color: #202836;
+	  line-height: 1.2em;
+	  text-align: left;
+	}
+	.home-intro-two {
+	  font-family: Arvo;
+	  font-weight: 400;
+	  color: #202836;
+	  font-size: 1.15em;
+	  line-height: 1.85em;
+	  margin: 1em 0;
+	}
+}
 
 /* Record Entry */
 .btn-image-only {
