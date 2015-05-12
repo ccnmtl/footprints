@@ -322,7 +322,13 @@ background-color: transparent;
 	.home-search-two .home-search-submit:hover {
 		background-color: #222a38;
 	}
-
+	.home-visual {
+  	text-align: center;
+  	margin: 2em auto;
+	}
+	.home-visual img {
+	max-width: 100%;
+	}
 
 /* Block outercontainer Tablet */
 @media (min-width: 768px) {
