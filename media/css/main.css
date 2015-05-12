@@ -284,7 +284,10 @@ background-color: transparent;
 	  line-height: 1.5em;
 	  margin: 1em 0;
 	}
-	
+	.home-search {
+		background-color: #edebe6;
+		min-height: 200px;
+	}
 
 
 /* Block outercontainer Tablet */
@@ -315,6 +318,11 @@ background-color: transparent;
 	  line-height: 1.85em;
 	  margin: 1em 0;
 	}
+	.home-search {
+		background-color: #edebe6;
+		min-height: 200px;
+	}
+
 }
 
 /* Block outercontainer Desktop */
@@ -345,7 +353,12 @@ background-color: transparent;
 	  color: #202836;
 	  font-size: 1.15em;
 	  line-height: 1.85em;
-	  margin: 1em 0;
+	  margin: 1em 4em 0 0;
+	}
+	.home-search {
+	  background-color: #edebe6;
+	  min-height: 200px;
+	  margin: 12em 0 0 -5em;
 	}
 }
 
