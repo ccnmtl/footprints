@@ -254,7 +254,9 @@ background-color: transparent;
 
 /* Homepage */
 
-.col-md-12.featured {
+/* Block outercontainer */
+
+.container.home {
 	height: 500px;
 	margin-top: -1em;
 	background-image: url("../img/fp_home_feat_bg.jpg");
