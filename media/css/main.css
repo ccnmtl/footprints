@@ -287,6 +287,40 @@ background-color: transparent;
 	.home-search {
 		background-color: #edebe6;
 		min-height: 200px;
+		  padding: 1em 2em;
+	}
+	.home-search-one {
+		font-family: Arvo;
+		font-size: 2em;
+		color: #97421b;
+		text-align: center;
+	}
+		.home-search-two ul li {
+		list-style-image: url("../img/fp_home_listitem.png");
+		 margin: 15px 0px -10px -6px;
+	}
+		.home-search-two .home-search-text {
+	  font-family: Asap;
+	  font-size: 1.1em;
+	  width: 60%;
+	  background-color: #e5d9ca;
+	  border-radius: 4px;
+	  border: solid 1px #fff;
+	  padding: 5px;
+	  margin: 1em 0 -5px 0;
+	}
+	.home-search-two .home-search-submit {
+	background-color: #2e5367;
+	color: #fff;
+	  border-radius: 4px;
+	  border: none;
+	  padding: 5px 10px;
+	  margin: 1em .5em;
+	  font-family: Asap;
+	  
+	}
+	.home-search-two .home-search-submit:hover {
+		background-color: #222a38;
 	}
 
 
@@ -318,11 +352,49 @@ background-color: transparent;
 	  line-height: 1.85em;
 	  margin: 1em 0;
 	}
-	.home-search {
-		background-color: #edebe6;
-		min-height: 200px;
+		.home-search {
+	  background-color: #edebe6;
+	  min-height: 200px;
+	  padding: 1em;
 	}
-
+	.home-search-one {
+		font-family: Arvo;
+		font-size: 2em;
+		color: #97421b;
+		text-align: left;
+	}
+		.home-search-two {
+	  font-family: Arvo;
+	  font-size: 1.1em;
+	  line-height: 1.75em;
+	}
+		.home-search-two ul li {
+		list-style-image: url("../img/fp_home_listitem.png");
+		 margin: 15px 0px -10px -6px;
+	}
+		.home-search-two .home-search-text {
+	  font-family: Asap;
+	  font-size: 1.1em;
+	  width: 80%;
+	  background-color: #e5d9ca;
+	  border-radius: 4px;
+	  border: solid 1px #fff;
+	  padding: 5px;
+	  margin: 1em 0;
+	}
+	.home-search-two .home-search-submit {
+	background-color: #2e5367;
+	color: #fff;
+	  border-radius: 4px;
+	  border: none;
+	  padding: 5px 10px;
+	  margin: 1em .5em;
+	  font-family: Asap;
+	  
+	}
+	.home-search-two .home-search-submit:hover {
+		background-color: #222a38;
+	}
 }
 
 /* Block outercontainer Desktop */
@@ -359,6 +431,45 @@ background-color: transparent;
 	  background-color: #edebe6;
 	  min-height: 200px;
 	  margin: 12em 0 0 -5em;
+	  padding: 1em 2em;
+	}
+	.home-search-one {
+	font-family: Arvo;
+	font-size: 2em;
+	color: #97421b;
+	text-align: left;
+	}
+	.home-search-two {
+	  font-family: Arvo;
+	  font-size: 1.1em;
+	  line-height: 1.75em;
+	}
+	.home-search-two ul li {
+		list-style-image: url("../img/fp_home_listitem.png");
+		 margin: 15px 0px -10px -6px;
+	}
+	.home-search-two .home-search-text {
+	  font-family: Asap;
+	  font-size: 1.1em;
+	  width: 80%;
+	  background-color: #e5d9ca;
+	  border-radius: 4px;
+	  border: solid 1px #fff;
+	  padding: 5px;
+	  margin: 1em 0;
+	}
+	.home-search-two .home-search-submit {
+	background-color: #2e5367;
+	color: #fff;
+	  border-radius: 4px;
+	  border: none;
+	  padding: 5px 10px;
+	  margin: 1em .5em;
+	  font-family: Asap;
+	  
+	}
+	.home-search-two .home-search-submit:hover {
+		background-color: #222a38;
 	}
 }
 
