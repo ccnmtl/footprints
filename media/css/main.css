@@ -1008,12 +1008,12 @@ ul.additional-questions .editable-container {
     margin: 20px 0;
 }
 
-.object-browse .pagination {
+.pagination {
     margin: -4px 0 0 30px;
 }
 
-.object-browse .pagination>li>a,
-.object-browse .pagination>li>span {
+.pagination>li>a,
+.pagination>li>span {
     color: #2e5367;
 }
 
@@ -1040,12 +1040,12 @@ ul.additional-questions .editable-container {
   border-color: #adadad;
 }
 
-.object-browse .pagination>.active>a,
-.object-browse .pagination>.active>span,
-.object-browse .pagination>.active>a:hover,
-.object-browse .pagination>.active>span:hover,
-.object-browse .pagination>.active>a:focus,
-.object-browse .pagination>.active>span:focus {
+.pagination>.active>a,
+.pagination>.active>span,
+.pagination>.active>a:hover,
+.pagination>.active>span:hover,
+.pagination>.active>a:focus,
+.pagination>.active>span:focus {
   color: #fff;
   background-color: #2e5367;
   border-color: #2e5367;
@@ -1140,6 +1140,14 @@ ul.additional-questions .editable-container {
 
 .object-search ul li label {
     font-weight: normal;
+}
+
+.object-search .input-group input[type='search'] {
+    border: 1px solid #ccc;
+}
+
+.object-search .input-group input[type='search']:focus {
+    background-color: white;
 }
 
 .object-search .search-result {

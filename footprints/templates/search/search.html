@@ -16,18 +16,14 @@
                 <div class="form-group">
                     <label for="q">Search for</label>
                     <div class="input-group">
-                        <div class="input-group-addon"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></div>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></span>
                         {{form.q}}
                     </div>
-                    
                 </div>
                 <br />
                 <div class="form-group">
                     <label for="models">Filter By Record Type</label>
-                    <ul id="id_models">
-                    <li><label for="id_models_0"><input class="regDropDown" id="id_models_0" name="models" type="checkbox" value="main.footprint"> Footprint</label></li>
-                    <li><label for="id_models_3"><input class="regDropDown" id="id_models_3" name="models" type="checkbox" value="main.writtenwork"> Literary Work</label></li>
-                    </ul>
+                    {{form.models}}
                 </div>
                 <input class="btn btn-default" type="reset" value="Clear"></input>
                 <input class="btn btn-primary" type="submit" value="Search"></input>
@@ -39,7 +35,7 @@
                     <div class="panel-heading">
                         <div class="panel-title">
                             <div class="pull-left">
-                                Displaying {{page.start_index}} - {{page.end_index}} of {{paginator.count}} items
+                                {{page.start_index}} - {{page.end_index}} of {{paginator.count}} items
                             </div>
                             {% if paginator.num_pages > 1 %}
                                 <ul class="pagination pagination-sm pull-right">
@@ -119,6 +115,8 @@
         jQuery('input:reset').click(function(evt) {
             window.location = '/search/';
         });
+        
+        jQuery("input[type='search']").focus();
     });
 </script>
 {% endblock %}
