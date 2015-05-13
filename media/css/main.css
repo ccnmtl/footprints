@@ -261,6 +261,7 @@ background-color: transparent;
 		background-image: url("../img/fp_home_feat_bg.jpg");
 		background-repeat: no-repeat;
 		background-size: 100%;
+		
 	}
 	
 	.home-intro {
@@ -562,6 +563,7 @@ background-color: transparent;
 	.container.home {
 		background-image: url("../img/fp_home_feat_bg.jpg");
 		background-repeat: no-repeat;
+		background-position-y: -100px;
 		background-size: 100%;
 	}
 	
