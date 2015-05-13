@@ -276,6 +276,9 @@ background-color: transparent;
 	  line-height: 1.2em;
 	  text-align: center;
 	}
+	.emph {
+		color:#2e5367;
+	}
 	.home-intro-two {
 	  font-family: Asap;
 	  font-weight: 400;
@@ -323,11 +326,42 @@ background-color: transparent;
 		background-color: #222a38;
 	}
 	.home-visual {
-  	text-align: center;
-  	margin: 2em auto;
+		display: none;
 	}
-	.home-visual img {
-	display: none;
+	.visual-mobile {
+		width: 100%;
+		display: block;
+		float: left;
+		background-image: url("../img/fp_home_ex_visual.jpg");
+		background-size: 100%;
+		padding: 0;
+	}
+	.mobile-desc {
+		background-color: #222a38;
+		font-size: 1.15em;
+		font-family: Arvo;
+		color: #fff;
+		padding: 10px 20px;
+	}
+	.visual-mobile ul {
+		margin: 0 0 0 -39px;
+	}
+	.visual-mobile ul li {
+		width: 100%;
+		margin: 0;
+		list-style-type: none;
+		float: left;
+		clear: both;
+		padding: 10px 30px;
+		background-image: url("../img/fp_mobile_map_bg.png");
+		border-bottom: solid 1px #fff; 
+		font-family: Arvo;
+		font-size: 1.5em;
+		color: #fff;
+	}
+	.visual-mobile ul li:hover {
+		background-image: none;
+		background-color: #662d12;
 	}
 
 /* Block outercontainer Tablet */
@@ -401,10 +435,126 @@ background-color: transparent;
 	.home-search-two .home-search-submit:hover {
 		background-color: #222a38;
 	}
+	.home-visual {
+		display: none;
+	}
+	.visual-mobile {
+		width: 100%;
+		display: block;
+		float: left;
+		background-image: url("../img/fp_home_ex_visual.jpg");
+		background-size: 100%;
+		padding: 0;
+	}
+	.mobile-desc {
+		background-color: #222a38;
+		font-size: 1.15em;
+		font-family: Arvo;
+		color: #fff;
+		padding: 10px 20px;
+	}
+	.visual-mobile ul {
+		margin: 0 0 0 -39px;
+	}
+	.visual-mobile ul li {
+		width: 100%;
+		margin: 0;
+		list-style-type: none;
+		float: left;
+		clear: both;
+		padding: 10px 30px;
+		background-image: url("../img/fp_mobile_map_bg.png");
+		border-bottom: solid 1px #fff; 
+		font-family: Arvo;
+		font-size: 1.5em;
+		color: #fff;
+	}
+	.visual-mobile ul li:hover {
+		background-image: none;
+		background-color: #662d12;
+	}
+}
+
+/* Block outercontainer Narrow Desktop */
+@media (min-width: 992px) {
+
+	.home-visual {
+		display: initial;
+		margin: 1em; 
+	}
 	.home-visual img {
 	max-width: 100%;
 	display: block;
 	}
+		.home-visual img {
+	max-width: 100%;
+	display: initial;
+	border: solid 4px #fff;
+	}
+	
+		.map-loc-1 {
+	  position: absolute;
+	  top: 107px;
+	  display: block;
+	  background-image: url("../img/fp_map_loc_1.png");
+	  width: 152px;
+	  height: 28px;
+	  left: 122px;
+	
+	}
+	
+	.map-loc-2 {
+	  position: absolute;
+	  top: 26px;
+	  display: block;
+	  background-image: url("../img/fp_map_loc_2.png");
+	  width: 152px;
+	  height: 28px;
+	  left: 384px;
+
+	}
+	.map-loc-3 {
+	  position: absolute;
+	  top: 56px;
+	  display: block;
+	  background-image: url("../img/fp_map_loc_3.png");
+	  width: 115px;
+	  height: 28px;
+	  left: 668px;
+
+	}
+		.map-loc-1:focus {
+	  position: absolute;
+	  top: 107px;
+	  display: block;
+	  background-image: url("../img/fp_map_loc_1_over.png");
+	  width: 152px;
+	  height: 28px;
+	  left: 122px;
+	}
+	
+	.map-loc-2:focus {
+	  position: absolute;
+	  top: 26px;
+	  display: block;
+	  background-image: url("../img/fp_map_loc_2_over.png");
+	  width: 152px;
+	  height: 28px;
+	  left: 384px;
+	}
+	.map-loc-3:focus {
+	  position: absolute;
+	  top: 56px;
+	  display: block;
+	  background-image: url("../img/fp_map_loc_3_over.png");
+	  width: 115px;
+	  height: 28px;
+	  left: 668px;
+	}
+	.visual-mobile {
+		display: none;
+	}
+
 }
 
 /* Block outercontainer Desktop */
@@ -487,15 +637,6 @@ background-color: transparent;
 		text-align: center;
 	}
 	
-	.visual-exp {
-	  text-align: center;
-	  font-family: Arvo;
-	  font-size: 1.35em;
-	  background-color: #fff;
-	  padding: 10px 100px;
-	  margin: 35px 64px -4px 63px;
-	}
-	
 	.home-visual img {
 	max-width: 100%;
 	display: initial;
@@ -563,6 +704,9 @@ background-color: transparent;
 	  width: 115px;
 	  height: 28px;
 	  left: 785px;
+	}
+	.visual-mobile {
+		display: none;
 	}
 }
 
