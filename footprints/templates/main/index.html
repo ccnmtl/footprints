@@ -57,25 +57,47 @@
 </div>    
 {% endblock %}
 
-
-{% block content %}
-
-    <div class="col-md-12">
-
-        <blockquote>
-            <p>A footprint is evidence of a literary work at a moment in time and space, e.g.</p>
-            <ol class="blockquote-list">
-                <li>a particular copy of an imprint that is now extant</li>
-                <li>a particular manuscript now extant</li>
-                <li>an unspecified or unknown copy of an imprint (edition), including a copy or an imprint no longer extant</li>
-                <li>a literary work but where the imprint is not known and/or not known whether in manuscript or print</li>
-            </ol>
-      <br>
-      <a href="http://ccnmtl.columbia.edu" target="_blank"><img src="{{STATIC_URL}}img/ccnmtl.png" style="float:right" alt="CCNMTL" /></a>
-
-        </blockquote>
-
-    </div>
-</div>
+{% block outercontainer %}
+    
+    <div class="container container-pl home" id="outer-container">
+    
+        <div class="content">
+            {% block primarynav %}{% endblock %}
+            {% block pagemode %}{% endblock %}
+            <div class="row">
+              <div class="col-md-7 home-intro">
+                  <div class="home-intro-one">
+                      Footprints traces the history and movement of Jewish books since the inception of print.
+                  </div>
+                  <div class="home-intro-two">
+                      <p>The history of the book is an important part of humanities scholarship. Especially as more books are digitized, scholars, librarians, collectors, and others have become increasingly attuned to the significance of individual books as objects with their own unique story. Jewish books in particular tell a fascinating story about the spread of knowledge and faith in a global Diaspora.
+                      </p>
+                      <p>
+Every literary work represents a moment in time and space where an idea was conceived and documented. But the history of a book continues long after composition as it is bought, sold, shared, read, confiscated, stored, or even discarded. This history is the essence of Footprints.</p>
+                  </div>
+                  
+              </div>
+              <div class="col-md-5 home-search">
+                  <div class="home-search-one">Search for Footprints</div>
+                  <div class="home-search-two">
+                      A footprint is a record of the material presence of a literary work at a particular time and place:
+                      <ul>
+                          <li>an extant copy of an imprint</li>
+                            <li>a copy owned in the past whose whereabouts are unknown</li>
+                      </ul>
+                      <input type="text" class="home-search-text"></input>
+                      <input type="submit" class="home-search-submit" value="Search"></input>
+                  </div>
+              </div>
+           </div> <!-- /.row (first)-->
+           <div class="row">
+               <div class="col-md-12 home-visual">
+                   <img src="{{STATIC_URL}}img/fp_home_ex_visual.jpg">
+               </div>
+           </div> <!-- /.row (second)-->
+        </div> <!-- /.content -->
+    
+    </div> <!-- /.container-pl -->
 {% endblock %}
+ 
 <!--endblock content -->
