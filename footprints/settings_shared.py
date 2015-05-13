@@ -31,6 +31,7 @@ HAYSTACK_CONNECTIONS = {
 }
 
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+HAYSTACK_SEARCH_RESULTS_PER_PAGE = 15
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
@@ -199,7 +200,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'footprints.main.permissions.IsLoggedInOrReadOnly'
     ],
-    'PAGINATE_BY': 30,
+    'PAGINATE_BY': 15,
     'DATETIME_FORMAT': '%m/%d/%y %I:%M %p'
 }
 

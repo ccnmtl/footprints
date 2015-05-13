@@ -85,8 +85,12 @@ Every literary work represents a moment in time and space where an idea was conc
                           <li>an extant copy of an imprint</li>
                             <li>a copy owned in the past whose whereabouts are unknown</li>
                       </ul>
-                      <input type="text" class="home-search-text"></input>
-                      <input type="submit" class="home-search-submit" value="Search"></input>
+                      
+                      <form method="get" action="{% url 'search' %}">
+                          <input type="text" name='q' class="home-search-text"></input>
+                          <input type="hidden" name="models" value="main.footprint" />                          
+                          <input type="submit" class="home-search-submit" value="Search"></input>
+                      </form>
                   </div>
               </div>
            </div> <!-- /.row (first)-->
