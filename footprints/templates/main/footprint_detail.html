@@ -138,6 +138,11 @@
         {% csrf_token %}
         <div class="row">
             <div class="col-md-8">
+                <h1>
+                    <img class="pull-left footicon" src="{{STATIC_URL}}img/footprint.png" />
+                    <span class="pull-left object-title" data-name='display-title'>{{footprint.title|truncatewords:15}}</span>
+                    <div class="clearfix"></div>
+                </h1>
                 <div class="footprint-detail" style="display: none"></div>
                 <div class="book-detail" style="display: none"></div>
             </div>
