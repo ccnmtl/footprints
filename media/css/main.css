@@ -261,6 +261,7 @@ background-color: transparent;
 		background-image: url("../img/fp_home_feat_bg.jpg");
 		background-repeat: no-repeat;
 		background-size: 100%;
+		
 	}
 	
 	.home-intro {
@@ -275,6 +276,9 @@ background-color: transparent;
 	  color: #202836;
 	  line-height: 1.2em;
 	  text-align: center;
+	}
+	.emph {
+		color:#2e5367;
 	}
 	.home-intro-two {
 	  font-family: Asap;
@@ -323,11 +327,42 @@ background-color: transparent;
 		background-color: #222a38;
 	}
 	.home-visual {
-  	text-align: center;
-  	margin: 2em auto;
+		display: none;
 	}
-	.home-visual img {
-	max-width: 100%;
+	.visual-mobile {
+		width: 100%;
+		display: block;
+		float: left;
+		background-image: url("../img/fp_home_ex_visual.jpg");
+		background-size: 100%;
+		padding: 0;
+	}
+	.mobile-desc {
+		background-color: #222a38;
+		font-size: 1.15em;
+		font-family: Arvo;
+		color: #fff;
+		padding: 10px 20px;
+	}
+	.visual-mobile ul {
+		margin: 0 0 0 -39px;
+	}
+	.visual-mobile ul li {
+		width: 100%;
+		margin: 0;
+		list-style-type: none;
+		float: left;
+		clear: both;
+		padding: 10px 30px;
+		background-image: url("../img/fp_mobile_map_bg.png");
+		border-bottom: solid 1px #fff; 
+		font-family: Arvo;
+		font-size: 1.5em;
+		color: #fff;
+	}
+	.visual-mobile ul li:hover {
+		background-image: none;
+		background-color: #662d12;
 	}
 
 /* Block outercontainer Tablet */
@@ -401,6 +436,126 @@ background-color: transparent;
 	.home-search-two .home-search-submit:hover {
 		background-color: #222a38;
 	}
+	.home-visual {
+		display: none;
+	}
+	.visual-mobile {
+		width: 100%;
+		display: block;
+		float: left;
+		background-image: url("../img/fp_home_ex_visual.jpg");
+		background-size: 100%;
+		padding: 0;
+	}
+	.mobile-desc {
+		background-color: #222a38;
+		font-size: 1.15em;
+		font-family: Arvo;
+		color: #fff;
+		padding: 10px 20px;
+	}
+	.visual-mobile ul {
+		margin: 0 0 0 -39px;
+	}
+	.visual-mobile ul li {
+		width: 100%;
+		margin: 0;
+		list-style-type: none;
+		float: left;
+		clear: both;
+		padding: 10px 30px;
+		background-image: url("../img/fp_mobile_map_bg.png");
+		border-bottom: solid 1px #fff; 
+		font-family: Arvo;
+		font-size: 1.5em;
+		color: #fff;
+	}
+	.visual-mobile ul li:hover {
+		background-image: none;
+		background-color: #662d12;
+	}
+}
+
+/* Block outercontainer Narrow Desktop */
+@media (min-width: 992px) {
+
+	.home-visual {
+		display: initial;
+		margin: 1em; 
+	}
+	.home-visual img {
+	max-width: 100%;
+	display: block;
+	}
+		.home-visual img {
+	max-width: 100%;
+	display: initial;
+	border: solid 4px #fff;
+	}
+	
+		.map-loc-1 {
+	  position: absolute;
+	  top: 107px;
+	  display: block;
+	  background-image: url("../img/fp_map_loc_1.png");
+	  width: 152px;
+	  height: 28px;
+	  left: 122px;
+	
+	}
+	
+	.map-loc-2 {
+	  position: absolute;
+	  top: 26px;
+	  display: block;
+	  background-image: url("../img/fp_map_loc_2.png");
+	  width: 152px;
+	  height: 28px;
+	  left: 384px;
+
+	}
+	.map-loc-3 {
+	  position: absolute;
+	  top: 56px;
+	  display: block;
+	  background-image: url("../img/fp_map_loc_3.png");
+	  width: 115px;
+	  height: 28px;
+	  left: 668px;
+
+	}
+		.map-loc-1:focus {
+	  position: absolute;
+	  top: 107px;
+	  display: block;
+	  background-image: url("../img/fp_map_loc_1_over.png");
+	  width: 152px;
+	  height: 28px;
+	  left: 122px;
+	}
+	
+	.map-loc-2:focus {
+	  position: absolute;
+	  top: 26px;
+	  display: block;
+	  background-image: url("../img/fp_map_loc_2_over.png");
+	  width: 152px;
+	  height: 28px;
+	  left: 384px;
+	}
+	.map-loc-3:focus {
+	  position: absolute;
+	  top: 56px;
+	  display: block;
+	  background-image: url("../img/fp_map_loc_3_over.png");
+	  width: 115px;
+	  height: 28px;
+	  left: 668px;
+	}
+	.visual-mobile {
+		display: none;
+	}
+
 }
 
 /* Block outercontainer Desktop */
@@ -408,6 +563,7 @@ background-color: transparent;
 	.container.home {
 		background-image: url("../img/fp_home_feat_bg.jpg");
 		background-repeat: no-repeat;
+		background-position-y: -100px;
 		background-size: 100%;
 	}
 	
@@ -420,9 +576,9 @@ background-color: transparent;
 	.home-intro-one {
 	  font-family: Arvo;
 	  font-weight: 400;
-	  font-size: 2.75em;
+	  font-size: 2.25em;
 	  color: #202836;
-	  line-height: 1.2em;
+	  line-height: 1.3em;
 	  text-align: left;
 	}
 	.home-intro-two {
@@ -436,8 +592,8 @@ background-color: transparent;
 	.home-search {
 	  background-color: #edebe6;
 	  min-height: 200px;
-	  margin: 12em 0 0 -5em;
-	  padding: 1em 2em;
+	  margin: 7.5em 0 0 -5em;
+	  padding: 1.5em 2em;
 	}
 	.home-search-one {
 	font-family: Arvo;
@@ -457,7 +613,7 @@ background-color: transparent;
 	.home-search-two .home-search-text {
 	  font-family: Asap;
 	  font-size: 1.1em;
-	  width: 80%;
+	  width: 70%;
 	  background-color: #e5d9ca;
 	  border-radius: 4px;
 	  border: solid 1px #fff;
@@ -476,6 +632,83 @@ background-color: transparent;
 	}
 	.home-search-two .home-search-submit:hover {
 		background-color: #222a38;
+	}
+	.home-visual {
+		width: 100%;
+		display: block;
+		text-align: center;
+	}
+	
+	.home-visual img {
+	max-width: 100%;
+	display: initial;
+	border: solid 4px #fff;
+	}
+	
+	.map-loc-1 {
+	  position: absolute;
+	  top: 115px;
+	  display: block;
+	  background-image: url("../img/fp_map_loc_1.png");
+	  width: 152px;
+	  height: 28px;
+	  left: 200px;
+	  -webkit-transition: background-image 2s; /* Safari */
+    transition: background-image 2s;
+	}
+	
+	.map-loc-2 {
+	  position: absolute;
+	  top: 30px;
+	  display: block;
+	  background-image: url("../img/fp_map_loc_2.png");
+	  width: 152px;
+	  height: 28px;
+	  left: 490px;
+	  	  -webkit-transition: background-image 2s; /* Safari */
+    transition: background-image 2s;
+	}
+	.map-loc-3 {
+	  position: absolute;
+	  top: 59px;
+	  display: block;
+	  background-image: url("../img/fp_map_loc_3.png");
+	  width: 115px;
+	  height: 28px;
+	  left: 785px;
+	  	  -webkit-transition: background-image 2s; /* Safari */
+    transition: background-image 2s;
+	}
+		.map-loc-1:hover {
+	  position: absolute;
+	  top: 115px;
+	  display: block;
+	  background-image: url("../img/fp_map_loc_1_over.png");
+	  width: 152px;
+	  height: 28px;
+	  left: 200px;
+	}
+	
+	.map-loc-2:hover {
+	  position: absolute;
+	  top: 30px;
+	  display: block;
+	  background-image: url("../img/fp_map_loc_2_over.png");
+	  width: 152px;
+	  height: 28px;
+	  left: 490px;
+	}
+	.map-loc-3:hover {
+	  position: absolute;
+	  top: 59px;
+	  display: block;
+	  background-image: url("../img/fp_map_loc_3_over.png");
+	  width: 115px;
+	  height: 28px;
+	  left: 785px;
+	}
+	.visual-mobile {
+		display: none;
 	}
 }
 
