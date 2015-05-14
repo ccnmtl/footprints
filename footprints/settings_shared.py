@@ -33,12 +33,7 @@ HAYSTACK_CONNECTIONS = {
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 HAYSTACK_SEARCH_RESULTS_PER_PAGE = 15
 
-TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
-
-NOSE_ARGS = [
-    '--with-coverage',
-    '--cover-package=footprints',
-]
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 JENKINS_TASKS = (
     'django_jenkins.tasks.run_pep8',
@@ -111,7 +106,6 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'tagging',
     'typogrify',
-    'django_nose',
     'compressor',
     'django_statsd',
     'bootstrapform',
