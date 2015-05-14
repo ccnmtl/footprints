@@ -109,6 +109,21 @@ blockquote {
     width: 100%;
 }
 
+.navbar-collapse.collapse.in {
+  margin: 0;
+  height: 195px;
+  position: relative;
+}
+
+.navbar-collapse.collapse.in ul {
+    float: left;
+}
+
+.in ul.front.navbar-nav li {
+    display: block;
+    clear: both;
+}
+
 .container.header .navbar-right {
     height: 25px;
 }
@@ -165,6 +180,10 @@ a.navbar-brand.front {
     float: none;
     width: 355px;
     margin: 2em auto;
+}
+
+.navbar-brand img {
+    max-width: 100%;
 }
 
 a.navbar-brand {
@@ -390,6 +409,7 @@ ul.front > li > a:hover {
 
 /* Block outercontainer Tablet */
 @media (min-width: 768px) {
+    
     .container.home {
         background-image: url("../img/fp_home_feat_bg.jpg");
         background-repeat: no-repeat;
