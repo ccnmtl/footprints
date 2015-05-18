@@ -709,8 +709,8 @@ ul.front > li > a:hover {
         width: 152px;
         height: 28px;
         left: 200px;
-        -webkit-transition: background-image 2s; /* Safari */
-        transition: background-image 2s;
+        -webkit-transition: background-image .6s; /* Safari */
+        transition: background-image .6s;
     }
 
     .map-loc-2 {
@@ -721,8 +721,8 @@ ul.front > li > a:hover {
         width: 152px;
         height: 28px;
         left: 490px;
-        -webkit-transition: background-image 2s; /* Safari */
-        transition: background-image 2s;
+        -webkit-transition: background-image .6s; /* Safari */
+        transition: background-image .6s;
     }
     .map-loc-3 {
         position: absolute;
@@ -732,8 +732,8 @@ ul.front > li > a:hover {
         width: 115px;
         height: 28px;
         left: 785px;
-        -webkit-transition: background-image 2s; /* Safari */
-        transition: background-image 2s;
+        -webkit-transition: background-image .6s; /* Safari */
+        transition: background-image .6s;
     }
     .map-loc-1:hover {
         position: absolute;
