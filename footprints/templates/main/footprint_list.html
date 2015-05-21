@@ -57,35 +57,6 @@
 
 <div class="object-browse">
     <div class="row tools">
-        <!-- div class="col-sm-6">
-            <div class="btn-group">
-              <button type="button" class="btn btn-default dropdown-toggle"
-                data-toggle="dropdown" aria-expanded="false">
-                Sort By {{selected_sort_label }} <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu" role="menu">
-                {% for key, value in sort_options.items %}
-                    <li>
-                        <a href="{% url 'browse-footprint-list' key %}">
-                            {{value.label}}
-                            {% ifequal selected_sort_label  value.label %}<span class="glyphicon glyphicon-ok" aria-hidden="true"></span> {% endifequal %} 
-                        </a>
-                    </li>
-                {% endfor %}
-              </ul>
-            </div>
-              
-            &nbsp;&nbsp;
-            <a href="{% url 'browse-footprint-list' selected_sort %}?direction=asc"
-                    class="btn btn-sort-direction asc {% ifequal direction 'asc' %}active{% endifequal %}">
-                <span class="glyphicon glyphicon-sort-by-attributes" aria-hidden="true"></span>
-            </a>
-            
-            <a href="{% url 'browse-footprint-list' selected_sort %}?direction=desc"
-                    class="btn btn-sort-direction desc {% ifequal direction 'desc' %}active{% endifequal %}">
-                <span class="glyphicon glyphicon-sort-by-attributes-alt" aria-hidden="true"></span>
-            </a>
-        </div-->
         <div class="col-sm-12">
             {% if paginator.num_pages > 1 %}
                 <ul class="pagination pagination-sm pull-right">
@@ -116,7 +87,7 @@
                     Evidence Location
                 </th>
                 <th class="owners">Owners</th>
-                <th data-sort-by="wtitle" class="sortable wtitle">Literary Work</th>
+                <th data-sort-by="wtitle" class="sortable wtitle">Literary Work / Imprint</th>
                 <th data-sort-by="added" class="sortable added">Added</th>
                 <th data-sort-by="complete" class="sortable complete">Complete</th>
             </tr>

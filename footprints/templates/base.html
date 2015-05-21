@@ -81,9 +81,6 @@
                             <li class="logged-in-greeting">
                                 <a href="/accounts/logout/?next=/"><span title="Log Out">Log Out</span></a>
                             </li>
-                            {% if user.has_usable_password %}
-                                <li><a href="/accounts/password_change/">Change Password</a></li>
-                            {% endif %}
                         {% endif %}
                         
                     {% endblock %}
@@ -207,6 +204,9 @@
                     <li><a href="/credits/">Credits</a></li>
                     <li><a href="/contact/">Contact</a></li>
                     <li><a href="/help/">Help</a></li>
+                    {% if user.has_usable_password %}
+                        <a href="/accounts/password_change/">Password</a>
+                    {% endif %}
                 </ul>                    
             </div>
             <div class="col-md-7">
