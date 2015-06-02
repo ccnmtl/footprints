@@ -6,7 +6,7 @@ uuid==1.30
 psycopg2==2.5.4
 Pillow==2.8.1
 versiontools==1.9.1
-statsd==3.0.1
+statsd==3.1
 pep8==1.5.7
 pyflakes==0.8.1
 mccabe==0.2.1
@@ -40,7 +40,7 @@ typogrify==2.0.0
 django-indexer==0.3.0
 django-templatetag-sugar==1.0
 django-paging==0.2.5
-django-annoying==0.8.0
+django-annoying==0.8.1
 django-appconf==0.6
 django-compressor==1.5
 django-statsd-mozilla==0.3.14
