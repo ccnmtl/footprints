@@ -36,7 +36,7 @@ sqlparse==0.1.14
 djangowind==0.13.3
 sorl==3.1
 tagging==0.3-pre
-typogrify==2.0.0
+typogrify==2.0.7
 django-indexer==0.3.0
 django-templatetag-sugar==1.0
 django-paging==0.2.5
