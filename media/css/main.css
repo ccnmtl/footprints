@@ -233,7 +233,7 @@ ul.front > li > a:hover {
 
 .footer {
     background-color: #171717;
-    height: 200px;
+    height: 175px;
     position: relative;
     margin: 1em 0 0 0;
     bottom: 0;
@@ -244,7 +244,7 @@ ul.front > li > a:hover {
   margin: 1em 0 0 0;
 }
 
-.footer .col-md-9 {
+.footer .col-md-10 {
   margin: 0 0 0 0;
 }
 
@@ -278,6 +278,7 @@ ul.front > li > a:hover {
     color: #edebe6;
     text-decoration: none;
 }
+
 
 .footer p {
 display: none;
@@ -699,7 +700,7 @@ ul.footer-logos li {
     .home-intro {
         display: block;
         background-image: url("../img/fp_home_intro_bg.png");
-        margin: 2em 0 0 3em;
+        margin: 3em 0 0 3em;
         padding: 2em;
     }
     .home-intro-one {
@@ -765,7 +766,7 @@ ul.footer-logos li {
         width: 100%;
         display: block;
         text-align: center;
-          margin: 3em auto 1em 0;
+        margin: 5em auto .5em 0;
     }
 
     .home-visual img {
@@ -840,14 +841,14 @@ ul.footer-logos li {
         display: none;
     }
     .base-links {
-        margin: 1em 0;
-        padding: 1em 2em;
+        margin: 2em 0;
+        padding: 1em 0 0 0;
     }
     .base-links .col-md-4 {
       display: inline;
       clear: none;
       float: left;
-      width: 33%;
+      width: 33.3%;
       height: 150px;
       border: none;
     }
@@ -883,8 +884,8 @@ ul.footer-logos li {
   margin: 3em 0 0 0;
 }
 
-.footer .col-md-9 {
-  margin: 2.5em 0 0 0;
+.footer .col-md-10 {
+  margin: 2em 0 0 0;
 }
 
 .footer .navbar-nav li {
