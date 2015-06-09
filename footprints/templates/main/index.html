@@ -27,6 +27,7 @@
                  </button>
                  
                  <a class="navbar-brand front" href="/"><img src="{{STATIC_URL}}img/fp_header_logo_center.png" alt="Footprints" /></a>
+                 <a class="navbar-brand front cjh" href="/"><img src="{{STATIC_URL}}img/fp_cjh_logo.png" alt="Center for Jewish History" /></a>
             </div>
 
             <!--/.navbar-header -->
@@ -42,6 +43,7 @@
                     {% endif %}
                     <li><a href="/browse/footprints/">Browse</a></li>
                     <li><a href="/search/">Search</a></li>
+                    <li><a href="http://edblogs.columbia.edu/footprints/" target="_blank">Blog</a></li>
 
                     {% if request.user.is_anonymous %}
                         <li><a id="login-link" href="#" data-toggle="modal" data-target="#login-modal">Log In</a></li>
