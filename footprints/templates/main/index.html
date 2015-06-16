@@ -27,6 +27,7 @@
                  </button>
                  
                  <a class="navbar-brand front" href="/"><img src="{{STATIC_URL}}img/fp_header_logo_center.png" alt="Footprints" /></a>
+<!--                 <a class="navbar-brand front cjh" href="/"><img src="{{STATIC_URL}}img/fp_cjh_logo.png" alt="Center for Jewish History" /></a> -->
             </div>
 
             <!--/.navbar-header -->
@@ -42,6 +43,7 @@
                     {% endif %}
                     <li><a href="/browse/footprints/">Browse</a></li>
                     <li><a href="/search/">Search</a></li>
+                    <li><a href="http://edblogs.columbia.edu/footprints/" target="_blank">Blog</a></li>
 
                     {% if request.user.is_anonymous %}
                         <li><a id="login-link" href="#" data-toggle="modal" data-target="#login-modal">Log In</a></li>
@@ -81,7 +83,7 @@ Every literary work represents a moment in time and space where an idea was conc
               <div class="col-md-4 home-search">
                   <div class="home-search-one">Search for Footprints</div>
                   <div class="home-search-two">
-                      A footprint is a record of the material presence of a literary work at a particular time and place:
+                      A footprint is a record of the material presence of a literary work at a particular time and place, such as:
                       <ul>
                           <li>an extant copy of an imprint</li>
                             <li>a copy owned in the past whose whereabouts are unknown</li>
@@ -102,9 +104,9 @@ Every literary work represents a moment in time and space where an idea was conc
                    <a href="http://footprints.ccnmtl.columbia.edu/timeline/shevet_yehuda/"><div class="map-loc-2"></div></a>
                    <a href="http://footprints.ccnmtl.columbia.edu/timeline/josippon/"><div class="map-loc-3"></div></a>
                </div>
-               <div class="home-visual-desc">Click on the titles on the map to visualize the journey of Jewish <span class="emph">books across the world</span> and <span class="emph">throughout time</span>.</div>
+               <div class="home-visual-desc">Click on the titles on the map to visualize the journey of Jewish books <span class="emph">across the world</span> and <span class="emph">through time</span>.</div>
                <div class="col-md-12 visual-mobile">
-                   <div class="mobile-desc">Click on these Footprint titles to visualize the journey of Jewish books across the world and throughout time.</div>
+                   <div class="mobile-desc">Click on these Footprint titles to visualize the journey of Jewish books across the world and through time.</div>
                    <ul>
                    <a href="http://footprints.ccnmtl.columbia.edu/timeline/sefer_ha-bahur/"><li>Sefer Ha-bahur (1892)</li></a>
                    <a href="http://footprints.ccnmtl.columbia.edu/timeline/shevet_yehuda/"><li>Shevet Yehuda (1829)</li></a>

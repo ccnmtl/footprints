@@ -63,6 +63,7 @@
                  {% endcomment %}
                  
                  <a class="navbar-brand" href="/"><img class="img-responsive" src="{{STATIC_URL}}img/fp_header_logo.png" alt="Footprints" /></a>
+<!--<a class="navbar-brand cjh" href="/"><img class="img-responsive" src="{{STATIC_URL}}img/fp_cjh_logo.png" alt="Footprints" /></a> -->
             </div>
 
             <!--/.navbar-header -->
@@ -75,6 +76,7 @@
                             {% endif %}
                             <li><a href="/browse/footprints/">Browse</a></li>
                             <li><a href="/search/">Search</a></li>
+							<li><a href="http://edblogs.columbia.edu/footprints/" target="_blank">Blog</a></li>
                         {% if request.user.is_anonymous %}
                             <li><a id="login-link" href="#" data-toggle="modal" data-target="#login-modal">Log In</a></li>
                         {% else %}
@@ -198,25 +200,28 @@
     <div class="container foot">
     <footer class="footer">
         <div class="row">
-            <div class="col-md-5">
+            <div class="col-md-2">
                 <ul class="nav navbar-nav">
-                    <li><a href="/about/">About</a></li>
                     <li><a href="/credits/">Credits</a></li>
                     <li><a href="/contact/">Contact</a></li>
-                    <li><a href="/help/">Help</a></li>
+                    <li><a href="/faq/">FAQ</a></li>
+                    <li><a href="/glossary/">Glossary</a></li>
                     {% if user.has_usable_password %}
                         <li><a href="/accounts/password_change/">Password</a></li>
                     {% endif %}
                 </ul>                    
             </div>
-            <div class="col-md-7">
-                <div class="pull-right footer-branding">
-                Footprints was developed through a collaboration of researchers from the
-                <a href="http://www.jtsa.edu/">Jewish Theological Seminary</a>, 
-                <a href="http://ccnmtl.columbia.edu">Columbia University</a>, 
-                <a href="http://http://www.pitt.edu/">University of Pittsburgh</a> and
-                <a href="http://www.stonybrook.edu/">Stony Brook University</a>,
-                as well as other partner institutions.</div>
+            <div class="col-md-10">
+                <div class="footer-branding">
+
+                <p><i>Footprints</i> was developed through a collaboration of educators and researchers from the following institutions:</p>
+                <ul class="footer-logos">
+<li>                <a href="http://www.jtsa.edu/"><img src="{{STATIC_URL}}img/fp_jts_logo.png" target="_blank" alt="Jewish Theological Seminary"></a></li> 
+<li>                <a href="http://library.columbia.edu"><img src="{{STATIC_URL}}img/fp_cu_logo.png" target="_blank" alt="Columbia University"></a> </li>
+<li>                <a href="http://www.pitt.edu/"><img src="{{STATIC_URL}}img/fp_pitt_logo.png" target="_blank" alt="University of Pittsburgh"></a> </li>
+<li>                <a href="http://www.stonybrook.edu/"><img src="{{STATIC_URL}}img/fp_sb_logo.png" target="_blank" alt="Stony Brook University"></a></li>
+<li>                                <a href="http://ccnmtl.columbia.edu"><img src="{{STATIC_URL}}img/fp_ccnmtl_logo.png" target="_blank" alt="Columbia Center for New Media Teaching and Learning"></a></li>
+                </ul>
             </div>
         </div>
     </footer>
