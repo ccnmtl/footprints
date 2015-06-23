@@ -341,7 +341,9 @@
         context: function(term, page) {
             return {
                 work: jQuery(this.eltWork).val(),
-                imprint: jQuery(this.eltImprint).val()
+                imprint: jQuery(this.eltImprint).val(),
+                page: page,
+                q: term
             };
         },
         initChoices: function() {
@@ -368,7 +370,11 @@
                     initSelection: function(elt, callback) {
                         callback({id: dataId, text: description});
                     },
-                    formatSelection: function(object, container, query, escMarkup) {
+                    formatSelection: function(object, container, query,
+                            escMarkup) {
+                        return object.text;
+                    },
+                    formatResult: function(object) {
                         return object.text;
                     }
                 });
@@ -408,25 +414,31 @@
             }
         },
         results: function(data, page, query) {
-            var results = [{
-                id: this.createId,
-                text: '<div class="separator">Create new ' + query.element[0].name + '</div>'
-            }];
+            var items = [];
+            
+            if (page === 1) {
+                items.push({
+                    id: this.createId,
+                    text: '<div class="separator">Create new ' +
+                        query.element[0].name + '</div>'
+                });
+            }
 
             for (var i=0; i < data.results.length; i++) {
                 if (data.results[i].description &&
                         data.results[i].description.length > 0) {
-                    results.push({
+                    items.push({
                         id: data.results[i].id,
                         text: data.results[i].description
                     });
                 }
             }
-            return {results: results, more: data.next};
+            return {results: items, more: data.next !== null};
         },
         validateField: function(elt) {
             var parent = jQuery(elt).parents('.form-group');
-            if (jQuery(parent).is(":visible") && jQuery(elt).val().length === 0) {
+            if (jQuery(parent).is(":visible") &&
+                    jQuery(elt).val().length === 0) {
                 jQuery(parent).addClass("has-error");
                 return false;
             } else {
@@ -470,7 +482,8 @@
             'click a.connect-records': 'connectRecords'
         },
         initialize: function(options) {
-            _.bindAll(this, 'connectRecords', 'context', 'render', 'maximizeCarousel');
+            _.bindAll(this, 'connectRecords', 'context', 'render',
+                      'maximizeCarousel');
 
             // Modifying X-Editable default properties
             jQuery.fn.editable.defaults.mode = 'inline';
