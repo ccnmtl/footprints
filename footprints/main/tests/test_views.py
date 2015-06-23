@@ -712,6 +712,23 @@ class AddDigitalObjectViewTest(TestCase):
 
 class ViewsetsTest(TestCase):
 
+    def test_writtenwork_viewset(self):
+        viewset = ImprintViewSet()
+        ww1 = ImprintFactory(title='Alpha')
+        ww2 = ImprintFactory(title='Beta')
+
+        viewset.request = RequestFactory().get('/', {})
+        qs = viewset.get_queryset()
+        self.assertEquals(qs.count(), 2)
+        self.assertEquals(qs[0], ww1)
+        self.assertEquals(qs[1], ww2)
+
+        data = {'q': 'bet'}
+        viewset.request = RequestFactory().get('/', data)
+        qs = viewset.get_queryset()
+        self.assertEquals(qs.count(), 1)
+        self.assertEquals(qs.first(), ww2)
+
     def test_imprint_viewset(self):
         viewset = ImprintViewSet()
         imprint1 = ImprintFactory(title='Alpha')
@@ -728,6 +745,12 @@ class ViewsetsTest(TestCase):
         qs = viewset.get_queryset()
         self.assertEquals(qs.count(), 1)
         self.assertEquals(qs.first(), imprint1)
+
+        data = {'q': 'bet'}
+        viewset.request = RequestFactory().get('/', data)
+        qs = viewset.get_queryset()
+        self.assertEquals(qs.count(), 1)
+        self.assertEquals(qs.first(), imprint2)
 
     def test_bookcopy_viewset(self):
         viewset = BookCopyViewSet()

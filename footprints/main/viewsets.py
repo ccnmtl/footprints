@@ -62,6 +62,16 @@ class WrittenWorkViewSet(viewsets.ModelViewSet):
     serializer_class = WrittenWorkSerializer
     permission_classes = (IsLoggedInOrReadOnly,)
 
+    def get_queryset(self):
+        """
+        Optionally restricts the works by title
+        """
+        qs = WrittenWork.objects.all()
+        title = self.request.GET.get('q', None)
+        if title is not None and len(title) > 0:
+            qs = qs.filter(title__istartswith=title)
+        return qs
+
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -80,6 +90,10 @@ class ImprintViewSet(viewsets.ModelViewSet):
         work_id = self.request.GET.get('work', None)
         if work_id:
             qs = qs.filter(work__id=work_id)
+
+        title = self.request.GET.get('q', None)
+        if title is not None and len(title) > 0:
+            qs = qs.filter(title__istartswith=title)
 
         return qs
 
