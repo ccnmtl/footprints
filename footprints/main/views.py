@@ -3,13 +3,17 @@ from django.conf import settings
 from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import logout as auth_logout_view
+from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.db.models.fields import FieldDoesNotExist
 from django.db.models.fields.related import ManyToManyField
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
+from django.template import loader
+from django.template.context import Context
 from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
+from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
 from djangowind.views import logout as wind_logout_view
 from haystack.query import SearchQuerySet
@@ -18,7 +22,8 @@ from rest_framework.renderers import JSONPRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from footprints.main.forms import DigitalObjectForm
+from footprints.main.forms import DigitalObjectForm, ContactUsForm, \
+    SUBJECT_CHOICES
 from footprints.main.models import (
     Footprint, Actor, Person, Role, WrittenWork, Language, ExtendedDateFormat,
     Place, Imprint, BookCopy, StandardizedIdentification,
@@ -422,3 +427,36 @@ class NameListView(LoggedInMixin, APIView):
             return Response(serializer.data)
         else:
             return Response({})
+
+
+class ContactUsView(FormView):
+    template_name = 'main/contact.html'
+    form_class = ContactUsForm
+    success_url = "/contact/success/"
+
+    def get_initial(self):
+        initial = super(ContactUsView, self).get_initial()
+        if not self.request.user.is_anonymous():
+            initial['name'] = self.request.user.get_full_name()
+            initial['email'] = self.request.user.email
+        initial['subject'] = '-----'
+
+        return initial
+
+    def form_valid(self, form):
+        subject = "Footprints Contact Us Request"
+        form_data = form.cleaned_data
+
+        if not self.request.user.is_anonymous():
+            form_data['username'] = self.request.user.username
+
+        form_data['subject'] = dict(SUBJECT_CHOICES)[form_data['subject']]
+
+        # POST to the support email
+        sender = form_data['email']
+        recipients = (getattr(settings, 'CONTACT_US_EMAIL'),)
+
+        tmpl = loader.get_template('main/contact_notification_email.txt')
+        send_mail(subject, tmpl.render(Context(form_data)), sender, recipients)
+
+        return super(ContactUsView, self).form_valid(form)

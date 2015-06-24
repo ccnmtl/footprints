@@ -14,7 +14,8 @@ from footprints.main.views import (
     FootprintDetailView, PersonDetailView, PlaceDetailView,
     WrittenWorkDetailView, TitleListView, NameListView,
     AddPlaceView, AddDateView, RemoveRelatedView, FootprintListView,
-    AddIdentifierView, AddDigitalObjectView, ConnectFootprintView)
+    AddIdentifierView, AddDigitalObjectView, ConnectFootprintView,
+    ContactUsView)
 from footprints.main.viewsets import (
     BookCopyViewSet, ImprintViewSet, ActorViewSet,
     ExtendedDateFormatViewSet, FootprintViewSet, LanguageViewSet,
@@ -113,6 +114,11 @@ urlpatterns = patterns(
     url(r'^api/', include(router.urls)),
     url(r'^api/title/$', TitleListView.as_view()),
     url(r'^api/name/$', NameListView.as_view()),
+
+    # Contact us forms.
+    (r'^contact/success/$',
+     TemplateView.as_view(template_name='main/contact_success.html')),
+    (r'^contact/$', ContactUsView.as_view()),
 
     (r'^admin/', include(admin.site.urls)),
     url(r'^_impersonate/', include('impersonate.urls')),

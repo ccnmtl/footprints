@@ -1676,3 +1676,8 @@ float: left;
   margin: 0 15px 10px 0;
   box-shadow: 2px 2px 1px #836737;
 }
+
+input[name='decoy'],
+p.decoy {
+    display: none !important;
+}
