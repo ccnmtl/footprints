@@ -1018,6 +1018,10 @@ ul.wizard-tabs.has-error li.active a {
     color: #836737;
 }
 
+.footprint-form .form-group .help-block {
+    width: 75%;
+}
+
 .footprint-form .form-group .error-block {
     display: none;
     color: #a94442;

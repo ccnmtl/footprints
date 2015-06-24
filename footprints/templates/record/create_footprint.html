@@ -27,38 +27,18 @@
 <h1>Create a Footprint</h1>
 </div>
 <div class="row">
- 
     <div class="col-md-8">
         <form id="footprint-form" class="footprint-form" role="form" method="post">
             {% csrf_token %}
             <div role="tabpanel">
-                <!--<ul class="nav wizard-tabs" role="tablist">
-                    <li role="presentation" class="active">
-                        <a href="#title" aria-controls="profile" role="tab" data-toggle="tab">
-                            <span class="step-number">1. </span>Title
-                        </a>
-                    </li>
-                    <li role="presentation" class="disabled">
-                        <a href="#evidencetype" aria-controls="home" role="tab" data-toggle="tab">
-                            <span class="step-number">2. </span>Evidence Type
-                        </a>
-                    </li>
-                    <li role="presentation" class="disabled">
-                        <a href="#evidencelocation" aria-controls="home" role="tab" data-toggle="tab">
-                            <span class="step-number">3. </span>Evidence Location
-                        </a>
-                    </li>
-                </ul>-->
-                
                 <div class="tab-content well">
                     <div role="tabpanel" class="tab-pane active wizard-pane" id="title">
                         <div class="form-content">
                             <div class="form-group required">
                                 <h3>1. Identify the Title</h3>
+                                <label>Enter the literary work's title exactly as it appears in the evidence.</label>
                                  <input type="text" class="form-control" name="footprint-title" placeholder=""/>
                                 <div class="error-block">This field is required.</div>
-                                <br />
-                                <label>Enter the literary work's title exactly as it appears in the evidence.</label>
                                 <div class="help-block">
                                     Abbreviations and alternate spellings are expected.<br />
                                     The footprint will be linked to a standardized title after creation.<br />
@@ -77,6 +57,7 @@
                             <div class="form-group required">
                                 <h3>2. Describe the evidence</h3>
                                 <br />
+                                <label>What is the evidence type?</label>
                                 <select class="form-control required" name="footprint-medium">
                                     <option value="" disabled selected>Select the evidence type</option>
                                     {% for medium in mediums %}
@@ -86,8 +67,7 @@
                                 </select>
                                 <input type="form-control" name="footprint-medium-other" class="form-control"
                                     placeholder="Specify another evidence type" style="display: none"></input>
-                                <div class="error-block">This field is required.</div> <br />
-                                <label>What is the evidence type?</label>
+                                <div class="error-block">This field is required.</div>
                                 <div class="help-block">
                                     The evidence type is where the footprint is derived or deduced from, e.g.,
                                     an extant copy with an owner’s signature, a library mark, a book list or catalog, 
@@ -96,8 +76,8 @@
                             </div>
                             <br />
                             <div class="form-group">
-                                <textarea class="form-control" name="footprint-medium-description"></textarea> <br />
                                 <label>Do you have additional descriptive information about the evidence?</label>
+                                <textarea class="form-control" name="footprint-medium-description"></textarea>
                                 <div class="help-block">
                                     Additional information might include an auction catalog title. 
                                 </div>
@@ -115,9 +95,9 @@
                         <div class="form-content">
                             <div class="form-group required">
                                 <h3>3. Locate the evidence</h3>
-                                <textarea class="form-control required" name="footprint-provenance"></textarea>
-                                <div class="error-block">This field is required.</div> <br />
                                 <label>Where can the evidence be found right now?</label>
+                                <textarea class="form-control required" name="footprint-provenance"></textarea>
+                                <div class="error-block">This field is required.</div>
                                 <div class="help-block">
                                     The evidence location describes where one can find the evidence now. Options include
                                     a particular library, archive, a printed book, a journal article, a collection, e.g.
