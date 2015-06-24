@@ -1,10 +1,14 @@
 from json import loads
 
+from django.conf import settings
+from django.contrib.auth.models import AnonymousUser
+from django.core import mail
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.test.client import Client, RequestFactory
 
+from footprints.main.forms import ContactUsForm
 from footprints.main.models import Footprint, Actor, Imprint, \
     StandardizedIdentificationType
 from footprints.main.tests.factories import (
@@ -12,7 +16,7 @@ from footprints.main.tests.factories import (
     PersonFactory, RoleFactory, PlaceFactory, ActorFactory, BookCopyFactory,
     ExtendedDateFormatFactory)
 from footprints.main.views import (
-    CreateFootprintView, AddActorView)
+    CreateFootprintView, AddActorView, ContactUsView)
 from footprints.main.viewsets import ImprintViewSet, BookCopyViewSet
 
 
@@ -768,3 +772,58 @@ class ViewsetsTest(TestCase):
         qs = viewset.get_queryset()
         self.assertEquals(qs.count(), 1)
         self.assertEquals(qs.first(), book1)
+
+
+class ContactUsViewTest(TestCase):
+
+    def test_get_initial_anonymous(self):
+        view = ContactUsView()
+        view.request = RequestFactory().get('/contact/')
+        view.request.session = {}
+        view.request.user = AnonymousUser()
+        initial = view.get_initial()
+
+        self.assertFalse('name' in initial)
+        self.assertFalse('email' in initial)
+
+    def test_get_initial_not_anonymous(self):
+        view = ContactUsView()
+        view.request = RequestFactory().get('/contact/')
+        view.request.session = {}
+        view.request.user = UserFactory(first_name='Foo',
+                                        last_name='Bar',
+                                        email='foo@bar.com')
+
+        initial = view.get_initial()
+        self.assertEquals(initial['name'], 'Foo Bar')
+        self.assertEquals(initial['email'], 'foo@bar.com')
+
+        # a subsequent call using an anonymous session returns a clean initial
+        view.request.session = {}
+        view.request.user = AnonymousUser()
+        initial = view.get_initial()
+        self.assertFalse('name' in initial)
+        self.assertFalse('email' in initial)
+
+    def test_form_valid(self):
+        view = ContactUsView()
+        view.request = RequestFactory().get('/contact/')
+        view.request.user = AnonymousUser()
+
+        form = ContactUsForm()
+        form.cleaned_data = {
+            'name': 'Foo Bar',
+            'email': 'sender@ccnmtl.columbia.edu',
+            'subject': 'other',
+            'description': 'There is a problem'
+        }
+
+        view.form_valid(form)
+        self.assertEqual(len(mail.outbox), 1)
+
+        self.assertEqual(mail.outbox[0].subject,
+                         'Footprints Contact Us Request')
+        self.assertEquals(mail.outbox[0].from_email,
+                          'sender@ccnmtl.columbia.edu')
+        self.assertEquals(mail.outbox[0].to,
+                          [settings.CONTACT_US_EMAIL])

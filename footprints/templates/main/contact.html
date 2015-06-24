@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Contact Us{% endblock %}
+
+{% block css %}
+    <style>
+        .form-group .help-block {
+            display: none;
+        }
+        .form-group.has-error .help-block {
+            display: block;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="contact_us_form">
+        <h2 class="title">Contact Us</h2>
+        <br />
+        <form action="." method="post" name="feedback" class="form-horizontal">{% csrf_token %}
+            <div class="form-group {% if form.name.errors %}has-error{% endif %}">
+                <label for="name" class="col-sm-2 control-label">Name</label>
+                <div class="col-sm-6">
+                    <input type="text" name="name" class="form-control"
+                    value="{% if form.data.name %}{{form.data.name}}{% else %}{{form.initial.name}}{% endif %}" />
+                    <p class="help-block">Name is a required field</p>
+                </div>
+            </div>    
+            <div class="visualclear"></div>
+            <div class="form-group {% if form.email.errors %}has-error{% endif %}">
+                <label for="email" class="col-sm-2 control-label">E-mail Address</label>
+                <div class="col-sm-6">
+                    <input class="form-control" type="text" name="email"
+                     value="{% if form.data.email %}{{form.data.email}}{% else %}{{form.initial.email}}{% endif %}" />
+                    <div class="visualclear"></div>                
+                    <p class="help-block">A valid e-mail address is required.</p>
+                </div>
+            </div>
+            <br />
+            <div class="visualclear"></div>
+            <div class="form-group {% if form.subject.errors %}has-error{% endif %}">
+                <label for="subject"  class="col-sm-2 control-label">Subject</label>
+                <div class="col-sm-6">
+                    {{form.subject}}
+                    <p class="help-block">Subject is a required field.</p>
+                </div>
+            </div>
+            <br />
+            <div class="form-group {% if form.description.errors %}has-error{% endif %}">
+                <label for="description" class="col-sm-2 control-label">Description</label>
+                <div class="col-sm-6">
+                    {{form.description}}
+                    <p class="help-block">Description is a required field.</p>
+                </div>
+            </div>
+            <div class="form-group {% if form.decoy.errors %}has-error{% endif %}">
+                <input type="text" name="decoy" value="" placeholder="Please leave blank" autofill="off" />
+                <p class="help-block decoy">If you can see the decoy field, please leave it blank.</p>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-8">
+                    <input class="btn pull-right" type="submit" value="Send Feedback"/>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

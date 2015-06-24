@@ -145,6 +145,7 @@ EMAIL_SUBJECT_PREFIX = "[footprints] "
 EMAIL_HOST = 'localhost'
 SERVER_EMAIL = "footprints@ccnmtl.columbia.edu"
 DEFAULT_FROM_EMAIL = SERVER_EMAIL
+CONTACT_US_EMAIL = 'footprints@columbia.edu'
 
 STATIC_ROOT = os.path.join(os.path.dirname(__file__), "../media")
 STATICFILES_DIRS = (
