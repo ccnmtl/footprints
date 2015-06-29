@@ -304,7 +304,7 @@ ul.footer-logos li {
 }
 
 
-	
+
 /* Homepage */
 
 /* Block outercontainer */
@@ -458,7 +458,7 @@ ul.footer-logos li {
 
 /* Block outercontainer Tablet */
 @media (min-width: 768px) {
-    
+
     .container.home {
         background-image: url("../img/fp_home_feat_bg.jpg");
         background-repeat: no-repeat;
@@ -1644,14 +1644,14 @@ margin: 0 auto;
 .flatpage_contain h3 {
   color: #836737;
   }
-  
+
 .flatpage_contain .flat-well {
   background-image: url("../img/fp_section_bg.png");
   background-repeat: repeat;
   padding: 10px 20px;
   margin: 0 0 10px 200px;
   float: left;
-} 
+}
   .flatpage_contain .flat-well div {
   border-bottom: dotted 1px #ccc;
   padding: 1em 0 2em 0;
@@ -1660,7 +1660,7 @@ margin: 0 auto;
   .flatpage_contain .flat-well div:last-child {
   border-bottom: none;
   }
-  
+
 ul.about-nav {
   float: left;
   margin: 1em 5em 2em -40px;
@@ -1670,7 +1670,7 @@ ul.about-nav {
   ul.about-nav li {
 padding: 0 0 10px 0;
 }
-  
+
   .flatpage_contain .well a {
   font-weight: bold;
   }
@@ -1681,6 +1681,33 @@ float: left;
   box-shadow: 2px 2px 1px #836737;
 }
 
+ul#glossary {
+  margin-left: -37px;
+}
+
+ul#glossary li {
+  list-style-type: none;
+  padding: 10px;
+}
+
+ul#glossary li:nth-child(odd) {
+  background-color: #f7f7f7;
+}
+
+ul#glossary strong {
+  color: #2e5367;
+}
+#faq p {
+  margin: 2em 0;
+  background-image: url("../img/fp_section_bg.png");
+  background-repeat: repeat;
+  padding: 20px;
+}
+#faq strong {
+  font-weight: normal;
+  font-size: 1.25em;
+  color: #2e5367;
+}
 input[name='decoy'],
 p.decoy {
     display: none !important;
