@@ -17,7 +17,7 @@ BeautifulSoup==3.2.1
 cssselect==0.9.1
 lxml==3.4.4
 fuzzywuzzy==0.4.0
-sure==1.2.9
+sure==1.2.12
 ipython==1.2.1
 ipdb==0.8
 rdflib==4.1.2
