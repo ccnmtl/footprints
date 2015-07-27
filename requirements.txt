@@ -21,7 +21,7 @@ sure==1.2.12
 ipython==1.2.1
 ipdb==0.8
 rdflib==4.1.2
-selenium==2.45.0
+selenium==2.46.1
 coverage==3.7.1
 pyasn1==0.1.8
 pyOpenSSL==0.15.1
