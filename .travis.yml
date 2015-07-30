@@ -5,3 +5,5 @@ install:
   - ./bootstrap.py
 script:
   - make
+notifications:
+  slack: ccnmtl:GizSNscLWJLldjQrffB8mwgm
