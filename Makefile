@@ -2,7 +2,7 @@ MANAGE=./manage.py
 APP=footprints
 FLAKE8=./ve/bin/flake8
 
-jenkins: ./ve/bin/python validate test flake8 jshint
+jenkins: ./ve/bin/python check test flake8 jshint
 
 ./ve/bin/python: requirements.txt bootstrap.py virtualenv.py
 	chmod +x manage.py bootstrap.py
@@ -20,14 +20,14 @@ test: ./ve/bin/python
 flake8: ./ve/bin/python
 	$(FLAKE8) $(APP) --max-complexity=12
 
-runserver: ./ve/bin/python validate
+runserver: ./ve/bin/python check
 	$(MANAGE) runserver
 
-migrate: ./ve/bin/python validate jenkins
+migrate: ./ve/bin/python check jenkins
 	$(MANAGE) migrate
 
-validate: ./ve/bin/python
-	$(MANAGE) validate
+check: ./ve/bin/python
+	$(MANAGE) check
 
 shell: ./ve/bin/python
 	$(MANAGE) shell_plus
@@ -42,14 +42,14 @@ clean:
 
 pull:
 	git pull
-	make validate
+	make check
 	make test
 	make migrate
 	make flake8
 
 rebase:
 	git pull --rebase
-	make validate
+	make check
 	make test
 	make migrate
 	make flake8
@@ -57,14 +57,14 @@ rebase:
 syncdb: ./ve/bin/python
 	$(MANAGE) syncdb
 
-collectstatic: ./ve/bin/python validate
+collectstatic: ./ve/bin/python check
 	$(MANAGE) collectstatic --noinput --settings=$(APP).settings_production
 
 # run this one the very first time you check
 # this out on a new machine to set up dev
 # database, etc. You probably *DON'T* want
 # to run it after that, though.
-install: ./ve/bin/python validate jenkins
+install: ./ve/bin/python check jenkins
 	createdb $(APP)
 	$(MANAGE) syncdb --noinput
 	make migrate

@@ -15,21 +15,25 @@ from footprints.main.models import Footprint, Role, DigitalObject, \
 class RoleForm(ModelForm):
     class Meta:
         model = Role
+        exclude = []
 
 
 class ExtendedDateFormatForm(ModelForm):
     class Meta:
         model = ExtendedDateFormat
+        exclude = []
 
 
 class LanguageForm(ModelForm):
     class Meta:
         model = Language
+        exclude = []
 
 
 class DigitalFormatForm(ModelForm):
     class Meta:
         model = DigitalFormat
+        exclude = []
 
 
 class DigitalObjectForm(ModelForm):
@@ -41,6 +45,7 @@ class DigitalObjectForm(ModelForm):
 class StandardizedIdentificationForm(ModelForm):
     class Meta:
         model = StandardizedIdentification
+        exclude = []
 
 
 class PersonForm(ModelForm):
@@ -89,11 +94,13 @@ class PlaceForm(ModelForm):
 class CollectionForm(ModelForm):
     class Meta:
         model = Collection
+        exclude = []
 
 
 class WrittenWorkForm(ModelForm):
     class Meta:
         model = WrittenWork
+        exclude = []
 
 
 class ImprintForm(ModelForm):
@@ -102,11 +109,13 @@ class ImprintForm(ModelForm):
 
     class Meta:
         model = Imprint
+        exclude = []
 
 
 class BookCopyForm(ModelForm):
     class Meta:
         model = BookCopy
+        exclude = []
 
 
 class FootprintForm(ModelForm):
@@ -115,6 +124,7 @@ class FootprintForm(ModelForm):
 
     class Meta:
         model = Footprint
+        exclude = []
 
 
 class FootprintSearchForm(ModelSearchForm):
