@@ -61,29 +61,29 @@ class RoleManager(models.Manager):
         super(RoleManager, self).__init__(*args, **kwargs)
         self._fields = fields
 
-    def get_query_set(self):
+    def get_queryset(self):
         return RoleQuerySet(self.model, self._fields)
 
     def get_author_role(self):
-        return self.get_query_set().get_author_role()
+        return self.get_queryset().get_author_role()
 
     def get_owner_role(self):
-        return self.get_query_set().get_owner_role()
+        return self.get_queryset().get_owner_role()
 
     def get_publisher_role(self):
-        return self.get_query_set().get_publisher_role()
+        return self.get_queryset().get_publisher_role()
 
     def get_printer_role(self):
-        return self.get_query_set().get_printer_role()
+        return self.get_queryset().get_printer_role()
 
     def for_footprint(self):
-        return self.get_query_set().for_footprint()
+        return self.get_queryset().for_footprint()
 
     def for_imprint(self):
-        return self.get_query_set().for_imprint()
+        return self.get_queryset().for_imprint()
 
     def for_work(self):
-        return self.get_query_set().for_work()
+        return self.get_queryset().for_work()
 
 
 class Role(models.Model):
@@ -160,14 +160,14 @@ class StandardizedIdentificationTypeManager(models.Manager):
             *args, **kwargs)
         self._fields = fields
 
-    def get_query_set(self):
+    def get_queryset(self):
         return StandardizedIdentificationTypeQuerySet(self.model, self._fields)
 
     def for_imprint(self):
-        return self.get_query_set().for_imprint()
+        return self.get_queryset().for_imprint()
 
     def for_work(self):
-        return self.get_query_set().for_work()
+        return self.get_queryset().for_work()
 
 
 class StandardizedIdentificationType(models.Model):
