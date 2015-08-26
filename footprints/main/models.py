@@ -222,7 +222,7 @@ class Person(models.Model):
     standardized_identifier = models.ForeignKey(StandardizedIdentification,
                                                 null=True, blank=True)
     digital_object = models.ManyToManyField(
-        DigitalObject, null=True, blank=True)
+        DigitalObject, blank=True)
 
     notes = models.TextField(null=True, blank=True)
 
@@ -286,7 +286,7 @@ class Place(models.Model):
     position = GeopositionField()
 
     digital_object = models.ManyToManyField(
-        DigitalObject, null=True, blank=True)
+        DigitalObject, blank=True)
 
     notes = models.TextField(null=True, blank=True)
 
@@ -321,7 +321,7 @@ class Place(models.Model):
 
 class Collection(models.Model):
     name = models.CharField(max_length=512, unique=True)
-    actor = models.ManyToManyField(Actor, null=True, blank=True)
+    actor = models.ManyToManyField(Actor, blank=True)
 
     notes = models.TextField(null=True, blank=True)
 
@@ -343,12 +343,12 @@ class Collection(models.Model):
 class WrittenWork(models.Model):
     title = models.TextField(null=True, blank=True)
     actor = models.ManyToManyField(
-        Actor, null=True, blank=True,
+        Actor, blank=True,
         help_text="The author or creator of the work. ")
     notes = models.TextField(null=True, blank=True)
 
     standardized_identifier = models.ManyToManyField(
-        StandardizedIdentification, null=True, blank=True)
+        StandardizedIdentification, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
@@ -393,18 +393,18 @@ class Imprint(models.Model):
 
     title = models.TextField(null=True, blank=True,
                              verbose_name="Imprint Title")
-    language = models.ManyToManyField(Language, null=True, blank=True)
+    language = models.ManyToManyField(Language, blank=True)
     date_of_publication = models.OneToOneField(ExtendedDateFormat,
                                                null=True, blank=True)
     place = models.ForeignKey(Place, null=True, blank=True)
 
-    actor = models.ManyToManyField(Actor, null=True, blank=True)
+    actor = models.ManyToManyField(Actor, blank=True)
 
     standardized_identifier = models.ManyToManyField(
-        StandardizedIdentification, null=True, blank=True)
+        StandardizedIdentification, blank=True)
 
     digital_object = models.ManyToManyField(
-        DigitalObject, null=True, blank=True)
+        DigitalObject, blank=True)
 
     notes = models.TextField(null=True, blank=True)
 
@@ -479,7 +479,7 @@ class BookCopy(models.Model):
     imprint = models.ForeignKey(Imprint)
 
     digital_object = models.ManyToManyField(
-        DigitalObject, null=True, blank=True)
+        DigitalObject, blank=True)
 
     notes = models.TextField(null=True, blank=True)
 
@@ -549,7 +549,7 @@ class Footprint(models.Model):
 
     title = models.TextField(null=True, blank=True,
                              verbose_name='Footprint Title')
-    language = models.ManyToManyField(Language, null=True, blank=True)
+    language = models.ManyToManyField(Language, blank=True)
     place = models.ForeignKey(Place, null=True, blank=True,
                               verbose_name='Footprint Location')
 
@@ -561,10 +561,10 @@ class Footprint(models.Model):
     collection = models.ForeignKey(Collection, null=True, blank=True)
 
     digital_object = models.ManyToManyField(
-        DigitalObject, null=True, blank=True)
+        DigitalObject, blank=True)
 
     actor = models.ManyToManyField(
-        Actor, null=True, blank=True,
+        Actor, blank=True,
         help_text="An owner or other person related to this footprint. ")
 
     notes = models.TextField(null=True, blank=True)
