@@ -33,7 +33,7 @@ astroid==1.3.8
 pylint==1.4.1
 six==1.9.0
 factory_boy==2.4.1
-python-ldap==2.4.19
+python-ldap==2.4.20
 sqlparse==0.1.14
 
 djangowind==0.13.3
