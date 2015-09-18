@@ -84,6 +84,7 @@ MIDDLEWARE_CLASSES = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'waffle.middleware.WaffleMiddleware',
     'audit_log.middleware.UserLoggingMiddleware',
+    'reversion.middleware.RevisionMiddleware',
 ]
 
 ROOT_URLCONF = 'footprints.urls'
@@ -121,6 +122,7 @@ INSTALLED_APPS = [
     'footprints.main',
     'geoposition',
     'rest_framework',
+    'reversion'
 ]
 
 INTERNAL_IPS = ('127.0.0.1', )
