@@ -1,4 +1,5 @@
 from django.contrib import admin
+import reversion
 
 from footprints.main.models import Footprint, DigitalFormat, Role, \
     ExtendedDateFormat, Actor, Language, DigitalObject, \
@@ -83,7 +84,7 @@ def owner(obj):
 owner.short_description = 'Owner'
 
 
-class FootprintAdmin(admin.ModelAdmin):
+class FootprintAdmin(reversion.VersionAdmin):
     list_display = ('title', 'associated_date', 'place', owner,
                     imprint_title, imprint_date, language)
     readonly_fields = ('created_at', 'modified_at',

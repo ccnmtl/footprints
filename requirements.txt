@@ -67,3 +67,4 @@ django-geoposition==0.2.2
 django-audit-log==0.7.0
 djangorestframework==3.0.3
 Unidecode==0.04.17
+django-reversion==1.9.3
