@@ -7,7 +7,7 @@ psycopg2==2.6.1
 Pillow==2.8.1
 versiontools==1.9.1
 statsd==3.1
-pep8==1.5.7
+pep8==1.6.2
 pyflakes==0.9.2
 mccabe==0.3.1
 pyparsing==2.0.3
