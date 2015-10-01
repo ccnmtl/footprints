@@ -16,7 +16,7 @@ tornado==4.2.1
 BeautifulSoup==3.2.1
 cssselect==0.9.1
 lxml==3.4.4
-fuzzywuzzy==0.6.0
+fuzzywuzzy==0.6.1
 sure==1.2.12
 ipython==4.0.0
 ipdb==0.8.1
