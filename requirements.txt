@@ -1,4 +1,4 @@
-Django==1.8.4
+Django==1.8.5
 feedparser==5.2.0
 Markdown==2.6.2
 smartypants==1.8.6
