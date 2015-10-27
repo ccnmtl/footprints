@@ -18,7 +18,7 @@ from django.views.generic.list import ListView
 from djangowind.views import logout as wind_logout_view
 from haystack.query import SearchQuerySet
 from rest_framework.permissions import AllowAny
-from rest_framework.renderers import JSONPRenderer
+from rest_framework_jsonp.renderers import JSONPRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 

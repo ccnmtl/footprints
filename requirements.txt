@@ -65,6 +65,7 @@ pysolr==2.0.15
 django-haystack==2.3.1
 django-geoposition==0.2.2
 django-audit-log==0.7.0
-djangorestframework==3.0.3
+djangorestframework==3.2.4
+djangorestframework-jsonp==1.0.2
 Unidecode==0.04.17
 django-reversion==1.9.3
