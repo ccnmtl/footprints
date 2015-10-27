@@ -14,34 +14,40 @@ TEST_MEDIA_PATH = os.path.join(os.path.dirname(__file__), 'test.txt')
 
 
 class UserFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = User
+    class Meta:
+        model = User
     username = factory.Sequence(lambda n: "user%03d" % n)
     password = factory.PostGenerationMethodCall('set_password', 'test')
 
 
 class ExtendedDateFormatFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = ExtendedDateFormat
+    class Meta:
+        model = ExtendedDateFormat
     edtf_format = '1984~'
 
 
 class RoleFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = Role
+    class Meta:
+        model = Role
     name = factory.Sequence(lambda n: "Author%03d" % n)
     level = 'footprint'
 
 
 class LanguageFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = Language
+    class Meta:
+        model = Language
     name = factory.Sequence(lambda n: "Language%03d" % n)
 
 
 class DigitalFormatFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = DigitalFormat
+    class Meta:
+        model = DigitalFormat
     name = factory.Sequence(lambda n: "format%03d" % n)
 
 
 class DigitalObjectFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = DigitalObject
+    class Meta:
+        model = DigitalObject
     name = factory.Sequence(lambda n: "image%03d" % n)
     digital_format = factory.SubFactory(DigitalFormatFactory)
 
@@ -50,7 +56,8 @@ class DigitalObjectFactory(factory.DjangoModelFactory):
 
 
 class StandardizedIdentificationTypeFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = StandardizedIdentificationType
+    class Meta:
+        model = StandardizedIdentificationType
 
     name = factory.Sequence(lambda n: "name%03d" % n)
     slug = factory.Sequence(lambda n: "%03d" % n)
@@ -58,14 +65,16 @@ class StandardizedIdentificationTypeFactory(factory.DjangoModelFactory):
 
 
 class StandardizedIdentificationFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = StandardizedIdentification
+    class Meta:
+        model = StandardizedIdentification
 
     identifier = factory.Sequence(lambda n: "identifier%03d" % n)
     identifier_type = factory.SubFactory(StandardizedIdentificationTypeFactory)
 
 
 class PersonFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = Person
+    class Meta:
+        model = Person
 
     name = factory.Sequence(lambda n: "Name%03d" % n)
     birth_date = factory.SubFactory(ExtendedDateFormatFactory)
@@ -76,7 +85,8 @@ class PersonFactory(factory.DjangoModelFactory):
 
 
 class ActorFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = Actor
+    class Meta:
+        model = Actor
 
     person = factory.SubFactory(PersonFactory)
     role = factory.SubFactory(RoleFactory)
@@ -84,7 +94,8 @@ class ActorFactory(factory.DjangoModelFactory):
 
 
 class PlaceFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = Place
+    class Meta:
+        model = Place
 
     country = 'Poland'
     city = 'Cracow'
@@ -92,7 +103,8 @@ class PlaceFactory(factory.DjangoModelFactory):
 
 
 class CollectionFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = Collection
+    class Meta:
+        model = Collection
 
     name = factory.Sequence(lambda n: "Collection%03d" % n)
 
@@ -103,7 +115,8 @@ class CollectionFactory(factory.DjangoModelFactory):
 
 
 class WrittenWorkFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = WrittenWork
+    class Meta:
+        model = WrittenWork
 
     title = 'The Odyssey'
     notes = 'epic'
@@ -116,7 +129,8 @@ class WrittenWorkFactory(factory.DjangoModelFactory):
 
 
 class ImprintFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = Imprint
+    class Meta:
+        model = Imprint
 
     work = factory.SubFactory(WrittenWorkFactory)
     title = 'The Odyssey, Edition 1'
@@ -143,14 +157,16 @@ class ImprintFactory(factory.DjangoModelFactory):
 
 
 class BookCopyFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = BookCopy
+    class Meta:
+        model = BookCopy
 
     imprint = factory.SubFactory(ImprintFactory)
     notes = "lorem ipsum"
 
 
 class FootprintFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = Footprint
+    class Meta:
+        model = Footprint
 
     book_copy = factory.SubFactory(BookCopyFactory)
     medium = 'Medium'
