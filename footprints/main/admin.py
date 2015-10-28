@@ -89,6 +89,7 @@ class FootprintAdmin(reversion.VersionAdmin):
                     imprint_title, imprint_date, language)
     readonly_fields = ('created_at', 'modified_at',
                        'created_by', 'last_modified_by')
+    search_fields = ('title',)
     fieldsets = (
         (None, {
             'fields': ('book_copy', 'medium', 'medium_description',

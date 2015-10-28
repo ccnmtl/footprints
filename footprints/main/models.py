@@ -2,7 +2,9 @@ from audit_log.models.fields import LastUserField, CreatingUserField
 from django.db import models
 from django.template import loader
 from django.template.context import Context
+from edtf import EDTF
 from geoposition.fields import GeopositionField
+
 
 FOOTPRINT_LEVEL = 'footprint'
 IMPRINT_LEVEL = 'imprint'
@@ -26,7 +28,25 @@ class ExtendedDateFormat(models.Model):
         verbose_name = 'Extended Date Format'
 
     def __unicode__(self):
-        return self.edtf_format
+        e = EDTF(self.edtf_format)
+        if e.is_interval:
+            return "%s - %s" % (self.fmt(e.start), self.fmt(e.end))
+        else:
+            return self.fmt(e)
+
+    def fmt(self, edtf):
+        # based on precision
+        # year
+
+        # season
+
+        # month
+
+        # day
+        pass
+
+    def as_datetime(self):
+        return EDTF(self.edtf_format).sort_date_latest()
 
 
 class RoleQuerySet(models.query.QuerySet):
