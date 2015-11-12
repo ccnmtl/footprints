@@ -1,15 +1,16 @@
-(function () {
+(function() {
     window.ImprintView = Backbone.View.extend({
         events: {},
         initialize: function(options) {
-            _.bindAll(this, 'initializeMap', 'attachInfoWindow', 'initializeTooltips');
+            _.bindAll(this, 'initializeMap', 'attachInfoWindow',
+                      'initializeTooltips');
 
             var self = this;
-            jQuery(this.el).find(".imprint-list-item").each(function() {
+            jQuery(this.el).find('.imprint-list-item').each(function() {
                 self.initializeMap(this);
             });
         },
-        
+
         mapOptions: {
             zoom: 10,
             draggable: true,
@@ -20,17 +21,17 @@
             mapTypeId: google.maps.MapTypeId.ROADMAP,
             zoomControl: true,
             zoomControlOptions: {
-              style: google.maps.ZoomControlStyle.SMALL,
-              position: google.maps.ControlPosition.RIGHT_BOTTOM
+                style: google.maps.ZoomControlStyle.SMALL,
+                position: google.maps.ControlPosition.RIGHT_BOTTOM
             },
             streetViewControl: false
         },
         attachInfoWindow: function(infowindow, map, marker, content) {
-           var self = this;
-           google.maps.event.addListener(marker, 'click', function() {
-               infowindow.setContent(content);
-               infowindow.open(map, marker);
-           });
+            var self = this;
+            google.maps.event.addListener(marker, 'click', function() {
+                infowindow.setContent(content);
+                infowindow.open(map, marker);
+            });
         },
         initializeMap: function(elt) {
             var self = this;
@@ -44,18 +45,19 @@
 
                 var mapElt = jQuery(elt).find('.imprint-map')[0];
                 var map = new google.maps.Map(mapElt, this.mapOptions);
-                var boundsChanged = google.maps.event.addListener(map, 'bounds_changed', function(event) {
+                var boundsChanged = google.maps.event
+                    .addListener(map, 'bounds_changed', function(event) {
                     if (map.getZoom() > 10) {
                         map.setZoom(10);
                     }
-                    google.maps.event.removeListener(boundsChanged); 
+                    google.maps.event.removeListener(boundsChanged);
                 });
 
                 var bounds = new google.maps.LatLngBounds();
-                var clusterer = new MarkerClusterer(map, [],
-                                                    {gridSize: 10, maxZoom: 15});
+                var clusterer = new MarkerClusterer(
+                    map, [], {gridSize: 10, maxZoom: 15});
 
-                for (var i=0; i < markers.length; i++) {
+                for (var i = 0; i < markers.length; i++) {
                     var lat = jQuery(markers[i]).data('latitude');
                     var lng = jQuery(markers[i]).data('longitude');
                     var title = jQuery(markers[i]).data('title');
@@ -71,7 +73,7 @@
                     bounds.extend(latlng);
                     clusterer.addMarker(marker);
                 }
-                
+
                 map.fitBounds(bounds);
                 jQuery(mapElt).show();
             }
