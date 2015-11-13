@@ -1,4 +1,4 @@
-(function () {
+(function() {
     window.Footprint = Backbone.Model.extend({
         urlRoot: '/api/footprint/',
         url: function() {
@@ -12,7 +12,7 @@
             return this.urlRoot + this.get('id') + '/';
         }
     });
-    
+
     window.FootprintBaseView = Backbone.View.extend({
         context: function() {
             var ctx = this.model.toJSON();
@@ -28,8 +28,8 @@
             mapTypeId: google.maps.MapTypeId.ROADMAP,
             zoomControl: true,
             zoomControlOptions: {
-              style: google.maps.ZoomControlStyle.SMALL,
-              position: google.maps.ControlPosition.RIGHT_BOTTOM
+                style: google.maps.ZoomControlStyle.SMALL,
+                position: google.maps.ControlPosition.RIGHT_BOTTOM
             },
             mapTypeControl: false,
             streetViewControl: false
@@ -43,8 +43,9 @@
                 if (lat && lng) {
                     var latlng = new google.maps.LatLng(lat, lng);
                     this.mapOptions.center = latlng;
-                    this.map = new google.maps.Map(this.mapElt, this.mapOptions);
-                    
+                    this.map = new google.maps
+                        .Map(this.mapElt, this.mapOptions);
+
                     this.marker = new google.maps.Marker({
                         position: latlng,
                         map: this.map,
@@ -63,11 +64,12 @@
             var self = this;
             var eltRemove = jQuery(evt.currentTarget).parents('a')[0];
             var eltText = jQuery(evt.currentTarget).closest('div').prev();
-            var msg = "Are you sure you want to remove the connection to " + jQuery(eltText).html() + "?";
+            var msg = 'Are you sure you want to remove the connection to ' +
+                jQuery(eltText).html() + '?';
 
-            jQuery("#confirm-modal").find('.modal-body').html(msg);
+            jQuery('#confirm-modal').find('.modal-body').html(msg);
 
-            var modal = jQuery("#confirm-modal").modal({
+            var modal = jQuery('#confirm-modal').modal({
                 'show': true,
                 'backdrop': 'static',
                 'keyboard': false,
@@ -84,11 +86,12 @@
 
             jQuery.ajax({
                 url: jQuery(elt).data('url'),
-                type: "post",
+                type: 'post',
                 data: data,
                 success: self.refresh,
                 error: function() {
-                    jQuery("#confirm-modal div.error").modal("An error occurred. Please try again.");
+                    jQuery('#confirm-modal div.error')
+                        .modal('An error occurred. Please try again.');
                 }
             });
         },
@@ -99,35 +102,36 @@
         },
         validateActor: function(values) {
             if (!values.hasOwnProperty('person_name') ||
-                    values.person_name.length < 1) {
+                values.person_name.length < 1) {
                 return 'Please enter the person\'s name';
             } else if (!values.hasOwnProperty('role') ||
-                           values.role.length < 1) {
+                       values.role.length < 1) {
                 return 'Please select a role';
             }
         },
         validatePlace: function(values) {
             if (!values.hasOwnProperty('latitude') ||
                     !values.hasOwnProperty('longitude')) {
-                return "Please select a location on the map";
+                return 'Please select a location on the map';
             } else if (values.country.length < 1) {
-                return "Please specify a country";
+                return 'Please specify a country';
             }
         },
         validateIdentifier: function(values) {
             if (!values.hasOwnProperty('identifier') ||
                     values.identifer.length < 1) {
-                return "Please specify an identifer";
-            } else  if (!values.hasOwnProperty('identifier_type') ||
+                return 'Please specify an identifer';
+            } else if (!values.hasOwnProperty('identifier_type') ||
                     values.identifer.length < 1) {
-                return "Please select the type of identifier";
+                return 'Please select the type of identifier';
             }
         }
     });
-    
+
     window.FootprintDetailView = window.FootprintBaseView.extend({
         events: {
-            'click a.remove-related span.glyphicon-trash': 'confirmRemoveRelated',
+            'click a.remove-related span.glyphicon-trash':
+            'confirmRemoveRelated',
             'click .toggle-edit-digital-object': 'toggleEditDigitalObject'
         },
         initialize: function(options) {
@@ -142,11 +146,11 @@
         },
         render: function() {
             var self = this;
-            
+
             var markup = this.template(this.context());
             jQuery(this.el).html(markup);
             this.delegateEvents();
-            
+
             // Initialize X-editable fields
             jQuery(this.el).find('.editable').editable({
                 namedParams: true,
@@ -176,14 +180,14 @@
                 },
                 success: this.refresh
             });
-            
+
             jQuery(this.el).find('.editable-actor').editable({
                 namedParams: true,
                 validate: this.validateActor,
                 success: this.refresh,
-                tpl: jQuery('#xeditable-actor-form').html() 
+                tpl: jQuery('#xeditable-actor-form').html()
             });
-            
+
             jQuery(this.el).find('.editable-medium').editable({
                 namedParams: true,
                 source: this.baseContext.all_mediums,
@@ -198,16 +202,16 @@
             var elt = jQuery(this.el).find('.editable-digitalobject');
             jQuery(elt).editable({
                 namedParams: true,
-                tpl: jQuery('#xeditable-digitalobject-form').html(), 
+                tpl: jQuery('#xeditable-digitalobject-form').html(),
                 source: this.baseContext.all_mediums,
                 url: function() { return true; /* plupload submits */},
                 success: this.refresh
             });
-            
+
             jQuery('.carousel').carousel({
                 interval: false
             });
-            
+
             jQuery(this.el).fadeIn(function() {
                 self.initializeMap();
                 self.initializeTooltips();
@@ -221,12 +225,13 @@
 
     window.BookDetailView = window.FootprintBaseView.extend({
         events: {
-            'click a.remove-related span.glyphicon-trash': 'confirmRemoveRelated'
+            'click a.remove-related span.glyphicon-trash':
+            'confirmRemoveRelated'
         },
         initialize: function(options) {
             _.bindAll(this, 'context', 'refresh', 'render',
                 'confirmRemoveRelated', 'removeRelated');
-            
+
             this.baseContext = options.baseContext;
             this.template = _.template(jQuery(options.template).html());
             this.model.on('change', this.render);
@@ -253,16 +258,16 @@
                 namedParams: true,
                 tpl: jQuery('#xeditable-author-form').html(),
                 validate: this.validateActor,
-                success: this.refresh            
+                success: this.refresh
             });
-            
+
             jQuery(this.el).find('.editable-publisher').editable({
                 namedParams: true,
                 tpl: jQuery('#xeditable-publisher-form').html(),
                 validate: this.validateActor,
                 success: this.refresh
             });
-            
+
             jQuery(this.el).find('.editable-language').editable({
                 namedParams: true,
                 source: this.baseContext.all_languages,
@@ -274,7 +279,7 @@
                 },
                 success: this.refresh
             });
-            
+
             jQuery(this.el).find('.editable-place').editable({
                 namedParams: true,
                 tpl: jQuery('#xeditable-place-form').html(),
@@ -315,7 +320,7 @@
             });
         }
     });
-    
+
     window.ConnectRecordView = window.FootprintBaseView.extend({
         events: {
             'click button.btn-next': 'validate',
@@ -331,9 +336,10 @@
             this.baseContext = options.baseContext;
             this.initChoices();
             this.eltWork = jQuery(this.el).find('input.select-object.work')[0];
-            this.eltImprint = jQuery(this.el).find('input.select-object.imprint')[0];
+            this.eltImprint = jQuery(this.el)
+                .find('input.select-object.imprint')[0];
             this.eltCopy =  jQuery(this.el).find('input.select-object.copy')[0];
-            
+
             this.template = _.template(jQuery(options.template).html());
 
             jQuery(this.el).on('show.bs.modal', this.reset);
@@ -348,14 +354,14 @@
         },
         initChoices: function() {
             var self = this;
-            
+
             // Initialize select2
-            jQuery(this.el).find("input.select-object").each(function() {
+            jQuery(this.el).find('input.select-object').each(function() {
                 var dataUrl = jQuery(this).data('url');
                 var dataId = jQuery(this).val();
                 var description = jQuery(this).prev().html();
                 jQuery(this).select2({
-                    width: "100%",
+                    width: '100%',
                     allowClear: true,
                     minimumInputLength: 0,
                     ajax: {
@@ -366,7 +372,9 @@
                         results: self.results,
                         cache: true
                     },
-                    escapeMarkup: function (markup) { return markup; },
+                    escapeMarkup: function(markup) {
+                        return markup;
+                    },
                     initSelection: function(elt, callback) {
                         callback({id: dataId, text: description});
                     },
@@ -388,21 +396,22 @@
             if (value.length > 0) {
                 if (jQuery(evt.currentTarget).hasClass('work')) {
                     // Written Work Selection
-                    
+
                     // clear & hide copy
                     jQuery(this.eltCopy).select2('val', '');
                     jQuery(this.eltCopy).parents('.form-group').fadeOut();
-                    
+
                     // clear & maybe hide imprint
                     jQuery(this.eltImprint).select2('val', '');
                     if (value === this.createId) {
-                        jQuery(this.eltImprint).parents('.form-group').fadeOut();
+                        jQuery(this.eltImprint).parents('.form-group')
+                            .fadeOut();
                     } else {
                         jQuery(this.eltImprint).parents('.form-group').fadeIn();
                     }
                 } else if (jQuery(evt.currentTarget).hasClass('imprint')) {
                     // Imprint Selection
-                    
+
                     // clear & maybe hide copy
                     jQuery(this.eltCopy).select2('val', '');
                     if (value === this.createId) {
@@ -415,7 +424,7 @@
         },
         results: function(data, page, query) {
             var items = [];
-            
+
             if (page === 1) {
                 items.push({
                     id: this.createId,
@@ -424,7 +433,7 @@
                 });
             }
 
-            for (var i=0; i < data.results.length; i++) {
+            for (var i = 0; i < data.results.length; i++) {
                 if (data.results[i].description &&
                         data.results[i].description.length > 0) {
                     items.push({
@@ -437,12 +446,12 @@
         },
         validateField: function(elt) {
             var parent = jQuery(elt).parents('.form-group');
-            if (jQuery(parent).is(":visible") &&
+            if (jQuery(parent).is(':visible') &&
                     jQuery(elt).val().length === 0) {
-                jQuery(parent).addClass("has-error");
+                jQuery(parent).addClass('has-error');
                 return false;
             } else {
-                jQuery(parent).removeClass("has-error");
+                jQuery(parent).removeClass('has-error');
                 return true;
             }
         },
@@ -457,18 +466,18 @@
                 ctx.copy = jQuery(this.eltCopy).select2('data');
                 ctx.createId = this.createId;
                 ctx.current_book = this.model.toJSON();
-                
+
                 var markup = this.template(ctx);
-                jQuery(this.el).find(".page2 p").html(markup);
+                jQuery(this.el).find('.page2 p').html(markup);
                 this.navigate();
             }
         },
         navigate: function(evt) {
-            jQuery(".page1, .page2").toggle();
+            jQuery('.page1, .page2').toggle();
         },
         reset: function() {
-            jQuery(this.el).find(".page1").show();
-            jQuery(this.el).find(".page2").hide();
+            jQuery(this.el).find('.page1').show();
+            jQuery(this.el).find('.page2').hide();
         },
         submit: function(evt) {
             var form = jQuery(this.el).find('form');
@@ -496,30 +505,31 @@
 
             this.footprint.on('change', this.render);
             this.bookCopy.on('change', this.render);
-            
+
             this.options = options;
 
             this.baseContext = options.baseContext;
-            this.elProgress = jQuery(this.el).find(".progress-detail");
+            this.elProgress = jQuery(this.el).find('.progress-detail');
             this.template = _.template(jQuery(options.progressTemplate).html());
-            
-            this.carouselTemplate = _.template(jQuery(options.carouselTemplate).html());
-            
-            // create child views for each page area 
+
+            this.carouselTemplate = _.template(jQuery(options.carouselTemplate)
+                                               .html());
+
+            // create child views for each page area
             this.detailView = new window.FootprintDetailView({
-                el: jQuery(this.el).find(".footprint-detail"),
+                el: jQuery(this.el).find('.footprint-detail'),
                 model: this.footprint,
                 baseContext: options.baseContext,
                 template: options.detailTemplate
             });
             this.bookView = new window.BookDetailView({
-                el: jQuery(this.el).find(".book-detail"),
+                el: jQuery(this.el).find('.book-detail'),
                 model: this.bookCopy,
                 baseContext: options.baseContext,
                 template: options.bookTemplate
             });
             this.connectBookView = new window.ConnectRecordView({
-                el: jQuery(this.el).find("#connect-records-modal"),
+                el: jQuery(this.el).find('#connect-records-modal'),
                 model: this.bookCopy,
                 baseContext: options.baseContext,
                 template: options.connectTemplate
@@ -542,13 +552,13 @@
         },
         maximizeCarousel: function(evt) {
             var self = this;
-            
+
             var ctx = this.footprint.toJSON();
             ctx.active_id = jQuery(evt.currentTarget).data('id');
             var html = this.carouselTemplate(ctx);
-            jQuery("#carousel-modal").find('.modal-body').html(html);
-            
-            var modal = jQuery("#carousel-modal").modal({
+            jQuery('#carousel-modal').find('.modal-body').html(html);
+
+            var modal = jQuery('#carousel-modal').modal({
                 'backdrop': 'static',
                 'keyboard': false,
                 'show': true

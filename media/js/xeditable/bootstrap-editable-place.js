@@ -4,12 +4,12 @@ Place editable input.
 @class place
 @extends abstractinput
 **/
-(function ($) {
-    "use strict";
-    
-    var Place = function (options) {
+(function($) {
+    'use strict';
+
+    var Place = function(options) {
         this.init('place', options, Place.defaults);
-        
+
         // Europe, @todo - allow this to be configurable
         this.defaultLatLng = new google.maps.LatLng(
             48.6908333333, 9.14055555556);
@@ -20,13 +20,13 @@ Place editable input.
             mapTypeId: google.maps.MapTypeId.ROADMAP,
             zoomControl: true,
             zoomControlOptions: {
-              style: google.maps.ZoomControlStyle.SMALL,
-              position: google.maps.ControlPosition.RIGHT_BOTTOM
+                style: google.maps.ZoomControlStyle.SMALL,
+                position: google.maps.ControlPosition.RIGHT_BOTTOM
             },
             mapTypeControl: false,
             streetViewControl: false
         };
-        
+
         this.geocoder = new google.maps.Geocoder();
     };
 
@@ -45,11 +45,12 @@ Place editable input.
 
                 if (responses && responses.length > 0) {
                     var components = responses[0].address_components;
-                    
-                    for (var i=0; i < components.length; i++) {
+
+                    for (var i = 0; i < components.length; i++) {
                         if (components[i].types.indexOf('locality') > -1) {
                             jQuery(self.$city).val(components[i].long_name);
-                        } else if (components[i].types.indexOf('country') > -1) {
+                        } else if (components[i].types
+                                   .indexOf('country') > -1) {
                             jQuery(self.$country).val(components[i].long_name);
                         }
                     }
@@ -69,7 +70,7 @@ Place editable input.
             });
             self.mapInstance.setCenter(latlng);
             self.geocodePosition();
-            
+
             google.maps.event.addListener(self.marker, 'dragend', function() {
                 self.geocodePosition();
             });
@@ -81,7 +82,7 @@ Place editable input.
             if (places.length > 0) {
                 self.place = places[0];
                 var bounds = new google.maps.LatLngBounds();
-                
+
                 // Create a marker for the place.
                 if (self.marker) {
                     self.marker.setMap(null);
@@ -93,7 +94,8 @@ Place editable input.
                     draggable: true,
                     animation: google.maps.Animation.DROP
                 });
-                google.maps.event.addListener(self.marker, 'dragend', function() {
+                google.maps.event
+                    .addListener(self.marker, 'dragend', function() {
                     self.geocodePosition();
                 });
 
@@ -104,10 +106,10 @@ Place editable input.
             }
         },
         /**
-        Renders input from tpl
+           Renders input from tpl
 
-        @method render() 
-        **/        
+           @method render()
+        **/
         render: function() {
             var self = this;
 
@@ -115,144 +117,147 @@ Place editable input.
             self.$country =  self.$tpl.find('input[name="country"]')[0];
             self.$address =  self.$tpl.find('input[name="address"]')[0];
             self.$mapContainer = self.$tpl.find('.map-container')[0];
-            
-            self.mapInstance = new google.maps.Map(self.$mapContainer, self.mapOptions);
-            self.mapInstance.controls[google.maps.ControlPosition.TOP_LEFT].push(self.$address);
-            
+
+            self.mapInstance = new google.maps.Map(self.$mapContainer,
+                                                   self.mapOptions);
+            self.mapInstance.controls[google.maps.ControlPosition.TOP_LEFT]
+                .push(self.$address);
+
             // drop a marker on click
-            google.maps.event.addListener(self.mapInstance, 'click', function(event) {
+            google.maps.event
+                .addListener(self.mapInstance, 'click', function(event) {
                 self.dropMarker(event.latLng);
             });
-            
+
             self.searchBox = new google.maps.places.SearchBox(
-                    /** @type {HTMLInputElement} */(self.$address));
-            
+                /** @type {HTMLInputElement} */(self.$address));
+
             // Listen for the event fired when the user selects an item from the
             // pick list. Retrieve the matching places for that item.
-            google.maps.event.addListener(self.searchBox, 'places_changed', function() {
+            google.maps.event
+                .addListener(self.searchBox, 'places_changed', function() {
                 self.mapSearchResult();
             });
-            
+
             setTimeout(function() {
-                google.maps.event.trigger(self.mapInstance, 'resize');    
+                google.maps.event.trigger(self.mapInstance, 'resize');
                 self.mapInstance.setCenter(self.defaultLatLng);
             }, 0);
         },
-        
+
         /**
-        Default method to show value in element. Can be overwritten by display option.
-        
-        @method value2html(value, element) 
+           Default method to show value in element. Can be overwritten by display option.
+
+           @method value2html(value, element)
         **/
         value2html: function(value, element) {
         },
-        
-        /**
-        Gets value from element's html
-        
-        @method html2value(html) 
-        **/        
-        html2value: function(html) {        
-          return null;  
-        },
-      
-       /**
-        Converts value to string. 
-        It is used in internal comparing (not for sending to server).
-        
-        @method value2str(value)  
-       **/
-       value2str: function(value) {
-           var str = '';
-           if (value) {
-               for(var k in value) {
-                   str = str + k + ':' + value[k] + ';';  
-               }
-           }
-           return str;
-       }, 
-       
-       /*
-        Converts string to value. Used for reading value from 'data-value' attribute.
-        
-        @method str2value(str)  
-       */
-       str2value: function(str) {
-           /*
-           this is mainly for parsing value defined in data-value attribute. 
-           If you will always set value by javascript, no need to overwrite it
-           */
-           return str;
-       },                
-       
-       /**
-        Sets value of input.
-        
-        @method value2input(value) 
-        @param {mixed} value
-       **/         
-       value2input: function(value) {
-           
-       },
 
-       
-       /**
-        Returns value of input.
-        
-        @method input2value() 
-       **/          
-       input2value: function() {
-           var values = {};
-           if (this.marker !== undefined) {
-               values.latitude = this.marker.getPosition().lat();
-               values.longitude = this.marker.getPosition().lng();
-           }
-           values.city = jQuery(this.$city).val();
-           values.country = jQuery(this.$country).val();
-           return values;
-       },
-       
-       /**
-           @method value2submit(value) 
+        /**
+           Gets value from element's html
+
+           @method html2value(html)
+        **/
+        html2value: function(html) {
+            return null;
+        },
+
+        /**
+           Converts value to string.
+           It is used in internal comparing (not for sending to server).
+
+           @method value2str(value)
+        **/
+        value2str: function(value) {
+            var str = '';
+            if (value) {
+                for (var k in value) {
+                    str = str + k + ':' + value[k] + ';';
+                }
+            }
+            return str;
+        },
+
+        /*
+          Converts string to value. Used for reading value from 'data-value' attribute.
+
+          @method str2value(str)
+        */
+        str2value: function(str) {
+            /*
+              this is mainly for parsing value defined in data-value attribute.
+              If you will always set value by javascript, no need to overwrite it
+            */
+            return str;
+        },
+
+        /**
+           Sets value of input.
+
+           @method value2input(value)
+           @param {mixed} value
+        **/
+        value2input: function(value) {
+
+        },
+
+        /**
+           Returns value of input.
+
+           @method input2value()
+        **/
+        input2value: function() {
+            var values = {};
+            if (this.marker !== undefined) {
+                values.latitude = this.marker.getPosition().lat();
+                values.longitude = this.marker.getPosition().lng();
+            }
+            values.city = jQuery(this.$city).val();
+            values.country = jQuery(this.$country).val();
+            return values;
+        },
+
+        /**
+           @method value2submit(value)
            @param {mixed} value
            @returns {mixed}
-       **/
-       value2submit: function(value) {
-           return {
-               position: this.marker.getPosition().toUrlValue(),
-               city: jQuery(this.$city).val(),
-               country: jQuery(this.$country).val()
-           };
-       },
-       
+        **/
+        value2submit: function(value) {
+            return {
+                position: this.marker.getPosition().toUrlValue(),
+                city: jQuery(this.$city).val(),
+                country: jQuery(this.$country).val()
+            };
+        },
+
         /**
-        Activates input: sets focus on the first field.
-        
-        @method activate() 
-       **/        
-       activate: function() {
+           Activates input: sets focus on the first field.
+
+           @method activate()
+        **/
+        activate: function() {
             this.$address.focus();
-       },  
-       
-       /**
-        Attaches handler to submit form in case of 'showbuttons=false' mode
-        
-        @method autosubmit() 
-       **/       
-       autosubmit: function() {
-           this.$input.keydown(function (e) {
+        },
+
+        /**
+           Attaches handler to submit form in case of 'showbuttons=false' mode
+
+           @method autosubmit()
+        **/
+        autosubmit: function() {
+            this.$input.keydown(function(e) {
                 if (e.which === 13) {
                     $(this).closest('form').submit();
                 }
-           });
-       },
-       error: function(response, newValue) {
-           if (response.status === 500) {
-               return 'Service unavailable. Please try later.';
-           } else {
-               return response.responseText;
-           }
-       }
+            });
+        },
+        error: function(response, newValue) {
+            if (response.status === 500) {
+                return 'Service unavailable. Please try later.';
+            } else {
+                return response.responseText;
+            }
+        }
     });
 
     Place.defaults = $.extend({}, $.fn.editabletypes.abstractinput.defaults, {
