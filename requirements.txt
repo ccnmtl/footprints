@@ -34,7 +34,7 @@ pylint==1.4.4
 six==1.9.0
 fake-factory==0.5.3
 factory_boy==2.6.0
-python-ldap==2.4.20
+python-ldap==2.4.22
 sqlparse==0.1.16
 
 djangowind==0.14.1
