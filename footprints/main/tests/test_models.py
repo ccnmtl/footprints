@@ -15,10 +15,6 @@ from footprints.main.tests.factories import RoleFactory, \
 
 class BasicModelTest(TestCase):
 
-    def test_fuzzy_date(self):
-        a_date = ExtendedDateFormat.objects.create(edtf_format='2004?-06-11')
-        self.assertEquals(a_date.__unicode__(), '2004?-06-11')
-
     def test_language(self):
         language = Language.objects.create(name='English')
         self.assertEquals(language.__unicode__(), 'English')
@@ -141,7 +137,7 @@ class BasicModelTest(TestCase):
 
         imprint = ImprintFactory()
         self.assertEquals(imprint.__unicode__(),
-                          'The Odyssey, Edition 1 (1984~)')
+                          'The Odyssey, Edition 1 (c. 1984)')
 
         imprint.digital_object.add(DigitalObjectFactory())
         self.assertEquals(imprint.percent_complete(), 100)
@@ -170,7 +166,7 @@ class BasicModelTest(TestCase):
     def test_book_copy(self):
         copy = BookCopyFactory()
         self.assertTrue(
-            copy.__unicode__().endswith('The Odyssey, Edition 1 (1984~)'))
+            copy.__unicode__().endswith('The Odyssey, Edition 1 (c. 1984)'))
         copy.digital_object.add(DigitalObjectFactory())
         self.assertEquals(copy.percent_complete(), 100)
 
@@ -214,3 +210,26 @@ class BasicModelTest(TestCase):
                                              provenance="Provenance",
                                              book_copy=book_copy)
         self.assertTrue(footprint.is_bare())
+
+
+class ExtendedDateFormatTest(TestCase):
+
+    use_cases = {
+        '14xx': '1400s',  # PRECISION_CENTURY
+        '192x': '1920s',  # PRECISION_DECADE
+        '1613': '1613',  # PRECISION_YEAR
+        '1944-11': 'November 1944',  # PRECISION_MONTH
+        '1659-06-30': 'June 30, 1659',  # PRECISION_DAY
+        '1659~': 'c. 1659',  # uncertain
+        '1659?': '1659?',  # approximate
+        '1659?~': 'c. 1659?',  # approximate & uncertain
+        '16xx/1871': '1600s - 1871',
+        '1557-09/1952-01-31': 'September 1557 - January 31, 1952',
+        '1829/open': '1829 - present',
+        'unknown/1736': '? - 1736',
+    }
+
+    def test_use_cases(self):
+        for key, val in self.use_cases.items():
+            e = ExtendedDateFormat(edtf_format=key)
+            self.assertEquals(e.__unicode__(), val)

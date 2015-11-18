@@ -7,13 +7,18 @@ from footprints.main.models import Footprint, DigitalFormat, Role, \
     Imprint, BookCopy
 
 
-admin.site.register(ExtendedDateFormat)
 admin.site.register(Role)
 admin.site.register(Language)
 admin.site.register(DigitalFormat)
 admin.site.register(DigitalObject)
 admin.site.register(StandardizedIdentification)
 admin.site.register(Person)
+
+
+class ExtendedDateFormatAdmin(admin.ModelAdmin):
+    list_display = ('edtf_format', '__unicode__')
+
+admin.site.register(ExtendedDateFormat, ExtendedDateFormatAdmin)
 
 
 def person_name(obj):

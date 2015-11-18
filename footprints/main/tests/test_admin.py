@@ -17,7 +17,7 @@ class CustomAdminViewTest(TestCase):
     def test_imprint_display_name(self):
         book_copy = BookCopyFactory()
         self.assertEquals(imprint_display(book_copy),
-                          'The Odyssey, Edition 1 (1984~)')
+                          'The Odyssey, Edition 1 (c. 1984)')
 
     def test_work_title(self):
         imprint = ImprintFactory()
@@ -36,7 +36,7 @@ class CustomAdminViewTest(TestCase):
     def test_imprint_date(self):
         footprint = FootprintFactory()
         self.assertEquals(imprint_date(footprint).__unicode__(),
-                          '1984~')
+                          'c. 1984')
 
     def test_owner(self):
         footprint = FootprintFactory()
