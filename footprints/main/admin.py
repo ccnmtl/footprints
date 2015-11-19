@@ -7,13 +7,18 @@ from footprints.main.models import Footprint, DigitalFormat, Role, \
     Imprint, BookCopy
 
 
-admin.site.register(ExtendedDateFormat)
 admin.site.register(Role)
 admin.site.register(Language)
 admin.site.register(DigitalFormat)
 admin.site.register(DigitalObject)
 admin.site.register(StandardizedIdentification)
 admin.site.register(Person)
+
+
+class ExtendedDateFormatAdmin(admin.ModelAdmin):
+    list_display = ('edtf_format', '__unicode__')
+
+admin.site.register(ExtendedDateFormat, ExtendedDateFormatAdmin)
 
 
 def person_name(obj):
@@ -89,6 +94,7 @@ class FootprintAdmin(reversion.VersionAdmin):
                     imprint_title, imprint_date, language)
     readonly_fields = ('created_at', 'modified_at',
                        'created_by', 'last_modified_by')
+    search_fields = ('title',)
     fieldsets = (
         (None, {
             'fields': ('book_copy', 'medium', 'medium_description',

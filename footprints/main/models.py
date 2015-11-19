@@ -2,7 +2,9 @@ from audit_log.models.fields import LastUserField, CreatingUserField
 from django.db import models
 from django.template import loader
 from django.template.context import Context
+from edtf import EDTF, edtf_date
 from geoposition.fields import GeopositionField
+
 
 FOOTPRINT_LEVEL = 'footprint'
 IMPRINT_LEVEL = 'imprint'
@@ -22,11 +24,64 @@ LEVEL_TYPES = (
 class ExtendedDateFormat(models.Model):
     edtf_format = models.CharField(max_length=256)
 
+    month_names = {
+        1: 'January', 2: 'February', 3: 'Mar', 4: 'April',
+        5: 'May', 6: 'June', 7: 'July', 8: 'August', 9: 'September',
+        10: 'October', 11: 'November', 12: 'December'}
+
     class Meta:
         verbose_name = 'Extended Date Format'
 
     def __unicode__(self):
-        return self.edtf_format
+        e = EDTF(self.edtf_format)
+
+        if e.is_interval:
+            return "%s - %s" % (self.fmt(e.date_obj.start),
+                                self.fmt(e.date_obj.end))
+        else:
+            return self.fmt(e.date_obj)
+
+    def fmt_modifier(self, date_obj):
+        if date_obj == 'open':
+            return 'present'
+        if date_obj == 'unknown':
+            return '?'
+
+    def fmt(self, date_obj):
+        result = ''
+
+        if isinstance(date_obj, basestring):
+            result = self.fmt_modifier(date_obj)
+        else:
+            precision = date_obj.precision
+
+            if date_obj.precision is None:
+                result = 'invalid'
+            elif precision == edtf_date.PRECISION_CENTURY:
+                result = ('%ss' % date_obj._precise_year(edtf_date.EARLIEST))
+            elif precision == edtf_date.PRECISION_DECADE:
+                result = '%ss' % date_obj._precise_year(edtf_date.EARLIEST)
+            elif precision == edtf_date.PRECISION_YEAR:
+                result = '%s' % date_obj.get_year()
+            elif precision == edtf_date.PRECISION_MONTH:
+                result = '%s %s' % (self.month_names[date_obj.get_month()],
+                                    date_obj.get_year())
+            elif precision == edtf_date.PRECISION_DAY:
+                result = '%s %s, %s' % (
+                    self.month_names[date_obj.get_month()],
+                    date_obj.get_day(),
+                    date_obj.get_year())
+
+            if date_obj.is_uncertain:
+                result += '?'
+
+            if date_obj.is_approximate:
+                result = 'c. ' + result
+
+        return result
+
+    def as_datetime(self):
+        return EDTF(self.edtf_format).sort_date_latest()
 
 
 class RoleQuerySet(models.query.QuerySet):
@@ -116,7 +171,7 @@ class DigitalFormat(models.Model):
 
     class Meta:
         ordering = ['name']
-        verbose_name = "Digital Format"
+        verbose_name = 'Digital Format'
 
     def __unicode__(self):
         return self.name
