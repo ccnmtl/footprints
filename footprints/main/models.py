@@ -51,32 +51,32 @@ class ExtendedDateFormat(models.Model):
         result = ''
 
         if isinstance(date_obj, basestring):
-            result = self.fmt_modifier(date_obj)
-        else:
-            precision = date_obj.precision
+            return self.fmt_modifier(date_obj)
 
-            if date_obj.precision is None:
-                result = 'invalid'
-            elif precision == edtf_date.PRECISION_CENTURY:
-                result = ('%ss' % date_obj._precise_year(edtf_date.EARLIEST))
-            elif precision == edtf_date.PRECISION_DECADE:
-                result = '%ss' % date_obj._precise_year(edtf_date.EARLIEST)
-            elif precision == edtf_date.PRECISION_YEAR:
-                result = '%s' % date_obj.get_year()
-            elif precision == edtf_date.PRECISION_MONTH:
-                result = '%s %s' % (self.month_names[date_obj.get_month()],
-                                    date_obj.get_year())
-            elif precision == edtf_date.PRECISION_DAY:
-                result = '%s %s, %s' % (
-                    self.month_names[date_obj.get_month()],
-                    date_obj.get_day(),
-                    date_obj.get_year())
+        precision = date_obj.precision
 
-            if date_obj.is_uncertain:
-                result += '?'
+        if date_obj.precision is None:
+            result = 'invalid'
+        elif precision == edtf_date.PRECISION_CENTURY:
+            result = ('%ss' % date_obj._precise_year(edtf_date.EARLIEST))
+        elif precision == edtf_date.PRECISION_DECADE:
+            result = '%ss' % date_obj._precise_year(edtf_date.EARLIEST)
+        elif precision == edtf_date.PRECISION_YEAR:
+            result = '%s' % date_obj.get_year()
+        elif precision == edtf_date.PRECISION_MONTH:
+            result = '%s %s' % (self.month_names[date_obj.get_month()],
+                                date_obj.get_year())
+        elif precision == edtf_date.PRECISION_DAY:
+            result = '%s %s, %s' % (
+                self.month_names[date_obj.get_month()],
+                date_obj.get_day(),
+                date_obj.get_year())
 
-            if date_obj.is_approximate:
-                result = 'c. ' + result
+        if date_obj.is_uncertain:
+            result += '?'
+
+        if date_obj.is_approximate:
+            result = 'c. ' + result
 
         return result
 
