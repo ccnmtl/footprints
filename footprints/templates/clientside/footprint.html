@@ -84,7 +84,7 @@
                      data-type="text" data-pk="<%=associated_date.id%>"
                      data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
                      data-url="/api/edtf/<%=associated_date.id%>/">
-                        <%=associated_date.edtf_format%>
+                        <%=associated_date.display_format%>
                     </a>
                     <div class="pull-right">
                         <a href="javascript:void(0);" class="remove-related"
@@ -95,7 +95,7 @@
                         </a>
                     </div>
                 <% } else { %>
-                    <%=associated_date.edtf_format%>
+                    <%=associated_date.display_format%>
                 <% } %>
             </dd>
         <% } %>

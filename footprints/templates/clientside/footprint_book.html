@@ -154,7 +154,7 @@ The Literary Work
                  data-type="text" data-pk="<%=imprint.date_of_publication.id%>"
                  data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
                  data-url="/api/edtf/<%=imprint.date_of_publication.id%>/">
-                    <%=imprint.date_of_publication.edtf_format%>
+                    <%=imprint.date_of_publication.display_format%>
                 </a>
                 <div class="pull-right">
                 <a href="javascript:void(0);" class="remove-related"
@@ -165,7 +165,7 @@ The Literary Work
                 </a>
                 </div>
             <% } else { %>
-                <%=imprint.date_of_publication.edtf_format%>
+                <%=imprint.date_of_publication.display_format%>
             <% } %>
         </dd>
     <% } %>
