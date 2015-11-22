@@ -111,7 +111,7 @@ class LanguageSerializer(HyperlinkedModelSerializer):
 class ExtendedDateFormatSerializer(HyperlinkedModelSerializerEx):
     class Meta:
         model = ExtendedDateFormat
-        fields = ('id', 'edtf_format',)
+        fields = ('id', 'edtf_format', 'display_format')
 
     def get_queryset(self):
         return ExtendedDateFormat.objects.all()

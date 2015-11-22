@@ -33,6 +33,9 @@ class ExtendedDateFormat(models.Model):
         verbose_name = 'Extended Date Format'
 
     def __unicode__(self):
+        return self.display_format()
+
+    def display_format(self):
         e = EDTF(self.edtf_format)
 
         if e.is_interval:
