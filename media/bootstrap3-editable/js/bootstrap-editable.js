@@ -631,7 +631,8 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
     */      
     $.fn.editableform.template = '<form class="form-inline editableform">'+
     '<div class="control-group">' + 
-    '<div><div class="editable-input"></div><div class="editable-buttons"></div></div>'+
+    '<div><div class="editable-buttons"></div>' +
+    '<div class="editable-input"></div></div>'+
     '<div class="editable-error-block"></div>' + 
     '</div>' + 
     '</form>';
@@ -640,8 +641,9 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
     $.fn.editableform.loading = '<div class="editableform-loading"></div>';
 
     //buttons
-    $.fn.editableform.buttons = '<button type="submit" class="editable-submit">ok</button>'+
-    '<button type="button" class="editable-cancel">cancel</button>';      
+    $.fn.editableform.buttons = 
+        '<button type="submit" class="editable-submit">ok</button>'+
+        '<button type="button" class="editable-cancel">cancel</button>';      
 
     //error class attached to control-group
     $.fn.editableform.errorGroupClass = null;  
@@ -4665,7 +4667,7 @@ Editableform based on Twitter Bootstrap 3
 
             //for bs3 set default class `input-sm` to standard inputs
             var emptyInputClass = this.input.options.inputclass === null || this.input.options.inputclass === false;
-            var defaultClass = 'input-sm';
+            var defaultClass = '';
             
             //bs3 add `form-control` class to standard inputs
             var stdtypes = 'text,select,textarea,password,email,url,tel,number,range,time,typeaheadjs'.split(','); 

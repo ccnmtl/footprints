@@ -113,6 +113,8 @@ Place editable input.
         render: function() {
             var self = this;
 
+            self.$tpl.parents('.editable-input').addClass('wide');
+
             self.$city =  self.$tpl.find('input[name="city"]')[0];
             self.$country =  self.$tpl.find('input[name="country"]')[0];
             self.$address =  self.$tpl.find('input[name="address"]')[0];
