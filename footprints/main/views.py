@@ -363,6 +363,23 @@ class AddIdentifierView(AddRelatedRecordView):
             return self.render_to_json_response({'success': True})
 
 
+class AddLanguageView(AddRelatedRecordView):
+
+    def post(self, *args, **kwargs):
+        the_parent = self.get_parent()
+
+        languages = self.request.POST.getlist('language')
+
+        # delete all language that are not in the posted list
+        the_parent.language.exclude(id__in=languages).delete()
+
+        # add all languages. (no-op if already exists)
+        for lid in languages:
+            the_parent.language.add(Language.objects.get(id=lid))
+
+        return self.render_to_json_response({'success': True})
+
+
 class AddPlaceView(AddRelatedRecordView):
 
     def post(self, *args, **kwargs):

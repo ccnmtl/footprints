@@ -85,6 +85,7 @@ MIDDLEWARE_CLASSES = [
     'waffle.middleware.WaffleMiddleware',
     'audit_log.middleware.UserLoggingMiddleware',
     'reversion.middleware.RevisionMiddleware',
+    'footprints.main.middleware.MethodOverrideMiddleware'
 ]
 
 ROOT_URLCONF = 'footprints.urls'

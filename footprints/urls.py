@@ -15,7 +15,7 @@ from footprints.main.views import (
     WrittenWorkDetailView, TitleListView, NameListView,
     AddPlaceView, AddDateView, RemoveRelatedView, FootprintListView,
     AddIdentifierView, AddDigitalObjectView, ConnectFootprintView,
-    ContactUsView)
+    ContactUsView, AddLanguageView)
 from footprints.main.viewsets import (
     BookCopyViewSet, ImprintViewSet, ActorViewSet,
     ExtendedDateFormatViewSet, FootprintViewSet, LanguageViewSet,
@@ -74,6 +74,8 @@ urlpatterns = patterns(
     auth_urls,
     url(r'^actor/add/$',
         AddActorView.as_view(), name='add-actor-view'),
+    url(r'^language/add/$',
+        AddLanguageView.as_view(), name='add-language-view'),
     url(r'^place/add/$',
         AddPlaceView.as_view(), name='add-place-view'),
     url(r'^date/add/$',
@@ -86,7 +88,8 @@ urlpatterns = patterns(
     url(r'^remove/related/$',
         RemoveRelatedView.as_view(), name='remove-related'),
 
-    (r'^footprint/create/$', CreateFootprintView.as_view()),
+    url(r'^footprint/create/$', CreateFootprintView.as_view(),
+        name='create-footprint-view'),
     url(r'^footprint/connect/(?P<pk>\d+)/$', ConnectFootprintView.as_view(),
         name='connect-footprint-view'),
 

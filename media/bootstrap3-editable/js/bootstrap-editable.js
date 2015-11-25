@@ -354,7 +354,7 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
                         url: this.options.url,
                         data: params,
                         traditional: true,
-                        type: 'POST'
+                        type: this.options.method || 'patch'
                     }, this.options.ajaxOptions));
                 }
             }
@@ -629,13 +629,14 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
     Note: following params could redefined in engine: bootstrap or jqueryui:
     Classes 'control-group' and 'editable-error-block' must always present!
     */      
-    $.fn.editableform.template = '<form class="form-inline editableform">'+
-    '<div class="control-group">' + 
-    '<div><div class="editable-buttons"></div>' +
-    '<div class="editable-input"></div></div>'+
-    '<div class="editable-error-block"></div>' + 
-    '</div>' + 
-    '</form>';
+    $.fn.editableform.template =
+        '<form class="form-inline editableform">'+
+        '<div class="control-group">' + 
+        '<div><div class="editable-buttons"></div>' +
+        '<div class="editable-input"></div></div>'+
+        '<div class="editable-error-block"></div>' + 
+        '</div>' + 
+        '</form>';
 
     //loading div
     $.fn.editableform.loading = '<div class="editableform-loading"></div>';
