@@ -195,7 +195,7 @@ REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
-        'footprints.main.permissions.IsLoggedInOrReadOnly'
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly'
     ],
     'PAGINATE_BY': 15,
     'DATETIME_FORMAT': '%m/%d/%y %I:%M %p'
