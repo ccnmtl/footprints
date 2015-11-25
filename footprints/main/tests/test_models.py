@@ -69,6 +69,12 @@ class BasicModelTest(TestCase):
                                                        identifier_type=stt)
 
         self.assertEquals(si.__unicode__(), 'foo')
+        self.assertEquals(si.authority(), 'Sample')
+
+        si = StandardizedIdentification.objects.create(identifier='foo',
+                                                       identifier_type=None)
+        self.assertEquals(si.__unicode__(), 'foo')
+        self.assertIsNone(si.authority())
 
     def test_person(self):
         person = PersonFactory(name='Cicero')

@@ -433,12 +433,12 @@
                 });
             }
 
-            for (var i = 0; i < data.results.length; i++) {
-                if (data.results[i].description &&
-                        data.results[i].description.length > 0) {
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].description &&
+                        data[i].description.length > 0) {
                     items.push({
-                        id: data.results[i].id,
-                        text: data.results[i].description
+                        id: data[i].id,
+                        text: data[i].description
                     });
                 }
             }
