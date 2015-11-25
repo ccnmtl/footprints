@@ -1,47 +1,12 @@
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
-from rest_framework.fields import CharField, ReadOnlyField, empty
-from rest_framework.relations import (ManyRelatedField, MANY_RELATION_KWARGS)
+from rest_framework.fields import CharField, ReadOnlyField
 from rest_framework.serializers import Serializer, HyperlinkedModelSerializer
-from rest_framework.utils import html
 
 from footprints.main.models import Footprint, Language, Role, Actor, \
     ExtendedDateFormat, Person, Place, WrittenWork, Imprint, BookCopy, \
     StandardizedIdentification, DigitalObject, DigitalFormat, \
     StandardizedIdentificationType
-
-
-# Fixes a django-restframework bug, patch submitted & will be available 3.0.5
-class ManyRelatedFieldEx(ManyRelatedField):
-    def get_value(self, dictionary):
-        # We override the default field access in order to support
-        # lists in HTML forms.
-        if html.is_html_input(dictionary):
-            # Don't return [] if the update is partial
-            if self.field_name not in dictionary:
-                if getattr(self.root, 'partial', False):
-                    return empty
-            elif len(dictionary[self.field_name]) < 1:
-                return []
-            else:
-                return dictionary.getlist(self.field_name)
-
-        return dictionary.get(self.field_name, empty)
-
-
-class HyperlinkedModelSerializerEx(HyperlinkedModelSerializer):
-    def get_value(self, dictionary):
-        # We override the default field access in order to support
-        # lists in HTML forms.
-        if html.is_html_input(dictionary):
-            # Don't return [] if the update is partial
-            if self.field_name not in dictionary:
-                if getattr(self.root, 'partial', False):
-                    return empty
-            elif len(dictionary[self.field_name]) < 1:
-                return {}
-
-        return dictionary.get(self.field_name, empty)
 
 
 class NameSerializer(Serializer):
@@ -74,14 +39,6 @@ class StandardizedIdentificationSerializer(HyperlinkedModelSerializer):
     def get_queryset(self):
         return StandardizedIdentification.objects.all()
 
-    @classmethod
-    def many_init(cls, *args, **kwargs):
-        list_kwargs = {'child_relation': cls(*args, **kwargs)}
-        for key in kwargs.keys():
-            if key in MANY_RELATION_KWARGS:
-                list_kwargs[key] = kwargs[key]
-        return ManyRelatedFieldEx(**list_kwargs)
-
 
 class LanguageSerializer(HyperlinkedModelSerializer):
     class Meta:
@@ -99,16 +56,8 @@ class LanguageSerializer(HyperlinkedModelSerializer):
         except (TypeError, ValueError):
             self.fail('incorrect_type', data_type=type(data).__name__)
 
-    @classmethod
-    def many_init(cls, *args, **kwargs):
-        list_kwargs = {'child_relation': cls(*args, **kwargs)}
-        for key in kwargs.keys():
-            if key in MANY_RELATION_KWARGS:
-                list_kwargs[key] = kwargs[key]
-        return ManyRelatedFieldEx(**list_kwargs)
 
-
-class ExtendedDateFormatSerializer(HyperlinkedModelSerializerEx):
+class ExtendedDateFormatSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = ExtendedDateFormat
         fields = ('id', 'edtf_format', 'display_format')
@@ -138,7 +87,7 @@ class PersonSerializer(HyperlinkedModelSerializer):
         fields = ('id', 'name', 'birth_date', 'death_date')
 
 
-class PlaceSerializer(HyperlinkedModelSerializerEx):
+class PlaceSerializer(HyperlinkedModelSerializer):
     display_title = ReadOnlyField(source='__unicode__')
     latitude = ReadOnlyField()
     longitude = ReadOnlyField()
@@ -153,14 +102,6 @@ class DigitalObjectSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = DigitalObject
         fields = ('id', 'name', 'description', 'file')
-
-    @classmethod
-    def many_init(cls, *args, **kwargs):
-        list_kwargs = {'child_relation': cls(*args, **kwargs)}
-        for key in kwargs.keys():
-            if key in MANY_RELATION_KWARGS:
-                list_kwargs[key] = kwargs[key]
-        return ManyRelatedFieldEx(**list_kwargs)
 
 
 class ActorSerializer(HyperlinkedModelSerializer):
@@ -182,16 +123,8 @@ class ActorSerializer(HyperlinkedModelSerializer):
         except (TypeError, ValueError):
             self.fail('incorrect_type', data_type=type(data).__name__)
 
-    @classmethod
-    def many_init(cls, *args, **kwargs):
-        list_kwargs = {'child_relation': cls(*args, **kwargs)}
-        for key in kwargs.keys():
-            if key in MANY_RELATION_KWARGS:
-                list_kwargs[key] = kwargs[key]
-        return ManyRelatedFieldEx(**list_kwargs)
 
-
-class WrittenWorkSerializer(HyperlinkedModelSerializerEx):
+class WrittenWorkSerializer(HyperlinkedModelSerializer):
     actor = ActorSerializer(many=True)
     standardized_identifier = StandardizedIdentificationSerializer(many=True)
 
@@ -201,7 +134,7 @@ class WrittenWorkSerializer(HyperlinkedModelSerializerEx):
                   'standardized_identifier')
 
 
-class ImprintSerializer(HyperlinkedModelSerializerEx):
+class ImprintSerializer(HyperlinkedModelSerializer):
     work = WrittenWorkSerializer()
     language = LanguageSerializer(many=True)
     actor = ActorSerializer(many=True)
