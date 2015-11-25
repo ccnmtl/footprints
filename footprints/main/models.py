@@ -264,7 +264,10 @@ class StandardizedIdentification(models.Model):
         return self.identifier
 
     def authority(self):
-        return self.identifier_type.name
+        if self.identifier_type:
+            return self.identifier_type.name
+        else:
+            return None
 
 
 class Person(models.Model):
