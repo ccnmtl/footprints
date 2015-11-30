@@ -6,7 +6,7 @@ from django.core import mail
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.urlresolvers import reverse
 from django.test import TestCase
-from django.test.client import Client, RequestFactory
+from django.test.client import Client, RequestFactory, encode_multipart
 
 from footprints.main.forms import ContactUsForm
 from footprints.main.models import Footprint, Actor, Imprint, \
@@ -772,6 +772,32 @@ class ViewsetsTest(TestCase):
         qs = viewset.get_queryset()
         self.assertEquals(qs.count(), 1)
         self.assertEquals(qs.first(), book1)
+
+    def test_footprint_viewset(self):
+        csrf_client = Client(enforce_csrf_checks=True)
+
+        self.user = UserFactory()
+        csrf_client.login(username=self.user.username, password="test")
+
+        # get a csrf token
+        url = reverse('create-footprint-view')
+        response = csrf_client.get(url)
+
+        footprint = FootprintFactory()
+        data = {'pk': footprint.id, 'title': 'abcdefg'}
+        content = encode_multipart('BoUnDaRyStRiNg', data)
+        content_type = 'multipart/form-data; boundary=BoUnDaRyStRiNg'
+
+        url = '/api/footprint/%s/' % footprint.id
+
+        csrf_header = response.cookies['csrftoken'].value
+        response = csrf_client.patch(url, content,
+                                     content_type=content_type,
+                                     HTTP_X_CSRFTOKEN=csrf_header)
+        self.assertEquals(response.status_code, 200)
+
+        footprint.refresh_from_db()
+        self.assertEquals(footprint.title, 'abcdefg')
 
 
 class ContactUsViewTest(TestCase):

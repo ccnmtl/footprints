@@ -125,8 +125,9 @@ class ActorSerializer(HyperlinkedModelSerializer):
 
 
 class WrittenWorkSerializer(HyperlinkedModelSerializer):
-    actor = ActorSerializer(many=True)
-    standardized_identifier = StandardizedIdentificationSerializer(many=True)
+    actor = ActorSerializer(many=True, read_only=True)
+    standardized_identifier = StandardizedIdentificationSerializer(
+        many=True, read_only=True)
 
     class Meta:
         model = WrittenWork
@@ -136,11 +137,12 @@ class WrittenWorkSerializer(HyperlinkedModelSerializer):
 
 class ImprintSerializer(HyperlinkedModelSerializer):
     work = WrittenWorkSerializer()
-    language = LanguageSerializer(many=True)
-    actor = ActorSerializer(many=True)
+    language = LanguageSerializer(many=True, read_only=True)
+    actor = ActorSerializer(many=True, read_only=True)
     place = PlaceSerializer()
     date_of_publication = ExtendedDateFormatSerializer()
-    standardized_identifier = StandardizedIdentificationSerializer(many=True)
+    standardized_identifier = StandardizedIdentificationSerializer(
+        many=True, read_only=True)
 
     class Meta:
         model = Imprint
@@ -149,20 +151,10 @@ class ImprintSerializer(HyperlinkedModelSerializer):
                   'date_of_publication', 'actor', 'notes',
                   'standardized_identifier', 'description')
 
-    def update(self, instance, validated_data):
-        if 'language' in validated_data:
-            instance.language = validated_data['language']
-            instance.save()
-        else:
-            instance = super(ImprintSerializer, self).update(
-                instance, validated_data)
-
-        return instance
-
 
 class BookCopySerializer(HyperlinkedModelSerializer):
     imprint = ImprintSerializer()
-    owners = ActorSerializer(many=True)
+    owners = ActorSerializer(many=True, read_only=True)
 
     class Meta:
         model = BookCopy
@@ -171,10 +163,10 @@ class BookCopySerializer(HyperlinkedModelSerializer):
 
 class FootprintSerializer(HyperlinkedModelSerializer):
     associated_date = ExtendedDateFormatSerializer()
-    language = LanguageSerializer(many=True)
-    actor = ActorSerializer(many=True)
+    language = LanguageSerializer(many=True, read_only=True)
+    actor = ActorSerializer(many=True, read_only=True)
     place = PlaceSerializer()
-    digital_object = DigitalObjectSerializer(many=True)
+    digital_object = DigitalObjectSerializer(many=True, read_only=True)
     created_by = UserSerializer(read_only=True)
     last_modified_by = UserSerializer(read_only=True)
 
@@ -186,14 +178,3 @@ class FootprintSerializer(HyperlinkedModelSerializer):
                   'percent_complete', 'digital_object',
                   'created_at', 'modified_at',
                   'created_by', 'last_modified_by')
-
-    def update(self, instance, validated_data):
-        if 'language' in validated_data:
-            # all related languages are posted
-            instance.language = validated_data['language']
-            instance.save()
-        else:
-            instance = super(FootprintSerializer, self).update(
-                instance, validated_data)
-
-        return instance

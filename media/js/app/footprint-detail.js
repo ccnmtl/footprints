@@ -496,9 +496,6 @@
 
             // Modifying X-Editable default properties
             jQuery.fn.editable.defaults.mode = 'inline';
-            jQuery.fn.editable.defaults.ajaxOptions = {
-                headers: {'X-HTTP-Method-Override': 'PATCH'}
-            };
 
             this.footprint = new window.Footprint({id: options.footprint.id});
             this.bookCopy = new window.BookCopy({id: options.book_copy.id});

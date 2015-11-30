@@ -84,7 +84,7 @@ MIDDLEWARE_CLASSES = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'waffle.middleware.WaffleMiddleware',
     'audit_log.middleware.UserLoggingMiddleware',
-    'reversion.middleware.RevisionMiddleware',
+    'reversion.middleware.RevisionMiddleware'
 ]
 
 ROOT_URLCONF = 'footprints.urls'

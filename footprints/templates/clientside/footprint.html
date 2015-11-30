@@ -11,7 +11,6 @@
         <% if (editable) { %>
             <a href="javascript:void(0);" class="editable"
                 data-name="narrative" data-type="textarea" data-pk="<%=id%>"
-                data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
                 data-url="/api/footprint/<%=id%>/"><%=narrative%></a>
         <% } else { %>
             <%=narrative%>
@@ -42,7 +41,7 @@
                                             <% if (editable) { %>
                                                 <div class="edit-digital-object" style="display: none">
                                                     <a href="javascript:void(0);" class="remove-related"
-                                                        data-params="{attr:'digital_object',child_id:'<%=digital_object[i].id%>',csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=id%>,parent_model:'footprint'}" 
+                                                        data-params="{attr:'digital_object',child_id:'<%=digital_object[i].id%>',parent_id:<%=id%>,parent_model:'footprint'}" 
                                                         data-url="/remove/related/"
                                                         title="remove image">
                                                         <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
@@ -82,13 +81,12 @@
                     <a href="javascript:void(0);" class="editable-required required"
                      data-name="edtf_format"
                      data-type="text" data-pk="<%=associated_date.id%>"
-                     data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
                      data-url="/api/edtf/<%=associated_date.id%>/">
                         <%=associated_date.display_format%>
                     </a>
                     <div class="pull-right">
                         <a href="javascript:void(0);" class="remove-related"
-                            data-params="{attr:'associated_date',child_id:'<%=associated_date.id%>',csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=id%>,parent_model:'footprint'}" 
+                            data-params="{attr:'associated_date',child_id:'<%=associated_date.id%>',parent_id:<%=id%>,parent_model:'footprint'}" 
                             data-url="/remove/related/"
                             title="remove date">
                             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
@@ -113,7 +111,7 @@
                 <div class="pull-right">
                     <% if (editable) { %>
                         <a href="javascript:void(0);" class="remove-related"
-                            data-params="{attr:'place',child_id:'<%=place.id%>',csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=id%>,parent_model:'footprint'}" 
+                            data-params="{attr:'place',child_id:'<%=place.id%>',parent_id:<%=id%>,parent_model:'footprint'}" 
                             data-url="/remove/related/"
                             title="remove place">
                             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
@@ -139,11 +137,11 @@
             <dd class="border-bottom">
                 <% if (editable) { %>
                     <a href="javascript:void(0);" class="editable-language"
-                        data-name="language"
+                        data-name="language" data-method="post"
                         data-type="select2" data-pk="<%=id%>"
                         data-value="[<% for (var i=0; i < language.length; i++) { %><%=language[i].id%><% if (i < language.length-1) { %> ,<% } }%>]"
-                        data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
-                        data-url="/api/footprint/<%=id%>/">
+                        data-params="{parent_id:<%=id%>,parent_model:'footprint'}"
+                        data-url="/language/add/">
                 <% } %>
                 <% for (var i=0; i < language.length; i++) { %> 
                     <%= language[i].name %><% if (i < language.length-1) { %> , <% } %>
@@ -164,7 +162,6 @@
             <% if (editable) { %>
                 <a href="javascript:void(0);" class="editable-required"
                     data-name="title" data-type="text" data-pk="<%=id%>"
-                    data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
                     data-url="/api/footprint/<%=id%>/"><%=title%></a>
             <% } else { %>
                 <%=title%>
@@ -177,7 +174,7 @@
                 <div class="pull-right">
                     <% if (editable) { %>
                         <a href="javascript:void(0);" class="remove-related"
-                            data-params="{attr:'actor',child_id:'<%=actor[i].id%>',csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=id%>,parent_model:'footprint'}" 
+                            data-params="{attr:'actor',child_id:'<%=actor[i].id%>',parent_id:<%=id%>,parent_model:'footprint'}" 
                             data-url="/remove/related/"
                             title="remove actor">
                             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
@@ -201,7 +198,6 @@
                     data-name="medium"
                     data-type="select2" data-pk="<%=id%>"
                     data-value="<%=medium%>"
-                    data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
                     data-url="/api/footprint/<%=id%>/"><%=medium%>
                 </a>
             <% } else { %>
@@ -223,7 +219,6 @@
                     <a href="javascript:void(0);" class="editable"
                         data-name="medium_description"
                         data-type="text" data-pk="<%=id%>"
-                        data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
                         data-url="/api/footprint/<%=id%>/"><%=medium_description%></a>
                 <% } else { %>
                     <%=medium_description%>
@@ -243,7 +238,6 @@
                 <a href="javascript:void(0);" class="editable-required"
                     data-name="provenance"
                     data-type="text" data-pk="<%=id%>"
-                    data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
                     data-url="/api/footprint/<%=id%>/"><%=provenance%></a>
             <% } else { %>
                 <%=provenance%>
@@ -257,7 +251,6 @@
                     <a href="javascript:void(0);" class="editable"
                         data-name="call_number"
                         data-type="text" data-pk="<%=id%>"
-                        data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
                         data-url="/api/footprint/<%=id%>/"><%=call_number%></a>
                 <% } else { %>
                     <%=call_number%>
@@ -272,7 +265,6 @@
                     <a href="javascript:void(0);" class="editable"
                         data-name="notes"
                         data-type="textarea" data-pk="<%=id%>"
-                        data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
                         data-url="/api/footprint/<%=id%>/"><%=notes%></a>
                 <% } else { %>
                     <%=notes%>
@@ -292,7 +284,8 @@
                             <span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
                             <a href="javascript:void(0);" class="editable-place do-you-know persistant"
                                 data-name="place" data-pk="<%=id%>" data-type="place"
-                                data-params="{csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=id%>,parent_model:'footprint'}"
+                                data-method="post"
+                                data-params="{parent_id:<%=id%>,parent_model:'footprint'}"
                                 data-url="/place/add/">the place where the footprint occurred?</a>
                         </li>
                     <% } %>
@@ -300,25 +293,25 @@
                         <li><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
                         <a href="javascript:void(0);" class="editable do-you-know persistant editable-refresh"
                             data-name="date_string" data-type="text" data-pk="<%=id%>"
-                            data-value=""
-                            data-params="{csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=id%>,parent_model:'footprint',attr:'associated_date'}"
+                            data-value="" data-method="post"
+                            data-params="{parent_id:<%=id%>,parent_model:'footprint',attr:'associated_date'}"
                             data-url="/date/add/">the date when the footprint occurred?</a>
                         </li>
                     <% } %>
                     <% if (language.length < 1) { %> 
                         <li><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
                             <a href="javascript:void(0);" class="editable-language do-you-know persistant"
-                                data-name="language"
+                                data-name="language" data-method="post"
                                 data-type="select2" data-pk="<%=id%>" data-value=""
-                                data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
-                            data-url="/api/footprint/<%=id%>/">the language(s) of the footprint?</a>
+                                data-params="{parent_id:<%=id%>,parent_model:'footprint'}"
+                                data-url="/language/add/">the language(s) of the footprint?</a>
                         </li>
                     <% } %>
                     <li class="fixed"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
                         <a href="javascript:void(0);" class="editable-actor do-you-know persistant"
-                            data-name="actor" 
+                            data-name="actor" data-method="post"
                             data-type="actor" data-pk="<%=id%>" data-value=""
-                            data-params="{csrfmiddlewaretoken:'<%=csrf_token%>',parent_id:<%=id%>,parent_model:'footprint'}" 
+                            data-params="{parent_id:<%=id%>,parent_model:'footprint'}" 
                             data-url="/actor/add/">people related to this footprint, e.g. sellers, owners, curators?</a>
                     </li>
                     <% if (!medium_description || medium_description.length < 1) { %> 
@@ -326,7 +319,6 @@
                             <a href="javascript:void(0);" class="editable do-you-know persistant"
                                 data-name="medium_description" data-value=""                                         
                                 data-type="text" data-pk="<%=id%>"
-                                data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
                                 data-url="/api/footprint/<%=id%>/">details about the evidence, e.g. a catalog title?</a>
                         </li>
                     <% } %>
@@ -334,7 +326,6 @@
                         <li><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
                             <a href="javascript:void(0);" class="editable do-you-know persistant" data-name="call_number"
                                 data-type="text" data-pk="<%=id%>" data-value=""
-                                data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}" 
                                 data-url="/api/footprint/<%=id%>/">the call number of the evidence?</a>
                         </li>
                     <% } %>
@@ -342,14 +333,13 @@
                         <li><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
                             <a href="javascript:void(0);" class="editable do-you-know persistant" data-name="notes"
                                data-type="textarea" data-pk="<%=id%>" data-value=""
-                               data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
                                data-url="/api/footprint/<%=id%>/">any additional notes, clarifications, deductions or oddities?</a>
                         </li>
                     <% } %>
                     <li><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
                         <a href="javascript:void(0);" class="editable-digitalobject do-you-know persistant" data-name="digital_object"
-                           data-type="digitalobject" data-pk="<%=id%>" data-value=""
-                           data-params='{"csrfmiddlewaretoken":"<%=csrf_token%>","parent_id":"<%=id%>","parent_model":"footprint"}'>
+                           data-type="digitalobject" data-pk="<%=id%>" data-value="" data-method="post"
+                           data-params='{"parent_id":"<%=id%>","parent_model":"footprint"}'>
                             what the evidence looks like? Add some images
                         </a>
                     </li>
@@ -357,7 +347,6 @@
                     <li><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
                         <a href="javascript:void(0);" class="editable do-you-know persistant" data-name="narrative"
                            data-type="textarea" data-pk="<%=id%>" data-value=""
-                           data-params="{csrfmiddlewaretoken:'<%=csrf_token%>'}"
                            data-url="/api/footprint/<%=id%>/">a one-sentence narrative for this footprint?</a>
                         </a>
                     </li>
