@@ -354,7 +354,7 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
                         url: this.options.url,
                         data: params,
                         traditional: true,
-                        type: this.options.method || 'patch'
+                        type: this.options.method || 'PATCH'
                     }, this.options.ajaxOptions));
                 }
             }
