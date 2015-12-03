@@ -44,6 +44,12 @@ class ExtendedDateFormat(models.Model):
         else:
             return self.fmt(e.date_obj, False)
 
+    def ordinal(self, n):
+        # cribbed from http://codegolf.stackexchange.com/
+        # questions/4707/outputting-ordinal-numbers-1st-2nd-3rd#answer-4712
+        return "%d%s" % (
+            n, "tsnrhtdd"[(n / 10 % 10 != 1) * (n % 10 < 4) * n % 10::4])
+
     def fmt_modifier(self, date_obj):
         if date_obj == 'open':
             return 'present'
@@ -55,18 +61,12 @@ class ExtendedDateFormat(models.Model):
             return '{}s'.format(year)
 
         century = int(str(year)[:2]) + 1
-        modifier = 'th'
 
-        if century <= 3 or century >= 21:
-            n = century % 10
-            if n == 1:
-                modifier = 'st'
-            if n == 2:
-                modifier = 'nd'
-            if n == 3:
-                modifier = 'rd'
+        return '{} century'.format(self.ordinal(century))
 
-        return '{}{} century'.format(century, modifier)
+    def fmt_millenium(self, millenium):
+        millenium = int(millenium) + 1
+        return '{} millenium'.format(self.ordinal(millenium))
 
     def fmt(self, date_obj, is_interval):
         result = ''
@@ -78,6 +78,8 @@ class ExtendedDateFormat(models.Model):
 
         if date_obj.precision is None:
             result = 'invalid'
+        elif precision == edtf_date.PRECISION_MILLENIUM:
+            result = self.fmt_millenium(date_obj._millenium)
         elif precision == edtf_date.PRECISION_CENTURY:
             yr = date_obj._precise_year(edtf_date.EARLIEST)
             result = self.fmt_century(yr, is_interval)
