@@ -214,7 +214,7 @@ class BasicModelTest(TestCase):
 class ExtendedDateFormatTest(TestCase):
 
     use_cases = {
-        '14xx': '1400s',  # PRECISION_CENTURY
+        '14xx': '15th century',  # PRECISION_CENTURY
         '192x': '1920s',  # PRECISION_DECADE
         '1613': '1613',  # PRECISION_YEAR
         '1944-11': 'November 1944',  # PRECISION_MONTH
