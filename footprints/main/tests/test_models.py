@@ -4,7 +4,7 @@ from django.db.utils import IntegrityError
 from django.test import TestCase
 
 from footprints.main.models import Language, DigitalFormat, \
-    ExtendedDateFormat, StandardizedIdentification, \
+    ExtendedDate, StandardizedIdentification, \
     Actor, Imprint, FOOTPRINT_LEVEL, IMPRINT_LEVEL, WRITTENWORK_LEVEL, Role, \
     Place, Footprint, WrittenWork, BookCopy, StandardizedIdentificationType
 from footprints.main.tests.factories import RoleFactory, \
@@ -233,5 +233,5 @@ class ExtendedDateFormatTest(TestCase):
 
     def test_use_cases(self):
         for key, val in self.use_cases.items():
-            e = ExtendedDateFormat(edtf_format=key)
+            e = ExtendedDate(edtf_format=key)
             self.assertEquals(e.__unicode__(), val)

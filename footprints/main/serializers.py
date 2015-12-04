@@ -4,7 +4,7 @@ from rest_framework.fields import CharField, ReadOnlyField
 from rest_framework.serializers import Serializer, HyperlinkedModelSerializer
 
 from footprints.main.models import Footprint, Language, Role, Actor, \
-    ExtendedDateFormat, Person, Place, WrittenWork, Imprint, BookCopy, \
+    ExtendedDate, Person, Place, WrittenWork, Imprint, BookCopy, \
     StandardizedIdentification, DigitalObject, DigitalFormat, \
     StandardizedIdentificationType
 
@@ -59,11 +59,11 @@ class LanguageSerializer(HyperlinkedModelSerializer):
 
 class ExtendedDateFormatSerializer(HyperlinkedModelSerializer):
     class Meta:
-        model = ExtendedDateFormat
+        model = ExtendedDate
         fields = ('id', 'edtf_format', 'display_format')
 
     def get_queryset(self):
-        return ExtendedDateFormat.objects.all()
+        return ExtendedDate.objects.all()
 
 
 class RoleSerializer(HyperlinkedModelSerializer):

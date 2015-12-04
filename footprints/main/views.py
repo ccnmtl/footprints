@@ -25,7 +25,7 @@ from rest_framework.views import APIView
 from footprints.main.forms import DigitalObjectForm, ContactUsForm, \
     SUBJECT_CHOICES
 from footprints.main.models import (
-    Footprint, Actor, Person, Role, WrittenWork, Language, ExtendedDateFormat,
+    Footprint, Actor, Person, Role, WrittenWork, Language, ExtendedDate,
     Place, Imprint, BookCopy, StandardizedIdentification,
     StandardizedIdentificationType)
 from footprints.main.serializers import NameSerializer
@@ -329,7 +329,7 @@ class AddDateView(AddRelatedRecordView):
 
         date_string = self.request.POST.get('date_string', None)
         if date_string is not None:
-            edtf = ExtendedDateFormat.objects.create(edtf_format=date_string)
+            edtf = ExtendedDate.objects.create(edtf_format=date_string)
             setattr(the_parent, attr, edtf)
             the_parent.save()
 

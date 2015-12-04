@@ -21,7 +21,7 @@ LEVEL_TYPES = (
 )
 
 
-class ExtendedDateFormat(models.Model):
+class ExtendedDate(models.Model):
     edtf_format = models.CharField(max_length=256)
 
     month_names = {
@@ -294,10 +294,10 @@ class StandardizedIdentification(models.Model):
 class Person(models.Model):
     name = models.TextField()
 
-    birth_date = models.OneToOneField(ExtendedDateFormat,
+    birth_date = models.OneToOneField(ExtendedDate,
                                       null=True, blank=True,
                                       related_name="birth_date")
-    death_date = models.OneToOneField(ExtendedDateFormat,
+    death_date = models.OneToOneField(ExtendedDate,
                                       null=True, blank=True,
                                       related_name="death_date")
 
@@ -476,7 +476,7 @@ class Imprint(models.Model):
     title = models.TextField(null=True, blank=True,
                              verbose_name="Imprint Title")
     language = models.ManyToManyField(Language, blank=True)
-    date_of_publication = models.OneToOneField(ExtendedDateFormat,
+    date_of_publication = models.OneToOneField(ExtendedDate,
                                                null=True, blank=True)
     place = models.ForeignKey(Place, null=True, blank=True)
 
@@ -635,7 +635,7 @@ class Footprint(models.Model):
     place = models.ForeignKey(Place, null=True, blank=True,
                               verbose_name='Footprint Location')
 
-    associated_date = models.OneToOneField(ExtendedDateFormat,
+    associated_date = models.OneToOneField(ExtendedDate,
                                            null=True, blank=True,
                                            verbose_name='Footprint Date')
 

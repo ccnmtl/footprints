@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import viewsets
 
 from footprints.main.models import (
-    Footprint, Actor, Person, Role, WrittenWork, Language, ExtendedDateFormat,
+    Footprint, Actor, Person, Role, WrittenWork, Language, ExtendedDate,
     Place, Imprint, BookCopy, StandardizedIdentification, DigitalFormat,
     DigitalObject, StandardizedIdentificationType)
 from footprints.main.serializers import (
@@ -30,7 +30,7 @@ class RoleViewSet(viewsets.ModelViewSet):
 
 
 class ExtendedDateFormatViewSet(viewsets.ModelViewSet):
-    queryset = ExtendedDateFormat.objects.all()
+    queryset = ExtendedDate.objects.all()
     serializer_class = ExtendedDateFormatSerializer
 
 
