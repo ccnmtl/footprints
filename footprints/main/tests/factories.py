@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 import factory
 
 from footprints.main.models import (
-    Language, ExtendedDateFormat, Role, DigitalFormat,
+    Language, ExtendedDate, Role, DigitalFormat,
     StandardizedIdentification, Person, Actor, Place, Collection, WrittenWork,
     Imprint, BookCopy, Footprint, DigitalObject, IMPRINT_LEVEL,
     StandardizedIdentificationType)
@@ -22,7 +22,7 @@ class UserFactory(factory.DjangoModelFactory):
 
 class ExtendedDateFormatFactory(factory.DjangoModelFactory):
     class Meta:
-        model = ExtendedDateFormat
+        model = ExtendedDate
     edtf_format = '1984~'
 
 

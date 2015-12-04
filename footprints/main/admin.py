@@ -2,7 +2,7 @@ from django.contrib import admin
 import reversion
 
 from footprints.main.models import Footprint, DigitalFormat, Role, \
-    ExtendedDateFormat, Actor, Language, DigitalObject, \
+    ExtendedDate, Actor, Language, DigitalObject, \
     StandardizedIdentification, Person, Place, Collection, WrittenWork, \
     Imprint, BookCopy
 
@@ -18,7 +18,7 @@ admin.site.register(Person)
 class ExtendedDateFormatAdmin(admin.ModelAdmin):
     list_display = ('edtf_format', '__unicode__')
 
-admin.site.register(ExtendedDateFormat, ExtendedDateFormatAdmin)
+admin.site.register(ExtendedDate, ExtendedDateFormatAdmin)
 
 
 def person_name(obj):
