@@ -211,7 +211,7 @@ class BasicModelTest(TestCase):
         self.assertTrue(footprint.is_bare())
 
 
-class ExtendedDateFormatTest(TestCase):
+class ExtendedDateTest(TestCase):
 
     use_cases = {
         '999': 'invalid',
@@ -235,3 +235,32 @@ class ExtendedDateFormatTest(TestCase):
         for key, val in self.use_cases.items():
             e = ExtendedDate(edtf_format=key)
             self.assertEquals(e.__unicode__(), val)
+
+    def test_create_from_dict(self):
+        values = {
+            'millenium1': 2, 'century1': 0, 'decade1': 0, 'year1': 1,
+            'month1': 1, 'day1': 1,
+            'approximate1': True, 'uncertain1': True,
+            'millenium2': 2, 'century2': 0, 'decade2': None, 'year2': None,
+            'month2': None, 'day2': None,
+            'approximate2': False, 'uncertain2': False}
+
+        dt = ExtendedDate.objects.create_from_dict(values)
+        self.assertEquals(dt.edtf_format, '2001-01-01?~/20xx')
+
+    def test_to_edtf(self):
+        mgr = ExtendedDate.objects
+        dt = mgr.to_edtf(2, None, None, None, None, None, True, True)
+        self.assertEquals(dt, '2xxx?~')
+
+        dt = mgr.to_edtf(2, 0, None, None, None, None, True, True)
+        self.assertEquals(dt, '20xx?~')
+
+        dt = mgr.to_edtf(2, 0, 1, 5, None, None, False, False)
+        self.assertEquals(dt, '2015')
+
+        dt = mgr.to_edtf(2, 0, 1, 5, 2, None, False, False)
+        self.assertEquals(dt, '2015-02')
+
+        dt = mgr.to_edtf(2, 0, 1, 5, 12, 31, False, False)
+        self.assertEquals(dt, '2015-12-31')

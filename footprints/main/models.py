@@ -21,7 +21,53 @@ LEVEL_TYPES = (
 )
 
 
+class ExtendedDateManager(models.Manager):
+
+    def to_edtf(self, millenium, century, decade, year, month, day,
+                approximate, uncertain):
+
+        if day is not None:
+            dt = '{}{}{}{}-{:0>2d}-{:0>2d}'.format(
+                millenium, century, decade, year, month, day)
+        elif month is not None:
+            dt = '{}{}{}{}-{:0>2d}'.format(
+                millenium, century, decade, year, month)
+        elif year is not None:
+            dt = '{}{}{}{}'.format(millenium, century, decade, year)
+        elif decade is not None:
+            dt = '{}{}{}x'.format(millenium, century, decade)
+        elif century is not None:
+            dt = '{}{}xx'.format(millenium, century)
+        elif millenium is not None:
+            dt = '{}xxx'.format(millenium)
+
+        if uncertain:
+            dt = '{}?'.format(dt)
+
+        if approximate:
+            dt = '{}~'.format(dt)
+
+        return dt
+
+    def create_from_dict(self, values):
+        dt = self.to_edtf(
+            values['millenium1'], values['century1'], values['decade1'],
+            values['year1'], values['month1'], values['day1'],
+            values['approximate1'], values['uncertain1'])
+
+        if values['millenium2'] is not None:
+            dt2 = self.to_edtf(
+                values['millenium2'], values['century2'], values['decade2'],
+                values['year2'], values['month2'], values['day2'],
+                values['approximate2'], values['uncertain2'])
+
+            dt = '{}/{}'.format(dt, dt2)
+
+        return self.create(edtf_format=dt)
+
+
 class ExtendedDate(models.Model):
+    objects = ExtendedDateManager()
     edtf_format = models.CharField(max_length=256)
 
     month_names = {
