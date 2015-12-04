@@ -39,10 +39,16 @@ class ExtendedDateFormat(models.Model):
         e = EDTF(self.edtf_format)
 
         if e.is_interval:
-            return "%s - %s" % (self.fmt(e.date_obj.start),
-                                self.fmt(e.date_obj.end))
+            return "%s - %s" % (self.fmt(e.date_obj.start, True),
+                                self.fmt(e.date_obj.end, True))
         else:
-            return self.fmt(e.date_obj)
+            return self.fmt(e.date_obj, False)
+
+    def ordinal(self, n):
+        # cribbed from http://codegolf.stackexchange.com/
+        # questions/4707/outputting-ordinal-numbers-1st-2nd-3rd#answer-4712
+        return "%d%s" % (
+            n, "tsnrhtdd"[(n / 10 % 10 != 1) * (n % 10 < 4) * n % 10::4])
 
     def fmt_modifier(self, date_obj):
         if date_obj == 'open':
@@ -50,7 +56,19 @@ class ExtendedDateFormat(models.Model):
         if date_obj == 'unknown':
             return '?'
 
-    def fmt(self, date_obj):
+    def fmt_century(self, year, is_interval):
+        if is_interval:
+            return '{}s'.format(year)
+
+        century = int(str(year)[:2]) + 1
+
+        return '{} century'.format(self.ordinal(century))
+
+    def fmt_millenium(self, millenium):
+        millenium = int(millenium) + 1
+        return '{} millenium'.format(self.ordinal(millenium))
+
+    def fmt(self, date_obj, is_interval):
         result = ''
 
         if isinstance(date_obj, basestring):
@@ -60,8 +78,11 @@ class ExtendedDateFormat(models.Model):
 
         if date_obj.precision is None:
             result = 'invalid'
+        elif precision == edtf_date.PRECISION_MILLENIUM:
+            result = self.fmt_millenium(date_obj._millenium)
         elif precision == edtf_date.PRECISION_CENTURY:
-            result = ('%ss' % date_obj._precise_year(edtf_date.EARLIEST))
+            yr = date_obj._precise_year(edtf_date.EARLIEST)
+            result = self.fmt_century(yr, is_interval)
         elif precision == edtf_date.PRECISION_DECADE:
             result = '%ss' % date_obj._precise_year(edtf_date.EARLIEST)
         elif precision == edtf_date.PRECISION_YEAR:
