@@ -68,6 +68,12 @@
             return str;
         },
 
+        validate: function() {
+            if (this.$input.val().length < 1) {
+                return 'This field is required';
+            }
+        },
+
         /**
            Sets value of input.
 
@@ -94,6 +100,7 @@
         **/
         value2submit: function(value) {
             return {
+                error: this.validate(),
                 title: this.$input.val()
             };
         },

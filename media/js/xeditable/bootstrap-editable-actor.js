@@ -20,7 +20,7 @@
             this.$input = this.$tpl.find('input[name="person-autocomplete"]');
             this.$roleselect = this.$tpl.find('select[name="role"]');
             this.$actorname =  this.$tpl.find('input[name="actor-name"]');
-            jQuery(this.$input).autocomplete({
+            this.$input.autocomplete({
                select: function(event, ui) {
                    self.$input.attr('data-instance', ui.item.object_id);
                    self.$input.attr('data-label', ui.item.label);
@@ -112,6 +112,14 @@
         value2input: function(value) {
         },
 
+        validate: function() {
+            if (this.$input.val().length < 1) {
+                return 'Please enter the person\'s name';
+            } else if (this.$roleselect.val().length < 1) {
+                return 'Please select a role';
+            }
+        },
+
         /**
            Returns value of input.
 
@@ -128,6 +136,7 @@
         **/
         value2submit: function(value) {
             return {
+                error: this.validate(),
                 person_name: this.$input.val(),
                 person_id: this.$input.data('instance'),
                 role: this.$roleselect.val(),

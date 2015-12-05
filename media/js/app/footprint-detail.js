@@ -96,34 +96,11 @@
             });
         },
         validate: function(values) {
+            if (values.hasOwnProperty('error')) {
+                return values.error;
+            }
             if (values.length < 1) {
                 return 'This field is required';
-            }
-        },
-        validateActor: function(values) {
-            if (!values.hasOwnProperty('person_name') ||
-                values.person_name.length < 1) {
-                return 'Please enter the person\'s name';
-            } else if (!values.hasOwnProperty('role') ||
-                       values.role.length < 1) {
-                return 'Please select a role';
-            }
-        },
-        validatePlace: function(values) {
-            if (!values.hasOwnProperty('latitude') ||
-                    !values.hasOwnProperty('longitude')) {
-                return 'Please select a location on the map';
-            } else if (values.country.length < 1) {
-                return 'Please specify a country';
-            }
-        },
-        validateIdentifier: function(values) {
-            if (!values.hasOwnProperty('identifier') ||
-                    values.identifer.length < 1) {
-                return 'Please specify an identifer';
-            } else if (!values.hasOwnProperty('identifier_type') ||
-                    values.identifer.length < 1) {
-                return 'Please select the type of identifier';
             }
         }
     });
@@ -165,7 +142,7 @@
                 namedParams: true,
                 tpl: jQuery('#xeditable-place-form').html(),
                 onblur: 'ignore',
-                validate: this.validatePlace,
+                validate: this.validate,
                 success: this.refresh
             });
 
@@ -183,7 +160,7 @@
 
             jQuery(this.el).find('.editable-actor').editable({
                 namedParams: true,
-                validate: this.validateActor,
+                validate: this.validate,
                 success: this.refresh,
                 tpl: jQuery('#xeditable-actor-form').html()
             });
@@ -257,14 +234,14 @@
             jQuery(this.el).find('.editable-author').editable({
                 namedParams: true,
                 tpl: jQuery('#xeditable-author-form').html(),
-                validate: this.validateActor,
+                validate: this.validate,
                 success: this.refresh
             });
 
             jQuery(this.el).find('.editable-publisher').editable({
                 namedParams: true,
                 tpl: jQuery('#xeditable-publisher-form').html(),
-                validate: this.validateActor,
+                validate: this.validate,
                 success: this.refresh
             });
 
@@ -284,7 +261,7 @@
                 namedParams: true,
                 tpl: jQuery('#xeditable-place-form').html(),
                 onblur: 'ignore',
-                validate: this.validatePlace,
+                validate: this.validate,
                 success: this.refresh
             });
 
@@ -304,14 +281,14 @@
                 namedParams: true,
                 tpl: jQuery('#xeditable-imprint-identifier-form').html(),
                 onblur: 'ignore',
-                validate: this.validateIdentifer,
+                validate: this.validate,
                 success: this.refresh
             });
             jQuery(this.el).find('.editable-work-identifier').editable({
                 namedParams: true,
                 tpl: jQuery('#xeditable-work-identifier-form').html(),
                 onblur: 'ignore',
-                validate: this.validateIdentifer,
+                validate: this.validate,
                 success: this.refresh
             });
 
