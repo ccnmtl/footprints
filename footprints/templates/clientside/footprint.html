@@ -77,13 +77,8 @@
                 Footprint Date
             </dt>
             <dd class="border-bottom">
+                <%=associated_date.display_format%>
                 <% if (editable) { %>
-                    <a href="javascript:void(0);" class="editable-required required"
-                     data-name="edtf_format"
-                     data-type="text" data-pk="<%=associated_date.id%>"
-                     data-url="/api/edtf/<%=associated_date.id%>/">
-                        <%=associated_date.display_format%>
-                    </a>
                     <div class="pull-right">
                         <a href="javascript:void(0);" class="remove-related"
                             data-params="{attr:'associated_date',child_id:'<%=associated_date.id%>',parent_id:<%=id%>,parent_model:'footprint'}" 
@@ -92,8 +87,6 @@
                             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                         </a>
                     </div>
-                <% } else { %>
-                    <%=associated_date.display_format%>
                 <% } %>
             </dd>
         <% } %>
