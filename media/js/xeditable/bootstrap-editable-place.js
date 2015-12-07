@@ -39,19 +39,19 @@ Place editable input.
             self.geocoder.geocode({
                 latLng: self.marker.getPosition(),
             }, function(responses) {
-                jQuery(self.$city).val('');
-                jQuery(self.$country).val('');
-                jQuery(self.$address).val('');
+                self.$city.val('');
+                self.$country.val('');
+                self.$address.val('');
 
                 if (responses && responses.length > 0) {
                     var components = responses[0].address_components;
 
                     for (var i = 0; i < components.length; i++) {
                         if (components[i].types.indexOf('locality') > -1) {
-                            jQuery(self.$city).val(components[i].long_name);
+                            self.$city.val(components[i].long_name);
                         } else if (components[i].types
                                    .indexOf('country') > -1) {
-                            jQuery(self.$country).val(components[i].long_name);
+                            self.$country.val(components[i].long_name);
                         }
                     }
                 }
@@ -115,12 +115,12 @@ Place editable input.
 
             self.$tpl.parents('.editable-input').addClass('wide');
 
-            self.$city =  self.$tpl.find('input[name="city"]')[0];
-            self.$country =  self.$tpl.find('input[name="country"]')[0];
-            self.$address =  self.$tpl.find('input[name="address"]')[0];
-            self.$mapContainer = self.$tpl.find('.map-container')[0];
+            self.$city =  self.$tpl.find('input[name="city"]').first();
+            self.$country =  self.$tpl.find('input[name="country"]').first();
+            self.$address =  self.$tpl.find('input[name="address"]').first();
+            self.mapContainer = self.$tpl.find('.map-container')[0];
 
-            self.mapInstance = new google.maps.Map(self.$mapContainer,
+            self.mapInstance = new google.maps.Map(self.mapContainer,
                                                    self.mapOptions);
             self.mapInstance.controls[google.maps.ControlPosition.TOP_LEFT]
                 .push(self.$address);
@@ -203,6 +203,14 @@ Place editable input.
 
         },
 
+        validate: function(values) {
+            if (this.marker === undefined) {
+                return 'Please select a location on the map';
+            } else if (this.$country.val().length < 1) {
+                return 'Please specify a country';
+            }
+        },
+
         /**
            Returns value of input.
 
@@ -210,12 +218,14 @@ Place editable input.
         **/
         input2value: function() {
             var values = {};
+            values.error = this.validate();
+
             if (this.marker !== undefined) {
                 values.latitude = this.marker.getPosition().lat();
                 values.longitude = this.marker.getPosition().lng();
             }
-            values.city = jQuery(this.$city).val();
-            values.country = jQuery(this.$country).val();
+            values.city = this.$city.val();
+            values.country = this.$country.val();
             return values;
         },
 
@@ -227,8 +237,8 @@ Place editable input.
         value2submit: function(value) {
             return {
                 position: this.marker.getPosition().toUrlValue(),
-                city: jQuery(this.$city).val(),
-                country: jQuery(this.$country).val()
+                city: this.$city.val(),
+                country: this.$country.val()
             };
         },
 
