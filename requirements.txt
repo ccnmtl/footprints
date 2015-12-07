@@ -72,3 +72,5 @@ Unidecode==0.04.17
 django-reversion==1.9.3
 python-dateutil==2.4.2
 edtf==0.9.2
+
+ccnmtlsettings==0.1.0
