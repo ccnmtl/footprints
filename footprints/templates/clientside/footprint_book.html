@@ -144,13 +144,8 @@ The Literary Work
     <% if (imprint.date_of_publication) { %>
         <dt>Publication Date</dt>
         <dd class="border-bottom">
+            <%=imprint.date_of_publication.display_format%>
             <% if (editable) { %>
-                <a href="javascript:void(0);" class="editable-required"
-                 data-name="edtf_format"
-                 data-type="text" data-pk="<%=imprint.date_of_publication.id%>"
-                 data-url="/api/edtf/<%=imprint.date_of_publication.id%>/">
-                    <%=imprint.date_of_publication.display_format%>
-                </a>
                 <div class="pull-right">
                 <a href="javascript:void(0);" class="remove-related"
                     data-params="{attr:'date_of_publication',child_id:'<%=imprint.date_of_publication.id%>',parent_id:<%=imprint.id%>,parent_model:'imprint'}" 
@@ -159,8 +154,6 @@ The Literary Work
                     <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                 </a>
                 </div>
-            <% } else { %>
-                <%=imprint.date_of_publication.display_format%>
             <% } %>
         </dd>
     <% } %>
