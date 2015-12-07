@@ -71,7 +71,7 @@ class ExtendedDate(models.Model):
     edtf_format = models.CharField(max_length=256)
 
     month_names = {
-        1: 'January', 2: 'February', 3: 'Mar', 4: 'April',
+        1: 'January', 2: 'February', 3: 'March', 4: 'April',
         5: 'May', 6: 'June', 7: 'July', 8: 'August', 9: 'September',
         10: 'October', 11: 'November', 12: 'December'}
 
@@ -79,16 +79,16 @@ class ExtendedDate(models.Model):
         verbose_name = 'Extended Date Format'
 
     def __unicode__(self):
-        return self.display_format()
-
-    def display_format(self):
-        e = EDTF(self.edtf_format)
+        e = self.as_edtf()
 
         if e.is_interval:
             return "%s - %s" % (self.fmt(e.date_obj.start, True),
                                 self.fmt(e.date_obj.end, True))
         else:
             return self.fmt(e.date_obj, False)
+
+    def as_edtf(self):
+        return EDTF(self.edtf_format)
 
     def ordinal(self, n):
         # cribbed from http://codegolf.stackexchange.com/
@@ -122,8 +122,9 @@ class ExtendedDate(models.Model):
 
         precision = date_obj.precision
 
-        if date_obj.precision is None:
-            result = 'invalid'
+        if precision is None:
+            return 'invalid'
+
         elif precision == edtf_date.PRECISION_MILLENIUM:
             result = self.fmt_millenium(date_obj._millenium)
         elif precision == edtf_date.PRECISION_CENTURY:
