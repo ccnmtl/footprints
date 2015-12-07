@@ -1,0 +1,169 @@
+<script type="text/template" id="xeditable-edtf-form">
+    <div class="editable-edtf">
+        <h4 class="date-display">Date</h4>
+        <div>
+            <div class="form-group form-group-sm">
+                <table>
+                    <tr class="date-display-row">
+                        <td>
+                            <div>
+                                <label>Year</label>
+                            </div>
+                            <div>
+                                <input type="number" class="form-control edtf-entry" name="millenium1" min="1" max="2"
+                                 maxlength="1" data-content="Millenium<br />Value between 1-2"
+                                 data-toggle="popover" placeholder='-' />
+                                <input type="text" class="form-control numeric edtf-entry" name="century1" min="0" max="9"
+                                 maxlength="1" data-content="Century<br />Value between 0-9"
+                                 data-toggle="popover" placeholder='-' />
+                                <input type="text" class="form-control numeric edtf-entry" name="decade1" min="0" max="9"
+                                 maxlength="1" data-content="Decade<br />Value between 0-9"
+                                 data-toggle="popover" placeholder='-' />
+                                <input type="text" class="form-control numeric edtf-entry" name="year1" min="0" max="9"
+                                 maxlength="1" data-content="Year<br />Value between 0-9"
+                                 data-toggle="popover" placeholder='-' />
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                <label>Month</label>
+                            </div>
+                            <div>
+                                <select class="form-control edtf-entry" name="month1">
+                                    <option value="">-----</option>
+                                    <option value="1">January</option>
+                                    <option value="2">February</option>
+                                    <option value="3">March</option>
+                                    <option value="4">April</option>
+                                    <option value="5">May</option>
+                                    <option value="6">June</option>
+                                    <option value="7">July</option>
+                                    <option value="8">August</option>
+                                    <option value="9">September</option>
+                                    <option value="10">October</option>
+                                    <option value="11">November</option>
+                                    <option value="12">December</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                <label>Day</label>
+                            </div>
+                            <input type="number" class="form-control edtf-entry"
+                             name="day1" maxlength="2" min="1" max="31" 
+                             data-content="Day<br />Value between 1-31"
+                             data-toggle="popover" placeholder='--'
+                             data-required="[name='month1'],[name='year1'],[name='decade1'],[name='century1'],[name='millenium1']" />
+                        </td>
+                        <td>
+                            <div>
+                                <label>Traits</label>
+                            </div>
+                            <div class="traits">
+                                <input type="checkbox" name="approximate1" class="edtf-entry" /> 
+                                    approximate
+    
+                                <a href="javascript:void(0);" data-toggle="tooltip" data-placement="left"
+                                 title="Approximate dates are close to the actual, but not completely accurate or exact.">
+                                    <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                                </a>
+                            </div>
+                            <div>
+                                <input type="checkbox" name="uncertain1" class="edtf-entry" /> 
+                                uncertain
+                                <a href="javascript:void(0);" data-toggle="tooltip" data-placement="left"
+                                 title="Uncertain dates indicate the information may possibly be accurate, but not definitely.">
+                                    <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <div class="toggle-next-row-container date2">
+                                <button class="btn-white btn btn-xs toggle-next-row form-control">
+                                    to date
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="date-display-row" style="display: none">
+                        <td>
+                            <div>
+                                <label>Year 2</label>
+                            </div>
+                            <div>
+                                <input type="number" class="form-control edtf-entry" name="millenium2" min="1" max="2"
+                                 maxlength="1" data-content="Millenium<br />Value between 1-2"
+                                 data-toggle="popover" placeholder='-' />
+                                <input type="text" class="form-control numeric edtf-entry" name="century2" min="0" max="9"
+                                 maxlength="1" data-content="Century<br />Value between 0-9"
+                                 data-toggle="popover" placeholder='-' />
+                                <input type="text" class="form-control numeric edtf-entry" name="decade2" min="0" max="9"
+                                 maxlength="1" data-content="Decade<br />Value between 0-9"
+                                 data-toggle="popover" placeholder='-' />
+                                <input type="text" class="form-control numeric edtf-entry" name="year2" min="0" max="9"
+                                 maxlength="1" data-content="Year<br />Value between 0-9"
+                                 data-toggle="popover" placeholder='-' />
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                <label>Month 2</label>
+                            </div>
+                            <div>
+                                <select class="form-control edtf-entry" name="month2">
+                                    <option value="">-----</option>
+                                    <option value="1">January</option>
+                                    <option value="2">February</option>
+                                    <option value="3">March</option>
+                                    <option value="4">April</option>
+                                    <option value="5">May</option>
+                                    <option value="6">June</option>
+                                    <option value="7">July</option>
+                                    <option value="8">August</option>
+                                    <option value="9">September</option>
+                                    <option value="10">October</option>
+                                    <option value="11">November</option>
+                                    <option value="12">December</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                <label>Day 2</label>
+                            </div>
+                            <input type="number" class="form-control edtf-entry"
+                             name="day2" maxlength="2" min="1" max="31" 
+                             data-content="Day<br />Value between 0-31"
+                             data-toggle="popover" placeholder='--'/>
+                        </td>
+                        <td>
+                            <div>
+                                <label>Traits 2</label>
+                            </div>
+                            <div class="traits">
+                                <input type="checkbox" name="approximate2" class="edtf-entry" /> 
+                                    approximate
+    
+                                <a href="javascript:void(0);" data-toggle="tooltip" data-placement="left"
+                                 title="Approximate dates are close to the actual, but not completely accurate or exact.">
+                                    <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                                </a>
+                            </div>
+                            <div>
+                                <input type="checkbox" name="uncertain2" class="edtf-entry" /> 
+                                uncertain
+                                <a href="javascript:void(0);" data-toggle="tooltip" data-placement="left"
+                                 title="Uncertain dates indicate the information may possibly be accurate, but not definitely.">
+                                    <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</script>
