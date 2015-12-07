@@ -20,7 +20,7 @@ class UserFactory(factory.DjangoModelFactory):
     password = factory.PostGenerationMethodCall('set_password', 'test')
 
 
-class ExtendedDateFormatFactory(factory.DjangoModelFactory):
+class ExtendedDateFactory(factory.DjangoModelFactory):
     class Meta:
         model = ExtendedDate
     edtf_format = '1984~'
@@ -77,8 +77,8 @@ class PersonFactory(factory.DjangoModelFactory):
         model = Person
 
     name = factory.Sequence(lambda n: "Name%03d" % n)
-    birth_date = factory.SubFactory(ExtendedDateFormatFactory)
-    death_date = factory.SubFactory(ExtendedDateFormatFactory)
+    birth_date = factory.SubFactory(ExtendedDateFactory)
+    death_date = factory.SubFactory(ExtendedDateFactory)
     standardized_identifier = factory.SubFactory(
         StandardizedIdentificationFactory)
     notes = "notes"
@@ -134,7 +134,7 @@ class ImprintFactory(factory.DjangoModelFactory):
 
     work = factory.SubFactory(WrittenWorkFactory)
     title = 'The Odyssey, Edition 1'
-    date_of_publication = factory.SubFactory(ExtendedDateFormatFactory)
+    date_of_publication = factory.SubFactory(ExtendedDateFactory)
     place = factory.SubFactory(PlaceFactory)
     notes = "lorem ipsum"
 
@@ -175,7 +175,7 @@ class FootprintFactory(factory.DjangoModelFactory):
     title = 'Odyssey'
     place = factory.SubFactory(PlaceFactory)
 
-    associated_date = factory.SubFactory(ExtendedDateFormatFactory)
+    associated_date = factory.SubFactory(ExtendedDateFactory)
 
     call_number = 'call number'
     collection = factory.SubFactory(CollectionFactory)
