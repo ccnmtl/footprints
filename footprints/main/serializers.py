@@ -57,7 +57,7 @@ class LanguageSerializer(HyperlinkedModelSerializer):
             self.fail('incorrect_type', data_type=type(data).__name__)
 
 
-class ExtendedDateFormatSerializer(HyperlinkedModelSerializer):
+class ExtendedDateSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = ExtendedDate
         fields = ('id', 'edtf_format', 'display_format')
@@ -79,8 +79,8 @@ class DigitalFormatSerializer(HyperlinkedModelSerializer):
 
 
 class PersonSerializer(HyperlinkedModelSerializer):
-    birth_date = ExtendedDateFormatSerializer()
-    death_date = ExtendedDateFormatSerializer()
+    birth_date = ExtendedDateSerializer()
+    death_date = ExtendedDateSerializer()
 
     class Meta:
         model = Person
@@ -140,7 +140,7 @@ class ImprintSerializer(HyperlinkedModelSerializer):
     language = LanguageSerializer(many=True, read_only=True)
     actor = ActorSerializer(many=True, read_only=True)
     place = PlaceSerializer()
-    date_of_publication = ExtendedDateFormatSerializer()
+    date_of_publication = ExtendedDateSerializer()
     standardized_identifier = StandardizedIdentificationSerializer(
         many=True, read_only=True)
 
@@ -162,7 +162,7 @@ class BookCopySerializer(HyperlinkedModelSerializer):
 
 
 class FootprintSerializer(HyperlinkedModelSerializer):
-    associated_date = ExtendedDateFormatSerializer()
+    associated_date = ExtendedDateSerializer()
     language = LanguageSerializer(many=True, read_only=True)
     actor = ActorSerializer(many=True, read_only=True)
     place = PlaceSerializer()

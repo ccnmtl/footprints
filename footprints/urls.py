@@ -18,7 +18,7 @@ from footprints.main.views import (
     ContactUsView, AddLanguageView)
 from footprints.main.viewsets import (
     BookCopyViewSet, ImprintViewSet, ActorViewSet,
-    ExtendedDateFormatViewSet, FootprintViewSet, LanguageViewSet,
+    ExtendedDateViewSet, FootprintViewSet, LanguageViewSet,
     PersonViewSet, PlaceViewSet, RoleViewSet, WrittenWorkViewSet, UserViewSet,
     StandardizedIdentificationViewSet, DigitalFormatViewSet,
     DigitalObjectViewSet, StandardizedIdentificationTypeViewSet)
@@ -36,7 +36,7 @@ router.register(r'actor', ActorViewSet)
 router.register(r'book', BookCopyViewSet, base_name='book')
 router.register(r'digitalformat', DigitalFormatViewSet)
 router.register(r'digitalobject', DigitalObjectViewSet)
-router.register(r'edtf', ExtendedDateFormatViewSet)
+router.register(r'edtf', ExtendedDateViewSet)
 router.register(r'footprint', FootprintViewSet, base_name='footprint')
 router.register(r'identifiertype', StandardizedIdentificationTypeViewSet)
 router.register(r'identifier', StandardizedIdentificationViewSet)

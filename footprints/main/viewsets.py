@@ -7,7 +7,7 @@ from footprints.main.models import (
     DigitalObject, StandardizedIdentificationType)
 from footprints.main.serializers import (
     FootprintSerializer, LanguageSerializer, RoleSerializer,
-    ExtendedDateFormatSerializer, ActorSerializer, PersonSerializer,
+    ExtendedDateSerializer, ActorSerializer, PersonSerializer,
     PlaceSerializer, WrittenWorkSerializer, UserSerializer, ImprintSerializer,
     BookCopySerializer, StandardizedIdentificationSerializer,
     DigitalFormatSerializer, DigitalObjectSerializer,
@@ -29,9 +29,9 @@ class RoleViewSet(viewsets.ModelViewSet):
     serializer_class = RoleSerializer
 
 
-class ExtendedDateFormatViewSet(viewsets.ModelViewSet):
+class ExtendedDateViewSet(viewsets.ModelViewSet):
     queryset = ExtendedDate.objects.all()
-    serializer_class = ExtendedDateFormatSerializer
+    serializer_class = ExtendedDateSerializer
 
 
 class PersonViewSet(viewsets.ModelViewSet):
