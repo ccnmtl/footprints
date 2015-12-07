@@ -58,9 +58,12 @@ class LanguageSerializer(HyperlinkedModelSerializer):
 
 
 class ExtendedDateSerializer(HyperlinkedModelSerializer):
+    display = CharField(source='__unicode__')
+
     class Meta:
         model = ExtendedDate
-        fields = ('id', 'edtf_format', 'display_format')
+        fields = ('id', 'edtf_format', 'display')
+        read_only_fields = ('display',)
 
     def get_queryset(self):
         return ExtendedDate.objects.all()
