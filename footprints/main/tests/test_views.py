@@ -14,7 +14,7 @@ from footprints.main.models import Footprint, Actor, Imprint, \
 from footprints.main.tests.factories import (
     UserFactory, WrittenWorkFactory, ImprintFactory, FootprintFactory,
     PersonFactory, RoleFactory, PlaceFactory, ActorFactory, BookCopyFactory,
-    ExtendedDateFormatFactory)
+    ExtendedDateFactory)
 from footprints.main.views import (
     CreateFootprintView, AddActorView, ContactUsView)
 from footprints.main.viewsets import ImprintViewSet, BookCopyViewSet
@@ -467,7 +467,7 @@ class RemoveRelatedViewTest(TestCase):
         self.assertFalse(loads(response.content)['success'])
 
     def test_post_remove_invalid_child_id(self):
-        dt = ExtendedDateFormatFactory()
+        dt = ExtendedDateFactory()
 
         self.client.login(username=self.staff.username, password="test")
 

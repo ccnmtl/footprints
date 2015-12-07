@@ -15,10 +15,10 @@ admin.site.register(StandardizedIdentification)
 admin.site.register(Person)
 
 
-class ExtendedDateFormatAdmin(admin.ModelAdmin):
+class ExtendedDateAdmin(admin.ModelAdmin):
     list_display = ('edtf_format', '__unicode__')
 
-admin.site.register(ExtendedDate, ExtendedDateFormatAdmin)
+admin.site.register(ExtendedDate, ExtendedDateAdmin)
 
 
 def person_name(obj):
