@@ -60,6 +60,29 @@
                     return false;
                 }
             });
+
+            jQuery('input.edtf-entry').keyup(function() {
+                self.renderDateDisplay();
+            });
+            jQuery('select.edtf-entry').change(function() {
+                self.renderDateDisplay();
+            });
+        },
+
+        renderDateDisplay: function() {
+            var self = this;
+            jQuery.ajax({
+                url: '/date/display/',
+                type: 'post',
+                data: this.value2submit(),
+                success: function(data) {
+                    self.$tpl.find('.date-display').html(data.display);
+                },
+                error: function() {
+                    jQuery('#confirm-modal div.error')
+                        .modal('An error occurred. Please try again.');
+                }
+            });
         },
 
         /**

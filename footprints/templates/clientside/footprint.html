@@ -284,8 +284,8 @@
                     <% } %>
                     <% if (!associated_date) { %> 
                         <li><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
-                        <a href="javascript:void(0);" class="editable do-you-know persistant editable-refresh"
-                            data-name="date_string" data-type="text" data-pk="<%=id%>"
+                        <a href="javascript:void(0);" class="editable-edtf do-you-know persistant editable-refresh"
+                            data-name="date_string" data-type="edtf" data-pk="<%=id%>"
                             data-value="" data-method="post"
                             data-params="{parent_id:<%=id%>,parent_model:'footprint',attr:'associated_date'}"
                             data-url="/date/add/">the date when the footprint occurred?</a>

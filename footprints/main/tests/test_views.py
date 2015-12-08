@@ -565,14 +565,62 @@ class AddDateViewTest(TestCase):
                                     {'parent_id': self.footprint.id,
                                      'parent_model': 'footprint',
                                      'attr': 'associated_date',
-                                     'date_string': '1673'},
+                                     'millenium1': '1', 'century1': '6',
+                                     'decade1': '7', 'year1': '3',
+                                     'month1': '', 'day1': '',
+                                     'millenium2': '', 'century2': '',
+                                     'decade': '', 'year2': '',
+                                     'month2': '', 'day2': ''},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
         the_json = loads(response.content)
 
-        footprint = Footprint.objects.get(id=self.footprint.id)  # refresh
+        self.footprint.refresh_from_db()
         self.assertTrue(the_json['success'])
-        self.assertEquals(footprint.associated_date.edtf_format, '1673')
+        self.assertEquals(self.footprint.associated_date.edtf_format, '1673')
+
+
+class DisplayDateViewTest(TestCase):
+
+    def setUp(self):
+        self.user = UserFactory()
+        self.staff = UserFactory(is_staff=True)
+        self.footprint = FootprintFactory(title="Custom", associated_date=None)
+
+        self.url = reverse('display-date-view')
+
+    def test_post_expected_errors(self):
+        # no ajax
+        self.client.login(username=self.user.username, password="test")
+        self.assertEquals(self.client.post(self.url).status_code, 405)
+
+    def test_post_no_data(self):
+        self.client.login(username=self.staff.username, password="test")
+        response = self.client.post(self.url,
+                                    {'parent_id': self.footprint.id,
+                                     'parent_model': 'footprint'},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        the_json = loads(response.content)
+        self.assertFalse(the_json['success'])
+
+    def test_post_success(self):
+        self.client.login(username=self.staff.username, password="test")
+        response = self.client.post(self.url,
+                                    {'parent_id': self.footprint.id,
+                                     'parent_model': 'footprint',
+                                     'attr': 'associated_date',
+                                     'millenium1': '1', 'century1': '6',
+                                     'decade1': '7', 'year1': '3',
+                                     'month1': '', 'day1': '',
+                                     'millenium2': '', 'century2': '',
+                                     'decade': '', 'year2': '',
+                                     'month2': '', 'day2': ''},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        the_json = loads(response.content)
+        self.assertTrue(the_json['success'])
+        self.assertEquals(the_json['display'], '1673')
 
 
 class AddPlaceViewTest(TestCase):

@@ -268,8 +268,8 @@ The Literary Work
                 <% } %>
                 <% if (!imprint.date_of_publication) { %> 
                     <li><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
-                    <a href="javascript:void(0);" class="editable do-you-know persistant editable-refresh"
-                        data-name="date_string" data-type="text" data-pk="<%=imprint.id%>"
+                    <a href="javascript:void(0);" class="editable-edtf do-you-know persistant editable-refresh"
+                        data-name="date_string" data-type="edtf" data-pk="<%=imprint.id%>"
                         data-value="" data-method="post"
                         data-params="{parent_id:<%=imprint.id%>,parent_model:'imprint',attr:'date_of_publication'}"
                         data-url="/date/add/">the imprint publication date?</a>
