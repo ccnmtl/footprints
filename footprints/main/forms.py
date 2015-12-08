@@ -93,6 +93,7 @@ class ContactUsForm(forms.Form):
 
 class ExtendedDateForm(forms.Form):
     attr = forms.CharField(min_length=1, required=False)
+    is_range = forms.BooleanField(initial=False, required=False)
 
     millenium1 = forms.IntegerField(min_value=1, max_value=2, required=False)
     century1 = forms.IntegerField(min_value=0, max_value=9, required=False)

@@ -49,27 +49,68 @@
 
             this.$tpl.find('.toggle-next-row').click(function(evt) {
                 evt.preventDefault();
-                jQuery(this).parents('tr').next().toggle('fast');
+                jQuery(this).parents('tr').next().toggle('fast', function() {
+                    self.renderDateDisplay();
+                });
                 jQuery(this).toggleClass('minus');
                 return false;
             });
 
-            jQuery('.edtf-entry').keypress(function() {
+            var $elts = this.$tpl.find('.edtf-entry');
+            $elts.keypress(function() {
                 var maxlength = parseInt(jQuery(this).attr('maxlength'), 10);
                 if (this.value.length >= maxlength) {
                     return false;
                 }
             });
 
-            jQuery('input.edtf-entry').keyup(function() {
+            $elts.filter('input[type="number"]').keyup(function() {
                 self.renderDateDisplay();
             });
-            jQuery('select.edtf-entry').change(function() {
+            $elts.filter('select').change(function() {
+                self.renderDateDisplay();
+            });
+            $elts.filter('input[type="checkbox"]').click(function() {
                 self.renderDateDisplay();
             });
         },
+        hasValue: function() {
+            var value = jQuery(this).val();
+            return value && value.length > 0;
+        },
+        markRequired: function() {
+            var self = this;
+            jQuery('.edtf-entry').removeClass('required');
+            this.$tpl.parents('.form-group')
+                     .removeClass('has-error')
+                     .find('.help-block').hide();
 
+            // for date1 && date 2
+            this.$tpl.find('.date-display-row').each(function() {
+                // grab rightmost edtf-entry field with a value
+                // then verify the specified dependencies have values
+                // mark class with "required" if no value is found
+                var elts = jQuery(this).find('input[type="number"],select')
+                    .filter(self.hasValue).get().reverse();
+                var selector = jQuery(jQuery(elts).first()).data('required');
+                jQuery(this).find(selector)
+                            .not(self.hasValue).each(function() {
+                                jQuery(this).addClass('required');
+                            });
+            });
+        },
         renderDateDisplay: function() {
+            this.markRequired();
+            var msg = this.validate();
+            if (msg.length > 0) {
+                this.$tpl.parents('.form-group')
+                         .addClass('has-error')
+                         .find('.help-block')
+                         .html('Please fill out all required fields').show();
+                this.$tpl.find('.date-display').html('invalid');
+                return;
+            }
+
             var self = this;
             jQuery.ajax({
                 url: '/date/display/',
@@ -79,8 +120,7 @@
                     self.$tpl.find('.date-display').html(data.display);
                 },
                 error: function() {
-                    jQuery('#confirm-modal div.error')
-                        .modal('An error occurred. Please try again.');
+                    self.$tpl.find('.date-display').html('invalid');
                 }
             });
         },

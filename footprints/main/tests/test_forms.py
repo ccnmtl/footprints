@@ -61,6 +61,7 @@ class ExtendedDateFormTest(TestCase):
 
     def test_clean(self):
         data = {
+            'is_range': True,
             'millenium1': None, 'century1': '0', 'decade1': '1', 'year1': '0',
             'month1': '1', 'day1': '1',
             'approximate1': True, 'uncertain1': True,

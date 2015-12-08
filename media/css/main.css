@@ -1436,8 +1436,15 @@ span.glyphicon-question-sign {
     margin-right: 42px;
 }
 
+.form-group.has-error .editable-edtf input,
+.form-group.has-error .editable-edtf button,
+.form-group.has-error .editable-edtf select {
+    border-color: #ccc;
+}
+
 .editable-edtf .required {
-    border: 2px solid black;
+    border: 1px solid #97421b !important;
+    background-color: #f9f2f4;
 }
 
 .editable-edtf .nav-pills>li.active>a,

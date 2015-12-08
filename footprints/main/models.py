@@ -42,6 +42,8 @@ class ExtendedDateManager(models.Manager):
             dt = '{}{}xx'.format(millenium, century)
         elif millenium is not None:
             dt = '{}xxx'.format(millenium)
+        else:
+            return 'unknown'
 
         if uncertain:
             dt = '{}?'.format(dt)
@@ -57,7 +59,7 @@ class ExtendedDateManager(models.Manager):
             values['year1'], values['month1'], values['day1'],
             values['approximate1'], values['uncertain1'])
 
-        if values['millenium2'] is not None:
+        if values['is_range']:
             dt2 = self.to_edtf(
                 values['millenium2'], values['century2'], values['decade2'],
                 values['year2'], values['month2'], values['day2'],

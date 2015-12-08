@@ -238,6 +238,7 @@ class ExtendedDateTest(TestCase):
 
     def test_create_from_dict(self):
         values = {
+            'is_range': True,
             'millenium1': 2, 'century1': 0, 'decade1': 0, 'year1': 1,
             'month1': 1, 'day1': 1,
             'approximate1': True, 'uncertain1': True,
