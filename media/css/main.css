@@ -281,7 +281,7 @@ ul.front > li > a:hover {
 
 
 .footer p {
-display: none;
+    display: none;
 }
 
 ul.footer-logos {
@@ -972,10 +972,23 @@ ul.selected-authors li {
 
 /* Form Overrides */
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
 .btn-primary, .btn-default {
     color: #fff;
     background-color: #2e5367;
     border-color: #2e5367;
+}
+
+.btn-white {
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
 }
 
 .btn-primary:hover, .btn-primary:focus, .btn-primary.focus, .btn-primary:active, .btn-primary.active, .open > .dropdown-toggle.btn-primary {
@@ -1174,7 +1187,7 @@ img.footicon {
     border-bottom: dotted 1px #ccc;
 }
 
-.object-detail dl dt span.glyphicon-question-sign {
+span.glyphicon-question-sign {
     color: #d3c1a2;
 }
 
@@ -1421,6 +1434,103 @@ img.footicon {
 .editable-digital-object .editable-upload {
     float: right;
     margin-right: 42px;
+}
+
+.editable-edtf .required {
+    border: 2px solid black;
+}
+
+.editable-edtf .nav-pills>li.active>a,
+.editable-edtf .nav-pills>li.active>a:hover,
+.editable-edtf .nav-pills>li.active>a:focus {
+    color: #fff;
+    background-color: #2e5367;
+    border-color: #2e5367;
+}
+
+.editable-edtf .form-group table tr td {
+    vertical-align: top;
+}
+
+.editable-edtf .form-group input[name=millenium1],
+.editable-edtf .form-group input[name=millenium2],
+.editable-edtf .form-group input[name=century1],
+.editable-edtf .form-group input[name=century2],
+.editable-edtf .form-group input[name=decade1],
+.editable-edtf .form-group input[name=decade2],
+.editable-edtf .form-group input[name=year1],
+.editable-edtf .form-group input[name=year2] {
+    width: 20px !important;
+    padding: 2px 0px 0 6px;
+    margin-right: -2px;
+}
+
+.editable-edtf .form-group input[name=day1],
+.editable-edtf .form-group input[name=day2] {
+    width: 40px;
+    padding: 2px 0px 0 12px;
+}
+
+.editable-edtf .form-group input[name=year1],
+.editable-edtf .form-group input[name=year2],
+.editable-edtf .form-group select[name=month1],
+.editable-edtf .form-group select[name=month2],
+.editable-edtf .form-group input[name=day1],
+.editable-edtf .form-group input[name=day2] {
+    margin-right: 30px;
+}
+
+.editable-edtf .form-group .traits {
+    margin-top: -5px;
+}
+
+.editable-edtf .toggle-next-row-container {
+    margin: 0 0 15px 0;
+}
+
+.editable-edtf .date2.toggle-next-row-container {
+    margin-top: 25px;
+}
+
+.editable-edtf .toggle-next-row {
+    padding: 3px 5px;
+}
+
+.editable-edtf .toggle-next-row:before {
+    content: "\2b";
+    font-family: "Glyphicons Halflings";
+    line-height: 1.4;
+    margin: 2px;    
+} 
+
+.editable-edtf .toggle-next-row.minus:before { 
+    content: "\2212";
+}
+
+.editable-edtf .date-display {
+    margin-top: 0;
+    background-color: light-gray;
+    font-weight: bold;
+}
+
+.editable-edtf .date-display .date-display-1 {
+    font-weight: normal;
+}
+
+.editable-edtf .date-display .date-display-separator {
+    font-weight: normal;
+}
+
+.editable-edtf .date-display .date-display-2 {
+    font-weight: normal;
+}
+
+.editable-edtf ul li {
+    margin-bottom: -1px !important;
+}
+
+.editable-edtf .alert {
+    margin-top: 5px;
 }
 
 /* Additional Information */
