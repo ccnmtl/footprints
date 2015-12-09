@@ -122,8 +122,7 @@ class ExtendedDateForm(forms.Form):
                 self._errors['__all__'] = self.error_class([
                     'Please specify a date or date range'])
 
-        self.edtf = ExtendedDate.objects.create_from_dict(self.cleaned_data)
-        dt = self.edtf.__unicode__()
+        dt = self.get_edtf().__unicode__()
         if 'invalid' in dt or 'None' in dt:
             self._errors['__all__'] = self.error_class([
                     'Please fill out all required fields'])
@@ -134,4 +133,9 @@ class ExtendedDateForm(forms.Form):
         return self.cleaned_data['attr']
 
     def get_edtf(self):
-        return self.edtf
+        return ExtendedDate.objects.from_dict(self.cleaned_data)
+
+    def save(self):
+        edtf = self.get_edtf()
+        edtf.save()
+        return edtf

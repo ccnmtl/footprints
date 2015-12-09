@@ -3,6 +3,7 @@ from django.test.testcases import TestCase
 
 from footprints.main.forms import FootprintSearchForm, ContactUsForm, \
     ExtendedDateForm
+from footprints.main.models import ExtendedDate
 
 
 class SearchFormTest(TestCase):
@@ -78,5 +79,8 @@ class ExtendedDateFormTest(TestCase):
         data['year2'] = None
         form = ExtendedDateForm(data=data)
         self.assertTrue(form.is_valid())
-        self.assertEquals(form.get_edtf().edtf_format,
-                          '2010-01-01?~/20xx')
+        self.assertEquals(ExtendedDate.objects.count(), 0)
+
+        dt = form.save()
+        self.assertEquals(ExtendedDate.objects.count(), 1)
+        self.assertEquals(dt.edtf_format, '2010-01-01?~/20xx')

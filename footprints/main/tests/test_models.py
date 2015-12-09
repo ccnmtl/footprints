@@ -246,7 +246,7 @@ class ExtendedDateTest(TestCase):
             'month2': None, 'day2': None,
             'approximate2': False, 'uncertain2': False}
 
-        dt = ExtendedDate.objects.create_from_dict(values)
+        dt = ExtendedDate.objects.from_dict(values)
         self.assertEquals(dt.edtf_format, '2001-01-01?~/20xx')
 
     def test_to_edtf(self):
