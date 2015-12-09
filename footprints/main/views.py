@@ -18,14 +18,14 @@ from django.views.generic.list import ListView
 from djangowind.views import logout as wind_logout_view
 from haystack.query import SearchQuerySet
 from rest_framework.permissions import AllowAny
-from rest_framework_jsonp.renderers import JSONPRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework_jsonp.renderers import JSONPRenderer
 
 from footprints.main.forms import DigitalObjectForm, ContactUsForm, \
-    SUBJECT_CHOICES
+    SUBJECT_CHOICES, ExtendedDateForm
 from footprints.main.models import (
-    Footprint, Actor, Person, Role, WrittenWork, Language, ExtendedDate,
+    Footprint, Actor, Person, Role, WrittenWork, Language,
     Place, Imprint, BookCopy, StandardizedIdentification,
     StandardizedIdentificationType)
 from footprints.main.serializers import NameSerializer
@@ -323,21 +323,33 @@ class AddActorView(AddRelatedRecordView):
 class AddDateView(AddRelatedRecordView):
 
     def post(self, *args, **kwargs):
-        the_parent = self.get_parent()
-
-        attr = self.request.POST.get('attr', None)
-
-        date_string = self.request.POST.get('date_string', None)
-        if date_string is not None:
-            edtf = ExtendedDate.objects.create(edtf_format=date_string)
-            setattr(the_parent, attr, edtf)
+        form = ExtendedDateForm(self.request.POST)
+        if not form.is_valid():
+            return self.render_to_json_response({
+                'success': False,
+                'msg': 'Please fill out all required fields'
+            })
+        else:
+            the_parent = self.get_parent()
+            setattr(the_parent, form.get_attr(), form.get_edtf())
             the_parent.save()
 
             return self.render_to_json_response({'success': True})
-        else:
+
+
+class DisplayDateView(JSONResponseMixin, View):
+    def post(self, *args, **kwargs):
+        form = ExtendedDateForm(self.request.POST)
+
+        if not form.is_valid():
             return self.render_to_json_response({
                 'success': False,
-                'error': 'Please enter a date'
+                'msg': 'Please fill out all required fields'
+            })
+        else:
+            return self.render_to_json_response({
+                'success': True,
+                'display': form.get_edtf().__unicode__()
             })
 
 

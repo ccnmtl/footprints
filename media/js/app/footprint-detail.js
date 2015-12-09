@@ -58,7 +58,11 @@
             jQuery(this.el).find('[data-toggle="tooltip"]').tooltip();
         },
         refresh: function(response, newValue) {
-            this.model.fetch();
+            if (!response.success) {
+                return response.msg;
+            } else {
+                this.model.fetch();
+            }
         },
         confirmRemoveRelated: function(evt) {
             var self = this;
@@ -133,14 +137,24 @@
                 namedParams: true,
                 success: this.refresh
             });
+
             jQuery(this.el).find('.editable-required').editable({
                 namedParams: true,
                 success: this.refresh,
                 validate: this.validate
             });
+
             jQuery(this.el).find('.editable-place').editable({
                 namedParams: true,
                 tpl: jQuery('#xeditable-place-form').html(),
+                onblur: 'ignore',
+                validate: this.validate,
+                success: this.refresh
+            });
+
+            jQuery(this.el).find('.editable-edtf').editable({
+                namedParams: true,
+                tpl: jQuery('#xeditable-edtf-form').html(),
                 onblur: 'ignore',
                 validate: this.validate,
                 success: this.refresh
@@ -238,6 +252,14 @@
                 success: this.refresh
             });
 
+            jQuery(this.el).find('.editable-edtf').editable({
+                namedParams: true,
+                tpl: jQuery('#xeditable-edtf-form').html(),
+                onblur: 'ignore',
+                validate:  this.validate,
+                success: this.refresh
+            });
+
             jQuery(this.el).find('.editable-publisher').editable({
                 namedParams: true,
                 tpl: jQuery('#xeditable-publisher-form').html(),
@@ -300,7 +322,7 @@
 
     window.ConnectRecordView = window.FootprintBaseView.extend({
         events: {
-            'click button.btn-next': 'validate',
+            'click button.btn-next': 'next',
             'click button.btn-prev': 'navigate',
             'click button.btn-submit': 'submit'
         },
@@ -432,7 +454,7 @@
                 return true;
             }
         },
-        validate: function(evt) {
+        next: function(evt) {
             if (this.validateField(this.eltWork) &&
                 this.validateField(this.eltImprint) &&
                     this.validateField(this.eltCopy)) {

@@ -49,15 +49,78 @@
 
             this.$tpl.find('.toggle-next-row').click(function(evt) {
                 evt.preventDefault();
-                jQuery(this).parents('tr').next().toggle('fast');
+                jQuery(this).parents('tr').next().toggle('fast', function() {
+                    self.renderDateDisplay();
+                });
                 jQuery(this).toggleClass('minus');
                 return false;
             });
 
-            jQuery('.edtf-entry').keypress(function() {
+            var $elts = this.$tpl.find('.edtf-entry');
+            $elts.keypress(function() {
                 var maxlength = parseInt(jQuery(this).attr('maxlength'), 10);
                 if (this.value.length >= maxlength) {
                     return false;
+                }
+            });
+
+            $elts.filter('input[type="number"]').keyup(function() {
+                self.renderDateDisplay();
+            });
+            $elts.filter('select').change(function() {
+                self.renderDateDisplay();
+            });
+            $elts.filter('input[type="checkbox"]').click(function() {
+                self.renderDateDisplay();
+            });
+        },
+        hasValue: function() {
+            var value = jQuery(this).val();
+            return value && value.length > 0;
+        },
+        markRequired: function() {
+            var self = this;
+            jQuery('.edtf-entry').removeClass('required');
+            this.$tpl.parents('.form-group')
+                     .removeClass('has-error')
+                     .find('.help-block').hide();
+
+            // for date1 && date 2
+            this.$tpl.find('.date-display-row').each(function() {
+                // grab rightmost edtf-entry field with a value
+                // then verify the specified dependencies have values
+                // mark class with "required" if no value is found
+                var elts = jQuery(this).find('input[type="number"],select')
+                    .filter(self.hasValue).get().reverse();
+                var selector = jQuery(jQuery(elts).first()).data('required');
+                jQuery(this).find(selector)
+                            .not(self.hasValue).each(function() {
+                                jQuery(this).addClass('required');
+                            });
+            });
+        },
+        renderDateDisplay: function() {
+            this.markRequired();
+            var msg = this.validate();
+            if (msg.length > 0) {
+                this.$tpl.parents('.form-group')
+                         .addClass('has-error')
+                         .find('.help-block')
+                         .html('Please fill out all required fields').show();
+                this.$tpl.find('.date-display').html('invalid');
+                return;
+            }
+
+            var self = this;
+            jQuery.ajax({
+                url: '/date/display/',
+                type: 'post',
+                data: this.value2submit(),
+                success: function(data) {
+                    self.$tpl.find('.date-display').html(data.display);
+                },
+                error: function() {
+                    self.$tpl.find('.date-display').html('invalid');
                 }
             });
         },
@@ -174,22 +237,22 @@
                 'errors': error,
                 'is_range': this.$millenium2.is(':visible'),
                 'millenium1': this.$millenium1.val(),
-                'data.century1': this.$century1.val(),
-                'data.decade1': this.$decade1.val(),
-                'data.year1': this.$year1.val(),
-                'data.month1': this.$month1.val(),
-                'data.day1': this.$day1.val(),
-                'data.approximate1': this.$approximate1.is(':checked'),
-                'data.uncertain1': this.$uncertain1.is(':checked'),
+                'century1': this.$century1.val(),
+                'decade1': this.$decade1.val(),
+                'year1': this.$year1.val(),
+                'month1': this.$month1.val(),
+                'day1': this.$day1.val(),
+                'approximate1': this.$approximate1.is(':checked'),
+                'uncertain1': this.$uncertain1.is(':checked'),
 
-                'data.millenium2': this.$millenium2.val(),
-                'data.century2': this.$century2.val(),
-                'data.decade2': this.$decade2.val(),
-                'data.year2': this.$year2.val(),
-                'data.month2': this.$month2.val(),
-                'data.day2': this.$day2.val(),
-                'data.approximate2': this.$approximate2.is(':checked'),
-                'data.uncertain2': this.$uncertain2.is(':checked')
+                'millenium2': this.$millenium2.val(),
+                'century2': this.$century2.val(),
+                'decade2': this.$decade2.val(),
+                'year2': this.$year2.val(),
+                'month2': this.$month2.val(),
+                'day2': this.$day2.val(),
+                'approximate2': this.$approximate2.is(':checked'),
+                'uncertain2': this.$uncertain2.is(':checked')
             };
         },
 

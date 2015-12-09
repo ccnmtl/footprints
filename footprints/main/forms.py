@@ -6,7 +6,8 @@ from django.utils.translation import ugettext_lazy as _
 from haystack.forms import ModelSearchForm
 from haystack.utils import get_model_ct
 
-from footprints.main.models import Footprint, DigitalObject, WrittenWork
+from footprints.main.models import Footprint, DigitalObject, WrittenWork, \
+    ExtendedDate
 
 
 class DigitalObjectForm(ModelForm):
@@ -88,3 +89,49 @@ class ContactUsForm(forms.Form):
                 "Please leave this field blank"])
 
         return cleaned_data
+
+
+class ExtendedDateForm(forms.Form):
+    attr = forms.CharField(min_length=1, required=False)
+    is_range = forms.BooleanField(initial=False, required=False)
+
+    millenium1 = forms.IntegerField(min_value=1, max_value=2, required=False)
+    century1 = forms.IntegerField(min_value=0, max_value=9, required=False)
+    decade1 = forms.IntegerField(min_value=0, max_value=9, required=False)
+    year1 = forms.IntegerField(min_value=0, max_value=9, required=False)
+    month1 = forms.IntegerField(min_value=1, max_value=12, required=False)
+    day1 = forms.IntegerField(min_value=1, max_value=31, required=False)
+    approximate1 = forms.BooleanField(initial=False, required=False)
+    uncertain1 = forms.BooleanField(initial=False, required=False)
+
+    millenium2 = forms.IntegerField(min_value=1, max_value=2, required=False)
+    century2 = forms.IntegerField(min_value=0, max_value=9, required=False)
+    decade2 = forms.IntegerField(min_value=0, max_value=9, required=False)
+    year2 = forms.IntegerField(min_value=0, max_value=9, required=False)
+    month2 = forms.IntegerField(min_value=1, max_value=12, required=False)
+    day2 = forms.IntegerField(min_value=1, max_value=31, required=False)
+    approximate2 = forms.BooleanField(initial=False, required=False)
+    uncertain2 = forms.BooleanField(initial=False, required=False)
+
+    def clean(self):
+        cleaned_data = super(ExtendedDateForm, self).clean()
+
+        if not cleaned_data['millenium1']:
+            if not cleaned_data['millenium2']:
+                # date1 can be unknown if a date2 is specified
+                self._errors['__all__'] = self.error_class([
+                    'Please specify a date or date range'])
+
+        self.edtf = ExtendedDate.objects.create_from_dict(self.cleaned_data)
+        dt = self.edtf.__unicode__()
+        if 'invalid' in dt or 'None' in dt:
+            self._errors['__all__'] = self.error_class([
+                    'Please fill out all required fields'])
+
+        return cleaned_data
+
+    def get_attr(self):
+        return self.cleaned_data['attr']
+
+    def get_edtf(self):
+        return self.edtf

@@ -26,6 +26,8 @@ class ExtendedDateManager(models.Manager):
     def to_edtf(self, millenium, century, decade, year, month, day,
                 approximate, uncertain):
 
+        dt = ''
+
         if day is not None:
             dt = '{}{}{}{}-{:0>2d}-{:0>2d}'.format(
                 millenium, century, decade, year, month, day)
@@ -40,6 +42,8 @@ class ExtendedDateManager(models.Manager):
             dt = '{}{}xx'.format(millenium, century)
         elif millenium is not None:
             dt = '{}xxx'.format(millenium)
+        else:
+            return 'unknown'
 
         if uncertain:
             dt = '{}?'.format(dt)
@@ -55,7 +59,7 @@ class ExtendedDateManager(models.Manager):
             values['year1'], values['month1'], values['day1'],
             values['approximate1'], values['uncertain1'])
 
-        if values['millenium2'] is not None:
+        if values['is_range']:
             dt2 = self.to_edtf(
                 values['millenium2'], values['century2'], values['decade2'],
                 values['year2'], values['month2'], values['day2'],
@@ -125,7 +129,7 @@ class ExtendedDate(models.Model):
         if precision is None:
             return 'invalid'
 
-        elif precision == edtf_date.PRECISION_MILLENIUM:
+        if precision == edtf_date.PRECISION_MILLENIUM:
             result = self.fmt_millenium(date_obj._millenium)
         elif precision == edtf_date.PRECISION_CENTURY:
             yr = date_obj._precise_year(edtf_date.EARLIEST)
