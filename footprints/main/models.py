@@ -53,7 +53,7 @@ class ExtendedDateManager(models.Manager):
 
         return dt
 
-    def create_from_dict(self, values):
+    def from_dict(self, values):
         dt = self.to_edtf(
             values['millenium1'], values['century1'], values['decade1'],
             values['year1'], values['month1'], values['day1'],
@@ -67,7 +67,7 @@ class ExtendedDateManager(models.Manager):
 
             dt = '{}/{}'.format(dt, dt2)
 
-        return self.create(edtf_format=dt)
+        return ExtendedDate(edtf_format=dt)
 
 
 class ExtendedDate(models.Model):

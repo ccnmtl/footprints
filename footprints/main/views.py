@@ -331,7 +331,8 @@ class AddDateView(AddRelatedRecordView):
             })
         else:
             the_parent = self.get_parent()
-            setattr(the_parent, form.get_attr(), form.get_edtf())
+            edtf = form.save()
+            setattr(the_parent, form.get_attr(), edtf)
             the_parent.save()
 
             return self.render_to_json_response({'success': True})
