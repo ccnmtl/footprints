@@ -1,6 +1,7 @@
 /* Footprints CSS
  * by Rachelle White
- * ccnmtl.columbia.edu
+ * Zarina Mustapha
+ * ctl.columbia.edu
  * 2015
  */
 
@@ -233,41 +234,38 @@ ul.front > li > a:hover {
 
 .footer {
     background-color: #171717;
-    height: 175px;
     position: relative;
     margin: 1em 0 0 0;
     bottom: 0;
     font-size: .95em;
 }
 
-.footer .row {
-  margin: 1em 0 0 0;
+.footer .footer-navigation {
+  margin: 30px 0;
+  color: #999;
+  text-align: center;
+  list-style: none;
 }
 
-.footer .col-md-10 {
-  margin: 0 0 0 0;
+.footer .footer-navigation li {
+    display: inline-block;
+    padding: 0 20px;
 }
 
-.footer .navbar-nav li {
-	clear: both;
+.footer .footer-navigation li a {
+    color: #d3c1a2;
+    text-decoration: none;
 }
 
-.footer .nav li > a {
-  text-transform: none !important;
-  font-weight: inherit;
-  letter-spacing: 0;
-  padding: 0 0 5px 10px;
-}
-
-.footer .nav li > a:hover {
+.footer .footer-navigation li a:hover {
     color: #ccc;
-    background-color: transparent;
+    text-decoration: none;
 }
 
 .footer .footer-branding {
-	float: left;
-  color: #ccc;
-  text-align: right;
+  padding: 20px 0;
+  color: #999;
+  text-align: center;
 }
 
 .footer .footer-branding a {
@@ -279,28 +277,59 @@ ul.front > li > a:hover {
     text-decoration: none;
 }
 
-
 .footer p {
-    display: none;
+    display: block;
+}
+
+p.description1 {
+    width: auto;
+    margin: auto;
+}
+
+.footer .logos-group1 {
+    width: 501px;
+    margin: auto;
+}
+
+.footer .description2 {
+    padding-top: 20px;
 }
 
 ul.footer-logos {
-  clear: both;
-  float: left;
-  margin: .5em 0 0 -2em;
-  display: block;
+    margin: 10px auto 10px auto;
+    padding: 0;
+    height: 30px;
 }
 
 ul.footer-logos li {
 	list-style-type: none;
-	display: block;
-	clear: both;
+	display: inline;
+	clear: none;
 	float: left;
-	margin: 0 0 1em -2em;
-}
+	margin: 0 10px 0 10px;
+	}
 
 .footer-logos img {
   height: 30px;
+}
+
+.footer-line3 img {
+  height: 35px;
+}
+
+.footer-line1 {
+    width: 501px;
+    display: block;
+}
+
+.footer-line2 {
+    width: 420px;
+    display: block;
+}
+
+.footer-line3 {
+    width: 286px;
+    display: block;
 }
 
 
@@ -593,9 +622,8 @@ ul.footer-logos li {
 	  width: 118px;
 	}
 	.footer .footer-branding {
-	float: right;
-  color: #ccc;
-  text-align: right;
+  color: #999;
+  text-align: center;
 }
 
 }
@@ -673,19 +701,36 @@ ul.footer-logos li {
         height: 28px;
         left: 668px;
     }
-.home-visual-desc {
-  display: initial;
-  float: left;
-  width: 100%;
-  text-align: center;
-  font-size: 1.25em;
-  font-family: Arvo;
-  margin: 0em auto 1em 0;
-}
+    .home-visual-desc {
+      display: initial;
+      float: left;
+      width: 100%;
+      text-align: center;
+      font-size: 1.25em;
+      font-family: Arvo;
+      margin: 0em auto 1em 0;
+    }
     .visual-mobile {
         display: none;
     }
-
+    p.description1 {
+        width: 921px;
+        margin: auto;
+    }
+    .footer .logos-group1 {
+        width: 921px;
+    }
+    .footer-line1 {
+        float: left;
+    }
+    
+    .footer-line2 {
+        float: left;
+    }
+    
+    .footer-line3 {
+        display: block;
+    }
 }
 
 /* Block outercontainer Desktop */
@@ -860,89 +905,24 @@ ul.footer-logos li {
 	  vertical-align: middle;
 	  padding: 20px 0px;
 	}
-	/* Footer */
-
-.container.foot {
-    background-color: #171717;
-}
-
-.clearfooter {
-    height: 50px;
-    clear: both;
-}
-
-.footer {
-    background-color: #171717;
-    height: 145px;
-    position: relative;
-    margin: 1em 0 0 0;
-    bottom: 0;
-    font-size: .95em;
-}
-
-.footer .row {
-  margin: 3em 0 0 0;
-}
-
-.footer .col-md-10 {
-  margin: 2em 0 0 0;
-}
-
-.footer .navbar-nav li {
-	clear: both;
-}
-
-.footer .nav li > a {
-  text-transform: none !important;
-  font-weight: inherit;
-  letter-spacing: 0;
-  padding: 0 0 5px 10px;
-}
-
-.footer .nav li > a:hover {
-    color: #ccc;
-    background-color: transparent;
-}
-
-.footer .footer-branding {
-
-  color: #ccc;
-  text-align: right;
-}
-
-.footer .footer-branding a {
-    color: #d3c1a2;
-}
-
-.footer .footer-branding a:hover {
-    color: #edebe6;
-    text-decoration: none;
-}
-
-.footer p {
-display: block;
-}
-
-ul.footer-logos {
-  clear: both;
-  float: right;
-  margin: .5em 0 0 0;
-  display: block;
-}
-
-ul.footer-logos li {
-	list-style-type: none;
-	display: inline;
-	clear: none;
-	float: left;
-	margin: 0 0 0 1.5em;
-	}
-
-.footer-logos img {
-  height: 30px;
-}
-
-
+    p.description1 {
+        width: 921px;
+        margin: auto;
+    }
+    .footer .logos-group1 {
+        width: 921px;
+    }
+    .footer-line1 {
+        float: left;
+    }
+    
+    .footer-line2 {
+        float: left;
+    }
+    
+    .footer-line3 {
+        display: block;
+    }
 }
 
 /* Record Entry */
