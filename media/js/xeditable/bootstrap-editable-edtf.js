@@ -49,9 +49,7 @@
 
             this.$tpl.find('.toggle-next-row').click(function(evt) {
                 evt.preventDefault();
-                jQuery(this).parents('tr').next().toggle('fast', function() {
-                    self.renderDateDisplay();
-                });
+                jQuery(this).parents('tr').next().toggle();
                 jQuery(this).toggleClass('minus');
                 return false;
             });
@@ -80,10 +78,22 @@
         },
         markRequired: function() {
             var self = this;
+
+            this.$tpl.find('.date-display').html('');
             jQuery('.edtf-entry').removeClass('required');
+
             this.$tpl.parents('.form-group')
                      .removeClass('has-error')
                      .find('.help-block').hide();
+
+            if (this.$millenium1.val().length < 1) {
+                this.$millenium1.addClass('required');
+            }
+
+            if (this.$millenium2.is(':visible') &&
+                    this.$millenium2.val().length < 1) {
+                this.$millenium2.addClass('required');
+            }
 
             // for date1 && date 2
             this.$tpl.find('.date-display-row').each(function() {
@@ -100,14 +110,12 @@
             });
         },
         renderDateDisplay: function() {
-            this.markRequired();
             var msg = this.validate();
             if (msg.length > 0) {
                 this.$tpl.parents('.form-group')
                          .addClass('has-error')
                          .find('.help-block')
                          .html('Please fill out all required fields').show();
-                this.$tpl.find('.date-display').html('invalid');
                 return;
             }
 
@@ -212,6 +220,7 @@
         },
 
         validate: function() {
+            this.markRequired();
             return this.$tpl.find('.required').length > 0 ?
                 'Please fill in all required fields' : '';
         },
