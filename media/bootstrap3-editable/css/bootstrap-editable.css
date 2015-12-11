@@ -67,11 +67,12 @@
     background-position: left 5px;      
 }
 
- .editable-error-block {
+.editable-error-block {
     max-width: 300px;
-    margin: 5px 0 0 0;
     width: auto;
     white-space: normal;
+    margin: 0px;
+    min-height: 19px;
 }
 
 /*add padding for jquery ui*/
