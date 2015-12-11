@@ -1447,6 +1447,10 @@ span.glyphicon-question-sign {
     background-color: #f9f2f4;
 }
 
+.editable-edtf h4 {
+    min-height: 20px;
+}
+
 .editable-edtf .nav-pills>li.active>a,
 .editable-edtf .nav-pills>li.active>a:hover,
 .editable-edtf .nav-pills>li.active>a:focus {
@@ -1814,4 +1818,11 @@ ul#glossary strong {
 input[name='decoy'],
 p.decoy {
     display: none !important;
+}
+
+.editable-error-block:before {
+  font-family: "Glyphicons Halflings";
+  content: "\e101";
+  padding-right: 4px;
+  vertical-align: bottom;
 }

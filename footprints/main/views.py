@@ -327,7 +327,7 @@ class AddDateView(AddRelatedRecordView):
         if not form.is_valid():
             return self.render_to_json_response({
                 'success': False,
-                'msg': 'Please fill out all required fields'
+                'msg': form.get_error_messages()
             })
         else:
             the_parent = self.get_parent()
@@ -345,7 +345,7 @@ class DisplayDateView(JSONResponseMixin, View):
         if not form.is_valid():
             return self.render_to_json_response({
                 'success': False,
-                'msg': 'Please fill out all required fields'
+                'msg': form.get_error_messages()
             })
         else:
             return self.render_to_json_response({

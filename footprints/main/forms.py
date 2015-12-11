@@ -116,16 +116,18 @@ class ExtendedDateForm(forms.Form):
     def clean(self):
         cleaned_data = super(ExtendedDateForm, self).clean()
 
-        if not cleaned_data['millenium1']:
-            if not cleaned_data['millenium2']:
-                # date1 can be unknown if a date2 is specified
-                self._errors['__all__'] = self.error_class([
-                    'Please specify a date or date range'])
-
-        dt = self.get_edtf().__unicode__()
-        if 'invalid' in dt or 'None' in dt:
+        if cleaned_data['is_range'] and (not cleaned_data['millenium1'] or
+                                         not cleaned_data['millenium2']):
             self._errors['__all__'] = self.error_class([
-                    'Please fill out all required fields'])
+                'Please specify a valid start and end date.'])
+        elif not cleaned_data['is_range'] and not cleaned_data['millenium1']:
+            self._errors['__all__'] = self.error_class([
+                'Please specify a date or date range'])
+        else:
+            dt = self.get_edtf().__unicode__()
+            if 'invalid' in dt or 'None' in dt:
+                self._errors['__all__'] = self.error_class([
+                        'Please fill out all required fields'])
 
         return cleaned_data
 
@@ -134,6 +136,13 @@ class ExtendedDateForm(forms.Form):
 
     def get_edtf(self):
         return ExtendedDate.objects.from_dict(self.cleaned_data)
+
+    def get_error_messages(self):
+        msg = ''
+        for val in self.errors.values():
+            msg += val[0]
+            msg += '<br />'
+        return msg
 
     def save(self):
         edtf = self.get_edtf()
