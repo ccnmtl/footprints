@@ -62,6 +62,14 @@
                 }
             });
 
+            $elts.filter('.jump').keyup(function(evt) {
+                var charCode = (evt.which) ? evt.which : event.keyCode;
+                if (charCode >= 48 && charCode <= 57 &&
+                        jQuery(this).val().length > 0) {
+                    jQuery(this).nextAll('input').first().focus();
+                }
+            });
+
             $elts.filter('input[type="number"]').keyup(function() {
                 self.renderDateDisplay();
             });
