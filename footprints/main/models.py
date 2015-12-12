@@ -1,4 +1,5 @@
 from audit_log.models.fields import LastUserField, CreatingUserField
+from datetime import date
 from django.db import models
 from django.template import loader
 from django.template.context import Context
@@ -155,8 +156,29 @@ class ExtendedDate(models.Model):
 
         return result
 
-    def as_datetime(self):
-        return EDTF(self.edtf_format).sort_date_latest()
+    def _validate_python_date(self, dt):
+        # the python-edtf library returns "date.max" on a ValueError
+        # and, if approximate or uncertain are set, the day/month are adjusted
+        # just compare the year 9999 to the returned year
+        return None if dt.year == date.max.year else dt
+
+    def start(self):
+        edtf = self.as_edtf()
+
+        if edtf.is_interval:
+            dt = edtf.start_date_earliest()
+        else:
+            dt = edtf.date_earliest()
+
+        return self._validate_python_date(dt)
+
+    def end(self):
+        edtf = self.as_edtf()
+
+        if not edtf.is_interval:
+            return None
+
+        return self._validate_python_date(edtf.end_date_earliest())
 
 
 class RoleQuerySet(models.query.QuerySet):

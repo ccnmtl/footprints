@@ -350,7 +350,7 @@ class DisplayDateView(JSONResponseMixin, View):
         else:
             return self.render_to_json_response({
                 'success': True,
-                'display': form.get_edtf().__unicode__()
+                'display': form.get_extended_date().__unicode__()
             })
 
 
