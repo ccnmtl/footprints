@@ -10,7 +10,7 @@ from django.test.client import Client, RequestFactory, encode_multipart
 
 from footprints.main.forms import ContactUsForm
 from footprints.main.models import Footprint, Actor, Imprint, \
-    StandardizedIdentificationType
+    StandardizedIdentificationType, ExtendedDate
 from footprints.main.tests.factories import (
     UserFactory, WrittenWorkFactory, ImprintFactory, FootprintFactory,
     PersonFactory, RoleFactory, PlaceFactory, ActorFactory, BookCopyFactory,
@@ -485,6 +485,8 @@ class RemoveRelatedViewTest(TestCase):
         self.assertIsNotNone(footprint.associated_date)
 
     def test_post_remove_success(self):
+        dt = self.footprint.associated_date
+
         self.client.login(username=self.staff.username, password="test")
 
         response = self.client.post(self.remove_url, {
@@ -499,6 +501,9 @@ class RemoveRelatedViewTest(TestCase):
 
         footprint = Footprint.objects.get(id=self.footprint.id)  # refresh
         self.assertIsNone(footprint.associated_date)
+
+        with self.assertRaises(ExtendedDate.DoesNotExist):
+            ExtendedDate.objects.get(id=dt.id)
 
     def test_post_remove_actor(self):
         self.assertEquals(self.footprint.actor.count(), 2)
