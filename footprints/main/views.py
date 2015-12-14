@@ -27,7 +27,7 @@ from footprints.main.forms import DigitalObjectForm, ContactUsForm, \
 from footprints.main.models import (
     Footprint, Actor, Person, Role, WrittenWork, Language,
     Place, Imprint, BookCopy, StandardizedIdentification,
-    StandardizedIdentificationType)
+    StandardizedIdentificationType, ExtendedDate)
 from footprints.main.serializers import NameSerializer
 from footprints.mixins import (
     JSONResponseMixin, LoggedInMixin, EditableMixin)
@@ -249,6 +249,12 @@ class RemoveRelatedView(LoggedInMixin, EditableMixin,
         else:
             setattr(the_parent, attr, None)
             the_parent.save()
+
+            # dates are a OneToOne relationship
+            # delete once the relationship is removed
+            if isinstance(current, ExtendedDate):
+                current.delete()
+
             return self.render_to_json_response({'success': True})
 
     def removeManyToMany(self, the_parent, the_child, attr):
@@ -276,6 +282,7 @@ class RemoveRelatedView(LoggedInMixin, EditableMixin,
                 return self.removeManyToMany(the_parent, the_child, attr)
             else:
                 return self.removeForeignKey(the_parent, the_child, attr)
+
         except (ValueError, FieldDoesNotExist):
             return self.render_to_json_response({'success': False})
 
