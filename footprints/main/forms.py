@@ -1,5 +1,5 @@
 import urllib
-
+from datetime import date
 from django import forms
 from django.forms.models import ModelForm
 from django.utils.translation import ugettext_lazy as _
@@ -115,36 +115,56 @@ class ExtendedDateForm(forms.Form):
 
     def clean(self):
         cleaned_data = super(ExtendedDateForm, self).clean()
+        edt = self.get_extended_date()
 
-        if cleaned_data['is_range'] and (not cleaned_data['millenium1'] or
-                                         not cleaned_data['millenium2']):
+        display_format = edt.__unicode__()
+        if 'invalid' in display_format or 'None' in display_format:
             self._errors['__all__'] = self.error_class([
-                'Please specify a valid start and end date.'])
-        elif not cleaned_data['is_range'] and not cleaned_data['millenium1']:
-            self._errors['__all__'] = self.error_class([
-                'Please specify a date or date range'])
-        else:
-            dt = self.get_edtf().__unicode__()
-            if 'invalid' in dt or 'None' in dt:
+                'Please fill out all required fields'])
+            return
+
+        start = edt.start()
+        end = edt.end()
+
+        if cleaned_data['is_range']:
+            if start is None:
                 self._errors['__all__'] = self.error_class([
-                        'Please fill out all required fields'])
+                    'Please specify a valid start date'])
+            elif end is None:
+                self._errors['__all__'] = self.error_class([
+                    'Please specify a valid end date'])
+            elif start > date.today() or end > date.today():
+                self._errors['__all__'] = self.error_class([
+                    'All dates must be today or earlier'])
+            elif start > end:
+                self._errors['__all__'] = self.error_class([
+                    'The start date must be earlier than the end date.'])
+        else:
+            if start is None:
+                self._errors['__all__'] = self.error_class([
+                    'Please specify a valid date'])
+            elif start > date.today():
+                self._errors['__all__'] = self.error_class([
+                    'The date must be today or earlier'])
 
         return cleaned_data
 
     def get_attr(self):
         return self.cleaned_data['attr']
 
-    def get_edtf(self):
+    def get_extended_date(self):
         return ExtendedDate.objects.from_dict(self.cleaned_data)
 
     def get_error_messages(self):
         msg = ''
-        for val in self.errors.values():
+        for key, val in self.errors.items():
+            if key != '__all__':
+                msg += key + ': '
             msg += val[0]
             msg += '<br />'
         return msg
 
     def save(self):
-        edtf = self.get_edtf()
+        edtf = self.get_extended_date()
         edtf.save()
         return edtf
