@@ -58,7 +58,7 @@
             jQuery(this.el).find('[data-toggle="tooltip"]').tooltip();
         },
         refresh: function(response, newValue) {
-            if (!response.success) {
+            if (response.hasOwnProperty('success') && !response.success) {
                 return response.msg;
             } else {
                 this.model.fetch();
