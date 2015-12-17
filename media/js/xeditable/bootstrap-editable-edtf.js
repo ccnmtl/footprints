@@ -55,10 +55,13 @@
             });
 
             var $elts = this.$tpl.find('.edtf-entry');
-            $elts.keypress(function() {
-                var maxlength = parseInt(jQuery(this).attr('maxlength'), 10);
-                if (this.value.length >= maxlength) {
-                    return false;
+            $elts.keypress(function(evt) {
+                var charCode = (evt.which) ? evt.which : event.keyCode;
+                if (charCode >= 48 && charCode <= 57) {
+                    var len = parseInt(jQuery(this).attr('maxlength'), 10);
+                    if (this.value.length >= len) {
+                        return false;
+                    }
                 }
             });
 

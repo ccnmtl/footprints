@@ -958,12 +958,15 @@ ul.selected-authors li {
 }
 
 /* Form Overrides */
-
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
     /* display: none; <- Crashes Chrome on hover */
     -webkit-appearance: none;
     margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
 }
 
 .btn-primary, .btn-default {
@@ -1756,13 +1759,14 @@ ul.about-nav {
   width: 200px;
   position: fixed;
 }
-  ul.about-nav li {
-padding: 0 0 10px 0;
+
+ul.about-nav li {
+    padding: 0 0 10px 0;
 }
 
-  .flatpage_contain .well a {
-  font-weight: bold;
-  }
+.flatpage_contain .well a {
+    font-weight: bold;
+}
 
 .about-image {
 float: left;

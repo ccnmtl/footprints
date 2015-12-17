@@ -28,6 +28,8 @@
     /* inline-block emulation for IE7*/
     zoom: 1; 
     *display: inline;
+    z-index: 1;
+    position: relative;
 }
 
 .editable-buttons.editable-buttons-bottom {
