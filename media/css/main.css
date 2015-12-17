@@ -64,15 +64,22 @@ blockquote {
 
 /* Login Modal */
 #login-modal .login-uni-button {
-    border: 0;
-    padding-right: 10px;
-    color: #fff;
+    font-weight: 200;
+    color: #999;
+    border: none;
+    background: none;
+    line-height: normal;
+    float: right;
+    font-size: 11px;
+    margin-right: -12px;
 }
+
 #login-modal .login-uni-button:hover {
     color: #fff;
     background-color: #406777;
     border-color: #406777;
 }
+
 /* All pages */
 
 .container.header {
@@ -1213,6 +1220,7 @@ span.glyphicon-question-sign {
     transition: width .6s ease;
 }
 
+.sidebar-box.related-footprint,
 .sidebar-box.recordkeeping {
     background-image: url("../img/fp_section_bg.png");
     background-repeat: repeat;
@@ -1346,7 +1354,8 @@ span.glyphicon-question-sign {
     display: block;
 }
 
-.object-detail .connect-record-container .select2-container.book .select2-chosen, .object-detail .connect-record-container .select2-container.imprint .select2-chosen {
+.object-detail .connect-record-container .select2-container.book .select2-chosen,
+.object-detail .connect-record-container .select2-container.imprint .select2-chosen {
     color: black;
 }
 
@@ -1704,13 +1713,6 @@ ul.additional-questions .editable-container {
     margin-left: 10px;
 }
 
-/* LOGIN PAGE */
-.login-uni-button {
-    border: 0;
-    padding-right: 0;
-    color: #999;
-}
-
 /* Admin area record entry styles */
 .mce-container, .mce-container *, .mce-widget, .mce-widget *, .mce-reset, mce-content-body {
     font-size: 12px !important;
@@ -1805,4 +1807,12 @@ p.decoy {
   content: "\e101";
   padding-right: 4px;
   vertical-align: bottom;
+}
+
+#add-related-footprint .btn-group button.btn-default:hover,
+#add-related-footprint .btn-group button.btn-default:focus {
+    color: white;
+    outline: none;
+    background-color: #2e5367;
+    border-color: #2e5367;
 }

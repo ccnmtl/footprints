@@ -288,7 +288,6 @@ class ConnectFootprintViewTest(TestCase):
         self.work = WrittenWorkFactory()
         self.footprint = FootprintFactory()
 
-        self.user = UserFactory()
         self.staff = UserFactory(is_staff=True)
 
         self.url = reverse('connect-footprint-view',
@@ -330,6 +329,43 @@ class ConnectFootprintViewTest(TestCase):
 
         fp = Footprint.objects.get(id=self.footprint.id)
         self.assertEquals(fp.book_copy.imprint.work, self.work)
+
+
+class CopyFootprintViewTest(TestCase):
+    def setUp(self):
+        self.footprint = FootprintFactory()
+        self.staff = UserFactory(is_staff=True)
+        self.url = reverse('copy-footprint-view',
+                           kwargs={'pk': self.footprint.pk})
+
+    def test_post_expected_errors(self):
+        # not logged in
+        self.assertEquals(self.client.post(self.url).status_code, 302)
+
+    def test_post_new_evidence(self):
+        self.client.login(username=self.staff.username, password="test")
+
+        data = {
+            'footprint-medium': 'New Medium',
+            'footprint-provenance': 'New Provenance',
+            'footprint-title': 'Iliad',
+            'footprint-medium-description': 'Medium Description',
+            'footprint-call-number': 'Call Number',
+            'imprint': 0,
+            'copy': 0
+        }
+
+        response = self.client.post(self.url, data)
+        self.assertEquals(response.status_code, 302)
+        qs = Footprint.objects.exclude(id=self.footprint.id)
+        self.assertEquals(qs.count(), 1)
+
+        new_fp = qs.first()
+        self.assertEquals(new_fp.medium, 'New Medium')
+        self.assertEquals(new_fp.provenance, 'New Provenance')
+        self.assertEquals(new_fp.title, 'Iliad')
+        self.assertEquals(new_fp.medium_description, 'Medium Description')
+        self.assertEquals(new_fp.call_number, 'Call Number')
 
 
 class CreateFootprintViewTest(TestCase):

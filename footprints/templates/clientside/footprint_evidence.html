@@ -1,0 +1,59 @@
+<script type="text/template" id="related-evidence-template">
+    <div class="form-group">
+        <label class="col-sm-4 control-label">Footprint Title</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control required"
+                name="footprint-title" placeholder=""
+                value="<%=footprint.title%>"/>
+            <div class="error-block">This field is required.</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-4 control-label">Evidence Type</label>
+        <div class="col-sm-8">
+            <select class="form-control required" name="footprint-medium">
+                <option value="" disabled selected>Select the evidence type</option>
+                <% for (var i=0; i < all_mediums.length; i++) { %>
+                    <option value="<%=all_mediums[i].text%>"
+                        <% if (footprint.medium === all_mediums[i].text) { %>
+                            selected="selected"
+                        <% } %>
+                        >
+                        <%=all_mediums[i].text%>
+                    </option>
+                <% } %>
+            </select>
+            <div class="error-block">This field is required.</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-4 control-label">Evidence Location</label>
+        <div class="col-sm-8">
+            <textarea class="form-control required"
+                name="footprint-provenance"><%=footprint.provenance%></textarea>
+            <div class="error-block">This field is required.</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-4 control-label">Evidence Call Number</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" name="footprint-call-number"
+                value="<%=footprint.call_number%>" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-4 control-label">Evidence Description</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control"
+                name="footprint-medium-description"
+                value="<%=footprint.medium_description%>" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-4 text-right">Include Images</label>
+        <div class="col-sm-8">
+            <input checked="checked" type="checkbox" name="copy-images" value="1">
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</script>

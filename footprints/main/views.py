@@ -90,6 +90,7 @@ class FootprintDetailView(EditableMixin, DetailView):
         context['roles'] = Role.objects.all().order_by('name')
         context['identifier_types'] = \
             StandardizedIdentificationType.objects.all().order_by('name')
+        context['mediums'] = Footprint.MEDIUM_CHOICES
         return context
 
 
@@ -236,6 +237,36 @@ class ConnectFootprintView(LoggedInMixin, EditableMixin, View):
         fp.save()
 
         url = reverse('footprint-detail-view', kwargs={'pk': fp.pk})
+        return HttpResponseRedirect(url)
+
+
+class CopyFootprintView(ConnectFootprintView):
+
+    def post(self, *args, **kwargs):
+        fp = get_object_or_404(Footprint, pk=kwargs.get('pk', None))
+
+        new_fp = Footprint()
+        new_fp.medium = self.request.POST.get('footprint-medium')
+        new_fp.title = self.request.POST.get('footprint-title')
+        new_fp.provenance = self.request.POST.get(
+            'footprint-provenance')
+        new_fp.medium_description = self.request.POST.get(
+            'footprint-medium-description')
+        new_fp.call_number = self.request.POST.get('footprint-call-number')
+
+        pk = self.request.POST.get('imprint', self.CREATE_ID)
+        imprint = self.get_or_create_imprint(pk, fp.book_copy.imprint.work)
+
+        pk = self.request.POST.get('copy', self.CREATE_ID)
+        new_fp.book_copy = self.get_or_create_copy(pk, imprint)
+
+        new_fp.save()
+
+        if self.request.POST.get('copy-images', False) == '1':
+            for do in fp.digital_object.all():
+                new_fp.digital_object.add(do)
+
+        url = reverse('footprint-detail-view', kwargs={'pk': new_fp.pk})
         return HttpResponseRedirect(url)
 
 

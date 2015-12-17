@@ -112,7 +112,7 @@
     window.FootprintDetailView = window.FootprintBaseView.extend({
         events: {
             'click a.remove-related span.glyphicon-trash':
-            'confirmRemoveRelated',
+                'confirmRemoveRelated',
             'click .toggle-edit-digital-object': 'toggleEditDigitalObject'
         },
         initialize: function(options) {
@@ -329,15 +329,16 @@
         createId: '0',
         initialize: function(options) {
             _.bindAll(this, 'context', 'initChoices', 'results',
-                'onListSelect',
-                'validate', 'navigate', 'reset', 'submit');
+                'onListSelect', 'validate', 'navigate', 'reset', 'submit');
 
             this.baseContext = options.baseContext;
             this.initChoices();
-            this.eltWork = jQuery(this.el).find('input.select-object.work')[0];
-            this.eltImprint = jQuery(this.el)
-                .find('input.select-object.imprint')[0];
-            this.eltCopy =  jQuery(this.el).find('input.select-object.copy')[0];
+            this.$eltWork = jQuery(this.el)
+                .find('input.select-object.work').first();
+            this.$eltImprint = jQuery(this.el)
+                .find('input.select-object.imprint').first();
+            this.$eltCopy = jQuery(this.el)
+                .find('input.select-object.copy').first();
 
             this.template = _.template(jQuery(options.template).html());
 
@@ -345,8 +346,8 @@
         },
         context: function(term, page) {
             return {
-                work: jQuery(this.eltWork).val(),
-                imprint: jQuery(this.eltImprint).val(),
+                work: this.$eltWork.val(),
+                imprint: this.$eltImprint.val(),
                 page: page,
                 q: term
             };
@@ -388,35 +389,35 @@
                 jQuery(this).on('change', self.onListSelect);
                 jQuery(this).on('select2-clearing', self.onListClear);
             });
-
         },
         onListSelect: function(evt, added, removed) {
+            this.removeErrors();
             var value = jQuery(evt.currentTarget).val();
             if (value.length > 0) {
                 if (jQuery(evt.currentTarget).hasClass('work')) {
                     // Written Work Selection
 
                     // clear & hide copy
-                    jQuery(this.eltCopy).select2('val', '');
-                    jQuery(this.eltCopy).parents('.form-group').fadeOut();
+                    this.$eltCopy.select2('val', '');
+                    this.$eltCopy.parents('.form-group').fadeOut();
 
                     // clear & maybe hide imprint
-                    jQuery(this.eltImprint).select2('val', '');
+                    this.$eltImprint.select2('val', '');
                     if (value === this.createId) {
-                        jQuery(this.eltImprint).parents('.form-group')
+                        this.$eltImprint.parents('.form-group')
                             .fadeOut();
                     } else {
-                        jQuery(this.eltImprint).parents('.form-group').fadeIn();
+                        this.$eltImprint.parents('.form-group').fadeIn();
                     }
                 } else if (jQuery(evt.currentTarget).hasClass('imprint')) {
                     // Imprint Selection
 
                     // clear & maybe hide copy
-                    jQuery(this.eltCopy).select2('val', '');
+                    this.$eltCopy.select2('val', '');
                     if (value === this.createId) {
-                        jQuery(this.eltCopy).parents('.form-group').fadeOut();
+                        this.$eltCopy.parents('.form-group').fadeOut();
                     } else {
-                        jQuery(this.eltCopy).parents('.form-group').fadeIn();
+                        this.$eltCopy.parents('.form-group').fadeIn();
                     }
                 }
             }
@@ -441,28 +442,31 @@
                     });
                 }
             }
-            return {results: items, more: data.next !== null};
+            return {
+                results: items,
+                more: data.hasOwnProperty('next') && data.next !== null
+            };
         },
-        validateField: function(elt) {
-            var parent = jQuery(elt).parents('.form-group');
-            if (jQuery(parent).is(':visible') &&
-                    jQuery(elt).val().length === 0) {
-                jQuery(parent).addClass('has-error');
-                return false;
-            } else {
-                jQuery(parent).removeClass('has-error');
-                return true;
-            }
+        hasValue: function() {
+            var value = jQuery(this).val() ||
+                (this.tagName === 'DIV' && jQuery(this).select2('val'));
+            return value && value.length > 0;
+        },
+        validateFields: function(parent) {
+            this.removeErrors();
+            var elts = jQuery(parent).find('.required:visible')
+                .not(this.hasValue)
+                .parents('.form-group')
+                .addClass('has-error');
+            return jQuery('.form-group.has-error').length === 0;
         },
         next: function(evt) {
-            if (this.validateField(this.eltWork) &&
-                this.validateField(this.eltImprint) &&
-                    this.validateField(this.eltCopy)) {
-
+            var parent = jQuery(this.el).find('.page1');
+            if (this.validateFields(parent)) {
                 var ctx = this.baseContext;
-                ctx.work = jQuery(this.eltWork).select2('data');
-                ctx.imprint = jQuery(this.eltImprint).select2('data');
-                ctx.copy = jQuery(this.eltCopy).select2('data');
+                ctx.work = this.$eltWork.select2('data');
+                ctx.imprint = this.$eltImprint.select2('data');
+                ctx.copy = this.$eltCopy.select2('data');
                 ctx.createId = this.createId;
                 ctx.current_book = this.model.toJSON();
 
@@ -474,13 +478,20 @@
         navigate: function(evt) {
             jQuery('.page1, .page2').toggle();
         },
+        removeErrors: function(parent) {
+            jQuery(this.el).find('.form-group.has-error')
+                .removeClass('has-error');
+        },
         reset: function() {
             jQuery(this.el).find('.page1').show();
             jQuery(this.el).find('.page2').hide();
         },
         submit: function(evt) {
-            var form = jQuery(this.el).find('form');
-            form.submit();
+            var parent = jQuery(this.el).find('.page2');
+            if (this.validateFields(parent)) {
+                var form = jQuery(this.el).find('form');
+                form.submit();
+            }
         }
     });
 
@@ -506,10 +517,15 @@
 
             this.baseContext = options.baseContext;
             this.elProgress = jQuery(this.el).find('.progress-detail');
-            this.template = _.template(jQuery(options.progressTemplate).html());
+            this.progressTemplate =
+                _.template(jQuery(options.progressTemplate).html());
 
-            this.carouselTemplate = _.template(jQuery(options.carouselTemplate)
-                                               .html());
+            this.elRelated = jQuery(this.el).find('.footprint-evidence');
+            this.relatedTemplate =
+                _.template(jQuery(options.relatedTemplate).html());
+
+            this.carouselTemplate =
+                _.template(jQuery(options.carouselTemplate).html());
 
             // create child views for each page area
             this.detailView = new window.FootprintDetailView({
@@ -530,6 +546,12 @@
                 baseContext: options.baseContext,
                 template: options.connectTemplate
             });
+            this.addRelatedView = new window.ConnectRecordView({
+                el: jQuery(this.el).find('#add-related-footprint'),
+                model: this.bookCopy,
+                baseContext: options.baseContext,
+                template: options.connectTemplate
+            });
         },
         connectRecords: function() {
             var modal = jQuery(this.connectBookView.el).modal({
@@ -543,8 +565,11 @@
         },
         render: function() {
             var ctx = this.context();
-            var markup = this.template(ctx);
+            var markup = this.progressTemplate(ctx);
             jQuery(this.elProgress).html(markup);
+
+            markup = this.relatedTemplate(ctx);
+            jQuery(this.elRelated).html(markup);
         },
         maximizeCarousel: function(evt) {
             var self = this;

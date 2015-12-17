@@ -251,7 +251,7 @@
             </dd>
         <% } %>
 
-        <% if (notes.length > 0) { %>
+        <% if (notes && notes.length > 0) { %>
             <dt>Notes</dt>
             <dd class="border-bottom">
                 <% if (editable) { %>
@@ -322,7 +322,7 @@
                                 data-url="/api/footprint/<%=id%>/">the call number of the evidence?</a>
                         </li>
                     <% } %>
-                    <% if (notes.length < 1) { %> 
+                    <% if (!notes || notes.length < 1) { %> 
                         <li><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
                             <a href="javascript:void(0);" class="editable do-you-know persistant" data-name="notes"
                                data-type="textarea" data-pk="<%=id%>" data-value=""

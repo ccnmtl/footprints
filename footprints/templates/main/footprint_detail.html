@@ -83,6 +83,7 @@
     {% include "clientside/footprint_book.html" %}
     {% include "clientside/footprint_carousel.html" %}
     {% include "clientside/footprint_connect_confirm.html" %}
+    {% include "clientside/footprint_evidence.html" %}
     {% include "clientside/footprint_progress.html" %}
 {% endblock %}
 
@@ -117,6 +118,7 @@
                 connectTemplate: jQuery('#connect-confirm-template'),
                 carouselTemplate: jQuery('#carousel-template'), 
                 progressTemplate: jQuery('#progress-sidebar-template'),
+                relatedTemplate: jQuery('#related-evidence-template'),
                 baseContext: {
                     all_languages: [{% for language in languages %}
                                     {value: '{{language.id}}', text: "{{language.name}}"}{% if not forloop.last %},{% endif %}
@@ -127,7 +129,8 @@
                     editable: {% if editable %}true{% else %}false{% endif %},
                     static_url: '{{STATIC_URL}}',
                     is_bare:  {% if footprint.is_bare %}true{% else %}false{% endif %},
-                    work_id: '{{footprint.book_copy.imprint.work.id}}'
+                    work_id: '{{footprint.book_copy.imprint.work.id}}',
+                    work_title: '{{footprint.book_copy.imprint.work.title}}'
                 }
             });
         });
@@ -201,5 +204,9 @@
                 </div>
             </div>
         </div>
+        
+        {% include "main/footprint_related.html" %}
+
+    </div>
     </div>
 {% endblock %}
