@@ -542,6 +542,11 @@ class WrittenWork(models.Model):
         # how many footprints reference this work?
         return Footprint.objects.filter(book_copy__imprint__work=self).count()
 
+    def imprints(self):
+        lst = list(self.imprint_set.all())
+        lst.sort(key=lambda obj: obj.sort_date())
+        return lst
+
 
 class Imprint(models.Model):
     work = models.ForeignKey(WrittenWork)
@@ -593,6 +598,13 @@ class Imprint(models.Model):
         ctx = Context({'imprint': self})
         return template.render(ctx)
 
+    def footprints(self):
+        lst = list(Footprint.objects.filter(book_copy__imprint=self))
+        lst.sort(key=lambda obj:
+                 (obj.book_copy.id,
+                  obj.sort_date()))
+        return lst
+
     def percent_complete(self):
         required = 9.0
         completed = 0
@@ -628,6 +640,12 @@ class Imprint(models.Model):
     def references(self):
         # how many footprints reference this imprint?
         return Footprint.objects.filter(book_copy__imprint=self).count()
+
+    def sort_date(self):
+        if self.date_of_publication:
+            return self.date_of_publication.start()
+
+        return date.min
 
 
 class BookCopy(models.Model):
@@ -788,3 +806,9 @@ class Footprint(models.Model):
     def save(self, *args, **kwargs):
         self.percent_complete = self.calculate_percent_complete()
         super(Footprint, self).save(*args, **kwargs)
+
+    def sort_date(self):
+        if self.associated_date:
+            return self.associated_date.start()
+
+        return date.min
