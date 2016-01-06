@@ -133,6 +133,13 @@
                     work_title: '{{footprint.book_copy.imprint.work.title}}'
                 }
             });
+            
+            jQuery('.footprint.object-detail').keydown(function(event) {
+              if (event.keyCode === 13) {
+                event.preventDefault();
+                return false;
+              }
+            });
         });
     </script>
 {% endblock %}
