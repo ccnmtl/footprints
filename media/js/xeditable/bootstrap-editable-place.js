@@ -123,7 +123,7 @@ Place editable input.
             self.mapInstance = new google.maps.Map(self.mapContainer,
                                                    self.mapOptions);
             self.mapInstance.controls[google.maps.ControlPosition.TOP_LEFT]
-                .push(self.$address);
+                .push(self.$address[0]);
 
             // drop a marker on click
             google.maps.event
@@ -132,7 +132,7 @@ Place editable input.
             });
 
             self.searchBox = new google.maps.places.SearchBox(
-                /** @type {HTMLInputElement} */(self.$address));
+                /** @type {HTMLInputElement} */(self.$address[0]));
 
             // Listen for the event fired when the user selects an item from the
             // pick list. Retrieve the matching places for that item.
