@@ -1,3 +1,4 @@
+/* global csrftoken */
 (function($) {
     'use strict';
 
@@ -10,15 +11,18 @@
 
     $.extend(DigitalObject.prototype, {
         initializeUploader: function(browseButton, fileList) {
+            var headers = {'X-Requested-With': 'XMLHttpRequest'};
+            if (csrftoken !== undefined) {
+                headers['X-CSRFToken'] = csrftoken;
+            }
+
             var uploader = new plupload.Uploader({
                 browse_button: browseButton,
                 url: '/digitalobject/add/',
                 max_retries: 3,
                 multi_selection: false,
                 runtimes: 'html5,flash,silverlight',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
+                headers: headers,
                 flash_swf_url: '/media/js/plupload/Moxie.swf',
                 silverlight_xap_url: '/media/js/js/Moxie.xap',
                 filters: {
@@ -102,16 +106,18 @@
         render: function() {
             var self = this;
 
-            this.$browse =  this.$tpl.find('button.browse')[0];
-            this.$list =  this.$tpl.find('ul.filelist')[0];
-            this.$description =  this.$tpl.find('input[name="description"]')[0];
+            this.$browse = this.$tpl.find('button.browse').first();
+            this.$list = this.$tpl.find('ul.filelist').first();
+            this.$description =
+                this.$tpl.find('input[name="description"]').first();
 
             // hack: steal submit from EditableForm
             // Hide the submit button, make the input div wider
             jQuery('button.editable-submit').hide();
             jQuery(this.$browse).parents('.editable-input').addClass('wide');
 
-            this.uploader = this.initializeUploader(this.$browse, this.$list);
+            this.uploader = this.initializeUploader(
+                this.$browse[0], this.$list[0]);
 
             // gather additional submit params
             var params = $(this.options.scope).data('params');
