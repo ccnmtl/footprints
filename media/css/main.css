@@ -1051,13 +1051,19 @@ ul.wizard-tabs.has-error li.active a {
 
 /* Footprint Details */
 
-.writtenwork, .footprint-detail {
+.writtenwork .imprint-list,
+.writtenwork .writtenwork-detail,
+.footprint-detail {
     border-radius: 4px;
     background-image: url("../img/fp_section_bg.png");
     background-repeat: repeat;
     box-shadow: none;
-    margin: 0 0 20px 0;
-    padding: 10px 20px 10px 10px;
+    margin: 0 0 10px 0;
+    padding: 10px;
+}
+
+.footprint-detail {
+    padding-right: 20px;
 }
 
 img.footicon {
@@ -1307,9 +1313,19 @@ span.glyphicon-question-sign {
 }
 
 .object-detail .imprint-map {
-    margin: 0 50px;
-    width: 90%;
-    height: 300px;
+    width: 100%;
+}
+
+body.affix-container {
+    position: relative;
+}
+
+.object-detail .imprint-map-container.affix {
+    top: 10px;
+}
+
+.object-detail .imprint-map-container.affix-bottom {
+    position: absolute;
 }
 
 .object-detail .footprint-map {
@@ -1380,18 +1396,138 @@ span.glyphicon-question-sign {
     padding: 10px 20px 10px 10px;
 }
 
+.object-detail.writtenwork .col-md-7 {
+    padding-left: 0;
+}
+
+.object-detail.writtenwork .breadcrumb {
+    margin-bottom: 0px;
+}
+
+.object-detail.writtenwork h1 .object-title {
+    width: auto;
+    margin-left: 0px;
+}
+
+.object-detail.writtenwork .writtenwork-detail .metadata {
+    margin-left: 17px;
+}
+
+.object-detail.writtenwork .writtenwork-detail .metadata strong {
+    margin-right: 10px;
+}
+
+/*.object-detail.writtenwork .imprint-list {
+    overflow-y: auto;
+}
+*/
+
 .object-detail.writtenwork .imprint-list-item {
-    padding: 20px;
-    margin: 20px 20px;
+    padding: 5px 12px 12px 12px;
+    margin: 0 0 3px 0;
     border: 1px solid #eee;
-    border-left-width: 5px;
-    border-radius: 3px;
     background-color: white;
 }
 
-.object-detail.writtenwork .imprint-list-item table {
-    margin: 0 50px;
-    width: 90%;
+.object-detail.writtenwork .panel {
+    border: 0;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+}
+
+.object-detail.writtenwork .panel-group {
+    margin-bottom: 0;
+    margin-top: -2px;
+}
+
+.object-detail.writtenwork .panel-group .panel-heading {
+    border: 0;
+    cursor: pointer;
+    box-shadow: none;
+    padding-left: 0;
+    padding-top: 0;
+}
+
+.object-detail.writtenwork .panel-heading {
+    background-color: white;
+    border-radius: 0;
+}
+
+.object-detail.writtenwork .panel-body {
+    padding: 0 !important;
+    border-top: 0 !important;
+}
+
+.object-detail.writtenwork ul.list-group {
+    margin-bottom: 20px;
+}
+
+.object-detail.writtenwork .list-group-item {
+    background-color: #f6f7f8;
+    border-radius: 0;
+    border-bottom-color: #eee;
+    border-left-color: #eee;
+    border-right-color: #eee;    
+}
+
+.object-detail.writtenwork .imprint-list-item h4 {
+    margin-top: 0;
+    margin-bottom: 0;    
+    line-height: 30px;
+    font-size: 16px;
+}
+
+.object-detail.writtenwork .imprint-list-item h5 {
+    margin-top: 3px;
+}
+
+.object-detail.writtenwork .panel-title {
+    font-size: 14px;
+    color: #373e4d;
+}
+
+.object-detail.writtenwork .panel-title a,
+.object-detail.writtenwork .panel-title a:hover {
+    text-decoration: none;
+}
+
+.object-detail.writtenwork .panel-title a span:before {
+    content: "\2212";
+    font-family: "Glyphicons Halflings";
+    margin-right: 3px;
+    font-size: 10px;    
+}
+
+.object-detail.writtenwork .panel-title a.collapsed span:before {
+    content: "\2b";
+}
+
+.object-detail.writtenwork .panel-title .glyphicon {
+    color: #2e5367;
+}
+
+.object-detail.writtenwork .panel-default>.panel-heading .badge {
+    background-color: #373e4d;
+}
+
+.object-detail.writtenwork .divider {
+    margin-top: 1px;
+    border: 0;
+    background-color: white;
+}
+
+.object-detail.writtenwork .divider div.small {
+    padding: 5px;
+    margin-left: -20px;
+    margin-bottom: -14px;
+    position: relative;
+    z-index: 1;
+    border: 0;
+}
+
+.object-detail.writtenwork .imprint-description-published {
+    font-size: 14px;
+    font-weight: 500;
 }
 
 /** xeditable fields **/

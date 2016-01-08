@@ -163,6 +163,7 @@ class WrittenWorkDetailView(EditableMixin, DetailView):
 
         context['related'] = []
         context['editable'] = self.has_edit_permission(self.request.user)
+        context['imprints'] = self.object.imprints()
         return context
 
 
