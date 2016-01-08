@@ -10,6 +10,11 @@
     </div>
     {% if imprint.date_of_publication or imprint.place %}
     <div class="imprint-description-published">
+        {% if imprint.place %}
+            <img class="imprint-list-item-marker"
+                src="{{STATIC_URL}}img/marker.png"
+                alt="map marker" />
+        {% endif %}
         Published
         {% if imprint.date_of_publication %}
             {{imprint.date_of_publication}}{% if imprint.place %},{% endif %}

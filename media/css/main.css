@@ -1458,7 +1458,7 @@ body.affix-container {
     border-top: 0 !important;
 }
 
-.object-detail.writtenwork ul.list-group {
+.object-detail.writtenwork .list-group {
     margin-bottom: 20px;
 }
 
@@ -1467,7 +1467,14 @@ body.affix-container {
     border-radius: 0;
     border-bottom-color: #eee;
     border-left-color: #eee;
-    border-right-color: #eee;    
+    border-right-color: #eee;
+    margin-bottom: 0px;
+}
+
+.object-detail.writtenwork .list-group-item.active,
+.object-detail.writtenwork .list-group-item:hover {
+    border: 1px solid #373e4d !important;
+    color: #333;
 }
 
 .object-detail.writtenwork .imprint-list-item h4 {
@@ -1479,6 +1486,10 @@ body.affix-container {
 
 .object-detail.writtenwork .imprint-list-item h5 {
     margin-top: 3px;
+}
+
+.object-detail.writtenwork .imprint-list-item .imprint-list-item-marker {
+    height: 20px;
 }
 
 .object-detail.writtenwork .panel-title {
@@ -1514,6 +1525,10 @@ body.affix-container {
     margin-top: 1px;
     border: 0;
     background-color: white;
+}
+
+.object-detail.writtenwork .divider:hover {
+    border: 0 !important;
 }
 
 .object-detail.writtenwork .divider div.small {
@@ -1955,4 +1970,46 @@ p.decoy {
     outline: none;
     background-color: #2e5367;
     border-color: #2e5367;
+}
+
+
+/** Custom InfoWindow **/
+.gm-style-iw {
+    width: 300px !important;
+    top: 15px !important;
+    left: 0px !important;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    background-color: white;
+}
+.gm-style-iw div {
+    width: 100%;
+}
+.iw-container .iw-title.iw-footprint {
+    background-color: #f6f7f8;
+    border-top: 1px solid #ddd;
+    color: #333;
+    font-size: 18px;
+    padding: 10px 0 10px 10px;
+    margin-bottom: 5px;
+}
+.iw-container .iw-title.iw-imprint {
+    background: transparent;
+    color: #836737;
+    font-size: 18px;
+    padding: 10px 0 10px 10px;
+    background-image: url("../img/fp_section_bg.png");
+    background-repeat: repeat;
+    margin-bottom: 5px;
+}
+.iw-container .iw-content {
+    font-size: 13px;
+    line-height: 18px;
+    font-weight: 400;
+    margin-right: 1px;
+    padding: 5px 15px 10px 15px;
+    max-height: 140px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: white;
 }

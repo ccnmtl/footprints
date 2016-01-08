@@ -1,20 +1,15 @@
- <dl class="dl-horizontal">
  {% if footprint.associated_date %}
-    <dt>Footprint Date</dt>
-    <dd>{{footprint.associated_date}}</dd>
+    <div><strong>Footprint Date</strong>&nbsp;
+    <span>{{footprint.associated_date}}</span></div>
  {% endif %}
- {% if footprint.place %}
-    <dt>Footprint Place</dt>
-    <dd>{{footprint.place}}</dd>
- {% endif %}
+    <div><strong>Footprint Place</strong>&nbsp;
+    <span>{{footprint.place}}</span></div>
+ 
 {% with authors=footprint.book_copy.imprint.work.authors %}
     {% for actor in authors %}
-        <dt>Author</dt><dd>{{actor.display_name}}</dd>
+        <div><strong>Author</strong>&nbsp;<span>{{actor.display_name}}</span></div>
     {% endfor %}
 {% endwith %}
- {% with owners=footprint.owners %}
-    {% for actor in owners %}
-        <dt>Owner</dt><dd>{{actor.display_name}}</dd>
-    {% endfor %}
- {% endwith %}
-</dl>
+<a class="pull-right small" href="/footprint/{{footprint.id}}/">
+    details <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
+</a>
