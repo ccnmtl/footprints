@@ -19,7 +19,7 @@ cssselect==0.9.1
 lxml==3.5.0
 fuzzywuzzy==0.8.0
 sure==1.2.24
-ipython==4.0.0
+ipython==4.0.1
 ipdb==0.8.1
 rdflib==4.2.1
 selenium==2.48.0
