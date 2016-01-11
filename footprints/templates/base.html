@@ -13,7 +13,7 @@
         <meta name="robots" content="noindex">
       
         <!-- Bootstrap CSS: -->
-        <link href="{{STATIC_URL}}bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
         {% compress css %}
             <!-- Application CSS: -->
             <link href="{{STATIC_URL}}css/main.css" rel="stylesheet">
@@ -237,7 +237,7 @@
 
     <script src="{{STATIC_URL}}js/underscore-min.js"></script>
     <script src="{{STATIC_URL}}js/backbone-min.js"></script>
-    <script src="{{STATIC_URL}}bootstrap/js/bootstrap.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     
     {% if request.user.is_anonymous %}
         <script src="{{STATIC_URL}}js/app/login.js"></script>
