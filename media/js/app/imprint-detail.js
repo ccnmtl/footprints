@@ -182,6 +182,7 @@
                 '.panel-collapse').collapse('toggle');
         },
         onClickFootprint: function(evt) {
+            this.infowindow.close();
             jQuery(this.el).find('.active').removeClass('active');
             jQuery(evt.currentTarget).addClass('active');
 
@@ -197,6 +198,7 @@
             }
         },
         onClickImprint: function(evt) {
+            this.infowindow.close();
             jQuery(this.el).find('.active').removeClass('active');
             var id = jQuery(evt.currentTarget).data('id');
             if (id in this.markers) {
