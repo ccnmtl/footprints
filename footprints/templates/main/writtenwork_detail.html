@@ -68,7 +68,32 @@
 
                 {% for imprint in imprints %}
                     <div class="imprint-list-item">
-                        <h4>{{imprint.description}}</h4>
+                        <h4 data-id="imprint-{{imprint.id}}" class="{% if imprint.place %}mappable{% endif %}">
+                            {% if imprint.place %}
+                                <img class="imprint-list-item-marker"
+                                    src="{{STATIC_URL}}img/marker.png"
+                                    alt="map marker" />
+                                </button>
+                            {% endif %}                        
+                            <b>
+                            {% if not imprint.display_title %}
+                                Imprint
+                            {% else %}
+                                {{imprint.display_title}}
+                            {% endif %}
+                            </b>
+                        </h4>
+                        {% if imprint.date_of_publication or imprint.place %}
+                        <div class="imprint-description-published">
+                            Published
+                            {% if imprint.date_of_publication %}
+                                {{imprint.date_of_publication}}{% if imprint.place %},{% endif %}
+                            {% endif %}
+                            {% if imprint.place %}
+                                {{imprint.place}}
+                            {% endif %}
+                        </div>
+                        {% endif %}
                         {% if imprint.language.count > 0 %}
                             <h5>
                                 {% for language in imprint.language.all %} 
@@ -87,10 +112,16 @@
                         {% if imprint.place %}
                             <div class="map-marker"
                                 style="display: none"
+                                data-id="imprint-{{imprint.id}}"
                                 data-latitude="{{imprint.place.latitude}}"
                                 data-longitude="{{imprint.place.longitude}}"
                                 data-title="{{imprint.display_title}}">
-                                {{imprint.description|safe}}
+                                <div class="iw-container">
+                                    <div class="iw-title iw-imprint">Imprint</div>
+                                    <div class="iw-content">
+                                        {{imprint.description|safe}}
+                                    </div>
+                                </div>
                             </div>
                         {% endif %}
 
@@ -113,17 +144,32 @@
                                     <div class="panel-body">
                                         <ul class="list-group">
                                         {% for fp in footprints %}
-                                            <li class="list-group-item" data-book-copy="{{fp.book_copy.identifier}}">
+                                            <li class="list-group-item"
+                                                data-id="footprint-{{fp.id}}"
+                                                data-book-copy="{{fp.book_copy.identifier}}">
                                                 <a class="pull-right small" href="/footprint/{{fp.id}}/">
                                                     details <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
                                                 </a>
                                                 <div>
+                                                    {% if fp.place %}
+                                                        <img class="imprint-list-item-marker"
+                                                            src="{{STATIC_URL}}img/marker.png"
+                                                            alt="map marker" />
+                                                    {% endif %}            
                                                     {{fp.associated_date|default:""}}{% if fp.place %}{% if fp.associated_date %}, {% endif %}
                                                         in {{fp.place}}
                                                         <div class="map-marker" style="display: none"
+                                                            data-id="footprint-{{fp.id}}"
                                                             data-latitude="{{fp.place.latitude}}"
                                                             data-longitude="{{fp.place.longitude}}"
-                                                            data-title="{{fp.title}}">{{fp.description}}
+                                                            data-title="{{fp.title}}">
+                                                            
+                                                            <div class="iw-container">
+                                                                <div class="iw-title iw-footprint">Footprint</div>
+                                                                <div class="iw-content">
+                                                                    {{fp.description}}
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     {% endif %}
                                                 </div>
