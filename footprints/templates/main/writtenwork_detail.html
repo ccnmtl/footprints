@@ -68,7 +68,7 @@
 
                 {% for imprint in imprints %}
                     <div class="imprint-list-item">
-                        <div class="imprint-description-title">
+                        <h4 data-id="imprint-{{imprint.id}}" class="{% if imprint.place %}mappable{% endif %}">
                             {% if imprint.place %}
                                 <img class="imprint-list-item-marker"
                                     src="{{STATIC_URL}}img/marker.png"
@@ -82,7 +82,7 @@
                                 {{imprint.display_title}}
                             {% endif %}
                             </b>
-                        </div>
+                        </h4>
                         {% if imprint.date_of_publication or imprint.place %}
                         <div class="imprint-description-published">
                             Published
@@ -112,6 +112,7 @@
                         {% if imprint.place %}
                             <div class="map-marker"
                                 style="display: none"
+                                data-id="imprint-{{imprint.id}}"
                                 data-latitude="{{imprint.place.latitude}}"
                                 data-longitude="{{imprint.place.longitude}}"
                                 data-title="{{imprint.display_title}}">

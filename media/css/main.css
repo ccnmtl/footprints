@@ -1429,6 +1429,12 @@ body.affix-container {
     background-color: white;
 }
 
+.object-detail.writtenwork .imprint-list-item.active {
+    border: 1px solid #373e4d !important;
+    color: #333;
+}
+
+
 .object-detail.writtenwork .panel {
     border: 0;
     box-shadow: none;
@@ -1482,6 +1488,10 @@ body.affix-container {
     margin-bottom: 0;    
     line-height: 30px;
     font-size: 16px;
+}
+
+.object-detail.writtenwork .imprint-list-item h4.mappable {
+    cursor: pointer;
 }
 
 .object-detail.writtenwork .imprint-list-item h5 {
@@ -2008,7 +2018,7 @@ p.decoy {
     font-weight: 400;
     margin-right: 1px;
     padding: 5px 15px 10px 15px;
-    max-height: 140px;
+    max-height: 150px;
     overflow-y: auto;
     overflow-x: hidden;
     background-color: white;

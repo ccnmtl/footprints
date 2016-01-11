@@ -1,15 +1,42 @@
- {% if footprint.associated_date %}
-    <div><strong>Footprint Date</strong>&nbsp;
-    <span>{{footprint.associated_date}}</span></div>
- {% endif %}
-    <div><strong>Footprint Place</strong>&nbsp;
-    <span>{{footprint.place}}</span></div>
+{% with imprint=footprint.book_copy.imprint %}
+
+{% if imprint.display_title %}
+    <div>
+        <strong>Imprint</strong>&nbsp;
+        {{imprint.display_title}}
+    </div>
+{% endif %}
+
+{% if imprint.date_of_publication or imprint.place %}
+<div>
+    <strong>Published</strong>
+    {% if imprint.date_of_publication %}
+        {{imprint.date_of_publication}}{% if imprint.place %},{% endif %}
+    {% endif %}
+    {% if imprint.place %}
+        {{imprint.place}}
+    {% endif %}
+</div>
+{% endif %}
+<br />
+
+{% if footprint.associated_date %}
+<div><strong>Footprint Date</strong>&nbsp;
+<span>{{footprint.associated_date}}</span></div>
+{% endif %}
+
+<div><strong>Footprint Place</strong>&nbsp;
+<span>{{footprint.place}}</span></div>
  
 {% with authors=footprint.book_copy.imprint.work.authors %}
     {% for actor in authors %}
         <div><strong>Author</strong>&nbsp;<span>{{actor.display_name}}</span></div>
     {% endfor %}
 {% endwith %}
-<a class="pull-right small" href="/footprint/{{footprint.id}}/">
+
+ 
+ <a class="pull-right small" href="/footprint/{{footprint.id}}/">
     details <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
 </a>
+ 
+{% endwith %}
