@@ -27,7 +27,7 @@ coverage==3.7.1
 pyasn1==0.1.9
 pyOpenSSL==0.15.1
 ndg-httpsclient==0.4.0
-requests==2.8.0
+requests==2.9.1
 logilab-common==1.1.0
 logilab-astng==0.24.3
 lazy-object-proxy==1.2.1
