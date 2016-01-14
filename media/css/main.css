@@ -1429,12 +1429,6 @@ body.affix-container {
     background-color: white;
 }
 
-.object-detail.writtenwork .imprint-list-item.active {
-    border: 1px solid #373e4d !important;
-    color: #333;
-}
-
-
 .object-detail.writtenwork .panel {
     border: 0;
     box-shadow: none;
@@ -1471,16 +1465,24 @@ body.affix-container {
 .object-detail.writtenwork .list-group-item {
     background-color: #f6f7f8;
     border-radius: 0;
-    border-bottom-color: #eee;
-    border-left-color: #eee;
-    border-right-color: #eee;
+    border: 1px solid #eee;
     margin-bottom: 0px;
 }
 
-.object-detail.writtenwork .list-group-item.active,
 .object-detail.writtenwork .list-group-item:hover {
-    border: 1px solid #373e4d !important;
+    border-color: #95c0e9;
+}
+
+
+.object-detail.writtenwork .list-group-item.active,
+.object-detail.writtenwork .imprint-list-item.active {
+    border-color: #95c0e9;
     color: #333;
+    box-shadow: 0 0 10px #95c0e9;
+}
+
+.object-detail.writtenwork .list-group-item.active {
+    background-color: #f6f7f8;
 }
 
 .object-detail.writtenwork .imprint-list-item h4 {
@@ -1495,16 +1497,16 @@ body.affix-container {
 }
 
 .object-detail.writtenwork .imprint-list-item h5 {
-    margin-top: 3px;
+    margin-top: 5px;
 }
 
-.object-detail.writtenwork .imprint-list-item .imprint-list-item-marker {
+.object-detail.writtenwork .imprint-list-item-marker {
     height: 20px;
 }
 
 .object-detail.writtenwork .panel-title {
     font-size: 14px;
-    color: #373e4d;
+    color: #2e5367;
 }
 
 .object-detail.writtenwork .panel-title a,
@@ -1516,7 +1518,8 @@ body.affix-container {
     content: "\2212";
     font-family: "Glyphicons Halflings";
     margin-right: 3px;
-    font-size: 10px;    
+    font-size: 10px;
+    color: #2e5367;    
 }
 
 .object-detail.writtenwork .panel-title a.collapsed span:before {
@@ -1528,7 +1531,7 @@ body.affix-container {
 }
 
 .object-detail.writtenwork .panel-default>.panel-heading .badge {
-    background-color: #373e4d;
+    background-color: #2e5367;
 }
 
 .object-detail.writtenwork .divider {
@@ -1540,6 +1543,7 @@ body.affix-container {
 .object-detail.writtenwork .divider.active,
 .object-detail.writtenwork .divider:hover {
     border: 0 !important;
+    box-shadow: none;
 }
 
 .object-detail.writtenwork .divider div.small {

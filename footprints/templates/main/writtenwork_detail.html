@@ -49,6 +49,7 @@
         </h1>
         <div class="row">
             <div class="col-md-5">
+                 {% if work.actor.count > 0 and work.notes != None %}
                 <div class="writtenwork-detail">
                     <div class="breadcrumb">
                         THE LITERARY WORK
@@ -64,6 +65,7 @@
                         <div class="metadata"><strong>Notes</strong> {{work.notes|safe}}</div>
                     {% endif %}
                 </div>
+                {% endif %}
                 <div class="imprint-list">
                     <div class="breadcrumb">
                         IMPRINTS
