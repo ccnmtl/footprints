@@ -1537,6 +1537,7 @@ body.affix-container {
     background-color: white;
 }
 
+.object-detail.writtenwork .divider.active,
 .object-detail.writtenwork .divider:hover {
     border: 0 !important;
 }
@@ -1548,11 +1549,6 @@ body.affix-container {
     position: relative;
     z-index: 1;
     border: 0;
-}
-
-.object-detail.writtenwork .imprint-description-published {
-    font-size: 14px;
-    font-weight: 500;
 }
 
 /** xeditable fields **/

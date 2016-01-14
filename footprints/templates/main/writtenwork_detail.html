@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load compress %}
 
 {% block title %}Written Work{% endblock %}
 
@@ -21,8 +22,10 @@
     <script type="text/javascript" src="//maps.google.com/maps/api/js?libraries=places"></script>
     <script src="{{STATIC_URL}}js/underscore-min.js"></script>
     <script src="{{STATIC_URL}}js/backbone-min.js"></script>
-
+    <script src="{{STATIC_URL}}js/overlapping_marker_spidifier.min.js"></script>
+    {% compress js %}
     <script src="{{STATIC_URL}}js/app/imprint-detail.js"></script>
+    {% endcompress %} 
 
     <script type="text/javascript">
         jQuery(document).ready(function() {
@@ -94,20 +97,6 @@
                             {% endif %}
                         </div>
                         {% endif %}
-                        {% if imprint.language.count > 0 %}
-                            <h5>
-                                {% for language in imprint.language.all %} 
-                                    <span>{{ language.name }}{% if not forloop.last %} , {% endif %}</span>
-                                {% endfor %}
-                            </h5>
-                        {% endif %}
-                        {% if imprint.actor.count > 0 %}
-                            <h5>
-                            {% for actor in work.actor.all %}
-                                <div>{{actor}}</div>
-                            {% endfor %}
-                            </h5>
-                        {% endif %}
 
                         {% if imprint.place %}
                             <div class="map-marker"
@@ -176,6 +165,17 @@
                                                 <div>
                                                     as {{fp.title}}&nbsp;
                                                 </div>
+                                                {% with owners=fp.owners %}
+                                                {% if owners|length > 0 %}
+                                                    <div>owned by <span>
+                                                    {% for owner in owners %}
+                                                        {{owner.display_name}}
+                                                        {% if not forloop.last %},{% endif %}
+                                                    {% endfor %}
+                                                    </span>
+                                                    </div>
+                                                {% endif %}
+                                                {% endwith %}
                                             </li>
                                         {% endfor %}
                                         </ul>

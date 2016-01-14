@@ -1,16 +1,15 @@
 <div class="separator">
     <div class="imprint-description-title">
-        <b>
+        <strong>Title</strong>&nbsp;
         {% if not imprint.display_title %}
             Imprint
         {% else %}
             {{imprint.display_title}}
         {% endif %}
-        </b>
     </div>
     {% if imprint.date_of_publication or imprint.place %}
     <div class="imprint-description-published">
-        Published
+        <strong>Published</strong>
         {% if imprint.date_of_publication %}
             {{imprint.date_of_publication}}{% if imprint.place %},{% endif %}
         {% endif %}

@@ -1,3 +1,4 @@
+/* global OverlappingMarkerSpiderfier */
 (function() {
     window.ImprintView = Backbone.View.extend({
         events: {
@@ -8,7 +9,13 @@
         initialize: function(options) {
             _.bindAll(this, 'initializeMap', 'attachInfoWindow',
                       'initializeTooltips', 'onTogglePanel', 'resize',
-                      'onClickFootprint', 'onClickImprint');
+                      'onClickFootprint', 'onClickImprint',
+                      'updateMarkerIcons');
+
+            this.markerIcon = this.iconWithColor('ffa881');
+            this.spiderIcon = this.iconWithColor('ff6e2d');
+
+            this.mapLoaded = false;
 
             var copyId = null;
             var copyTemplate = _.template(jQuery(options.template).html());
@@ -39,15 +46,55 @@
             },
             streetViewControl: false
         },
+        updateMarkerIcons: function() {
+            for (var key in this.markers) {
+                if (this.markers.hasOwnProperty(key)) {
+                    this.markers[key].marker.setIcon(this.markerIcon);
+                }
+            }
+
+            var markers = this.oms.markersNearAnyOtherMarker();
+            for (var i = 0; i < markers.length; i++) {
+                markers[i].setIcon(this.spiderIcon);
+            }
+        },
         attachInfoWindow: function(infowindow, map, marker, content) {
             var self = this;
-            google.maps.event.addListener(marker, 'click', function() {
-                infowindow.setContent(content);
+
+            this.oms.addListener('click', function(marker, event) {
+                infowindow.setContent(marker.desc);
                 infowindow.open(map, marker);
+            });
+
+            this.oms.addListener('spiderfy', function(markers) {
+                for (var i = 0; i < markers.length; i ++) {
+                    markers[i].setIcon(self.markerIcon);
+                }
+
+                infowindow.close();
+            });
+
+            this.oms.addListener('unspiderfy', function(markers) {
+                for (var i = 0; i < markers.length; i ++) {
+                    markers[i].setIcon(self.spiderIcon);
+                }
             });
 
             google.maps.event.addListener(map, 'click', function() {
                 infowindow.close();
+            });
+
+            google.maps.event.addListener(map, 'idle', function() {
+                if (!self.mapLoaded) {
+                    self.updateMarkerIcons();
+                    self.mapLoaded = true;
+                }
+            });
+
+            google.maps.event.addListener(map, 'zoom_changed', function() {
+                if (self.mapLoaded) {
+                    self.updateMarkerIcons();
+                }
             });
 
             // *
@@ -116,8 +163,13 @@
             height -= jQuery(this.el).find('.writtenwork-detail')
                                      .outerHeight();
         },
+        iconWithColor: function(color) {
+            return 'https://chart.googleapis.com/chart?' +
+            'chst=d_map_pin_letter&chld=%E2%80%A2|' + color;
+        },
         initializeMap: function() {
             var self = this;
+
             // compile lat/longs
             var markers = jQuery(this.el).find('.map-marker');
             if (markers.length > 0) {
@@ -138,8 +190,12 @@
                 });
 
                 var bounds = new google.maps.LatLngBounds();
-                this.markers = {};
+                this.oms = new OverlappingMarkerSpiderfier(this.map, {
+                    keepSpiderfied: true,
+                    markersWontMove: true,
+                    markersWontHide: true});
 
+                this.markers = {};
                 for (var i = 0; i < markers.length; i++) {
                     var id = jQuery(markers[i]).data('id');
                     var lat = jQuery(markers[i]).data('latitude');
@@ -148,19 +204,18 @@
                     var latlng = new google.maps.LatLng(lat, lng);
                     var content = jQuery(markers[i]).html();
 
-                    var icon = 'https://chart.googleapis.com/chart?' +
-                        'chst=d_map_pin_letter&chld=%E2%80%A2|ff6e2d';
                     var marker = new google.maps.Marker({
                         position: latlng,
                         map: this.map,
-                        icon: icon
+                        icon: this.markerIcon,
+                        desc: content
                     });
-
-                    this.attachInfoWindow(this.infowindow, this.map,
-                        marker, content);
                     bounds.extend(latlng);
+                    this.oms.addMarker(marker);
                     this.markers[id] = {'marker': marker, 'content': content};
                 }
+
+                this.attachInfoWindow(this.infowindow, this.map);
 
                 this.map.fitBounds(bounds);
                 jQuery(mapElt).show();
