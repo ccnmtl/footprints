@@ -58,12 +58,44 @@
                 markers[i].setIcon(this.spiderIcon);
             }
         },
+        scrollToItem: function($elt) {
+            var eltTop = $elt.offset().top - 150;
+            var mapTop = jQuery('.foot').offset().top -
+                jQuery('.imprint-map-container').height() - 40;
+
+            jQuery('html, body').animate({
+                scrollTop: Math.min(eltTop, mapTop) + 'px'
+            }, 900);
+        },
         attachInfoWindow: function(infowindow, map, marker, content) {
             var self = this;
 
             this.oms.addListener('click', function(marker, event) {
                 infowindow.setContent(marker.desc);
                 infowindow.open(map, marker);
+
+                jQuery(self.el).find('.active').removeClass('active');
+
+                var $elt = jQuery('[data-id="' + marker.dataId + '"]').first();
+                if (marker.dataId.startsWith('footprint')) {
+                    $elt.addClass('active');
+                } else {
+                    $elt.parent().addClass('active');
+                }
+
+                if (!$elt.is(':visible')) {
+                    var $collapsible =
+                        $elt.parents('.panel').find('.panel-collapse').first();
+
+                    // wait until the collapsible is open to calc scrollTop
+                    $collapsible.one('shown.bs.collapse', function() {
+                        self.scrollToItem($elt);
+                    });
+
+                    $collapsible.collapse('toggle');
+                } else {
+                    self.scrollToItem($elt);
+                }
             });
 
             this.oms.addListener('spiderfy', function(markers) {
@@ -197,7 +229,7 @@
 
                 this.markers = {};
                 for (var i = 0; i < markers.length; i++) {
-                    var id = jQuery(markers[i]).data('id');
+                    var id = jQuery(markers[i]).data('related');
                     var lat = jQuery(markers[i]).data('latitude');
                     var lng = jQuery(markers[i]).data('longitude');
                     var title = jQuery(markers[i]).data('title');
@@ -208,7 +240,8 @@
                         position: latlng,
                         map: this.map,
                         icon: this.markerIcon,
-                        desc: content
+                        desc: content,
+                        dataId: id
                     });
                     bounds.extend(latlng);
                     this.oms.addMarker(marker);
