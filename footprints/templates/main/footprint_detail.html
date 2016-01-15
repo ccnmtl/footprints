@@ -10,64 +10,6 @@
 
 {% block extrahead %}
     <link href="{{STATIC_URL}}select2-3.5.2/select2.css" rel="stylesheet" />
-    {% comment %}
-        inline styles for this branch to prevent styling conflicts
-    {% endcomment %}
-    <style>
-        .object-detail .breadcrumb a {
-            text-transform: none;
-        }
-
-        .separator {
-            border-bottom: dotted black 1px;
-            padding-bottom: 5px;
-        }
-        
-        .connect-record-prompt {
-            width: 25%;
-            min-width: 250px;
-        }
-        
-        .connect-record-prompt p {
-            margin-bottom: 20px;
-        }
-        
-        .connect-record-prompt span.emphasis {
-            font-size: 125%;
-            font-weight: 400;
-        }
-
-        .connect-record-prompt a {
-            font-size: 125%;
-        }
-        
-        #connect-records-modal form .form-group .error-block {
-            display: none;
-            color: #a94442;
-            margin: 5px 0 0 0;
-        }
-
-        #connect-records-modal .form-group.has-error .error-block {
-            display: block;
-        }
-        
-        #connect-records-modal .page2 ul {
-            margin: 20px 0 0 0;
-        }
-        #connect-records-modal .page2 ul li {
-            margin-bottom: 20px;
-        }
-        #connect-records-modal .page2 ul li .separator {
-            border-bottom: 0;
-        }
-        .edit-digital-object {
-            margin-top: 5px;
-        } 
-        .toggle-edit-digital-object {
-            margin-top: -12px;
-            margin-bottom: 5px;
-        }
-    </style>
     
     {% include "xeditable/actor.html" %}
     {% include "xeditable/author.html" %}

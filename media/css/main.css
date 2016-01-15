@@ -1555,6 +1555,61 @@ body.affix-container {
     border: 0;
 }
 
+.object-detail.footprint .breadcrumb a {
+    text-transform: none;
+}
+
+.object-detail.footprint .separator {
+    border-bottom: dotted black 1px;
+    padding-bottom: 5px;
+}
+
+.object-detail.footprint .connect-record-prompt {
+    width: 25%;
+    min-width: 250px;
+}
+
+.object-detail.footprint .connect-record-prompt p {
+    margin-bottom: 20px;
+}
+
+.object-detail.footprint .connect-record-prompt span.emphasis {
+    font-size: 125%;
+    font-weight: 400;
+}
+
+.object-detail.footprint .connect-record-prompt a {
+    font-size: 125%;
+}
+
+.object-detail.footprint #connect-records-modal form .form-group .error-block {
+    display: none;
+    color: #a94442;
+    margin: 5px 0 0 0;
+}
+
+.object-detail.footprint #connect-records-modal .form-group.has-error .error-block {
+    display: block;
+}
+
+.object-detail.footprint #connect-records-modal .page2 ul {
+    margin: 20px 0 0 0;
+}
+.object-detail.footprint #connect-records-modal .page2 ul li {
+    margin-bottom: 20px;
+}
+.object-detail.footprint #connect-records-modal .page2 ul li .separator {
+    border-bottom: 0;
+}
+.object-detail.footprint .edit-digital-object {
+    margin-top: 5px;
+} 
+.object-detail.footprint .toggle-edit-digital-object {
+    margin-top: -12px;
+    margin-bottom: 5px;
+}
+
+
 /** xeditable fields **/
 .editable-person {
     padding: 20px;
