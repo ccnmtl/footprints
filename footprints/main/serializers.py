@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils import timezone
+from rest_framework import serializers
 from rest_framework.fields import CharField, ReadOnlyField
 from rest_framework.serializers import Serializer, HyperlinkedModelSerializer
 
@@ -164,6 +166,13 @@ class BookCopySerializer(HyperlinkedModelSerializer):
         fields = ('id', 'imprint', 'notes', 'description', 'owners')
 
 
+class DateTimeZoneField(serializers.DateTimeField):
+
+    def to_representation(self, value):
+        value = timezone.localtime(value)
+        return super(DateTimeZoneField, self).to_representation(value)
+
+
 class FootprintSerializer(HyperlinkedModelSerializer):
     associated_date = ExtendedDateSerializer()
     language = LanguageSerializer(many=True, read_only=True)
@@ -172,6 +181,8 @@ class FootprintSerializer(HyperlinkedModelSerializer):
     digital_object = DigitalObjectSerializer(many=True, read_only=True)
     created_by = UserSerializer(read_only=True)
     last_modified_by = UserSerializer(read_only=True)
+    created_at = DateTimeZoneField(format='%m/%d/%y %I:%M %p')
+    modified_at = DateTimeZoneField(format='%m/%d/%y %I:%M %p')
 
     class Meta:
         model = Footprint
