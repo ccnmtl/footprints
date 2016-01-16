@@ -4,7 +4,7 @@ import reversion
 from footprints.main.models import Footprint, DigitalFormat, Role, \
     ExtendedDate, Actor, Language, DigitalObject, \
     StandardizedIdentification, Person, Place, Collection, WrittenWork, \
-    Imprint, BookCopy
+    Imprint, BookCopy, StandardizedIdentificationType
 
 
 admin.site.register(Role)
@@ -12,6 +12,7 @@ admin.site.register(Language)
 admin.site.register(DigitalFormat)
 admin.site.register(DigitalObject)
 admin.site.register(StandardizedIdentification)
+admin.site.register(StandardizedIdentificationType)
 admin.site.register(Person)
 
 

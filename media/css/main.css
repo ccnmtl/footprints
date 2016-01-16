@@ -2078,3 +2078,12 @@ p.decoy {
     overflow-x: hidden;
     background-color: white;
 }
+
+.standard-identifier-logo {
+    margin-right: 5px;
+    margin-top: -2px;
+}
+.standard-identifier-logo a img {
+    width: 15px;
+    height: auto;
+}
