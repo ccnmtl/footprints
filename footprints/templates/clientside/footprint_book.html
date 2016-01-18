@@ -44,6 +44,11 @@ The Literary Work
     <% for (var i=0; i < imprint.work.standardized_identifier.length; i++) { %> 
         <dt><%=imprint.work.standardized_identifier[i].authority%></dt>
         <dd class="border-bottom">
+            <div class="pull-left standard-identifier-logo">
+                <a href="http://lccn.loc.gov/<%=imprint.work.standardized_identifier[i].identifier.replace(/\s+/g, '')%>">
+                    <img src="<%=static_url%>/img/loc.png" />
+                </a>
+            </div>
             <% if (editable) { %>
                 <a href="javascript:void(0);" class="editable-work-identifier"
                     data-type="identifier" data-pk="<%=imprint.work.standardized_identifier[i].id%>"
@@ -85,12 +90,14 @@ The Literary Work
                         data-params="{parent_id:<%=imprint.work.id%>,parent_model:'writtenwork'}" 
                         data-url="/actor/add/">the author(s) of the literary work?</a>
                 </li>
-                <li><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
-                    <a href="javascript:void(0);" class="editable-work-identifier do-you-know"
-                        data-value="" data-type="identifier" data-pk="<%=imprint.work.id%>" data-method="post"
-                        data-params="{parent_id:<%=imprint.work.id%>,parent_model:'writtenwork'}"
-                        data-url="/identifier/add/">the Library of Congress identifier associated with the literary work?</a>
-                </li>
+                <% if (imprint.work.standardized_identifier.length === 0) { %>
+                    <li><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
+                        <a href="javascript:void(0);" class="editable-work-identifier do-you-know"
+                            data-value="" data-type="identifier" data-pk="<%=imprint.work.id%>" data-method="post"
+                            data-params="{parent_id:<%=imprint.work.id%>,parent_model:'writtenwork'}"
+                            data-url="/identifier/add/">the Library of Congress identifier associated with the literary work?</a>
+                    </li>
+                <% } %>
            </ul>
         </dd>
     </dl>
@@ -198,6 +205,20 @@ The Literary Work
     <% for (var i=0; i < imprint.standardized_identifier.length; i++) { %> 
         <dt><%=imprint.standardized_identifier[i].authority%></dt>
         <dd class="border-bottom">
+            <% if (imprint.standardized_identifier[i].authority === 'WorldCat (OCLC)') { %>
+                <div class="pull-left standard-identifier-logo">
+                    <a href="http://www.worldcat.org/oclc/<%=imprint.standardized_identifier[i].identifier%>">
+                        <img src="<%=static_url%>/img/oclc.png" />
+                    </a>
+                </div>
+            <% } else if (imprint.standardized_identifier[i].authority === 'Bibliography of the Hebrew Book') { %>
+                <div class="pull-left standard-identifier-logo">
+                    <a href="http://aleph.nli.org.il:80/F/?func=direct&doc_number=<%=imprint.standardized_identifier[i].identifier%>&local_base=MBI01">
+                    <img src="<%=static_url%>/img/bhb.png" />
+                    </a>
+                </div>
+            <% } %>        
+        
             <% if (editable) { %>
                 <a href="javascript:void(0);" class="editable-imprint-identifier"
                     data-type="identifier" data-pk="<%=imprint.standardized_identifier[i].id%>"
