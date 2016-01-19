@@ -149,9 +149,7 @@ class ExtendedDate(models.Model):
                 date_obj.get_year())
 
         result = fmt_uncertain(date_obj, result)
-
-        if date_obj.is_approximate:
-            result = 'c. ' + result
+        result = fmt_approximate(date_obj, result)
 
         return result
 
@@ -183,6 +181,12 @@ class ExtendedDate(models.Model):
 def fmt_uncertain(date_obj, result):
     if date_obj.is_uncertain:
         result += '?'
+    return result
+
+
+def fmt_approximate(date_obj, result):
+    if date_obj.is_approximate:
+        result = 'c. ' + result
     return result
 
 
