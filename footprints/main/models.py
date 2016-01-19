@@ -148,8 +148,7 @@ class ExtendedDate(models.Model):
                 date_obj.get_day(),
                 date_obj.get_year())
 
-        if date_obj.is_uncertain:
-            result += '?'
+        result = fmt_uncertain(date_obj, result)
 
         if date_obj.is_approximate:
             result = 'c. ' + result
@@ -179,6 +178,12 @@ class ExtendedDate(models.Model):
             return None
 
         return self._validate_python_date(edtf.end_date_earliest())
+
+
+def fmt_uncertain(date_obj, result):
+    if date_obj.is_uncertain:
+        result += '?'
+    return result
 
 
 class RoleQuerySet(models.query.QuerySet):
