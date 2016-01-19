@@ -46,7 +46,7 @@ The Literary Work
         <dd class="border-bottom">
             <div class="pull-left standard-identifier-logo">
                 <a href="http://lccn.loc.gov/<%=imprint.work.standardized_identifier[i].identifier.replace(/\s+/g, '')%>">
-                    <img src="<%=static_url%>/img/loc.png" />
+                    <img src="<%=static_url%>img/loc.png" />
                 </a>
             </div>
             <% if (editable) { %>
@@ -208,13 +208,13 @@ The Literary Work
             <% if (imprint.standardized_identifier[i].authority === 'WorldCat (OCLC)') { %>
                 <div class="pull-left standard-identifier-logo">
                     <a href="http://www.worldcat.org/oclc/<%=imprint.standardized_identifier[i].identifier%>">
-                        <img src="<%=static_url%>/img/oclc.png" />
+                        <img src="<%=static_url%>img/oclc.png" />
                     </a>
                 </div>
             <% } else if (imprint.standardized_identifier[i].authority === 'Bibliography of the Hebrew Book') { %>
                 <div class="pull-left standard-identifier-logo">
                     <a href="http://aleph.nli.org.il:80/F/?func=direct&doc_number=<%=imprint.standardized_identifier[i].identifier%>&local_base=MBI01">
-                    <img src="<%=static_url%>/img/bhb.png" />
+                    <img src="<%=static_url%>img/bhb.png" />
                     </a>
                 </div>
             <% } %>        
