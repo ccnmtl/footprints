@@ -23,7 +23,7 @@ ipython==4.0.1
 ipdb==0.8.1
 rdflib==4.2.1
 selenium==2.48.0
-coverage==3.7.1
+coverage==4.0.3
 pyasn1==0.1.9
 pyOpenSSL==0.15.1
 ndg-httpsclient==0.4.0
@@ -55,7 +55,7 @@ raven==5.8.1
 django-bootstrap-form==3.2
 django-debug-toolbar==1.4
 django-waffle==0.11
-django-jenkins==0.17.0
+django-jenkins==0.18.1
 django-smoketest==0.3.0
 django-extensions==1.6.1
 django-stagingcontext==0.1.0
