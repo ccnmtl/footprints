@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block title %}Import{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}jquery-ui-1.11.2/jquery-ui.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}css/wizard.css" rel="stylesheet">
+{% endblock %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}jquery-ui-1.11.2/jquery-ui.js"></script>
+    
+    <script type="text/javascript">
+        jQuery(document).ready(function() {
+
+            {% if form.errors or form.csvfile.errors %}
+                jQuery('#upload-file-modal').modal('show');
+            {% endif %}
+
+            jQuery(document).on('change', '.btn-file :file', function() {
+                var $input = jQuery(this);
+                var args = [
+                    $input.get(0).files ? $input.get(0).files.length : 1,
+                    $input.val().replace(/\\/g, '/').replace(/.*\//, '')
+                ];
+                $input.trigger('fileselect', args);
+            });
+
+            jQuery('.btn-file :file').on('fileselect',
+                function(event, numFiles, label) {
+                    jQuery('.csv-file-name').html(label);
+                });
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
+<div class="batch-job-list row">
+    <div class="col-md-8">
+
+        <div class="page-header">
+            <h1>Batch Import</h1>
+        </div>
+        <div>
+            {% if jobs.count > 0 %}
+            <button type="button" class="btn btn-default pull-right btn-create-job"
+                data-toggle="modal" data-target="#upload-file-modal">
+                Create Job
+            </button>
+            {% endif %}
+            
+            <div class="modal fade" id="upload-file-modal" tabindex="-1" role="dialog" aria-labelledby="Upload CSV">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content fp-section">
+                  <div class="modal-body">
+                    <form name="import-csv" class="footprint-form" action="."
+                        enctype="multipart/form-data" method="POST">
+                        {% csrf_token %}
+                        <div class="form-content">
+                            <h3>Create Job</h3>
+                            <label>Use the browse button to find the date file, then click submit</label>
+
+                            <div class="form-group {% if form.csvfile.errors %}has-error{% endif %}">
+                                <div>
+                                    <span class="btn btn-white btn-file">
+                                        Browse Files
+                                        <input type="file" name="csvfile" />
+                                    </span>&nbsp;
+                                    <span class="csv-file-name"></span>
+                                </div>
+
+                                <div class="error-block pull-left">
+                                {% for error in form.csvfile.errors %}
+                                    <div>{{error}}</div>
+                                {% endfor %}
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                      </form>
+                  </div>
+                </div>
+              </div>
+            </div>        
+
+            <div class="fp-section">
+                <h3>Jobs</h3>
+                {% if jobs.count > 0 %}
+                    <table class="table">
+                        <tr><th>Id</th><th>Import Date</th><th>Created By</th><th>Complete</th><th>Records</th><th>Success</th><th>Invalid</th><th>Duplicates</th><th>Skipped</th><th>Actions</th></tr>
+                        {% for job in jobs %}
+                            <tr>
+                                <td><a href="{% url 'batchjob-detail-view' job.id %}">{{job.id}}</a></td>
+                                <td>{{job.created_at}}</td>
+                                <td>{{job.created_by}}</td>
+                                <td>{{job.processed}}</td>
+                                <td>{{job.batchrow_set.count}}</td>
+                                <td>{{job.valid}}</td>
+                                <td>{{job.invalid}}</td>
+                                <td>{{job.duplicate}}</td>
+                                <td>{{job.skipped}}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <p>No jobs found. <a href="#" data-toggle="modal" data-target="#upload-file-modal">Create one now</a></p>
+                {% endif %}
+            </div>
+        </div>    
+    </div>
+    <div class="col-md-4">
+        <div class="fp-qa">
+            <h4><span class="qa">Q:</span> How do I create multiple footprints?</h4>
+            <p><span class="qa">A:</span> Duis vitae tortor sed ante venenatis scelerisque. Mauris condimentum egestas enim in imperdiet. Praesent eget pellentesque mauris, id rutrum mauris.</p>
+        </div>
+        <div class="fp-qa">
+            <h4><span class="qa">Q:</span> What is the file format?</h4>
+            <p><span class="qa">A:</span> Duis vitae tortor sed ante venenatis scelerisque. Mauris condimentum egestas enim in imperdiet. Praesent eget pellentesque mauris, id rutrum mauris.</p>
+        </div>
+        <div class="fp-qa">
+            <h4><span class="qa">Q:</span> How are duplicates handled?</h4>
+            <p><span class="qa">A:</span> Duis vitae tortor sed ante venenatis scelerisque. Mauris condimentum egestas enim in imperdiet. Praesent eget pellentesque mauris, id rutrum mauris.</p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

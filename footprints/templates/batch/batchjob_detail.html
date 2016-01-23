@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load batchrow %}
+{% load compress %}
+
+{% block title %}Import{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block js %}
+    {% compress js %}
+        <script src="{{STATIC_URL}}js/app/batchjob-detail.js"></script>
+        <script type="text/javascript">
+            jQuery(document).ready(function() {
+                var view = new BatchJobDetailView({
+                    el: jQuery('.batch-job-detail')
+                });
+            });
+        </script>
+    {% endcompress %}   
+{% endblock %}
+
+{% block content %}
+<div class="batch-job-detail row">
+    <div class="col-md-12">
+        <ol class="breadcrumb">
+          <li><a href="/batch/">Batch</a></li>
+          <li class="active">Job {{object.id}}</li>
+        </ol>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="page-header">
+                    <h1>Batch Job</h1>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <dl>
+                    <dt>Processed</dt>
+                    <dd>{{object.processed}}</dd>
+                </dl>
+            </div>
+            <div class="col-md-2">
+                <dl>
+                    <dt>Created By</dt>
+                    <dd>{{object.created_by}}</dd>
+                </dl>
+            </div>
+            <div class="col-md-2">
+                <dl>
+                    <dt>Created At</dt>
+                    <dd>{{object.created_at}}</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="batch-job-row-container">
+            <h3>{{object.batchrow_set.count}} Records</h3>
+            <table>
+                {% for field in fields %}
+                    <tr>
+                        <td class="field-name">
+                            {% field_verbose_name field %}
+                        </td>
+                        {% for row in object.batchrow_set.all %}
+                            <td class="{% field_validate row field %}
+                                {% if row.check_for_duplication %}duplicate{% endif %}"
+                                data-record-id="{{row.id}}"
+                                data-value="{% field_value row field %}">
+                                <div>{% field_value row field %}</div>
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -128,6 +128,9 @@ urlpatterns = patterns(
      TemplateView.as_view(template_name='main/contact_success.html')),
     (r'^contact/$', ContactUsView.as_view()),
 
+    # Batch Import
+    (r'^batch/', include('footprints.batch.urls')),
+
     (r'^admin/', include(admin.site.urls)),
     url(r'^_impersonate/', include('impersonate.urls')),
     (r'^stats/$', TemplateView.as_view(template_name="stats.html")),
