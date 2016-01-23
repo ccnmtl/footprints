@@ -1,7 +1,7 @@
 from unittest import TestCase
 from lxml import etree
 
-from footprints.main.viaf import VIAFRecord
+from viaf.record import VIAFRecord
 
 
 class VIAFRecordTest(TestCase):
