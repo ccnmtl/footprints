@@ -1,4 +1,4 @@
-from django.test.testcases import TestCase
+from unittest import TestCase
 from lxml import etree
 
 from footprints.main.viaf import VIAFRecord
