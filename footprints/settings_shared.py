@@ -50,8 +50,7 @@ INSTALLED_APPS += [  # noqa
     'footprints.main',
     'geoposition',
     'rest_framework',
-    'reversion',
-    'viaf'
+    'reversion'
 ]
 
 CONTACT_US_EMAIL = 'footprints@columbia.edu'
