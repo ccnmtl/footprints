@@ -24,6 +24,7 @@ HAYSTACK_SEARCH_RESULTS_PER_PAGE = 15
 
 PROJECT_APPS = [
     'footprints.main',
+    'viaf'
 ]
 
 USE_TZ = True
