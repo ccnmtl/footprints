@@ -39,6 +39,7 @@ fake-factory==0.5.3
 factory_boy==2.6.0
 python-ldap==2.4.22
 sqlparse==0.1.18
+contextlib2==0.5.1
 
 djangowind==0.14.3
 sorl==3.1
@@ -51,7 +52,7 @@ django-annoying==0.8.5
 django-appconf==1.0.1
 django-compressor==1.6
 django-statsd-mozilla==0.3.16
-raven==5.8.1
+raven==5.10.1
 django-bootstrap-form==3.2
 django-debug-toolbar==1.4
 django-waffle==0.11
