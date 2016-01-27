@@ -643,26 +643,20 @@ class Imprint(models.Model):
 
     def percent_complete(self):
         required = 9.0
-        completed = 0
 
-        if self.has_work():
-            completed += 1
-        if self.has_title():
-            completed += 1
-        if self.has_language():
-            completed += 1
-        if self.has_date_of_publication():
-            completed += 1
-        if self.has_place():
-            completed += 1
-        if self.has_at_least_one_actor():
-            completed += 1
-        if self.has_standardized_identifier():
-            completed += 1
-        if self.has_at_least_one_digital_object():
-            completed += 1
-        if self.has_notes():
-            completed += 1
+        checks = [
+            self.has_work(),
+            self.has_title(),
+            self.has_language(),
+            self.has_date_of_publication(),
+            self.has_place(),
+            self.has_at_least_one_actor(),
+            self.has_standardized_identifier(),
+            self.has_at_least_one_digital_object(),
+            self.has_notes(),
+        ]
+
+        completed = sum(1 for c in checks if c)
         return int(completed/required * 100)
 
     def publishers(self):

@@ -265,3 +265,13 @@ class ExtendedDateTest(TestCase):
 
         dt = mgr.to_edtf(2, 0, 1, 5, 12, 31, False, False)
         self.assertEquals(dt, '2015-12-31')
+
+
+class ImprintTest(TestCase):
+    def test_percent_complete(self):
+        i = ImprintFactory()
+        # default 'factory settings'
+        self.assertEquals(i.percent_complete(), 88)
+        # eliminate one of them
+        i.notes = None
+        self.assertEquals(i.percent_complete(), 77)
