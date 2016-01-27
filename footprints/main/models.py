@@ -815,20 +815,17 @@ class Footprint(models.Model):
             required = 11.0  # not including call_number & collection
             completed = 4  # book copy, title, medium & provenance are required
 
-            if self.has_at_least_one_language():
-                completed += 1
-            if self.has_call_number():
-                completed += 1
-            if self.has_place():
-                completed += 1
-            if self.has_associated_date():
-                completed += 1
-            if self.has_at_least_one_digital_object():
-                completed += 1
-            if self.has_at_least_one_actor():
-                completed += 1
-            if self.has_notes():
-                completed += 1
+            checks = [
+                self.has_at_least_one_language(),
+                self.has_call_number(),
+                self.has_place(),
+                self.has_associated_date(),
+                self.has_at_least_one_digital_object(),
+                self.has_at_least_one_actor(),
+                self.has_notes(),
+            ]
+
+            completed += sum(1 for c in checks if c)
             return int(completed/required * 100)
         except ValueError:
             # factoryboy construction may throw ValueErrors
