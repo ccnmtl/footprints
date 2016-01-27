@@ -789,24 +789,45 @@ class Footprint(models.Model):
     def __unicode__(self):
         return self.provenance
 
+    def has_at_least_one_language(self):
+        return self.language.count() > 0
+
+    def has_call_number(self):
+        return self.call_number is not None
+
+    def has_place(self):
+        return self.place is not None
+
+    def has_associated_date(self):
+        return self.associated_date is not None
+
+    def has_at_least_one_digital_object(self):
+        return self.digital_object.count() > 0
+
+    def has_at_least_one_actor(self):
+        return self.actor.count() > 0
+
+    def has_notes(self):
+        return self.notes is not None and len(self.notes) > 0
+
     def calculate_percent_complete(self):
         try:
             required = 11.0  # not including call_number & collection
             completed = 4  # book copy, title, medium & provenance are required
 
-            if self.language.count() > 0:
+            if self.has_at_least_one_language():
                 completed += 1
-            if self.call_number is not None:
+            if self.has_call_number():
                 completed += 1
-            if self.place is not None:
+            if self.has_place():
                 completed += 1
-            if self.associated_date is not None:
+            if self.has_associated_date():
                 completed += 1
-            if self.digital_object.count() > 0:
+            if self.has_at_least_one_digital_object():
                 completed += 1
-            if self.actor.count() > 0:
+            if self.has_at_least_one_actor():
                 completed += 1
-            if self.notes is not None and len(self.notes) > 0:
+            if self.has_notes():
                 completed += 1
             return int(completed/required * 100)
         except ValueError:
