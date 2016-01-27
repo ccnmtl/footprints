@@ -614,27 +614,54 @@ class Imprint(models.Model):
                   obj.sort_date()))
         return lst
 
+    def has_work(self):
+        return self.work is not None
+
+    def has_title(self):
+        return self.title is not None
+
+    def has_language(self):
+        return self.language is not None
+
+    def has_date_of_publication(self):
+        return self.date_of_publication is not None
+
+    def has_place(self):
+        return self.place is not None
+
+    def has_at_least_one_actor(self):
+        return self.actor.count() > 0
+
+    def has_standardized_identifier(self):
+        return self.standardized_identifier is not None
+
+    def has_at_least_one_digital_object(self):
+        return self.digital_object.count() > 0
+
+    def has_notes(self):
+        return self.notes is not None
+
     def percent_complete(self):
         required = 9.0
         completed = 0
 
-        if self.work is not None:
+        if self.has_work():
             completed += 1
-        if self.title is not None:
+        if self.has_title():
             completed += 1
-        if self.language is not None:
+        if self.has_language():
             completed += 1
-        if self.date_of_publication is not None:
+        if self.has_date_of_publication():
             completed += 1
-        if self.place is not None:
+        if self.has_place():
             completed += 1
-        if self.actor.count() > 0:
+        if self.has_at_least_one_actor():
             completed += 1
-        if self.standardized_identifier is not None:
+        if self.has_standardized_identifier():
             completed += 1
-        if self.digital_object.count() > 0:
+        if self.has_at_least_one_digital_object():
             completed += 1
-        if self.notes is not None:
+        if self.has_notes():
             completed += 1
         return int(completed/required * 100)
 
