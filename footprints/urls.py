@@ -135,6 +135,10 @@ urlpatterns = patterns(
     (r'infranil/', include('infranil.urls')),
     (r'^uploads/(?P<path>.*)$',
      'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
+
+    # Visualizations for grant application
+    (r'^pathmapper/',
+     TemplateView.as_view(template_name='design/pathmapper.html')),
 )
 
 if settings.DEBUG:
