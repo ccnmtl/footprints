@@ -614,28 +614,49 @@ class Imprint(models.Model):
                   obj.sort_date()))
         return lst
 
+    def has_work(self):
+        return self.work is not None
+
+    def has_title(self):
+        return self.title is not None
+
+    def has_language(self):
+        return self.language is not None
+
+    def has_date_of_publication(self):
+        return self.date_of_publication is not None
+
+    def has_place(self):
+        return self.place is not None
+
+    def has_at_least_one_actor(self):
+        return self.actor.count() > 0
+
+    def has_standardized_identifier(self):
+        return self.standardized_identifier is not None
+
+    def has_at_least_one_digital_object(self):
+        return self.digital_object.count() > 0
+
+    def has_notes(self):
+        return self.notes is not None
+
     def percent_complete(self):
         required = 9.0
-        completed = 0
 
-        if self.work is not None:
-            completed += 1
-        if self.title is not None:
-            completed += 1
-        if self.language is not None:
-            completed += 1
-        if self.date_of_publication is not None:
-            completed += 1
-        if self.place is not None:
-            completed += 1
-        if self.actor.count() > 0:
-            completed += 1
-        if self.standardized_identifier is not None:
-            completed += 1
-        if self.digital_object.count() > 0:
-            completed += 1
-        if self.notes is not None:
-            completed += 1
+        checks = [
+            self.has_work(),
+            self.has_title(),
+            self.has_language(),
+            self.has_date_of_publication(),
+            self.has_place(),
+            self.has_at_least_one_actor(),
+            self.has_standardized_identifier(),
+            self.has_at_least_one_digital_object(),
+            self.has_notes(),
+        ]
+
+        completed = sum(1 for c in checks if c)
         return int(completed/required * 100)
 
     def publishers(self):
@@ -768,25 +789,43 @@ class Footprint(models.Model):
     def __unicode__(self):
         return self.provenance
 
+    def has_at_least_one_language(self):
+        return self.language.count() > 0
+
+    def has_call_number(self):
+        return self.call_number is not None
+
+    def has_place(self):
+        return self.place is not None
+
+    def has_associated_date(self):
+        return self.associated_date is not None
+
+    def has_at_least_one_digital_object(self):
+        return self.digital_object.count() > 0
+
+    def has_at_least_one_actor(self):
+        return self.actor.count() > 0
+
+    def has_notes(self):
+        return self.notes is not None and len(self.notes) > 0
+
     def calculate_percent_complete(self):
         try:
             required = 11.0  # not including call_number & collection
             completed = 4  # book copy, title, medium & provenance are required
 
-            if self.language.count() > 0:
-                completed += 1
-            if self.call_number is not None:
-                completed += 1
-            if self.place is not None:
-                completed += 1
-            if self.associated_date is not None:
-                completed += 1
-            if self.digital_object.count() > 0:
-                completed += 1
-            if self.actor.count() > 0:
-                completed += 1
-            if self.notes is not None and len(self.notes) > 0:
-                completed += 1
+            checks = [
+                self.has_at_least_one_language(),
+                self.has_call_number(),
+                self.has_place(),
+                self.has_associated_date(),
+                self.has_at_least_one_digital_object(),
+                self.has_at_least_one_actor(),
+                self.has_notes(),
+            ]
+
+            completed += sum(1 for c in checks if c)
             return int(completed/required * 100)
         except ValueError:
             # factoryboy construction may throw ValueErrors
