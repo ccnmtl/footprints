@@ -24,7 +24,8 @@ HAYSTACK_SEARCH_RESULTS_PER_PAGE = 15
 
 PROJECT_APPS = [
     'footprints.main',
-    'viaf'
+    'footprints.batch',
+    'viaf',
 ]
 
 USE_TZ = True
@@ -50,7 +51,8 @@ INSTALLED_APPS += [  # noqa
     'footprints.main',
     'geoposition',
     'rest_framework',
-    'reversion'
+    'reversion',
+    'footprints.batch'
 ]
 
 CONTACT_US_EMAIL = 'footprints@columbia.edu'

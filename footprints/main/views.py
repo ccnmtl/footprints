@@ -27,7 +27,7 @@ from footprints.main.forms import DigitalObjectForm, ContactUsForm, \
 from footprints.main.models import (
     Footprint, Actor, Person, Role, WrittenWork, Language,
     Place, Imprint, BookCopy, StandardizedIdentification,
-    StandardizedIdentificationType, ExtendedDate)
+    StandardizedIdentificationType, ExtendedDate, MEDIUM_CHOICES)
 from footprints.main.serializers import NameSerializer
 from footprints.mixins import (
     JSONResponseMixin, LoggedInMixin, EditableMixin)
@@ -90,7 +90,7 @@ class FootprintDetailView(EditableMixin, DetailView):
         context['roles'] = Role.objects.all().order_by('name')
         context['identifier_types'] = \
             StandardizedIdentificationType.objects.all().order_by('name')
-        context['mediums'] = Footprint.MEDIUM_CHOICES
+        context['mediums'] = MEDIUM_CHOICES
         return context
 
 
@@ -172,7 +172,7 @@ class CreateFootprintView(LoggedInMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = TemplateView.get_context_data(self, **kwargs)
-        context['mediums'] = Footprint.MEDIUM_CHOICES
+        context['mediums'] = MEDIUM_CHOICES
         return context
 
     def post(self, *args, **kwargs):

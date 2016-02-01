@@ -21,6 +21,20 @@ LEVEL_TYPES = (
     (PERSON_LEVEL, 'Person')
 )
 
+MEDIUM_CHOICES = [
+    "Approbation in imprint",
+    "Booklist/estate inventory",
+    "Bookseller/auction catalog  (pre-1850)",
+    "Bookseller/auction catalog (1850-present)",
+    "Bookseller marking in extant copy",
+    "Censor signature in extant copy",
+    "Dedication in imprint",
+    "Library catalog/union catalog",
+    "Owner signature/bookplate in extant copy",
+    "Reference in another text",
+    "Subscription list in imprint"
+]
+
 
 class ExtendedDateManager(models.Manager):
 
@@ -725,19 +739,6 @@ class BookCopy(models.Model):
 
 
 class Footprint(models.Model):
-    MEDIUM_CHOICES = [
-        "Approbation in imprint",
-        "Booklist/estate inventory",
-        "Bookseller/auction catalog  (pre-1850)",
-        "Bookseller/auction catalog (1850-present)",
-        "Bookseller marking in extant copy",
-        "Censor signature in extant copy",
-        "Dedication in imprint",
-        "Library catalog/union catalog",
-        "Owner signature/bookplate in extant copy",
-        "Reference in another text",
-        "Subscription list in imprint"
-    ]
 
     book_copy = models.ForeignKey(BookCopy)
     medium = models.CharField(
