@@ -353,11 +353,6 @@ ul.footer-logos li {
     background-size: 100%;
 }
 
-.home-intro {
-    display: block;
-    background-image: url("../img/fp_home_intro_bg.png");
-    padding: 1em 2em;
-}
 .home-intro-one {
     font-family: Arvo;
     font-weight: 400;
@@ -2205,3 +2200,130 @@ p.decoy {
     border-bottom-width: 1px;
     border-right-width: 1px;
 }
+
+/* PathMapper visualizations page */
+
+.pathmapper .header {
+    background-image: url("../img/fp_header_bg.jpg");
+    background-repeat: repeat;
+    height: 45px;
+    padding: 0;
+    margin: 0;
+}
+
+.pathmapper .header .logo {
+    margin-top: 5px;
+    margin-left: 0;
+    height: 35px;
+    width: 135px;
+    background-image: url("../img/fp_header_logo.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    float: left;
+}
+
+.pathmapper .header .logo a {
+    display: block;
+    height: 35px;
+    width: 135px;
+    float: left;
+}
+.pathmapper .header .brand {
+    margin-top: 5px;
+    margin-left: 145px;
+    height: 35px;
+    width: 135px;
+    color: #d3c1a2;
+    text-decoration: none;
+    font: 200 20px/35px 'Raleway', sans-serif;
+}
+
+.pathmapper .banner {
+    height: 150px;
+    background-image: url("../img/background-viz.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    padding: 0;
+    width: auto;
+    position: relative;
+}
+
+.pathmapper .intro {
+    display: block;
+    width: auto;
+    height: 130px;
+    background-image: url("../img/fp_home_intro_bg.png");
+    padding: 10px;
+    margin: 10px;
+    font: 400 14px/120% 'Arvo', sans-serif;
+    color: #202836;
+    text-align: center;
+}
+
+.pathmapper .download {
+    display: block;
+    border: 1px solid #837c56;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    padding: 8px;
+    margin: 10px auto;
+    width: 200px;
+    font: 700 13px/100% 'Asap', sans-serif;
+    text-transform: uppercase;
+    color: #837c56;
+}
+
+.pathmapper .slidebox {   
+    width: auto;
+    font: 400 15px/1.5em 'Asap', sans-serif;
+    color: #202836;
+    padding: 20px 5px;
+}
+
+.pathmapper .slidebox.odd {
+    background-color: #d3c1a2;
+}
+
+.pathmapper .slidebox.even {
+    background-color: #e5d9ca;
+}
+
+.pathmapper .slidebox h3 {   
+    font: 400 20px/1.5em 'Arvo', sans-serif;
+    color: #202836;
+    margin: 0 0 10px 0;
+    padding: 0;
+    text-align: center;
+}
+
+.pathmapper .slidebox .visual {
+    width: 100%;
+    height: auto;
+    margin: 0 0 20px 0;
+    padding: 0;
+    float: none;
+}
+
+.pathmapper .slidebox .visual img {
+    width: 100%;
+    height: auto;
+}
+
+.pathmapper .slidebox .text {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    float: none;
+}
+
+.pathmapper .footer {   
+    width: auto;
+    font: 400 15px/1.5em 'Arvo', sans-serif;
+    color: #ccc;
+    padding: 20px 5px;
+    text-align: center;
+    margin: 0 auto;
+}
+

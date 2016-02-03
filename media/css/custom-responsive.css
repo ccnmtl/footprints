@@ -1,0 +1,152 @@
+@media (min-width: 768px) {
+    .pathmapper .banner {
+        height: 200px;
+        width: 750px;
+    }
+    .pathmapper .intro {
+        display: block;
+        width: 600px;
+        height: 140px;
+        padding: 20px;
+        position: absolute;
+        margin: -70px 0 0 -300px;
+        top: 50%;
+        left: 50%;
+        font: 400 20px/1.2em 'Arvo', sans-serif;
+    }
+    .pathmapper .slidebox {   
+        width: 750px;
+        font: 400 15px/1.5em 'Arvo', sans-serif;
+        padding: 40px 20px;
+    }
+    .pathmapper .footer {   
+        width: 750px;
+    }
+}
+
+@media (min-width: 992px) {
+    .pathmapper .banner {
+        height: 200px;
+        width: 970px;
+    }
+    .pathmapper .intro {
+        display: block;
+        width: 800px;
+        height: 140px;
+        padding: 20px;
+        position: absolute;
+        margin: -70px 0 0 -400px;
+        top: 50%;
+        left: 50%;
+        font: 400 20px/1.2em 'Arvo', sans-serif;
+    }
+    .pathmapper .slidebox h3 {   
+        font: 400 20px/1.5em 'Arvo', sans-serif;
+        text-align: left;
+    }
+    .pathmapper .slidebox {   
+        width: 970px;
+        font: 400 15px/1.5em 'Arvo', sans-serif;
+        padding: 40px 20px;
+    }
+    .pathmapper .slidebox .visual {
+        width: 600px;
+        height: 357px;
+        margin: 0 20px 0 0;
+        padding: 0;
+        float: left;
+    }
+    .pathmapper .slidebox .text {
+        width: 310px;
+        float: left;
+    }
+    .pathmapper .footer {   
+        width: 970px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .pathmapper .banner {
+        height: 200px;
+        width: 1170px;
+    }
+    .pathmapper .intro {
+        display: block;
+        width: 900px;
+        height: 140px;
+        padding: 20px;
+        position: absolute;
+        margin: -70px 0 0 -450px;
+        top: 50%;
+        left: 50%;
+        font: 400 20px/1.2em 'Arvo', sans-serif;
+    }
+    .pathmapper .slidebox h3 {   
+        font: 400 20px/1.5em 'Arvo', sans-serif;
+        text-align: left;
+    }
+    .pathmapper .slidebox {   
+        width: 1170px;
+        font: 400 15px/1.5em 'Arvo', sans-serif;
+        padding: 60px;
+    }
+    .pathmapper .slidebox .visual {
+        width: 660px;
+        height: 393px;
+        margin: 0 20px 0 0;
+        padding: 0;
+        float: left;
+    }
+    .pathmapper .slidebox .text {
+        width: 370px;
+        float: left;
+    }
+    .pathmapper .footer {   
+        width: 1170px;
+    }
+}
+
+@media (min-width: 1405px) {
+    .pathmapper .header .container {
+        padding: 0;
+        width: 1400px;
+    }
+    .pathmapper .banner {
+        height: 200px;
+        width: 1400px;
+    }
+    .pathmapper .intro {
+        display: block;
+        width: 1000px;
+        height: 140px;
+        padding: 20px;
+        position: absolute;
+        margin: -70px 0 0 -500px;
+        top: 50%;
+        left: 50%;
+        font: 400 20px/1.2em 'Arvo', sans-serif;
+    }
+    .pathmapper .slidebox h3 {   
+        font: 400 20px/1.5em 'Arvo', sans-serif;
+        text-align: left;
+    }
+    .pathmapper .slidebox {   
+        width: 1400px;
+        font: 400 15px/1.5em 'Arvo', sans-serif;
+        padding: 60px;
+    }
+    .pathmapper .slidebox .visual {
+        width: 760px;
+        height: 453px;
+        margin: 0 20px 0 0;
+        padding: 0;
+        float: left;
+    }
+    .pathmapper .slidebox .text {
+        width: 500px;
+        float: left;
+    }
+    .pathmapper .footer {   
+        width: 1400px;
+    }
+}
