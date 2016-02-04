@@ -8,8 +8,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Footprints">
-    <meta name="author" content="CCNMTL">
+    <meta name="author" content="CTL">
     <meta name="robots" content="noindex">
+    <meta name="googlebot" content="noindex">
   
     <!-- Bootstrap CSS: -->
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
@@ -69,8 +70,40 @@
     </div>
 </div>
 
-<div class="container footer clearfix">
-Some text here to invite users to download the PDF
+<div class="container foot">
+<footer class="footer">
+
+            <ul class="footer-navigation">
+                <li><a href="/credits/">Credits</a></li>
+                <li><a href="/contact/">Contact</a></li>
+                <li><a href="/faq/">FAQ</a></li>
+                <li><a href="/glossary/">Glossary</a></li>
+                {% if user.has_usable_password %}
+                    <li><a href="/accounts/password_change/">Password</a></li>
+                {% endif %}
+                <li class="fp_socialmedia"><a href="https://www.facebook.com/footprintsHeb/" target="_blank" title="Footprints on Facebook"><img src="{{STATIC_URL}}img/footer_fb_logo.png" target="_blank" alt="Footprints on Facebook"></a></li>
+                <li class="fp_socialmedia"><a href="https://twitter.com/Footprints_Heb" target="_blank" title="Footprints on Twitter"><img src="{{STATIC_URL}}img/footer_twitter_logo.png" target="_blank" alt="Footprints on Twitter"></a></li>
+            </ul>                    
+
+    <div class="footer-branding">
+    <p class="description1">Footprints grew out of the Scholars Working Group on the Jewish Book at the Center for Jewish History and was developed as a collaboration of educators and researchers from the following institutions:</p>
+    <div class="logos-group1 clearfix">
+    <ul class="footer-logos footer-line1">
+    <li><a href="http://www.jtsa.edu/"><img src="{{STATIC_URL}}img/fp_jts_logo.png" target="_blank" alt="Jewish Theological Seminary"></a></li> 
+    <li><a href="http://library.columbia.edu"><img src="{{STATIC_URL}}img/fp_cul_logo.png" target="_blank" alt="Columbia University Libraries"></a> </li>
+    </ul>
+    <ul class="footer-logos footer-line2">
+    <li><a href="http://www.pitt.edu/"><img src="{{STATIC_URL}}img/fp_pitt2_logo.png" target="_blank" alt="University of Pittsburgh"></a> </li>
+    <li><a href="http://www.stonybrook.edu/"><img src="{{STATIC_URL}}img/fp_stonybrook_logo.png" target="_blank" alt="Stony Brook University"></a></li>
+    </ul>
+    </div>
+    <p class="description2">This project was made possible by generous support from:</p>
+    <ul class="footer-logos footer-line3">
+    <li><a href="http://www.cjh.org"><img src="{{STATIC_URL}}img/fp_cjh_logo.png" target="_blank" alt="Center for Jewish History"></a></li>
+    <li><a href="http://ctl.columbia.edu"><img src="{{STATIC_URL}}img/fp_ctl_logo.png" target="_blank" alt="Columbia University's Center for Teaching and Learning"></a></li>
+    </ul>
+    </div>
+</footer>
 </div>
 
 
