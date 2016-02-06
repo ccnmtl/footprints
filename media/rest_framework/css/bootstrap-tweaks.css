@@ -1,6 +1,6 @@
 /*
 
-This CSS file contains some tweaks specific to the included Bootstrap theme. 
+This CSS file contains some tweaks specific to the included Bootstrap theme.
 It's separate from `style.css` so that it can be easily overridden by replacing
 a single block in the template.
 
@@ -58,6 +58,31 @@ a single block in the template.
 .navbar .dropdown-menu li a:hover {
   background: #EEEEEE;
   color: #C20000;
+}
+
+ul.breadcrumb {
+  margin: 70px 0 0 0;
+}
+
+.breadcrumb li.active a {
+  color: #777;
+}
+
+.pagination>.disabled>a,
+.pagination>.disabled>a:hover,
+.pagination>.disabled>a:focus {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.pager>.disabled>a,
+.pager>.disabled>a:hover,
+.pager>.disabled>a:focus {
+  pointer-events: none;
+}
+
+.pager .next {
+  margin-left: 10px;
 }
 
 /*=== dabapps bootstrap styles ====*/
@@ -185,10 +210,20 @@ body a:hover {
   color: #c20000;
 }
 
-#content a span {
-  text-decoration: underline;
- }
-
 .request-info {
   clear:both;
+}
+
+.horizontal-checkbox label {
+  padding-top: 0;
+}
+
+.horizontal-checkbox label {
+  padding-top: 0 !important;
+}
+
+.horizontal-checkbox input {
+  float: left;
+  width: 20px;
+  margin-top: 3px;
 }
