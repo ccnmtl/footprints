@@ -249,6 +249,7 @@ ul.front > li > a:hover {
 
 .footer .footer-navigation {
   margin: 30px 0;
+  padding: 0;
   color: #999;
   text-align: center;
   list-style: none;
@@ -256,7 +257,7 @@ ul.front > li > a:hover {
 
 .footer .footer-navigation li {
     display: inline-block;
-    padding: 0 20px;
+    padding: 0 10px;
 }
 
 .footer .footer-navigation li a {
@@ -293,6 +294,16 @@ p.description1 {
     margin: auto;
 }
 
+.footer .logos-ir {
+    display: block;
+    width: auto;
+    margin-top: 15px;
+}
+
+.footer .logos-ir img {
+    height: 25px;
+}
+
 .footer .logos-group1 {
     width: 501px;
     margin: auto;
@@ -317,25 +328,23 @@ ul.footer-logos li {
 	}
 
 .footer-logos img {
-  height: 30px;
+  height: 25px;
 }
 
 .footer-line3 img {
-  height: 35px;
+    height: 25px;
 }
 
 .footer-line1 {
-    width: 501px;
     display: block;
 }
 
 .footer-line2 {
-    width: 420px;
     display: block;
 }
 
 .footer-line3 {
-    width: 286px;
+    width: 216px;
     display: block;
 }
 
@@ -353,11 +362,6 @@ ul.footer-logos li {
     background-size: 100%;
 }
 
-.home-intro {
-    display: block;
-    background-image: url("../img/fp_home_intro_bg.png");
-    padding: 1em 2em;
-}
 .home-intro-one {
     font-family: Arvo;
     font-weight: 400;
@@ -490,6 +494,40 @@ ul.footer-logos li {
     font-size: 1.5em;
     line-height: 1em;
     font-weight: 700;
+}
+
+@media (min-width: 550px) {
+    .footer .logos-ir {
+        display: inline;
+        width: auto;
+        margin: 0 10px;
+    }
+    .footer .logos-ir img {
+        height: 30px;
+    }
+    .footer-line3 img {
+        height: 35px;
+    }
+    .footer-line1 {
+        margin: 10px auto 10px auto;
+        padding: 0;
+        width: 505px;
+        display: block;
+    }
+    
+    .footer-line2 {
+        margin: 10px auto 10px auto;
+        padding: 0;
+        width: 424px;
+        display: block;
+    }
+    
+    .footer-line3 {
+        margin: 10px auto 10px auto;
+        padding: 0;
+        width: 286px;
+        display: block;
+    }
 }
 
 /* Block outercontainer Tablet */
@@ -633,7 +671,11 @@ ul.footer-logos li {
   text-align: center;
 }
 
+    .footer .footer-navigation li {
+        padding: 0 20px;
+    }
 }
+
 
 /* Block outercontainer Narrow Desktop */
 @media (min-width: 992px) {
@@ -2141,6 +2183,7 @@ p.decoy {
     width: 10px;
     padding: 4px;
     border: 1px solid white;
+    background-color: lightgray;
 }
 
 .batch-job-detail .batch-job-row-container table td:hover {
@@ -2148,42 +2191,20 @@ p.decoy {
     cursor: pointer;
 }
 
-.batch-job-detail .batch-job-row-container table td.valid {
-    background-color: lightgray;
-}
-
-.batch-job-detail .batch-job-row-container table td.valid.selected {
-    border-color: lightgray;
-}
-
-.batch-job-detail .batch-job-row-container table td.invalid {
-    background-color: #d99230;
-}
-
-.batch-job-detail .batch-job-row-container table td.invalid.selected {
-    border-color: #d99230;
-}
-
 .batch-job-detail .batch-job-row-container table td.empty {
     background-color: #eeeeee;
 }
 
-.batch-job-detail .batch-job-row-container table td.empty.selected {
-    border-color: #eeeeee;
-}
-
+.batch-job-detail .batch-job-row-container table td.invalid,
 .batch-job-detail .batch-job-row-container table td.missing {
     background-color: #B6212D;
-}
-
-.batch-job-detail .batch-job-row-container table td.missing.selected {
-    border-color: #B6212D;
 }
 
 .batch-job-detail .batch-job-row-container table td.field-name {
     width: 225px;
     min-width: 225px;
     max-width: 225px;
+    background-color: #fafafa;
 }
 
 .batch-job-detail .batch-job-row-container table td.field-name:hover {
@@ -2201,7 +2222,146 @@ p.decoy {
 .batch-job-detail .batch-job-row-container table td.selected {
     background-color: white;
     border-left-width: 8px;
+    border-top-width: 0px;
+    border-bottom-width: 0px;
+    border-right-width: 8px;
+    width: 400px;
+    min-width: 400px;
+    border-color: #2e5367;
+}
+
+.batch-job-detail .batch-job-row-container table td.selected:hover {
+    border: default;
+    cursor: default;
+}
+
+.batch-job-detail .batch-job-row-container td .error-block {
+    display: none;
+    color: #a94442;
+    float: right;
+    margin-bottom: 0;
+}
+
+.batch-job-detail .batch-job-row-container td.has-error .error-block {
+    display: block;
     border-top-width: 1px;
     border-bottom-width: 1px;
     border-right-width: 1px;
+}
+
+/* PathMapper visualizations page */
+
+.pathmapper .header {
+    background-image: url("../img/fp_header_bg.jpg");
+    background-repeat: repeat;
+    height: 45px;
+    padding: 0;
+    margin: 0;
+}
+
+.pathmapper .header .logo {
+    margin-top: 5px;
+    margin-left: 0;
+    height: 35px;
+    width: 135px;
+    background-image: url("../img/fp_header_logo.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    float: left;
+}
+
+.pathmapper .header .logo a {
+    display: block;
+    height: 35px;
+    width: 135px;
+    float: left;
+}
+.pathmapper .header .brand {
+    margin-top: 5px;
+    margin-left: 145px;
+    height: 35px;
+    width: 135px;
+    color: #d3c1a2;
+    text-decoration: none;
+    font: 200 20px/35px 'Raleway', sans-serif;
+}
+
+.pathmapper .banner {
+    height: 150px;
+    background-image: url("../img/background-viz.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    padding: 0;
+    width: auto;
+    position: relative;
+}
+
+.pathmapper .intro {
+    display: block;
+    width: auto;
+    height: 130px;
+    background-image: url("../img/fp_home_intro_bg.png");
+    padding: 10px;
+    margin: 10px;
+    font: 400 14px/120% 'Arvo', sans-serif;
+    color: #202836;
+    text-align: center;
+}
+
+.pathmapper .download {
+    display: block;
+    border: 1px solid #837c56;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    padding: 8px;
+    margin: 10px auto;
+    width: 200px;
+    font: 700 13px/100% 'Asap', sans-serif;
+    text-transform: uppercase;
+    color: #837c56;
+}
+
+.pathmapper .slidebox {   
+    width: auto;
+    font: 400 15px/1.5em 'Asap', sans-serif;
+    color: #202836;
+    padding: 20px 5px;
+}
+
+.pathmapper .slidebox.odd {
+    background-color: #d3c1a2;
+}
+
+.pathmapper .slidebox.even {
+    background-color: #e5d9ca;
+}
+
+.pathmapper .slidebox h3 {   
+    font: 400 20px/1.5em 'Arvo', sans-serif;
+    color: #202836;
+    margin: 0 0 10px 0;
+    padding: 0;
+    text-align: center;
+}
+
+.pathmapper .slidebox .visual {
+    width: 100%;
+    height: auto;
+    margin: 0 0 20px 0;
+    padding: 0;
+    float: none;
+}
+
+.pathmapper .slidebox .visual img {
+    width: 100%;
+    height: auto;
+}
+
+.pathmapper .slidebox .text {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    float: none;
 }
