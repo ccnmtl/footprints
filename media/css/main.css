@@ -249,6 +249,7 @@ ul.front > li > a:hover {
 
 .footer .footer-navigation {
   margin: 30px 0;
+  padding: 0;
   color: #999;
   text-align: center;
   list-style: none;
@@ -256,7 +257,7 @@ ul.front > li > a:hover {
 
 .footer .footer-navigation li {
     display: inline-block;
-    padding: 0 20px;
+    padding: 0 10px;
 }
 
 .footer .footer-navigation li a {
@@ -293,6 +294,16 @@ p.description1 {
     margin: auto;
 }
 
+.footer .logos-ir {
+    display: block;
+    width: auto;
+    margin-top: 15px;
+}
+
+.footer .logos-ir img {
+    height: 25px;
+}
+
 .footer .logos-group1 {
     width: 501px;
     margin: auto;
@@ -317,25 +328,23 @@ ul.footer-logos li {
 	}
 
 .footer-logos img {
-  height: 30px;
+  height: 25px;
 }
 
 .footer-line3 img {
-  height: 35px;
+    height: 25px;
 }
 
 .footer-line1 {
-    width: 501px;
     display: block;
 }
 
 .footer-line2 {
-    width: 420px;
     display: block;
 }
 
 .footer-line3 {
-    width: 286px;
+    width: 216px;
     display: block;
 }
 
@@ -487,6 +496,40 @@ ul.footer-logos li {
     font-weight: 700;
 }
 
+@media (min-width: 550px) {
+    .footer .logos-ir {
+        display: inline;
+        width: auto;
+        margin: 0 10px;
+    }
+    .footer .logos-ir img {
+        height: 30px;
+    }
+    .footer-line3 img {
+        height: 35px;
+    }
+    .footer-line1 {
+        margin: 10px auto 10px auto;
+        padding: 0;
+        width: 505px;
+        display: block;
+    }
+    
+    .footer-line2 {
+        margin: 10px auto 10px auto;
+        padding: 0;
+        width: 424px;
+        display: block;
+    }
+    
+    .footer-line3 {
+        margin: 10px auto 10px auto;
+        padding: 0;
+        width: 286px;
+        display: block;
+    }
+}
+
 /* Block outercontainer Tablet */
 @media (min-width: 768px) {
 
@@ -628,7 +671,11 @@ ul.footer-logos li {
   text-align: center;
 }
 
+    .footer .footer-navigation li {
+        padding: 0 20px;
+    }
 }
+
 
 /* Block outercontainer Narrow Desktop */
 @media (min-width: 992px) {
@@ -2317,15 +2364,3 @@ p.decoy {
     padding: 0;
     float: none;
 }
-
-/*
-.pathmapper .footer {   
-    width: auto;
-    font: 400 15px/1.5em 'Arvo', sans-serif;
-    color: #ccc;
-    padding: 20px 5px;
-    text-align: center;
-    margin: 0 auto;
-}
-*/
-
