@@ -66,8 +66,7 @@
                             {% field_verbose_name field %}
                         </td>
                         {% for row in object.batchrow_set.all %}
-                            <td class="{% field_validate row field %}
-                                {% if row.check_for_duplication %}duplicate{% endif %}"
+                            <td class="{% field_validate row field %}"
                                 data-record-id="{{row.id}}"
                                 data-value="{% field_value row field %}">
                                 <div>{% field_value row field %}</div>

@@ -1,8 +1,8 @@
 import csv
 
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import FormView
+from django.views.generic.edit import FormView, DeleteView
 
 from footprints.batch.forms import CreateBatchJobForm
 from footprints.batch.models import BatchJob, BatchRow
@@ -41,3 +41,8 @@ class BatchJobDetailView(LoggedInStaffMixin, DetailView):
         context = super(BatchJobDetailView, self).get_context_data(**kwargs)
         context['fields'] = BatchRow.FIELD_MAPPING
         return context
+
+
+class BatchJobDeleteView(LoggedInStaffMixin, DeleteView):
+    model = BatchJob
+    success_url = reverse_lazy('batchjob-list-view')
