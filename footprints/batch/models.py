@@ -82,7 +82,8 @@ class BatchRow(models.Model):
     def aggregate_notes(self):
         notes = ''
         if self.catalog_url and len(self.catalog_url) > 0:
-            notes = '{}<br />{}'.format(self.catalog_url, self.footprint_notes)
+            notes = u'{}<br />{}'.format(
+                self.catalog_url, self.footprint_notes)
         else:
             notes = self.footprint_notes
 
