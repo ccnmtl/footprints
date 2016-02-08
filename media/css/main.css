@@ -2203,6 +2203,12 @@ p.decoy {
 
 /* PathMapper visualizations page */
 
+.pathmapper .cover,
+.pathmapper .print-inline,
+.pathmapper .print-block {
+    display: none;
+}
+
 .pathmapper .header {
     background-image: url("../img/fp_header_bg.jpg");
     background-repeat: repeat;
