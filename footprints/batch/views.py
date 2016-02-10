@@ -31,7 +31,7 @@ class BatchJobListView(LoggedInStaffMixin, FormView):
         for row in table:
             batch_row = BatchRow(job=self.job)
             for idx, col in enumerate(row):
-                setattr(batch_row, BatchRow.FIELD_MAPPING[idx], col)
+                setattr(batch_row, BatchRow.FIELD_MAPPING[idx], col.strip())
             batch_row.save()
 
         return super(BatchJobListView, self).form_valid(form)

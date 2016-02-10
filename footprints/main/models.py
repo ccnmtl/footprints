@@ -22,17 +22,17 @@ LEVEL_TYPES = (
 )
 
 MEDIUM_CHOICES = [
-    "Approbation in imprint",
-    "Booklist/estate inventory",
-    "Bookseller/auction catalog  (pre-1850)",
-    "Bookseller/auction catalog (1850-present)",
-    "Bookseller marking in extant copy",
-    "Censor signature in extant copy",
-    "Dedication in imprint",
-    "Library catalog/union catalog",
-    "Owner signature/bookplate in extant copy",
-    "Reference in another text",
-    "Subscription list in imprint"
+    'Approbation in imprint',
+    'Booklist/estate inventory',
+    'Bookseller/auction catalog  (pre-1850)',
+    'Bookseller/auction catalog (1850-present)',
+    'Bookseller marking in extant copy',
+    'Censor signature in extant copy',
+    'Dedication in imprint',
+    'Library catalog/union catalog',
+    'Owner signature/bookplate in extant copy',
+    'Reference in another text',
+    'Subscription list in imprint'
 ]
 
 
