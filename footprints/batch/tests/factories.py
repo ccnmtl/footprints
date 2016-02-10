@@ -43,4 +43,4 @@ class BatchRowFactory(factory.DjangoModelFactory):
     footprint_actor_death_date = ''
     footprint_notes = 'Levita, Elijah.'
     footprint_location = ''
-    footprint_date = ''
+    footprint_date = '1989'

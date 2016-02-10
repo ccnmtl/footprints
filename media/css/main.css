@@ -2183,6 +2183,7 @@ p.decoy {
     width: 10px;
     padding: 4px;
     border: 1px solid white;
+    background-color: lightgray;
 }
 
 .batch-job-detail .batch-job-row-container table td:hover {
@@ -2190,42 +2191,20 @@ p.decoy {
     cursor: pointer;
 }
 
-.batch-job-detail .batch-job-row-container table td.valid {
-    background-color: lightgray;
-}
-
-.batch-job-detail .batch-job-row-container table td.valid.selected {
-    border-color: lightgray;
-}
-
-.batch-job-detail .batch-job-row-container table td.invalid {
-    background-color: #d99230;
-}
-
-.batch-job-detail .batch-job-row-container table td.invalid.selected {
-    border-color: #d99230;
-}
-
 .batch-job-detail .batch-job-row-container table td.empty {
     background-color: #eeeeee;
 }
 
-.batch-job-detail .batch-job-row-container table td.empty.selected {
-    border-color: #eeeeee;
-}
-
+.batch-job-detail .batch-job-row-container table td.invalid,
 .batch-job-detail .batch-job-row-container table td.missing {
     background-color: #B6212D;
-}
-
-.batch-job-detail .batch-job-row-container table td.missing.selected {
-    border-color: #B6212D;
 }
 
 .batch-job-detail .batch-job-row-container table td.field-name {
     width: 225px;
     min-width: 225px;
     max-width: 225px;
+    background-color: #fafafa;
 }
 
 .batch-job-detail .batch-job-row-container table td.field-name:hover {
@@ -2243,6 +2222,28 @@ p.decoy {
 .batch-job-detail .batch-job-row-container table td.selected {
     background-color: white;
     border-left-width: 8px;
+    border-top-width: 0px;
+    border-bottom-width: 0px;
+    border-right-width: 8px;
+    width: 400px;
+    min-width: 400px;
+    border-color: #2e5367;
+}
+
+.batch-job-detail .batch-job-row-container table td.selected:hover {
+    border: default;
+    cursor: default;
+}
+
+.batch-job-detail .batch-job-row-container td .error-block {
+    display: none;
+    color: #a94442;
+    float: right;
+    margin-bottom: 0;
+}
+
+.batch-job-detail .batch-job-row-container td.has-error .error-block {
+    display: block;
     border-top-width: 1px;
     border-bottom-width: 1px;
     border-right-width: 1px;

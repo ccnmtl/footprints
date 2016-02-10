@@ -1,12 +1,15 @@
 import csv
 
 from django.core.urlresolvers import reverse, reverse_lazy
+from django.shortcuts import get_object_or_404
+from django.views.generic.base import View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView, DeleteView
 
 from footprints.batch.forms import CreateBatchJobForm
 from footprints.batch.models import BatchJob, BatchRow
-from footprints.mixins import LoggedInStaffMixin
+from footprints.batch.templatetags.batchrowtags import validate_field_value
+from footprints.mixins import LoggedInStaffMixin, JSONResponseMixin
 
 
 class BatchJobListView(LoggedInStaffMixin, FormView):
@@ -39,10 +42,30 @@ class BatchJobDetailView(LoggedInStaffMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(BatchJobDetailView, self).get_context_data(**kwargs)
-        context['fields'] = BatchRow.FIELD_MAPPING
+        context['fields'] = BatchRow.imported_fields()
         return context
 
 
 class BatchJobDeleteView(LoggedInStaffMixin, DeleteView):
     model = BatchJob
     success_url = reverse_lazy('batchjob-list-view')
+
+
+class BatchRowUpdateView(LoggedInStaffMixin, JSONResponseMixin, View):
+    def post(self, *args, **kwargs):
+        pk = kwargs.get('pk', None)
+        row = get_object_or_404(BatchRow, pk=pk)
+
+        errors = {}
+
+        # validate all the fields
+        for fld in BatchRow.imported_fields():
+            value = self.request.POST.get(fld.name, None)
+            setattr(row, fld.name, value)
+            errors[fld.name] = validate_field_value(fld, value)
+
+        row.save()
+
+        return self.render_to_json_response({
+            'errors': errors
+        })
