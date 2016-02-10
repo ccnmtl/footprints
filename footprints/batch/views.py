@@ -64,7 +64,6 @@ class BatchRowUpdateView(LoggedInStaffMixin, JSONResponseMixin, View):
             setattr(row, fld.name, value)
             errors[fld.name] = validate_field_value(fld, value)
 
-        # save the values
         row.save()
 
         return self.render_to_json_response({
