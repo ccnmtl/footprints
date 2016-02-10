@@ -1,6 +1,6 @@
 APP=footprints
 JS_FILES=media/js/app/ media/js/xeditable
-MAX_COMPLEXITY=9
+MAX_COMPLEXITY=8
 PY_DIRS=$(APP) viaf
 
 all: jenkins

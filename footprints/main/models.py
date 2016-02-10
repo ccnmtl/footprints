@@ -60,11 +60,8 @@ class ExtendedDateManager(models.Manager):
         else:
             return 'unknown'
 
-        if uncertain:
-            dt = '{}?'.format(dt)
-
-        if approximate:
-            dt = '{}~'.format(dt)
+        dt = format_uncertain(dt, uncertain)
+        dt = format_approximate(dt, approximate)
 
         return dt
 
@@ -83,6 +80,18 @@ class ExtendedDateManager(models.Manager):
             dt = '{}/{}'.format(dt, dt2)
 
         return ExtendedDate(edtf_format=dt)
+
+
+def format_uncertain(dt, uncertain):
+    if uncertain:
+        dt = '{}?'.format(dt)
+    return dt
+
+
+def format_approximate(dt, approximate):
+    if approximate:
+        dt = '{}~'.format(dt)
+    return dt
 
 
 class ExtendedDate(models.Model):
@@ -134,8 +143,6 @@ class ExtendedDate(models.Model):
         return '{} millenium'.format(self.ordinal(millenium))
 
     def fmt(self, date_obj, is_interval):
-        result = ''
-
         if isinstance(date_obj, basestring):
             return self.fmt_modifier(date_obj)
 
@@ -143,6 +150,16 @@ class ExtendedDate(models.Model):
 
         if precision is None:
             return 'invalid'
+
+        result = self._fmt_precision(precision, date_obj, is_interval)
+
+        result = fmt_uncertain(date_obj, result)
+        result = fmt_approximate(date_obj, result)
+
+        return result
+
+    def _fmt_precision(self, precision, date_obj, is_interval):
+        result = ''
 
         if precision == edtf_date.PRECISION_MILLENIUM:
             result = self.fmt_millenium(date_obj._millenium)
@@ -161,10 +178,6 @@ class ExtendedDate(models.Model):
                 self.month_names[date_obj.get_month()],
                 date_obj.get_day(),
                 date_obj.get_year())
-
-        result = fmt_uncertain(date_obj, result)
-        result = fmt_approximate(date_obj, result)
-
         return result
 
     def _validate_python_date(self, dt):
