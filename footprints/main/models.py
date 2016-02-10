@@ -60,11 +60,8 @@ class ExtendedDateManager(models.Manager):
         else:
             return 'unknown'
 
-        if uncertain:
-            dt = '{}?'.format(dt)
-
-        if approximate:
-            dt = '{}~'.format(dt)
+        dt = format_uncertain(dt, uncertain)
+        dt = format_approximate(dt, approximate)
 
         return dt
 
@@ -83,6 +80,18 @@ class ExtendedDateManager(models.Manager):
             dt = '{}/{}'.format(dt, dt2)
 
         return ExtendedDate(edtf_format=dt)
+
+
+def format_uncertain(dt, uncertain):
+    if uncertain:
+        dt = '{}?'.format(dt)
+    return dt
+
+
+def format_approximate(dt, approximate):
+    if approximate:
+        dt = '{}~'.format(dt)
+    return dt
 
 
 class ExtendedDate(models.Model):
