@@ -123,6 +123,25 @@ class ExtendedDateForm(forms.Form):
                 'Please fill out all required fields'])
             return
 
+        self._set_errors(edt, cleaned_data)
+        return cleaned_data
+
+    def get_attr(self):
+        return self.cleaned_data['attr']
+
+    def get_extended_date(self):
+        return ExtendedDate.objects.from_dict(self.cleaned_data)
+
+    def get_error_messages(self):
+        msg = ''
+        for key, val in self.errors.items():
+            if key != '__all__':
+                msg += key + ': '
+            msg += val[0]
+            msg += '<br />'
+        return msg
+
+    def _set_errors(self, edt, cleaned_data):
         start = edt.start()
         end = edt.end()
 
@@ -146,23 +165,6 @@ class ExtendedDateForm(forms.Form):
             elif start > date.today():
                 self._errors['__all__'] = self.error_class([
                     'The date must be today or earlier'])
-
-        return cleaned_data
-
-    def get_attr(self):
-        return self.cleaned_data['attr']
-
-    def get_extended_date(self):
-        return ExtendedDate.objects.from_dict(self.cleaned_data)
-
-    def get_error_messages(self):
-        msg = ''
-        for key, val in self.errors.items():
-            if key != '__all__':
-                msg += key + ': '
-            msg += val[0]
-            msg += '<br />'
-        return msg
 
     def save(self):
         edtf = self.get_extended_date()
