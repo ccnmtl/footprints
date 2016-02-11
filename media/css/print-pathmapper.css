@@ -1,0 +1,85 @@
+
+.pathmapper .print-inline {
+    display: inline;
+}
+
+.pathmapper .print-block {
+    display: block !important;
+}
+
+.pathmapper .cover {
+    background-image: none;
+    width: 504px;
+    height: 504px;
+    padding: 0;
+    margin: 72px auto 0 auto;
+    border: 1px solid #ccc;
+    page-break-after: always;
+    display: block;
+}
+
+.pathmapper .hidden-print {
+    display: none;
+}
+
+.pathmapper .header .container {
+    display: none;
+}
+
+.pathmapper .slidebox {
+    page-break-before: always;
+}
+
+.pathmapper .slidebox h3 {
+    text-align: left;
+}
+
+.pathmapper .slidebox .visual {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    float: none;
+}
+
+.pathmapper .slidebox .text
+{
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+	font-weight: 300;
+	font-size: 1em;
+	page-break-before: always;
+	width: 100%;
+	padding: 1in 1.5in;
+	float: none;
+	text-align: justify;
+}
+
+.container.foot,
+.footer {
+    background: none;
+}
+
+.container.foot {
+    page-break-before: always;
+}
+
+.footer {
+    padding-top: 1in;
+}
+
+.footer .description1,
+.footer .description2 {
+    padding-top: 40px;
+    padding-bottom: 10px;
+}
+
+.footer-line1 {
+    width: 100%;
+    display: block;
+    float: none;
+}
+
+.footer-line2 {
+    display: block;
+    float: none;
+}
