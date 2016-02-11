@@ -29,10 +29,3 @@ class BatchRowTest(TestCase):
             book_copy=copy)
 
         self.assertTrue(row.check_for_duplication())
-
-    def test_validate_catalog_url(self):
-        row = BatchRowFactory()
-        self.assertTrue(row.validate_catalog_url)
-
-        row = BatchRowFactory(catalog_url='foobarbaz')
-        self.assertFalse(row.validate_catalog_url())

@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, url
 
 from footprints.batch.views import BatchJobDetailView, BatchJobListView, \
-    BatchJobDeleteView
+    BatchJobDeleteView, BatchRowUpdateView
 
 
 urlpatterns = patterns(
@@ -12,4 +12,6 @@ urlpatterns = patterns(
         BatchJobDetailView.as_view(), name='batchjob-detail-view'),
     url(r'job/delete/(?P<pk>\d+)/$',
         BatchJobDeleteView.as_view(), name='batchjob-delete-view'),
+    url(r'job/update/(?P<pk>\d+)/$',
+        BatchRowUpdateView.as_view(), name='batchrow-update-view'),
 )
