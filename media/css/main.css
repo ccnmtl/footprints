@@ -769,6 +769,10 @@ ul.footer-logos li {
     .footer .logos-group1 {
         width: 921px;
     }
+    .footer .institutions-research {
+        width: 929px;
+        margin: auto;
+    }
     .footer-line1 {
         float: left;
     }
@@ -960,6 +964,10 @@ ul.footer-logos li {
     }
     .footer .logos-group1 {
         width: 921px;
+    }
+    .footer .institutions-research {
+        width: 929px;
+        margin: auto;
     }
     .footer-line1 {
         float: left;

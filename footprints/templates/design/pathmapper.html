@@ -25,7 +25,7 @@
     <script src="{{STATIC_URL}}jquery/js/jquery-1.10.1.min.js"></script>
     <link href="//fonts.googleapis.com/css?family=Asap:400,700,400italic" rel="stylesheet" type="text/css">
     <link href='//fonts.googleapis.com/css?family=Arvo:400,700' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Raleway:200' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Raleway:200' rel='stylesheet' type='text/css'>
 
 </head>
 
@@ -50,12 +50,12 @@
 </div>
 
 <div class="container slidebox clearfix odd">
-    <h3 class="visible-xs visible-sm">Slide 1</h3>
+    <h3 class="visible-xs visible-sm print-block">Slide 1</h3>
     <div class="visual">
     <img src="{{STATIC_URL}}img/pathmapper-test.png">
     </div>
     <div class="text">
-        <h3 class="visible-lg visible-md">Slide 1</h3>
+        <h3 class="visible-lg visible-md print-block">Slide 1</h3>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus vel odio ultricies ornare vitae a neque. Cras convallis augue eget elit sollicitudin suscipit. Cras sapien diam, elementum ultricies porttitor non, mollis vitae magna. Maecenas sagittis interdum dolor eu pulvinar. Nunc rutrum aliquam porta. Nullam mattis lectus ultrices, imperdiet nisi id, ullamcorper velit. Phasellus a dignissim odio, eget mollis quam.</p>
         
         <p>Morbi a lobortis leo. Morbi sed est tempus, mollis purus quis, scelerisque ante. Cras varius faucibus purus, a volutpat augue rutrum ac. Donec euismod dolor nec pellentesque sollicitudin. Donec lacinia tortor quis iaculis accumsan. Pellentesque eget sollicitudin dui, sed interdum felis. Nunc ac nisi eu felis scelerisque pellentesque. Vivamus aliquet molestie vulputate. Morbi sit amet pretium leo, vel lobortis sapien.        
@@ -63,12 +63,12 @@
 </div>
 
 <div class="container slidebox clearfix even">
-    <h3 class="visible-xs visible-sm">Slide 2</h3>
+    <h3 class="visible-xs visible-sm print-block">Slide 2</h3>
     <div class="visual">
     <img src="{{STATIC_URL}}img/pathmapper-test.png">
     </div>
     <div class="text">
-        <h3 class="visible-lg visible-md">Slide 2</h3>
+        <h3 class="visible-lg visible-md print-block">Slide 2</h3>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus vel odio ultricies ornare vitae a neque. Cras convallis augue eget elit sollicitudin suscipit. Cras sapien diam, elementum ultricies porttitor non, mollis vitae magna. Maecenas sagittis interdum dolor eu pulvinar. Nunc rutrum aliquam porta. Nullam mattis lectus ultrices, imperdiet nisi id, ullamcorper velit. Phasellus a dignissim odio, eget mollis quam.</p>
         
         <p>Morbi a lobortis leo. Morbi sed est tempus, mollis purus quis, scelerisque ante. Cras varius faucibus purus, a volutpat augue rutrum ac. Donec euismod dolor nec pellentesque sollicitudin. Donec lacinia tortor quis iaculis accumsan. Pellentesque eget sollicitudin dui, sed interdum felis. Nunc ac nisi eu felis scelerisque pellentesque. Vivamus aliquet molestie vulputate. Morbi sit amet pretium leo, vel lobortis sapien.        
@@ -77,8 +77,7 @@
 
 <div class="container foot">
 <footer class="footer">
-    
-    <ul class="footer-navigation">
+    <ul class="footer-navigation hidden-print">
         <li><a href="/credits/">Credits</a></li>
         <li><a href="/contact/">Contact</a></li>
         <li><a href="/faq/">FAQ</a></li>
@@ -95,20 +94,32 @@
         
         <div class="institutions-research clearfix">
             <div class="footer-line1">
-            <div class="logos-ir"><a href="http://www.jtsa.edu/"><img src="{{STATIC_URL}}img/fp_jts_logo.png" target="_blank" alt="Jewish Theological Seminary"></a></div>
-            <div class="logos-ir"><a href="http://library.columbia.edu"><img src="{{STATIC_URL}}img/fp_cul_logo.png" target="_blank" alt="Columbia University Libraries"></a></div>
+            <div class="logos-ir"><a href="http://www.jtsa.edu/" class="hidden-print" /><img src="{{STATIC_URL}}img/fp_jts_logo.png" target="_blank" alt="Jewish Theological Seminary" class="hidden-print" /></a>
+            <img src="{{STATIC_URL}}img/fp_jts_logo_bw.png" target="_blank" alt="Jewish Theological Seminary" class="print-inline" />
+            </div>
+            <div class="logos-ir"><a href="http://library.columbia.edu" class="hidden-print" /><img src="{{STATIC_URL}}img/fp_cul_logo.png" target="_blank" alt="Columbia University Libraries" class="hidden-print" /></a>
+            <img src="{{STATIC_URL}}img/fp_cul_logo_bw.png" target="_blank" alt="Columbia University Libraries" class="print-inline" />
+            </div>
             </div>
             <div class="footer-line2">
-            <div class="logos-ir"><a href="http://www.pitt.edu/"><img src="{{STATIC_URL}}img/fp_pitt2_logo.png" target="_blank" alt="University of Pittsburgh"></a></div>
-            <div class="logos-ir"><a href="http://www.stonybrook.edu/"><img src="{{STATIC_URL}}img/fp_stonybrook_logo.png" target="_blank" alt="Stony Brook University"></a></div>
+            <div class="logos-ir"><a href="http://www.pitt.edu/" class="hidden-print" /><img src="{{STATIC_URL}}img/fp_pitt2_logo.png" target="_blank" alt="University of Pittsburgh" class="hidden-print" /></a>
+            <img src="{{STATIC_URL}}img/fp_pitt_logo_bw.png" target="_blank" alt="University of Pittsburgh" class="print-inline" />
+            </div>
+            <div class="logos-ir"><a href="http://www.stonybrook.edu/" class="hidden-print" /><img src="{{STATIC_URL}}img/fp_stonybrook_logo.png" target="_blank" alt="Stony Brook University" class="hidden-print" /></a>
+            <img src="{{STATIC_URL}}img/fp_stonybrook_logo_bw.png" target="_blank" alt="Stony Brook University" class="print-inline" />
+            </div>
             </div>
         </div>
         
         <p class="description2">This project was made possible by generous support from:</p>
 
         <ul class="footer-logos footer-line3">
-        <li><a href="http://www.cjh.org"><img src="{{STATIC_URL}}img/fp_cjh_logo.png" target="_blank" alt="Center for Jewish History"></a></li>
-        <li><a href="http://ctl.columbia.edu"><img src="{{STATIC_URL}}img/fp_ctl_logo.png" target="_blank" alt="Columbia University's Center for Teaching and Learning"></a></li>
+        <li><a href="http://www.cjh.org" class="hidden-print" /><img src="{{STATIC_URL}}img/fp_cjh_logo.png" target="_blank" alt="Center for Jewish History" class="hidden-print" /></a>
+        <img src="{{STATIC_URL}}img/fp_cjh_logo_bw.png" target="_blank" alt="Center for Jewish History" class="print-inline" />
+        </li>
+        <li><a href="http://ctl.columbia.edu" class="hidden-print" /><img src="{{STATIC_URL}}img/fp_ctl_logo.png" target="_blank" alt="Columbia University's Center for Teaching and Learning" class="hidden-print" /></a>
+        <img src="{{STATIC_URL}}img/fp_ctl_logo_bw.png" target="_blank" alt="Columbia University's Center for Teaching and Learning" class="print-inline" />
+        </li>
         </ul>
     </div>
 </footer>
