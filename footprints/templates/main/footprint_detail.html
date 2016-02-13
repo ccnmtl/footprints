@@ -65,7 +65,7 @@
                     all_languages: [{% for language in languages %}
                                     {value: '{{language.id}}', text: "{{language.name}}"}{% if not forloop.last %},{% endif %}
                                     {% endfor %}],
-                    all_mediums:  [{% for medium in footprint.MEDIUM_CHOICES %}
+                    all_mediums:  [{% for medium in mediums %}
                                    {value: '{{medium}}', text: "{{medium}}"}{% if not forloop.last %},{% endif %}
                                    {% endfor %}],
                     editable: {% if editable %}true{% else %}false{% endif %},
