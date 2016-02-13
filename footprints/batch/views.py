@@ -1,5 +1,6 @@
 import csv
 
+from django.contrib import messages
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import get_object_or_404
 from django.views.generic.base import View
@@ -60,12 +61,24 @@ class BatchRowUpdateView(LoggedInStaffMixin, JSONResponseMixin, View):
 
         # validate all the fields
         for fld in BatchRow.imported_fields():
-            value = self.request.POST.get(fld.name, None)
-            setattr(row, fld.name, value)
-            errors[fld.name] = validate_field_value(fld, value)
+            if fld.name in self.request.POST:
+                value = self.request.POST.get(fld.name)
+                setattr(row, fld.name, value)
+                errors[fld.name] = validate_field_value(fld, value)
 
         row.save()
 
         return self.render_to_json_response({
             'errors': errors
         })
+
+
+class BatchRowDeleteView(LoggedInStaffMixin, DeleteView):
+    model = BatchRow
+
+    def get_success_url(self):
+        msg = 'Record {} deleted'.format(self.object.id)
+        messages.add_message(self.request, messages.INFO, msg)
+
+        return reverse_lazy('batchjob-detail-view',
+                            kwargs={'pk': self.object.job.id})

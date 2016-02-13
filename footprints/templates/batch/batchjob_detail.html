@@ -25,89 +25,129 @@
 {% endblock %}
 
 {% block content %}
-<div class="batch-job-detail row">
-    <div class="col-md-12">
-        <ol class="breadcrumb">
-          <li><a href="/batch/">Batch</a></li>
-          <li class="active">Job {{object.id}}</li>
-        </ol>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="page-header">
-                    <h1>Batch Job</h1>
+<div class="batch-job-detail">
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+              <li><a href="/batch/">Batch</a></li>
+              <li class="active">Job {{object.id}}</li>
+            </ol>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="page-header">
+                        <h1>Batch Job</h1>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-2">
-                <dl>
-                    <dt>Processed</dt>
-                    <dd>{{object.processed}}</dd>
-                </dl>
-            </div>
-            <div class="col-md-2">
-                <dl>
-                    <dt>Created By</dt>
-                    <dd>{{object.created_by}}</dd>
-                </dl>
-            </div>
-            <div class="col-md-2">
-                <dl>
-                    <dt>Created At</dt>
-                    <dd>{{object.created_at}}</dd>
-                </dl>
+                <div class="col-md-2">
+                    <dl>
+                        <dt>Processed</dt>
+                        <dd>{{object.processed}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-2">
+                    <dl>
+                        <dt>Created By</dt>
+                        <dd>{{object.created_by}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-2">
+                    <dl>
+                        <dt>Created At</dt>
+                        <dd>{{object.created_at}}</dd>
+                    </dl>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-md-12">
-        <div class="batch-job-row-container">
-            <h3>{{object.batchrow_set.count}} Records</h3>
-            <table>
-                {% for field in fields %}
+    {% if messages %}
+        <div class="alert alert-info alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {% for message in messages %}
+                <div>{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="batch-job-row-container">
+                {% with rows=object.batchrow_set.all %}
+                <h3>{{object.batchrow_set.count}} Records</h3>
+                <table>
                     <tr>
-                        <td class="field-name">
-                            {% if field.null and field.blank %}
-                                {{field.verbose_name|safe}}
-                            {% else %}
-                                <b>{{field.verbose_name|safe}}</b>
-                            {% endif %}
-                            
-                        </td>
-                        {% for row in object.batchrow_set.all %}
-                            {% field_value row field as the_value %}
-                            <td class="{% validate_field_value field the_value %}"
-                                data-record-id="{{row.id}}"
-                                data-value="the_value">
+                        <td class="field-name">Similar Footprints</td>
+                        {% for row in rows%}
+                            {% for id in row.similar_footprints %}
+                                {% if forloop.first %}
+                                    <td data-record-id="{{row.id}}" class="similar has-warning">
+                                        <div class="small">
+                                            <p>Review similar footprints to prevent record duplication</p>
+                                {% endif %}
+                                    <a target="_blank" href="{% url 'footprint-detail-view' id %}">{{id}}</a>{% if not forloop.last %},{% endif %}
+                                 {% if forloop.last %}
+                                       </div>
+                                    </td>
+                                 {% endif %}
+                            {% empty %}
+                                <td data-record-id="{{row.id}}">
+                                    <div class="small">No similar footprints</div>
+                                </td>
+                            {% endfor %}
+                        {% endfor %}
+                    </tr>
+                    {% for field in fields %}
+                        <tr>
+                            <td class="field-name">
+                                {% if field.null and field.blank %}
+                                    {{field.verbose_name|safe}}
+                                {% else %}
+                                    <b>{{field.verbose_name|safe}}</b>
+                                {% endif %}
+                                
+                            </td>
+                            {% for row in rows %}
+                                {% field_value row field as the_value %}
+                                <td class="{% validate_field_value field the_value %}"
+                                    data-record-id="{{row.id}}"
+                                    data-value="the_value">
+                                    <div>
+                                        <input name="{{field.name}}" type="text"
+                                            class="form-control input-sm"
+                                            placeholder="{{field.verbose_name|striptags}}"
+                                            value="{{the_value}}" />
+                                        <p class="error-block small pull-right">
+                                            {{field.help_text|safe}}
+                                        </p>
+                                    </div>
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <td class="field-name"></td>
+                        {% for row in rows %}
+                            <td data-record-id="{{row.id}}">
                                 <div>
-                                    <input name="{{field.name}}" type="text"
-                                        class="form-control input-sm"
-                                        placeholder="{{field.verbose_name|striptags}}"
-                                        value="{{the_value}}" />
-                                    <p class="error-block small pull-right">
-                                        {{field.help_text|safe}}
-                                    </p>
+                                    <button type="button" class="pull-right btn btn-primary btn-sm has-spinner update-record"
+                                     data-loading-text="<span class='glyphicon-left glyphicon glyphicon-refresh spinning'></span>Updating...">
+                                        Update
+                                    </button>
+                                    <form class="pull-right" action="{% url 'batchrow-delete-view' row.id %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-default btn-white btn-sm delete-record">
+                                            Delete
+                                        </button>
+                                    </form>                                    
                                 </div>
                             </td>
                         {% endfor %}
+                        </tr>
                     </tr>
-                {% endfor %}
-                <tr>
-                    <td class="field-name"></td>
-                    {% for row in object.batchrow_set.all %}
-                        <td data-record-id="{{row.id}}">
-                            <div class="pull-right">
-                                <button type="button" class="btn btn-primary btn-sm has-spinner update-record"
-                                 data-loading-text="<span class='glyphicon-left glyphicon glyphicon-refresh spinning'></span>Updating...">
-                                    Update
-                                </button>
-                            </div>
-                        </td>
-                    {% endfor %}
-                    </tr>
-                </tr>             
-                
-            </table>
+                </table>
+                {% endwith %}
+            </div>
         </div>
     </div>
-    
+
     <div class="modal fade" id="success-modal" tabindex="-1" role="dialog" aria-labelledby="Upload CSV">
         <div class="modal-dialog" role="document">
             <div class="modal-content fp-section">
@@ -130,8 +170,19 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="confirm-delete-modal" tabindex="-1" role="dialog" aria-labelledby="Upload CSV">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content fp-section">
+                <h3>Confirm</h3>
+                <div class="modal-body">Are you sure you want to delete this record?</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-primary">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
-
 
 {% endblock %}

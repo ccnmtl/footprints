@@ -16,9 +16,9 @@ class BatchRowTest(TestCase):
         row = BatchRowFactory(catalog_url='')
         self.assertEquals(row.aggregate_notes(), 'Levita, Elijah.')
 
-    def test_check_for_duplication(self):
+    def test_similar_footprints(self):
         row = BatchRowFactory()
-        self.assertFalse(row.check_for_duplication())
+        self.assertFalse(row.similar_footprints().exists())
 
         work = WrittenWorkFactory(title=row.writtenwork_title)
         imprint = ImprintFactory(title=row.imprint_title, work=work)
@@ -28,4 +28,4 @@ class BatchRowTest(TestCase):
             call_number=row.call_number, notes=row.aggregate_notes(),
             book_copy=copy)
 
-        self.assertTrue(row.check_for_duplication())
+        self.assertTrue(row.similar_footprints().exists())

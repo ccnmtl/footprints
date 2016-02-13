@@ -2,10 +2,13 @@
     window.BatchJobDetailView = Backbone.View.extend({
         events: {
             'click .batch-job-row-container table td': 'clickRecord',
-            'click button.update-record': 'updateRecord'
+            'click button.update-record': 'updateRecord',
+            'click button.delete-record': 'confirmDeleteRecord',
+            'click #confirm-delete-modal .btn-primary': 'deleteRecord'
         },
         initialize: function(options) {
             _.bindAll(this, 'clickRecord', 'updateRecord', 'refreshRecord',
+                'deleteRecord', 'confirmDeleteRecord',
                 'showModal', 'showSuccessModal', 'showErrorModal');
 
             this.baseUpdateUrl = options.baseUpdateUrl;
@@ -71,6 +74,19 @@
                 success: self.refreshRecord,
                 error: self.showErrorModal
             });
+        },
+        confirmDeleteRecord: function(evt) {
+            evt.preventDefault();
+            this.$form = jQuery(evt.currentTarget).parents('form');
+            jQuery('#confirm-delete-modal').modal({
+                'show': true,
+                'backdrop': 'static',
+                'keyboard': false,
+            });
+            return false;
+        },
+        deleteRecord: function(evt) {
+            this.$form.submit();
         }
     });
 })();
