@@ -32,6 +32,7 @@ USE_TZ = True
 
 TEMPLATE_CONTEXT_PROCESSORS += [  # noqa
     'django.template.context_processors.csrf',
+    'django.contrib.messages.context_processors.messages'
 ]
 
 MIDDLEWARE_CLASSES += [  # noqa

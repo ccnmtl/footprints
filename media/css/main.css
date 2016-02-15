@@ -2208,6 +2208,16 @@ p.decoy {
     background-color: #B6212D;
 }
 
+.batch-job-detail .batch-job-row-container table td.similar {
+    background-color: #dcc066; /*B67721*/
+}
+
+.batch-job-detail .batch-job-row-container table td.similar div {
+    border: 1px solid #dcc066;
+    border-radius: 4px;
+    padding: 4px;
+}
+
 .batch-job-detail .batch-job-row-container table td.field-name {
     width: 225px;
     min-width: 225px;
@@ -2255,6 +2265,10 @@ p.decoy {
     border-top-width: 1px;
     border-bottom-width: 1px;
     border-right-width: 1px;
+}
+
+.batch-job-detail .update-record {
+    margin-left: 5px;
 }
 
 /* PathMapper visualizations page */

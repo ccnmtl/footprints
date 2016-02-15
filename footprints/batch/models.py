@@ -119,7 +119,7 @@ class BatchRow(models.Model):
 
         return notes
 
-    def check_for_duplication(self):
+    def similar_footprints(self):
         # 1st pass: duplicate medium, provenance, call_number, notes
         # imprint title, written work title
         matches = Footprint.objects.filter(
@@ -134,4 +134,4 @@ class BatchRow(models.Model):
         #  'footprint_actor', 'footprint_actor_role',
         # 'footprint_location', 'footprint_date'
 
-        return matches.exists()
+        return matches.values_list('id', flat=True)
