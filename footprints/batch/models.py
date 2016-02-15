@@ -42,25 +42,34 @@ class BatchRow(models.Model):
     ]
 
     DATE_HELP_TEXT = (
-        "This date format is invalid. See <a target='_blank' href='"
+        "This value is invalid. See <a target='_blank' href='"
         "https://github.com/ccnmtl/footprints/wiki/Batch-Import-Format'>"
-        "date formats</a> for rules")
+        "date formats</a> for rules.")
+    VIAF_HELP_TEXT = (
+        "This value is invalid. "
+        "Please enter a numeric VIAF identifier.")
+    LOCATION_HELP_TEXT = (
+        "This value is invalid. Please enter a geocode, e.g. "
+        "51.752021,-1.2577.")
 
     job = models.ForeignKey(BatchJob)
 
     catalog_url = models.TextField(
         null=True, blank=True, verbose_name='Catalog Link',
-        help_text='Please enter a valid url format')
+        help_text='Please enter a valid url format.')
     bhb_number = models.TextField(
-        verbose_name='BHB Number', help_text='This field is required')
+        verbose_name='BHB Number',
+        help_text=("This field is required. Please enter a numeric "
+                   "BHB identifier."))
     imprint_title = models.TextField(
-        verbose_name='Imprint')
+        verbose_name='Imprint', help_text="This field is required.")
     writtenwork_title = models.TextField(
         null=True, blank=True, verbose_name='Literary Work')
     writtenwork_author = models.TextField(
         null=True, blank=True, verbose_name='Literary Work Author')
     writtenwork_author_viaf = models.TextField(
-        null=True, blank=True, verbose_name='Literary Work Author VIAF')
+        null=True, blank=True, verbose_name='Literary Work Author VIAF',
+        help_text=VIAF_HELP_TEXT)
     writtenwork_author_birth_date = models.TextField(
         null=True, blank=True, verbose_name='Literary Work Author Birth Date',
         help_text=DATE_HELP_TEXT)
@@ -72,7 +81,8 @@ class BatchRow(models.Model):
     publisher = models.TextField(
         null=True, blank=True, verbose_name='Publisher')
     publisher_viaf = models.TextField(
-        null=True, blank=True, verbose_name='Publisher VIAF')
+        null=True, blank=True, verbose_name='Publisher VIAF',
+        help_text=VIAF_HELP_TEXT)
     publication_location = models.TextField(
         null=True, blank=True, verbose_name='Publication Location')
     publication_date = models.TextField(
@@ -80,16 +90,17 @@ class BatchRow(models.Model):
         verbose_name='Publication Date')
 
     medium = models.TextField(
-        verbose_name='Evidence Type', help_text='This field is required')
+        verbose_name='Evidence Type', help_text='This field is required.')
     provenance = models.TextField(
-        verbose_name='Evidence Location', help_text='This field is required')
+        verbose_name='Evidence Location', help_text='This field is required.')
     call_number = models.TextField(
         null=True, blank=True, verbose_name='Call Number')
 
     footprint_actor = models.TextField(
         null=True, blank=True, verbose_name='Footprint Actor')
     footprint_actor_viaf = models.TextField(
-        null=True, blank=True, verbose_name='Footprint Actor VIAF')
+        null=True, blank=True, verbose_name='Footprint Actor VIAF',
+        help_text=VIAF_HELP_TEXT)
     footprint_actor_role = models.TextField(
         null=True, blank=True, verbose_name='Footprint Actor Role')
     footprint_actor_birth_date = models.TextField(
