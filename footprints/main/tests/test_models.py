@@ -6,7 +6,8 @@ from django.test import TestCase
 from footprints.main.models import Language, DigitalFormat, \
     ExtendedDate, StandardizedIdentification, \
     Actor, Imprint, FOOTPRINT_LEVEL, IMPRINT_LEVEL, WRITTENWORK_LEVEL, Role, \
-    Place, Footprint, WrittenWork, BookCopy, StandardizedIdentificationType
+    Place, Footprint, WrittenWork, BookCopy, StandardizedIdentificationType, \
+    SLUG_BHB
 from footprints.main.tests.factories import RoleFactory, \
     ActorFactory, PlaceFactory, CollectionFactory, \
     WrittenWorkFactory, ImprintFactory, BookCopyFactory, FootprintFactory, \
@@ -83,22 +84,6 @@ class BasicModelTest(TestCase):
         person.digital_object.add(DigitalObjectFactory())
         self.assertEquals(person.percent_complete(), 100)
 
-    def test_actor(self):
-        person = PersonFactory()
-        role = RoleFactory()
-        actor = Actor.objects.create(person=person, role=role)
-
-        # No Alternate Name
-        self.assertEquals(
-            actor.__unicode__(),
-            '%s (%s)' % (actor.person.name, role.name))
-
-        # With Alternate Name
-        actor = ActorFactory(role=role)
-        self.assertEquals(
-            actor.__unicode__(),
-            '%s as %s (%s)' % (actor.person.name, actor.alias, role.name))
-
     def test_place(self):
         place = Place.objects.create(position='50.064650,19.944979')
         self.assertEquals(place.__unicode__(), '')
@@ -129,38 +114,6 @@ class BasicModelTest(TestCase):
         FootprintFactory(book_copy=copy)
         FootprintFactory()  # noise
         self.assertEquals(work.references(), 2)
-
-    def test_imprint(self):
-        imprint = Imprint.objects.create(work=WrittenWorkFactory())
-        self.assertEquals(imprint.__unicode__(), 'The Odyssey')
-
-        imprint = ImprintFactory()
-        self.assertEquals(imprint.__unicode__(),
-                          'The Odyssey, Edition 1 (c. 1984)')
-
-        # imprint.digital_object.add(DigitalObjectFactory())
-        # self.assertEquals(imprint.percent_complete(), 100)
-
-        publisher = RoleFactory(name="Publisher", level=IMPRINT_LEVEL)
-        printer = RoleFactory(name="Printer", level=IMPRINT_LEVEL)
-
-        imprint.actor.add(ActorFactory(alias="Publisher", role=publisher))
-        imprint.actor.add(ActorFactory(alias="Printer", role=printer))
-        printers = imprint.printers()
-        self.assertEquals(len(printers), 1)
-        self.assertEquals(printers[0].alias, "Printer")
-
-        publishers = imprint.publishers()
-        self.assertEquals(len(publishers), 1)
-        self.assertEquals(publishers[0].alias, "Publisher")
-
-        # references
-        self.assertEquals(imprint.references(), 0)
-        copy = BookCopyFactory(imprint=imprint)
-        FootprintFactory(book_copy=copy)
-        FootprintFactory(book_copy=copy)
-        FootprintFactory()  # noise
-        self.assertEquals(imprint.references(), 2)
 
     def test_book_copy(self):
         copy = BookCopyFactory()
@@ -268,6 +221,7 @@ class ExtendedDateTest(TestCase):
 
 
 class ImprintTest(TestCase):
+
     def test_percent_complete(self):
         i = ImprintFactory()
         # default 'factory settings'
@@ -275,3 +229,124 @@ class ImprintTest(TestCase):
         # eliminate one of them
         i.notes = None
         self.assertEquals(i.percent_complete(), 77)
+
+    def test_basics(self):
+        imprint = Imprint.objects.create(work=WrittenWorkFactory())
+        self.assertEquals(imprint.__unicode__(), 'The Odyssey')
+
+        imprint = ImprintFactory()
+        self.assertEquals(imprint.__unicode__(),
+                          'The Odyssey, Edition 1 (c. 1984)')
+
+        # imprint.digital_object.add(DigitalObjectFactory())
+        # self.assertEquals(imprint.percent_complete(), 100)
+
+        publisher = RoleFactory(name="Publisher", level=IMPRINT_LEVEL)
+        printer = RoleFactory(name="Printer", level=IMPRINT_LEVEL)
+
+        imprint.actor.add(ActorFactory(alias="Publisher", role=publisher))
+        imprint.actor.add(ActorFactory(alias="Printer", role=printer))
+        printers = imprint.printers()
+        self.assertEquals(len(printers), 1)
+        self.assertEquals(printers[0].alias, "Printer")
+
+        publishers = imprint.publishers()
+        self.assertEquals(len(publishers), 1)
+        self.assertEquals(publishers[0].alias, "Publisher")
+
+        # references
+        self.assertEquals(imprint.references(), 0)
+        copy = BookCopyFactory(imprint=imprint)
+        FootprintFactory(book_copy=copy)
+        FootprintFactory(book_copy=copy)
+        FootprintFactory()  # noise
+        self.assertEquals(imprint.references(), 2)
+
+    def test_get_or_create_by_attributes(self):
+        bhb_number = '94677047'
+
+        imprint, created = Imprint.objects.get_or_create_by_attributes(
+            bhb_number, 'The Odyssey', 'The Odyssey, Edition 1',
+            '1984~', '50.064650,19.944979')
+
+        self.assertEquals(imprint.title, 'The Odyssey, Edition 1')
+        self.assertEquals(imprint.work.title, 'The Odyssey')
+        self.assertEquals(imprint.date_of_publication.edtf_format, '1984~')
+        self.assertEquals(str(imprint.place.position), '50.064650,19.944979')
+
+        q = imprint.standardized_identifier.filter(
+            identifier=bhb_number, identifier_type__slug=SLUG_BHB)
+        self.assertTrue(q.exists())
+
+
+class ActorTest(TestCase):
+
+    def test_basics(self):
+        person = PersonFactory()
+        role = RoleFactory()
+        actor = Actor.objects.create(person=person, role=role)
+
+        # No Alternate Name
+        self.assertEquals(
+            actor.__unicode__(),
+            '%s (%s)' % (actor.person.name, role.name))
+
+        # With Alternate Name
+        actor = ActorFactory(role=role)
+        self.assertEquals(
+            actor.__unicode__(),
+            '%s as %s (%s)' % (actor.person.name, actor.alias, role.name))
+
+    def test_get_or_create_by_attributes(self):
+        role = RoleFactory()
+        viaf = '94677047'
+
+        actor, created = Actor.objects.get_or_create_by_attributes(
+            'Grace Hopper', None, role, None, None)
+        self.assertEquals(actor.person.name, 'Grace Hopper')
+        self.assertEquals(actor.role, role)
+        self.assertIsNone(actor.alias)
+        self.assertIsNone(actor.person.birth_date)
+        self.assertIsNone(actor.person.death_date)
+        self.assertIsNone(actor.person.standardized_identifier)
+
+        # name match results in the same object
+        # attributes are updated if no viaf match, yes name match
+        Actor.objects.get_or_create_by_attributes(
+            'Grace Hopper', viaf, role, 'December 9, 1906', 'January 1, 1992')
+        actor.person.refresh_from_db()
+        self.assertEquals(actor.person.birth_date.edtf_format, '1906-12-09')
+        self.assertEquals(actor.person.death_date.edtf_format, '1992-01-01')
+        self.assertEquals(
+            actor.person.standardized_identifier.identifier, viaf)
+
+        # same viaf and role results in the same object
+        actor2, created = Actor.objects.get_or_create_by_attributes(
+            'Grace Hopper', viaf, role, None, None)
+        self.assertEquals(actor, actor2)
+
+        # same name and role results in the same object
+        # attributes are not updated if they already exist
+        actor2, created = Actor.objects.get_or_create_by_attributes(
+            'Grace Hopper', None, role, None, None)
+        self.assertEquals(actor, actor2)
+        actor.person.refresh_from_db()
+        self.assertEquals(actor.person.birth_date.edtf_format, '1906-12-09')
+        self.assertEquals(actor.person.death_date.edtf_format, '1992-01-01')
+        self.assertEquals(
+            actor.person.standardized_identifier.identifier, viaf)
+
+        # same name/viaf and different role results in same person, diff actor
+        role2 = RoleFactory()
+        actor2, created = Actor.objects.get_or_create_by_attributes(
+            'Grace Hopper', None, role2, None, None)
+        self.assertNotEquals(actor, actor2)
+        self.assertEquals(actor.person, actor2.person)
+
+        # same viaf diff name results in same person, diff actor w/alias
+        role2 = RoleFactory()
+        actor2, created = Actor.objects.get_or_create_by_attributes(
+            'Amazing Grace', viaf, role2, None, None)
+        self.assertNotEquals(actor, actor2)
+        self.assertEquals(actor2.alias, 'Amazing Grace')
+        self.assertEquals(actor.person, actor2.person)

@@ -1,5 +1,6 @@
 from audit_log.models.fields import CreatingUserField
 from django.db import models
+from django.db.models.query_utils import Q
 from geoposition import Geoposition
 
 from footprints.batch.validators import validate_publication_location, \
@@ -140,37 +141,53 @@ class BatchRow(models.Model):
 
         return notes
 
+    def get_writtenwork_title(self):
+        if self.writtenwork_title is None or len(self.writtenwork_title) < 1:
+            return self.imprint_title
+        return self.writtenwork_title
+
     def similar_footprints(self):
-        params = {
+        kwargs = {
             'medium': self.medium,
             'provenance': self.provenance,
-            'book_copy__imprint__standardized_identifier__identifier':
-                self.bhb_number,
-            'book_copy__imprint__title': self.imprint_title,
             'call_number': self.call_number,
-            'notes': self.aggregate_notes,
-            'book_copy__imprint__work__title': self.writtenwork_title
+            'notes': self.aggregate_notes(),
+            'book_copy__imprint__work__title__iexact':
+                self.get_writtenwork_title()
         }
 
-        if self.writtenwork_author:
-            params['book_copy__imprint__work__actor__person__name'] = \
-                self.writtenwork_author
+        bhb = self.bhb_number
+        args = [
+            Q(book_copy__imprint__standardized_identifier__identifier=bhb) |
+            Q(book_copy__imprint__title__iexact=self.imprint_title)
+        ]
+
+        author = self.writtenwork_author
+        if author:
+            args.append(
+                Q(book_copy__imprint__work__actor__person__name=author) |
+                Q(book_copy__imprint__work__actor__alias=author))
 
         if self.publisher:
-            params['book_copy__imprint__actor__person__name'] = self.publisher
+            args.append(
+                Q(book_copy__imprint__actor__person__name=self.publisher) |
+                Q(book_copy__imprint__actor__alias=self.publisher))
 
         if (self.publication_location and
                 validate_publication_location(self.publication_location)):
             latlong = self.publication_location.split(',')
-            gp = Geoposition(latlong[0], latlong[1])
-            params['book_copy__imprint__place__position'] = gp
+            gp = Geoposition(latlong[0].strip(), latlong[1].strip())
+            kwargs['book_copy__imprint__place__position'] = gp
 
         if self.footprint_actor:
-            params['actor__person__name'] = self.footprint_actor
+            args.append(
+                Q(actor__person__name=self.footprint_actor) |
+                Q(actor__alias=self.footprint_actor))
 
         if (self.footprint_location and
                 validate_footprint_location(self.footprint_location)):
             latlong = self.footprint_location.split(',')
-            params['place__position'] = Geoposition(latlong[0], latlong[1])
+            kwargs['place__position'] = Geoposition(latlong[0], latlong[1])
 
-        return Footprint.objects.filter(**params).values_list('id', flat=True)
+        qs = Footprint.objects.filter(*args, **kwargs)
+        return qs.values_list('id', flat=True)

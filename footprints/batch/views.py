@@ -2,6 +2,8 @@ import csv
 
 from django.contrib import messages
 from django.core.urlresolvers import reverse, reverse_lazy
+from django.db import transaction
+from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.views.generic.base import View
 from django.views.generic.detail import DetailView
@@ -10,6 +12,8 @@ from django.views.generic.edit import FormView, DeleteView
 from footprints.batch.forms import CreateBatchJobForm
 from footprints.batch.models import BatchJob, BatchRow
 from footprints.batch.templatetags.batchrowtags import validate_field_value
+from footprints.main.models import Imprint, BookCopy, Footprint, \
+    Role, ExtendedDate, Actor, Place
 from footprints.mixins import LoggedInStaffMixin, JSONResponseMixin
 
 
@@ -25,6 +29,7 @@ class BatchJobListView(LoggedInStaffMixin, FormView):
     def get_success_url(self):
         return reverse('batchjob-detail-view', kwargs={'pk': self.job.id})
 
+    @transaction.atomic
     def form_valid(self, form):
         self.job = BatchJob.objects.create(created_by=self.request.user)
         table = csv.reader(form.cleaned_data['csvfile'])
@@ -45,6 +50,95 @@ class BatchJobDetailView(LoggedInStaffMixin, DetailView):
         context = super(BatchJobDetailView, self).get_context_data(**kwargs)
         context['fields'] = BatchRow.imported_fields()
         return context
+
+
+class BatchJobUpdateView(LoggedInStaffMixin, View):
+
+    def add_author(self, record, work):
+        author, created = Actor.objects.get_or_create_by_attributes(
+            record.writtenwork_author, record.writtenwork_author_viaf,
+            Role.objects.get_author_role(),
+            record.writtenwork_author_birth_date,
+            record.writtenwork_author_death_date)
+        work.actor.add(author)
+
+    def add_publisher(self, record, imprint):
+        publisher, created = Actor.objects.get_or_create_by_attributes(
+            record.publisher, record.publisher_viaf,
+            Role.objects.get_publisher_role(), None, None)
+
+        imprint.actor.add(publisher)
+
+    def add_actor(self, record, footprint):
+        try:
+            role = Role.objects.get(name=record.footprint_actor_role)
+            actor, created = Actor.objects.get_or_create_by_attributes(
+                record.footprint_actor, record.footprint_actor_viaf, role,
+                record.footprint_actor_birth_date,
+                record.footprint_actor_death_date)
+            footprint.actor.add(actor)
+        except Role.DoesNotExist:
+            pass  # role must be specified to create the actor
+
+    def get_or_create_copy(self, call_number, imprint):
+        q = {'call_number': call_number, 'book_copy__imprint': imprint}
+        footprint = Footprint.objects.filter(**q).first()
+        if footprint:
+            copy = footprint.book_copy
+        else:
+            copy = BookCopy.objects.create(imprint=imprint)
+
+        return copy
+
+    def create_footprint(self, record, copy):
+        fp = Footprint.objects.create(
+            title=record.imprint_title,
+            book_copy=copy, medium=record.medium,
+            provenance=record.provenance, call_number=record.call_number,
+            notes=record.aggregate_notes())
+
+        if record.footprint_date:
+            fp.associated_date = ExtendedDate.objects.create(
+                edtf_format=record.footprint_date)
+
+        if record.footprint_location:
+            fp.place = Place.objects.get_or_create_from_string(
+                record.footprint_location)[0]
+
+        fp.save()
+        return fp
+
+    @transaction.atomic
+    def post(self, *args, **kwargs):
+        pk = kwargs.get('pk', None)
+        job = get_object_or_404(BatchJob, pk=pk)
+
+        footprints = []
+        for record in job.batchrow_set.all():
+            imprint, created = Imprint.objects.get_or_create_by_attributes(
+                record.bhb_number, record.get_writtenwork_title(),
+                record.imprint_title, record.publication_date,
+                record.publication_location)
+
+            self.add_author(record, imprint.work)
+            self.add_publisher(record, imprint)
+
+            copy = self.get_or_create_copy(record.call_number, imprint)
+
+            footprint = self.create_footprint(record, copy)
+            self.add_actor(record, footprint)
+
+            footprints.append(footprint)
+
+        job.processed = True
+        job.save()
+
+        msg = 'Batch job processed. {} footprints created'.format(
+            len(footprints))
+        messages.add_message(self.request, messages.INFO, msg)
+
+        return HttpResponseRedirect(
+            reverse('batchjob-detail-view', kwargs={'pk': pk}))
 
 
 class BatchJobDeleteView(LoggedInStaffMixin, DeleteView):

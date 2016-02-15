@@ -33,7 +33,7 @@
               <li class="active">Job {{object.id}}</li>
             </ol>
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="page-header">
                         <h1>Batch Job</h1>
                     </div>
@@ -56,6 +56,16 @@
                         <dd>{{object.created_at}}</dd>
                     </dl>
                 </div>
+                <div class="col-md-2">
+                    <form action="{% url 'batchjob-update-view' object.id %}" method="post">
+                        {% csrf_token %}
+                        {% if object.processed %}
+                            <button disabled="disabled" type="button" class="pull-right btn btn-primary">Processed</button>
+                        {% else %}
+                            <button id="process-job" type="button" class="pull-right btn btn-primary">Process</button>
+                        {% endif %}
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -67,6 +77,10 @@
             {% endfor %}
         </div>
     {% endif %}
+     <div class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <strong>Data Validation</strong> Errors must be corrected before data can be processed. 
+    </div>
     <div class="row">
         <div class="col-md-12">
             <div class="batch-job-row-container">
@@ -80,7 +94,9 @@
                                 {% if forloop.first %}
                                     <td data-record-id="{{row.id}}" class="similar has-warning">
                                         <div class="small">
+                                            {% if not object.processed %}
                                             <p>Review similar footprints to prevent record duplication</p>
+                                            {% endif %}
                                 {% endif %}
                                     <a target="_blank" href="{% url 'footprint-detail-view' id %}">{{id}}</a>{% if not forloop.last %},{% endif %}
                                  {% if forloop.last %}
@@ -113,7 +129,10 @@
                                         <input name="{{field.name}}" type="text"
                                             class="form-control input-sm"
                                             placeholder="{{field.verbose_name|striptags}}"
-                                            value="{{the_value}}" />
+                                            value="{{the_value}}" 
+                                            {% if object.processed %}
+                                                disabled="disabled"
+                                            {% endif %} />
                                         <p class="error-block small pull-right">
                                             {{field.help_text|safe}}
                                         </p>
@@ -122,6 +141,8 @@
                             {% endfor %}
                         </tr>
                     {% endfor %}
+
+                    {% if not object.processed %}
                     <tr>
                         <td class="field-name"></td>
                         {% for row in rows %}
@@ -140,8 +161,8 @@
                                 </div>
                             </td>
                         {% endfor %}
-                        </tr>
                     </tr>
+                    {% endif %}
                 </table>
                 {% endwith %}
             </div>
@@ -152,7 +173,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content fp-section">
                 <h3>Success</h3>
-                <div class="modal-body">The record has been saved. All the data validates.</div>
+                <div class="modal-body">The record has been saved. The record data validates.</div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
@@ -163,7 +184,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content fp-section">
                 <h3>Error</h3>
-                <div class="modal-body">The record has been saved, but the data does not validate. Please correct the errors and try again.</div>
+                <div class="modal-body">The record has been saved, but the record data does not validate. Please correct the errors and try again.</div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
@@ -182,7 +203,18 @@
             </div>
         </div>
     </div>
-
+    <div class="modal fade" id="confirm-process-modal" tabindex="-1" role="dialog" aria-labelledby="Upload CSV">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content fp-section">
+                <h3>Confirm</h3>
+                <div class="modal-body">Are you sure you want to process this job?</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-primary">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 {% endblock %}
