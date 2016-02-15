@@ -1,6 +1,9 @@
 from audit_log.models.fields import CreatingUserField
 from django.db import models
+from geoposition import Geoposition
 
+from footprints.batch.validators import validate_publication_location, \
+    validate_footprint_location
 from footprints.main.models import Footprint
 
 
@@ -120,18 +123,36 @@ class BatchRow(models.Model):
         return notes
 
     def similar_footprints(self):
-        # 1st pass: duplicate medium, provenance, call_number, notes
-        # imprint title, written work title
-        matches = Footprint.objects.filter(
-            medium=self.medium, provenance=self.provenance,
-            call_number=self.call_number, notes=self.aggregate_notes(),
-            book_copy__imprint__title=self.imprint_title,
-            book_copy__imprint__work__title=self.writtenwork_title)
+        params = {
+            'medium': self.medium,
+            'provenance': self.provenance,
+            'book_copy__imprint__standardized_identifier__identifier':
+                self.bhb_number,
+            'book_copy__imprint__title': self.imprint_title,
+            'call_number': self.call_number,
+            'notes': self.aggregate_notes,
+            'book_copy__imprint__work__title': self.writtenwork_title
+        }
 
-        # @todo - 2nd pass:
-        # ['bhb_number', 'writtenwork_author', 'publisher',
-        #  'publication_location', 'publication_date',
-        #  'footprint_actor', 'footprint_actor_role',
-        # 'footprint_location', 'footprint_date'
+        if self.writtenwork_author:
+            params['book_copy__imprint__work__actor__person__name'] = \
+                self.writtenwork_author
 
-        return matches.values_list('id', flat=True)
+        if self.publisher:
+            params['book_copy__imprint__actor__person__name'] = self.publisher
+
+        if (self.publication_location and
+                validate_publication_location(self.publication_location)):
+            latlong = self.publication_location.split(',')
+            gp = Geoposition(latlong[0], latlong[1])
+            params['book_copy__imprint__place__position'] = gp
+
+        if self.footprint_actor:
+            params['actor__person__name'] = self.footprint_actor
+
+        if (self.footprint_location and
+                validate_footprint_location(self.footprint_location)):
+            latlong = self.footprint_location.split(',')
+            params['place__position'] = Geoposition(latlong[0], latlong[1])
+
+        return Footprint.objects.filter(**params).values_list('id', flat=True)
