@@ -51,6 +51,10 @@ class BatchRow(models.Model):
     LOCATION_HELP_TEXT = (
         "This value is invalid. Please enter a geocode, e.g. "
         "51.752021,-1.2577.")
+    ROLE_HELP_TEXT = (
+        "This value is invalid. See <a target='_blank' "
+        "href='https://github.com/ccnmtl/footprints/wiki/Batch-Import-Format'>"
+        "roles</a> for a list of choices.")
 
     job = models.ForeignKey(BatchJob)
 
@@ -84,7 +88,8 @@ class BatchRow(models.Model):
         null=True, blank=True, verbose_name='Publisher VIAF',
         help_text=VIAF_HELP_TEXT)
     publication_location = models.TextField(
-        null=True, blank=True, verbose_name='Publication Location')
+        null=True, blank=True, verbose_name='Publication Location',
+        help_text=LOCATION_HELP_TEXT)
     publication_date = models.TextField(
         null=True, blank=True, help_text=DATE_HELP_TEXT,
         verbose_name='Publication Date')
@@ -102,7 +107,8 @@ class BatchRow(models.Model):
         null=True, blank=True, verbose_name='Footprint Actor VIAF',
         help_text=VIAF_HELP_TEXT)
     footprint_actor_role = models.TextField(
-        null=True, blank=True, verbose_name='Footprint Actor Role')
+        null=True, blank=True, verbose_name='Footprint Actor Role',
+        help_text=ROLE_HELP_TEXT)
     footprint_actor_birth_date = models.TextField(
         null=True, blank=True, verbose_name='Footprint Actor Birth Date',
         help_text=DATE_HELP_TEXT)
@@ -112,7 +118,8 @@ class BatchRow(models.Model):
     footprint_notes = models.TextField(
         null=True, blank=True, verbose_name='Footprint Notes')
     footprint_location = models.TextField(
-        null=True, blank=True, verbose_name='Footprint Location')
+        null=True, blank=True, verbose_name='Footprint Location',
+        help_text=LOCATION_HELP_TEXT)
     footprint_date = models.TextField(
         null=True, blank=True, verbose_name='Footprint Date',
         help_text=DATE_HELP_TEXT)
