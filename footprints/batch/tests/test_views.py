@@ -1,3 +1,4 @@
+from decimal import Decimal
 from json import loads
 
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -8,8 +9,10 @@ from django.test.testcases import TestCase
 from footprints.batch.forms import CreateBatchJobForm
 from footprints.batch.models import BatchRow, BatchJob
 from footprints.batch.tests.factories import BatchJobFactory, BatchRowFactory
-from footprints.batch.views import BatchJobListView
-from footprints.main.tests.factories import UserFactory
+from footprints.batch.views import BatchJobListView, BatchJobUpdateView
+from footprints.main.models import Footprint
+from footprints.main.tests.factories import UserFactory, WrittenWorkFactory, \
+    ImprintFactory, FootprintFactory, RoleFactory, BookCopyFactory
 
 
 class BatchJobListViewTest(TestCase):
@@ -85,6 +88,127 @@ class BatchJobDeleteViewTest(TestCase):
         self.assertEquals(response.status_code, 302)
 
         self.assertFalse(BatchJob.objects.filter(id=self.job.id).exists())
+
+
+class BatchJobUpdateViewTest(TestCase):
+
+    def setUp(self):
+        self.user = UserFactory()
+        self.staff = UserFactory(is_staff=True)
+        self.job = BatchJobFactory()
+        self.record1 = BatchRowFactory(job=self.job)
+        self.record2 = BatchRowFactory(job=self.job,
+                                       footprint_date='1996',
+                                       medium='Approbation in imprint')
+        self.url = reverse('batchjob-update-view', kwargs={'pk': self.job.pk})
+
+        RoleFactory(name=self.record1.footprint_actor_role)
+
+    def test_add_author(self):
+        work = WrittenWorkFactory()
+        row = BatchRowFactory()
+
+        view = BatchJobUpdateView()
+        view.add_author(row, work)
+
+        q = {
+            'person__standardized_identifier__identifier':
+                row.writtenwork_author_viaf,
+            'person__name': row.writtenwork_author,
+            'person__birth_date__edtf_format': '1702',
+            'person__death_date__edtf_format': '1789',
+            'role__name': 'Author'
+        }
+        self.assertTrue(work.actor.filter(**q).exists())
+
+    def test_add_publisher(self):
+        imprint = ImprintFactory()
+        row = BatchRowFactory()
+
+        view = BatchJobUpdateView()
+        view.add_publisher(row, imprint)
+
+        q = {
+            'person__standardized_identifier__identifier':
+                row.publisher_viaf,
+            'person__name': row.publisher,
+            'role__name': 'Publisher'
+        }
+        self.assertTrue(imprint.actor.filter(**q).exists())
+
+    def test_add_actor(self):
+        footprint = FootprintFactory()
+
+        view = BatchJobUpdateView()
+        view.add_actor(self.record1, footprint)
+
+        q = {
+            'person__name': self.record1.footprint_actor,
+            'role__name': self.record1.footprint_actor_role
+        }
+        self.assertTrue(footprint.actor.filter(**q).exists())
+
+    def test_get_or_create_copy(self):
+        fp = FootprintFactory()
+        imprint = ImprintFactory()
+
+        view = BatchJobUpdateView()
+        copy = view.get_or_create_copy(fp.call_number, imprint)
+        self.assertNotEquals(fp.book_copy, copy)
+
+        copy = view.get_or_create_copy(fp.call_number, fp.book_copy.imprint)
+        self.assertEquals(fp.book_copy, copy)
+
+    def test_create_footprint(self):
+        copy = BookCopyFactory()
+
+        view = BatchJobUpdateView()
+        fp = view.create_footprint(self.record1, copy)
+
+        self.assertEquals(fp.book_copy, copy)
+        self.assertEquals(fp.medium, self.record1.medium)
+        self.assertEquals(fp.provenance, self.record1.provenance)
+        self.assertEquals(fp.call_number, self.record1.call_number)
+        self.assertEquals(fp.notes, self.record1.aggregate_notes())
+
+        self.assertEquals(fp.associated_date.__unicode__(),
+                          self.record1.footprint_date)
+        self.assertEquals(fp.place.latitude(), Decimal('41.0136'))
+        self.assertEquals(fp.place.longitude(), Decimal('28.9550'))
+
+    def test_view_basics(self):
+        response = self.client.get(self.url)
+        self.assertEquals(response.status_code, 405)
+
+        response = self.client.post(self.url)
+        self.assertEquals(response.status_code, 405)
+
+        self.client.login(username=self.user.username, password='test')
+        response = self.client.post(self.url)
+        self.assertEquals(response.status_code, 405)
+
+    def test_post(self):
+        self.client.login(username=self.staff.username, password='test')
+        response = self.client.post(self.url)
+        self.assertEquals(response.status_code, 302)
+
+        fp1 = Footprint.objects.get(medium='Library Catalog/Union Catalog')
+        a = self.record1.similar_footprints()
+        self.assertEquals(a.count(), 1)
+        self.assertEquals(a.first(), fp1.id)
+
+        fp2 = Footprint.objects.get(medium='Approbation in imprint')
+        a = self.record2.similar_footprints()
+        self.assertEquals(a.count(), 1)
+        self.assertEquals(a.first(), fp2.id)
+
+        self.assertTrue(fp1.book_copy, fp2.book_copy)
+
+        self.assertTrue('2 footprints created' in
+                        response.cookies['messages'].value)
+
+        self.job.refresh_from_db()
+        self.assertTrue(self.job.processed)
 
 
 class BatchRowUpdateViewTest(TestCase):

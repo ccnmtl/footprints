@@ -23,13 +23,13 @@ class BatchRowFactory(factory.DjangoModelFactory):
     writtenwork_title = 'Leshon Limudim'
     writtenwork_author = 'David ben Solomon Ibn Yahya'
     writtenwork_author_viaf = '7742556'
-    writtenwork_author_birth_date = ''
-    writtenwork_author_death_date = ''
+    writtenwork_author_birth_date = '1702'
+    writtenwork_author_death_date = '1789'
 
     # imprint publisher/printer information
     publisher = 'Eliezer Soncino'
     publisher_viaf = '297361612'
-    publication_location = '41.0136, 28.9550'
+    publication_location = '41.0136,28.9550'
     publication_date = '1542'
 
     medium = 'Library Catalog/Union Catalog'
@@ -38,9 +38,9 @@ class BatchRowFactory(factory.DjangoModelFactory):
 
     footprint_actor = 'Nicolo Maria Castaldi'
     footprint_actor_viaf = ''
-    footprint_actor_role = 'Center'
+    footprint_actor_role = 'Expurgator'
     footprint_actor_birth_date = ''
     footprint_actor_death_date = ''
     footprint_notes = 'Levita, Elijah.'
-    footprint_location = ''
+    footprint_location = '41.0136,28.9550'
     footprint_date = '1989'

@@ -1,9 +1,11 @@
-from audit_log.models.fields import LastUserField, CreatingUserField
 from datetime import date
+
+from audit_log.models.fields import LastUserField, CreatingUserField
 from django.db import models
 from django.template import loader
 from django.template.context import Context
 from edtf import EDTF, edtf_date
+from geoposition import Geoposition
 from geoposition.fields import GeopositionField
 
 
@@ -34,6 +36,9 @@ MEDIUM_CHOICES = [
     'Reference in another text',
     'Subscription list in imprint'
 ]
+
+SLUG_VIAF = 'VIAF'
+SLUG_BHB = 'BHB'
 
 
 class ExtendedDateManager(models.Manager):
@@ -335,11 +340,20 @@ class DigitalObject(models.Model):
 
 class StandardizedIdentificationTypeQuerySet(models.query.QuerySet):
 
+    SLUG_VIAF = 'VIAF'
+    SLUG_BHB = 'BHB'
+
     def for_imprint(self):
         return self.filter(level=IMPRINT_LEVEL)
 
     def for_work(self):
         return self.filter(level=WRITTENWORK_LEVEL)
+
+    def viaf(self):
+        return self.get(slug=self.SLUG_VIAF)
+
+    def bhb(self):
+        return self.get(slug=self.SLUG_BHB)
 
 
 class StandardizedIdentificationTypeManager(models.Manager):
@@ -356,6 +370,12 @@ class StandardizedIdentificationTypeManager(models.Manager):
 
     def for_work(self):
         return self.get_queryset().for_work()
+
+    def viaf(self):
+        return self.get_queryset().viaf()
+
+    def bhb(self):
+        return self.get_queryset().bhb()
 
 
 class StandardizedIdentificationType(models.Model):
@@ -447,7 +467,52 @@ class Person(models.Model):
         return int(complete/required * 100)
 
 
+class ActorManager(models.Manager):
+
+    def __init__(self, fields=None, *args, **kwargs):
+        super(ActorManager, self).__init__(
+            *args, **kwargs)
+        self._fields = fields
+
+    def get_or_create_by_attributes(self, name, viaf, role, born, died):
+        # find by viaf
+        person = Person.objects.filter(
+            standardized_identifier__identifier_type__slug=SLUG_VIAF,
+            standardized_identifier__identifier=viaf).first()
+
+        if person is None:
+            # find by name
+            person = Person.objects.filter(name=name).first()
+            if person is None:
+                person = Person.objects.create(name=name)
+
+            if viaf and person.standardized_identifier is None:
+                # add identifier
+                sit = StandardizedIdentificationType.objects.viaf()
+                person.standardized_identifier = \
+                    StandardizedIdentification.objects.create(
+                        identifier=viaf, identifier_type=sit)
+
+            # update birth date & death date
+            if born and person.birth_date is None:
+                person.birth_date = ExtendedDate.objects.create(
+                    edtf_format=unicode(EDTF.from_natural_text(born)))
+
+            if died and person.death_date is None:
+                person.death_date = ExtendedDate.objects.create(
+                    edtf_format=unicode(EDTF.from_natural_text(died)))
+
+            person.save()
+
+        alias = None if name == person.name else name
+
+        return Actor.objects.get_or_create(
+            role=role, person=person, alias=alias)
+
+
 class Actor(models.Model):
+    objects = ActorManager()
+
     person = models.ForeignKey(Person)
     role = models.ForeignKey(Role)
     alias = models.TextField(null=True, blank=True)
@@ -470,7 +535,22 @@ class Actor(models.Model):
         return "%s (%s)" % (self.display_name(), self.role)
 
 
+class PlaceManager(models.Manager):
+
+    def __init__(self, fields=None, *args, **kwargs):
+        super(PlaceManager, self).__init__(
+            *args, **kwargs)
+        self._fields = fields
+
+    def get_or_create_from_string(self, latlng):
+        a = latlng.split(',')
+        gp = Geoposition(a[0], a[1])
+        return Place.objects.get_or_create(position=gp)
+
+
 class Place(models.Model):
+    objects = PlaceManager()
+
     country = models.CharField(max_length=256, null=True, blank=True)
     city = models.CharField(max_length=256, null=True, blank=True)
 
@@ -584,7 +664,50 @@ class WrittenWork(models.Model):
         return lst
 
 
+class ImprintManager(models.Manager):
+
+    def __init__(self, fields=None, *args, **kwargs):
+        super(ImprintManager, self).__init__(
+            *args, **kwargs)
+        self._fields = fields
+
+    def get_or_create_by_attributes(self, bhb_number, work_title, title,
+                                    publication_date, publication_location):
+        created = False
+        imprint = Imprint.objects.filter(
+            standardized_identifier__identifier_type__slug=SLUG_BHB,
+            standardized_identifier__identifier=bhb_number).first()
+
+        if imprint is None:
+            work, created = WrittenWork.objects.get_or_create(title=work_title)
+
+            imprint, created = Imprint.objects.get_or_create(
+                title=title, work=work)
+
+            # add identifier
+            if bhb_number:
+                sit = StandardizedIdentificationType.objects.bhb()
+                si = StandardizedIdentification.objects.create(
+                    identifier=bhb_number, identifier_type=sit)
+                imprint.standardized_identifier.add(si)
+
+            # add publication date
+            if publication_date:
+                imprint.date_of_publication = ExtendedDate.objects.create(
+                    edtf_format=publication_date)
+
+            if publication_location:
+                imprint.place = Place.objects.get_or_create_from_string(
+                    publication_location)[0]
+
+            imprint.save()
+
+        return imprint, created
+
+
 class Imprint(models.Model):
+    objects = ImprintManager()
+
     work = models.ForeignKey(WrittenWork)
 
     title = models.TextField(null=True, blank=True,

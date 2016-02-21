@@ -2211,6 +2211,9 @@ p.decoy {
 .batch-job-detail .batch-job-row-container table td.similar {
     background-color: #dcc066; /*B67721*/
 }
+.batch-job-detail .batch-job-row-container table td.similar p {
+    margin-bottom: 0px;    
+}
 
 .batch-job-detail .batch-job-row-container table td.similar div {
     border: 1px solid #dcc066;
@@ -2242,7 +2245,7 @@ p.decoy {
     border-left-width: 8px;
     border-top-width: 0px;
     border-bottom-width: 0px;
-    border-right-width: 8px;
+    border-right-width: 0px;
     width: 400px;
     min-width: 400px;
     border-color: #2e5367;

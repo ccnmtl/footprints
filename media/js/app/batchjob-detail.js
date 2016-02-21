@@ -4,14 +4,29 @@
             'click .batch-job-row-container table td': 'clickRecord',
             'click button.update-record': 'updateRecord',
             'click button.delete-record': 'confirmDeleteRecord',
-            'click #confirm-delete-modal .btn-primary': 'deleteRecord'
+            'click #confirm-delete-modal .btn-primary': 'deleteRecord',
+            'click #process-job': 'confirmProcessJob',
+            'click #confirm-process-modal .btn-primary': 'processJob',
         },
         initialize: function(options) {
             _.bindAll(this, 'clickRecord', 'updateRecord', 'refreshRecord',
-                'deleteRecord', 'confirmDeleteRecord',
-                'showModal', 'showSuccessModal', 'showErrorModal');
+                'deleteRecord', 'confirmDeleteRecord', 'checkErrorState',
+                'showModal', 'showSuccessModal', 'showErrorModal',
+                'confirmProcessJob', 'processJob');
 
             this.baseUpdateUrl = options.baseUpdateUrl;
+
+            this.checkErrorState();
+        },
+        checkErrorState: function() {
+            if (jQuery(this.el).find('.has-error').length > 0) {
+                jQuery(this.el).find('#process-job')
+                               .attr('disabled', 'disabled');
+                jQuery(this.el).find('.alert-danger').show();
+            } else {
+                jQuery(this.el).find('#process-job').removeAttr('disabled');
+                jQuery(this.el).find('.alert-danger').hide();
+            }
         },
         clickRecord: function(evt) {
             var $td = jQuery(evt.currentTarget);
@@ -41,6 +56,8 @@
             } else {
                 this.showErrorModal();
             }
+
+            this.checkErrorState();
         },
         showModal: function(id) {
             jQuery(id).modal({
@@ -79,14 +96,23 @@
             evt.preventDefault();
             this.$form = jQuery(evt.currentTarget).parents('form');
             jQuery('#confirm-delete-modal').modal({
-                'show': true,
-                'backdrop': 'static',
-                'keyboard': false,
+                'show': true, 'backdrop': 'static'
             });
             return false;
         },
         deleteRecord: function(evt) {
             this.$form.submit();
+        },
+        confirmProcessJob: function(evt) {
+            evt.preventDefault();
+            this.$process = jQuery(evt.currentTarget).parents('form');
+            jQuery('#confirm-process-modal').modal({
+                'show': true, 'backdrop': 'static'
+            });
+            return false;
+        },
+        processJob: function(evt) {
+            this.$process.submit();
         }
     });
 })();
