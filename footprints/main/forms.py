@@ -146,18 +146,7 @@ class ExtendedDateForm(forms.Form):
         end = edt.end()
 
         if cleaned_data['is_range']:
-            if start is None:
-                self._errors['__all__'] = self.error_class([
-                    'Please specify a valid start date'])
-            elif end is None:
-                self._errors['__all__'] = self.error_class([
-                    'Please specify a valid end date'])
-            elif start > date.today() or end > date.today():
-                self._errors['__all__'] = self.error_class([
-                    'All dates must be today or earlier'])
-            elif start > end:
-                self._errors['__all__'] = self.error_class([
-                    'The start date must be earlier than the end date.'])
+            self._set_errors_is_range(start, end)
         else:
             if start is None:
                 self._errors['__all__'] = self.error_class([
@@ -165,6 +154,20 @@ class ExtendedDateForm(forms.Form):
             elif start > date.today():
                 self._errors['__all__'] = self.error_class([
                     'The date must be today or earlier'])
+
+    def _set_errors_is_range(self, start, end):
+        if start is None:
+            self._errors['__all__'] = self.error_class([
+                'Please specify a valid start date'])
+        elif end is None:
+            self._errors['__all__'] = self.error_class([
+                'Please specify a valid end date'])
+        elif start > date.today() or end > date.today():
+            self._errors['__all__'] = self.error_class([
+                'All dates must be today or earlier'])
+        elif start > end:
+            self._errors['__all__'] = self.error_class([
+                'The start date must be earlier than the end date.'])
 
     def save(self):
         edtf = self.get_extended_date()
