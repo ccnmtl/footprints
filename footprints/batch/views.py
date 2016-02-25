@@ -1,5 +1,7 @@
 import csv
+import urllib2
 
+from django.conf import settings
 from django.contrib import messages
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.db import transaction
@@ -54,6 +56,24 @@ class BatchJobDetailView(LoggedInStaffMixin, DetailView):
 
 class BatchJobUpdateView(LoggedInStaffMixin, View):
 
+    def add_place(self, obj, location):
+        obj.place, created = Place.objects.get_or_create_from_string(
+            location)
+
+        if created:
+            # reverse geocode the lat/long
+            url = settings.GOOGLE_MAPS_GEOCODE
+            response = urllib2.urlopen(url.format(location))
+            the_json = response.read()
+
+            components = the_json['results'][0]['address_components']
+
+            for component in components:
+                if component['types'] == 'locality':
+                    obj.place.city = component['long_name']
+                if component['types'] == 'country':
+                    obj.place.country = component['long_name']
+
     def add_author(self, record, work):
         author, created = Actor.objects.get_or_create_by_attributes(
             record.writtenwork_author, record.writtenwork_author_viaf,
@@ -102,8 +122,7 @@ class BatchJobUpdateView(LoggedInStaffMixin, View):
                 edtf_format=record.footprint_date)
 
         if record.footprint_location:
-            fp.place = Place.objects.get_or_create_from_string(
-                record.footprint_location)[0]
+            self.addPlace(record.footprint_location)
 
         fp.save()
         return fp

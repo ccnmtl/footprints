@@ -80,3 +80,6 @@ if 'test' in sys.argv or 'jenkins' in sys.argv:
         },
     }
     MEDIA_ROOT = './'
+
+GOOGLE_MAPS_GEOCODE = \
+    'https://maps.googleapis.com/maps/api/geocode/json?address={}'
