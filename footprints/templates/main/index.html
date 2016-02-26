@@ -39,7 +39,9 @@
                         {% endif %}
                     {% endif %}
                     <li><a href="/browse/footprints/">Browse</a></li>
-                    <!-- li><a href="/search/">Search</a></li-->
+                    {% switch "enable_search" %}
+                        <li><a href="/search/">Search</a></li>
+                    {% endswitch %}
                     <li><a href="http://edblogs.columbia.edu/footprints/" target="_blank">Blog</a></li>
 
                     {% if request.user.is_anonymous %}
