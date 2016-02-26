@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load waffle_tags %}
 
 {% block title %}Home{% endblock %}
 
@@ -76,7 +77,8 @@ Every literary work represents a moment in time and space where an idea was conc
                   </div>
                   
               </div>
-              <!-- div class="col-md-4 home-search">
+              {% switch "enable_search" %}
+              <div class="col-md-4 home-search">
                   <div class="home-search-one">Search for Footprints</div>
                   <div class="home-search-two">
                       A footprint is a record of the material presence of a literary work at a particular time and place, such as:
@@ -92,7 +94,8 @@ Every literary work represents a moment in time and space where an idea was conc
                       </form>
                   </div>
               </div>
-           </div--> <!-- /.row (first)-->
+              {% endswitch %}
+           </div> <!-- /.row (first)-->
            <div class="row">
                <div class="col-md-12 home-visual">
                    <img src="{{STATIC_URL}}img/fp_home_ex_visual.jpg">
