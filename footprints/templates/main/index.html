@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load waffle_tags %}
 
 {% block title %}Home{% endblock %}
 
@@ -38,7 +39,9 @@
                         {% endif %}
                     {% endif %}
                     <li><a href="/browse/footprints/">Browse</a></li>
-                    <li><a href="/search/">Search</a></li>
+                    {% flag "enable_search" %}
+                        <li><a href="/search/">Search</a></li>
+                    {% endflag %}
                     <li><a href="http://edblogs.columbia.edu/footprints/" target="_blank">Blog</a></li>
 
                     {% if request.user.is_anonymous %}
@@ -76,6 +79,7 @@ Every literary work represents a moment in time and space where an idea was conc
                   </div>
                   
               </div>
+              {% flag "enable_search" %}
               <div class="col-md-4 home-search">
                   <div class="home-search-one">Search for Footprints</div>
                   <div class="home-search-two">
@@ -92,6 +96,7 @@ Every literary work represents a moment in time and space where an idea was conc
                       </form>
                   </div>
               </div>
+              {% endflag %}
            </div> <!-- /.row (first)-->
            <div class="row">
                <div class="col-md-12 home-visual">
