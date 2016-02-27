@@ -5,6 +5,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.urlresolvers import reverse
 from django.test.client import RequestFactory
 from django.test.testcases import TestCase
+import mock
 
 from footprints.batch.forms import CreateBatchJobForm
 from footprints.batch.models import BatchRow, BatchJob
@@ -12,7 +13,8 @@ from footprints.batch.tests.factories import BatchJobFactory, BatchRowFactory
 from footprints.batch.views import BatchJobListView, BatchJobUpdateView
 from footprints.main.models import Footprint
 from footprints.main.tests.factories import UserFactory, WrittenWorkFactory, \
-    ImprintFactory, FootprintFactory, RoleFactory, BookCopyFactory
+    ImprintFactory, FootprintFactory, RoleFactory, BookCopyFactory, \
+    PlaceFactory
 
 
 class BatchJobListViewTest(TestCase):
@@ -104,6 +106,17 @@ class BatchJobUpdateViewTest(TestCase):
 
         RoleFactory(name=self.record1.footprint_actor_role)
 
+    def test_view_basics(self):
+        response = self.client.get(self.url)
+        self.assertEquals(response.status_code, 405)
+
+        response = self.client.post(self.url)
+        self.assertEquals(response.status_code, 405)
+
+        self.client.login(username=self.user.username, password='test')
+        response = self.client.post(self.url)
+        self.assertEquals(response.status_code, 405)
+
     def test_add_author(self):
         work = WrittenWorkFactory()
         row = BatchRowFactory()
@@ -148,6 +161,49 @@ class BatchJobUpdateViewTest(TestCase):
         }
         self.assertTrue(footprint.actor.filter(**q).exists())
 
+    @mock.patch('urllib2.urlopen')
+    def test_add_place_new(self, m_urlopen):
+        content = """{"results": [{
+            "address_components": [
+                {"long_name": "Osgiliath", "types": ["locality", "political"]},
+                {"long_name": "Gondor", "types": ["country", "political"]}
+            ]}]}"""
+        m_urlopen().read.side_effect = [content]
+
+        footprint = FootprintFactory()
+
+        view = BatchJobUpdateView()
+        view.add_place(footprint, '51.064650,20.944979')
+
+        footprint.refresh_from_db()
+        self.assertEquals(Decimal('51.064650'), footprint.place.latitude())
+        self.assertEquals(Decimal('20.944979'), footprint.place.longitude())
+        self.assertEquals('Osgiliath', footprint.place.city)
+        self.assertEquals('Gondor', footprint.place.country)
+
+    def test_add_place_existing(self):
+        position = '51.064650,20.944979'
+        place = PlaceFactory(position=position)
+        footprint = FootprintFactory()
+
+        view = BatchJobUpdateView()
+        view.add_place(footprint, position)
+
+        footprint.refresh_from_db()
+        self.assertEquals(place, footprint.place)
+
+    def test_get_or_create_imprint(self):
+        view = BatchJobUpdateView()
+        imprint = view.get_or_create_imprint(self.record1)
+
+        self.assertIsNone(imprint.place)
+
+        self.assertTrue(imprint.work.actor.filter(
+            person__name=self.record1.writtenwork_author).exists())
+
+        self.assertTrue(imprint.actor.filter(
+            person__name=self.record1.publisher).exists())
+
     def test_get_or_create_copy(self):
         fp = FootprintFactory()
         imprint = ImprintFactory()
@@ -173,19 +229,7 @@ class BatchJobUpdateViewTest(TestCase):
 
         self.assertEquals(fp.associated_date.__unicode__(),
                           self.record1.footprint_date)
-        self.assertEquals(fp.place.latitude(), Decimal('41.0136'))
-        self.assertEquals(fp.place.longitude(), Decimal('28.9550'))
-
-    def test_view_basics(self):
-        response = self.client.get(self.url)
-        self.assertEquals(response.status_code, 405)
-
-        response = self.client.post(self.url)
-        self.assertEquals(response.status_code, 405)
-
-        self.client.login(username=self.user.username, password='test')
-        response = self.client.post(self.url)
-        self.assertEquals(response.status_code, 405)
+        self.assertEquals(fp.place, None)
 
     def test_post(self):
         self.client.login(username=self.staff.username, password='test')

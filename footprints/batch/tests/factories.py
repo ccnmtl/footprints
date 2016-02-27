@@ -29,7 +29,7 @@ class BatchRowFactory(factory.DjangoModelFactory):
     # imprint publisher/printer information
     publisher = 'Eliezer Soncino'
     publisher_viaf = '297361612'
-    publication_location = '41.0136,28.9550'
+    publication_location = None
     publication_date = '1542'
 
     medium = 'Library Catalog/Union Catalog'
@@ -42,5 +42,5 @@ class BatchRowFactory(factory.DjangoModelFactory):
     footprint_actor_birth_date = ''
     footprint_actor_death_date = ''
     footprint_notes = 'Levita, Elijah.'
-    footprint_location = '41.0136,28.9550'
+    footprint_location = None
     footprint_date = '1989'

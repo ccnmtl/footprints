@@ -266,13 +266,11 @@ class ImprintTest(TestCase):
         bhb_number = '94677047'
 
         imprint, created = Imprint.objects.get_or_create_by_attributes(
-            bhb_number, 'The Odyssey', 'The Odyssey, Edition 1',
-            '1984~', '50.064650,19.944979')
+            bhb_number, 'The Odyssey', 'The Odyssey, Edition 1', '1984~')
 
         self.assertEquals(imprint.title, 'The Odyssey, Edition 1')
         self.assertEquals(imprint.work.title, 'The Odyssey')
         self.assertEquals(imprint.date_of_publication.edtf_format, '1984~')
-        self.assertEquals(str(imprint.place.position), '50.064650,19.944979')
 
         q = imprint.standardized_identifier.filter(
             identifier=bhb_number, identifier_type__slug=SLUG_BHB)

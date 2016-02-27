@@ -1,5 +1,8 @@
 import csv
+from json import loads
+import urllib2
 
+from django.conf import settings
 from django.contrib import messages
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.db import transaction
@@ -54,6 +57,34 @@ class BatchJobDetailView(LoggedInStaffMixin, DetailView):
 
 class BatchJobUpdateView(LoggedInStaffMixin, View):
 
+    def reverse_geocode(self, latitude, longitude):
+        # reverse geocode the lat/long
+        url = settings.GOOGLE_MAPS_REVERSE_GEOCODE
+        response = urllib2.urlopen(url.format(latitude, longitude))
+        the_json = loads(response.read())
+        components = the_json['results'][0]['address_components']
+
+        city = None
+        country = None
+        for component in components:
+            if ('locality' in component['types'] or
+                    'administrative_area_level_1' in component['types']):
+                city = component['long_name']
+            if 'country' in component['types']:
+                country = component['long_name']
+
+        return city, country
+
+    def add_place(self, obj, location):
+        obj.place, created = Place.objects.get_or_create_from_string(
+            location)
+        obj.save()
+
+        if created:
+            obj.place.city, obj.place.country = self.reverse_geocode(
+                obj.place.latitude(), obj.place.longitude())
+            obj.place.save()
+
     def add_author(self, record, work):
         author, created = Actor.objects.get_or_create_by_attributes(
             record.writtenwork_author, record.writtenwork_author_viaf,
@@ -80,6 +111,19 @@ class BatchJobUpdateView(LoggedInStaffMixin, View):
         except Role.DoesNotExist:
             pass  # role must be specified to create the actor
 
+    def get_or_create_imprint(self, record):
+        imprint, created = Imprint.objects.get_or_create_by_attributes(
+            record.bhb_number, record.get_writtenwork_title(),
+            record.imprint_title, record.publication_date)
+
+        if record.publication_location:
+            self.add_place(imprint, record.publication_location)
+
+        self.add_author(record, imprint.work)
+        self.add_publisher(record, imprint)
+
+        return imprint
+
     def get_or_create_copy(self, call_number, imprint):
         q = {'call_number': call_number, 'book_copy__imprint': imprint}
         footprint = Footprint.objects.filter(**q).first()
@@ -102,10 +146,12 @@ class BatchJobUpdateView(LoggedInStaffMixin, View):
                 edtf_format=record.footprint_date)
 
         if record.footprint_location:
-            fp.place = Place.objects.get_or_create_from_string(
-                record.footprint_location)[0]
+            self.add_place(fp, record.footprint_location)
 
         fp.save()
+
+        self.add_actor(record, fp)
+
         return fp
 
     @transaction.atomic
@@ -115,19 +161,9 @@ class BatchJobUpdateView(LoggedInStaffMixin, View):
 
         footprints = []
         for record in job.batchrow_set.all():
-            imprint, created = Imprint.objects.get_or_create_by_attributes(
-                record.bhb_number, record.get_writtenwork_title(),
-                record.imprint_title, record.publication_date,
-                record.publication_location)
-
-            self.add_author(record, imprint.work)
-            self.add_publisher(record, imprint)
-
+            imprint = self.get_or_create_imprint(record)
             copy = self.get_or_create_copy(record.call_number, imprint)
-
             footprint = self.create_footprint(record, copy)
-            self.add_actor(record, footprint)
-
             footprints.append(footprint)
 
         job.processed = True

@@ -672,7 +672,7 @@ class ImprintManager(models.Manager):
         self._fields = fields
 
     def get_or_create_by_attributes(self, bhb_number, work_title, title,
-                                    publication_date, publication_location):
+                                    publication_date):
         created = False
         imprint = Imprint.objects.filter(
             standardized_identifier__identifier_type__slug=SLUG_BHB,
@@ -695,10 +695,6 @@ class ImprintManager(models.Manager):
             if publication_date:
                 imprint.date_of_publication = ExtendedDate.objects.create(
                     edtf_format=publication_date)
-
-            if publication_location:
-                imprint.place = Place.objects.get_or_create_from_string(
-                    publication_location)[0]
 
             imprint.save()
 
