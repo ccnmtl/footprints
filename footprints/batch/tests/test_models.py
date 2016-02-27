@@ -46,3 +46,6 @@ class BatchRowTest(TestCase):
         fp.actor.add(actor)
 
         self.assertTrue(row.similar_footprints().exists())
+
+    def test_check_imprint_integrity(self):
+        pass

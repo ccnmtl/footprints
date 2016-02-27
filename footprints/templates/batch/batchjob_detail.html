@@ -110,6 +110,21 @@
                             {% endfor %}
                         {% endfor %}
                     </tr>
+                    <tr>
+                        <td class="field-name">Data Integrity</td>
+                        {% for row in rows %}
+                            {% with msg1=row.check_imprint_integrity %}
+                                <td data-record-id="{{row.id}}" class="
+                                    {% if msg1 %}
+                                        invalid has-error">
+                                        <div class="small">{{msg1|safe}}</div>
+                                    {% else %}
+                                        valid"><div class="small">No integrity issues.</div>
+                                    {% endif %}
+                                </td>
+                            {% endwith %}
+                        {% endfor %}
+                    </tr>
                     {% for field in fields %}
                         <tr>
                             <td class="field-name">

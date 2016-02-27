@@ -5,7 +5,7 @@ from geoposition import Geoposition
 
 from footprints.batch.validators import validate_publication_location, \
     validate_footprint_location
-from footprints.main.models import Footprint
+from footprints.main.models import Footprint, Imprint
 
 
 class BatchJob(models.Model):
@@ -56,6 +56,9 @@ class BatchRow(models.Model):
         "This value is invalid. See <a target='_blank' "
         "href='https://github.com/ccnmtl/footprints/wiki/Batch-Import-Format'>"
         "roles</a> for a list of choices.")
+    IMPRINT_INTEGRITY = (
+        "A <a href='/writtenwork/{}/#imprint-{}'>matching imprint</a> "
+        "has conflicting data: <b>{}</b>.")
 
     job = models.ForeignKey(BatchJob)
 
@@ -127,6 +130,9 @@ class BatchRow(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        ordering = ['writtenwork_title', 'imprint_title', 'id']
+
     @classmethod
     def imported_fields(cls):
         return [BatchRow._meta.get_field(name) for name in cls.FIELD_MAPPING]
@@ -145,6 +151,37 @@ class BatchRow(models.Model):
         if self.writtenwork_title is None or len(self.writtenwork_title) < 1:
             return self.imprint_title
         return self.writtenwork_title
+
+    def check_imprint_integrity(self):
+        imprint = Imprint.objects.filter(
+            standardized_identifier__identifier=self.bhb_number).first()
+
+        if imprint is None:
+            return None
+
+        fields = []
+        msg = None
+
+        # title, date, location & writtenwork title should match
+        if imprint.title != self.imprint_title:
+            fields.append('title')
+
+        if not imprint.date_of_publication.match_string(
+                self.publication_date):
+            fields.append('publication date')
+
+        if not imprint.place.match_string(self.publication_location):
+            fields.append('publication location')
+
+        if (self.writtenwork_title and
+                imprint.work.title.lower() != self.writtenwork_title.lower()):
+            fields.append('literary work title')
+
+        if len(fields):
+            msg = self.IMPRINT_INTEGRITY.format(
+                imprint.work.id, imprint.id, ', '.join(fields))
+
+        return msg
 
     def similar_footprints(self):
         kwargs = {

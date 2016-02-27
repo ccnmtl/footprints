@@ -1,4 +1,5 @@
 from datetime import date
+from decimal import Decimal
 
 from audit_log.models.fields import LastUserField, CreatingUserField
 from django.db import models
@@ -65,8 +66,8 @@ class ExtendedDateManager(models.Manager):
         else:
             return 'unknown'
 
-        dt = format_uncertain(dt, uncertain)
-        dt = format_approximate(dt, approximate)
+        dt = append_uncertain(dt, uncertain)
+        dt = append_approximate(dt, approximate)
 
         return dt
 
@@ -86,14 +87,18 @@ class ExtendedDateManager(models.Manager):
 
         return ExtendedDate(edtf_format=dt)
 
+    def create_from_string(self, date_str):
+        edtf = unicode(EDTF.from_natural_text(date_str))
+        return ExtendedDate.objects.create(edtf_format=edtf)
 
-def format_uncertain(dt, uncertain):
+
+def append_uncertain(dt, uncertain):
     if uncertain:
         dt = '{}?'.format(dt)
     return dt
 
 
-def format_approximate(dt, approximate):
+def append_approximate(dt, approximate):
     if approximate:
         dt = '{}~'.format(dt)
     return dt
@@ -208,6 +213,9 @@ class ExtendedDate(models.Model):
             return None
 
         return self._validate_python_date(edtf.end_date_earliest())
+
+    def match_string(self, date_str):
+        return self.edtf_format == unicode(EDTF.from_natural_text(date_str))
 
 
 def fmt_uncertain(date_obj, result):
@@ -589,6 +597,11 @@ class Place(models.Model):
     def longitude(self):
         return self.position.longitude
 
+    def match_string(self, latlng):
+        a = latlng.split(',')
+        return (self.latitude() == Decimal(a[0]) and
+                self.longitude() == Decimal(a[1]))
+
 
 class Collection(models.Model):
     name = models.CharField(max_length=512, unique=True)
@@ -693,8 +706,8 @@ class ImprintManager(models.Manager):
 
             # add publication date
             if publication_date:
-                imprint.date_of_publication = ExtendedDate.objects.create(
-                    edtf_format=publication_date)
+                imprint.date_of_publication = \
+                    ExtendedDate.objects.create_from_string(publication_date)
 
             imprint.save()
 
