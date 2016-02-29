@@ -20,7 +20,8 @@ def validate_date(value):
     if value is None or len(value) < 1:
         return True
 
-    return unicode(EDTF.from_natural_text(value)) != ''
+    s = unicode(EDTF.from_natural_text(value))
+    return s != '' and 'invalid' not in s
 
 
 def validate_writtenwork_author_birth_date(value):

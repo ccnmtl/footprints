@@ -2189,7 +2189,7 @@ p.decoy {
 
 .batch-job-detail .batch-job-row-container table td {
     width: 10px;
-    padding: 4px;
+    padding: 3px;
     border: 1px solid white;
     background-color: lightgray;
 }

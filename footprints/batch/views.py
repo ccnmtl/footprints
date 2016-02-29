@@ -142,8 +142,8 @@ class BatchJobUpdateView(LoggedInStaffMixin, View):
             notes=record.aggregate_notes())
 
         if record.footprint_date:
-            fp.associated_date = ExtendedDate.objects.create(
-                edtf_format=record.footprint_date)
+            fp.associated_date = ExtendedDate.objects.create_from_string(
+                record.footprint_date)
 
         if record.footprint_location:
             self.add_place(fp, record.footprint_location)

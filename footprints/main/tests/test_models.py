@@ -11,7 +11,7 @@ from footprints.main.models import Language, DigitalFormat, \
 from footprints.main.tests.factories import RoleFactory, \
     ActorFactory, PlaceFactory, CollectionFactory, \
     WrittenWorkFactory, ImprintFactory, BookCopyFactory, FootprintFactory, \
-    PersonFactory, DigitalObjectFactory
+    PersonFactory, DigitalObjectFactory, ExtendedDateFactory
 
 
 class BasicModelTest(TestCase):
@@ -85,8 +85,11 @@ class BasicModelTest(TestCase):
         self.assertEquals(person.percent_complete(), 100)
 
     def test_place(self):
-        place = Place.objects.create(position='50.064650,19.944979')
+        latlng = '50.064650,19.944979'
+        place = Place.objects.create(position=latlng)
         self.assertEquals(place.__unicode__(), '')
+        self.assertTrue(place.match_string(latlng))
+        self.assertFalse(place.match_string('12.34,56.789'))
 
         place = PlaceFactory()
         self.assertEquals(place.__unicode__(), 'Cracow, Poland')
@@ -219,6 +222,18 @@ class ExtendedDateTest(TestCase):
         dt = mgr.to_edtf(2, 0, 1, 5, 12, 31, False, False)
         self.assertEquals(dt, '2015-12-31')
 
+    def test_match_string(self):
+        edtf = ExtendedDateFactory()
+        self.assertTrue(edtf.match_string('approximately 1984'))
+        self.assertFalse(edtf.match_string('1984'))
+
+    def test_create_from_string(self):
+        dt = ExtendedDate.objects.create_from_string('approximately 1983')
+        self.assertEquals(dt.edtf_format, '1983~')
+
+        dt = ExtendedDate.objects.create_from_string('before 1984')
+        self.assertEquals(dt.edtf_format, 'unknown/1984')
+
 
 class ImprintTest(TestCase):
 
@@ -266,7 +281,8 @@ class ImprintTest(TestCase):
         bhb_number = '94677047'
 
         imprint, created = Imprint.objects.get_or_create_by_attributes(
-            bhb_number, 'The Odyssey', 'The Odyssey, Edition 1', '1984~')
+            bhb_number, 'The Odyssey', 'The Odyssey, Edition 1',
+            'approximately 1984')
 
         self.assertEquals(imprint.title, 'The Odyssey, Edition 1')
         self.assertEquals(imprint.work.title, 'The Odyssey')
