@@ -88,11 +88,11 @@
                             {% endif %}
                             </b>
                         </h4>
-                        {% if imprint.date_of_publication or imprint.place %}
+                        {% if imprint.publication_date or imprint.place %}
                         <div class="imprint-description-published">
                             Published
-                            {% if imprint.date_of_publication %}
-                                {{imprint.date_of_publication}}{% if imprint.place %},{% endif %}
+                            {% if imprint.publication_date %}
+                                {{imprint.publication_date}}{% if imprint.place %},{% endif %}
                             {% endif %}
                             {% if imprint.place %}
                                 {{imprint.place}}

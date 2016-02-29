@@ -145,7 +145,7 @@ class ImprintSerializer(HyperlinkedModelSerializer):
     language = LanguageSerializer(many=True, read_only=True)
     actor = ActorSerializer(many=True, read_only=True)
     place = PlaceSerializer()
-    date_of_publication = ExtendedDateSerializer()
+    publication_date = ExtendedDateSerializer()
     standardized_identifier = StandardizedIdentificationSerializer(
         many=True, read_only=True)
 
@@ -153,7 +153,7 @@ class ImprintSerializer(HyperlinkedModelSerializer):
         model = Imprint
         # @todo digital_object, standardized_identifier
         fields = ('id', 'work', 'title', 'language', 'place',
-                  'date_of_publication', 'actor', 'notes',
+                  'publication_date', 'actor', 'notes',
                   'standardized_identifier', 'description')
 
 
