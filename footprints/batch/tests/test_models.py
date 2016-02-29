@@ -71,7 +71,7 @@ class BatchRowTest(TestCase):
         sid = StandardizedIdentificationFactory(identifier=row.bhb_number)
         imprint.standardized_identifier.add(sid)
 
-        imprint.date_of_publication = ExtendedDate.objects.create(
+        imprint.publication_date = ExtendedDate.objects.create(
             edtf_format=row.publication_date)
         imprint.place, created = Place.objects.get_or_create_from_string(coord)
         imprint.save()
