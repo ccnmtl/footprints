@@ -153,14 +153,15 @@ class BatchRow(models.Model):
         return self.writtenwork_title
 
     def check_imprint_integrity(self):
+        msg = None
+
         imprint = Imprint.objects.filter(
             standardized_identifier__identifier=self.bhb_number).first()
 
         if imprint is None:
-            return None
+            return msg
 
         fields = []
-        msg = None
 
         # title, date, location & writtenwork title should match
         if imprint.title != self.imprint_title:
