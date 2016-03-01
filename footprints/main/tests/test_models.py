@@ -286,7 +286,7 @@ class ImprintTest(TestCase):
 
         self.assertEquals(imprint.title, 'The Odyssey, Edition 1')
         self.assertEquals(imprint.work.title, 'The Odyssey')
-        self.assertEquals(imprint.date_of_publication.edtf_format, '1984~')
+        self.assertEquals(imprint.publication_date.edtf_format, '1984~')
 
         q = imprint.standardized_identifier.filter(
             identifier=bhb_number, identifier_type__slug=SLUG_BHB)

@@ -134,7 +134,7 @@ class ImprintFactory(factory.DjangoModelFactory):
 
     work = factory.SubFactory(WrittenWorkFactory)
     title = 'The Odyssey, Edition 1'
-    date_of_publication = factory.SubFactory(ExtendedDateFactory)
+    publication_date = factory.SubFactory(ExtendedDateFactory)
     place = factory.SubFactory(PlaceFactory)
     notes = "lorem ipsum"
 

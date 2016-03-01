@@ -59,7 +59,7 @@ def language(obj):
 
 
 class ImprintAdmin(admin.ModelAdmin):
-    list_display = (work_title, 'title', 'date_of_publication', language)
+    list_display = (work_title, 'title', 'publication_date', language)
 
 admin.site.register(Imprint, ImprintAdmin)
 
@@ -75,7 +75,7 @@ imprint_title.short_description = 'Imprint Title'
 
 def imprint_date(obj):
     if obj.book_copy and obj.book_copy.imprint:
-        return obj.book_copy.imprint.date_of_publication
+        return obj.book_copy.imprint.publication_date
     else:
         return ''
 

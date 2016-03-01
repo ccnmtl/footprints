@@ -706,7 +706,7 @@ class ImprintManager(models.Manager):
 
             # add publication date
             if publication_date:
-                imprint.date_of_publication = \
+                imprint.publication_date = \
                     ExtendedDate.objects.create_from_string(publication_date)
 
             imprint.save()
@@ -722,8 +722,8 @@ class Imprint(models.Model):
     title = models.TextField(null=True, blank=True,
                              verbose_name="Imprint Title")
     language = models.ManyToManyField(Language, blank=True)
-    date_of_publication = models.OneToOneField(ExtendedDate,
-                                               null=True, blank=True)
+    publication_date = models.OneToOneField(ExtendedDate,
+                                            null=True, blank=True)
     place = models.ForeignKey(Place, null=True, blank=True)
 
     actor = models.ManyToManyField(Actor, blank=True)
@@ -749,8 +749,8 @@ class Imprint(models.Model):
     def __unicode__(self):
         label = self.display_title() or "Imprint"
 
-        if self.date_of_publication:
-            label = "%s (%s)" % (label, self.date_of_publication)
+        if self.publication_date:
+            label = "%s (%s)" % (label, self.publication_date)
         return label
 
     def display_title(self):
@@ -782,8 +782,8 @@ class Imprint(models.Model):
     def has_language(self):
         return self.language is not None
 
-    def has_date_of_publication(self):
-        return self.date_of_publication is not None
+    def has_publication_date(self):
+        return self.publication_date is not None
 
     def has_place(self):
         return self.place is not None
@@ -807,7 +807,7 @@ class Imprint(models.Model):
             self.has_work(),
             self.has_title(),
             self.has_language(),
-            self.has_date_of_publication(),
+            self.has_publication_date(),
             self.has_place(),
             self.has_at_least_one_actor(),
             self.has_standardized_identifier(),
@@ -831,8 +831,8 @@ class Imprint(models.Model):
         return Footprint.objects.filter(book_copy__imprint=self).count()
 
     def sort_date(self):
-        if self.date_of_publication:
-            return self.date_of_publication.start()
+        if self.publication_date:
+            return self.publication_date.start()
 
         return date.min
 

@@ -148,14 +148,14 @@ The Literary Work
             <% } %>
         </dd>
     <% } %>
-    <% if (imprint.date_of_publication) { %>
+    <% if (imprint.publication_date) { %>
         <dt>Publication Date</dt>
         <dd class="border-bottom">
-            <%=imprint.date_of_publication.display%>
+            <%=imprint.publication_date.display%>
             <% if (editable) { %>
                 <div class="pull-right">
                 <a href="javascript:void(0);" class="remove-related"
-                    data-params="{attr:'date_of_publication',child_id:'<%=imprint.date_of_publication.id%>',parent_id:<%=imprint.id%>,parent_model:'imprint'}" 
+                    data-params="{attr:'publication_date',child_id:'<%=imprint.publication_date.id%>',parent_id:<%=imprint.id%>,parent_model:'imprint'}" 
                     data-url="/remove/related/"
                     title="remove date">
                     <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
@@ -287,12 +287,12 @@ The Literary Work
                         data-url="/language/add/">the language of the imprint?</a>
                     </li>
                 <% } %>
-                <% if (!imprint.date_of_publication) { %> 
+                <% if (!imprint.publication_date) { %> 
                     <li><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
                     <a href="javascript:void(0);" class="editable-edtf do-you-know persistant editable-refresh"
                         data-name="date_string" data-type="edtf" data-pk="<%=imprint.id%>"
                         data-value="" data-method="post"
-                        data-params="{parent_id:<%=imprint.id%>,parent_model:'imprint',attr:'date_of_publication'}"
+                        data-params="{parent_id:<%=imprint.id%>,parent_model:'imprint',attr:'publication_date'}"
                         data-url="/date/add/">the imprint publication date?</a>
                     </li>
                 <% } %>

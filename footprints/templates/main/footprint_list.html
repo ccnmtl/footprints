@@ -129,8 +129,8 @@
                             </div>
                         {% endif %}
                         <div class="subtext">
-                            {% if footprint.book_copy.imprint.date_of_publication %}
-                                {{footprint.book_copy.imprint.date_of_publication}}{% if footprint.book_copy.imprint.place %}, {% endif %}
+                            {% if footprint.book_copy.imprint.publication_date %}
+                                {{footprint.book_copy.imprint.publication_date}}{% if footprint.book_copy.imprint.place %}, {% endif %}
                             {% endif %}
                             {% if footprint.book_copy.imprint.place %}
                                 {{footprint.book_copy.imprint.place}}
