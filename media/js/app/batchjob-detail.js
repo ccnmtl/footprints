@@ -6,17 +6,19 @@
             'click button.delete-record': 'confirmDeleteRecord',
             'click #confirm-delete-modal .btn-primary': 'deleteRecord',
             'click #process-job': 'confirmProcessJob',
-            'click #confirm-process-modal .btn-primary': 'processJob',
+            'click #confirm-process-modal .btn-primary': 'processJob'
         },
         initialize: function(options) {
             _.bindAll(this, 'clickRecord', 'updateRecord', 'refreshRecord',
                 'deleteRecord', 'confirmDeleteRecord', 'checkErrorState',
                 'showModal', 'showSuccessModal', 'showErrorModal',
-                'confirmProcessJob', 'processJob');
+                'closeRecord', 'confirmProcessJob', 'processJob');
 
             this.baseUpdateUrl = options.baseUpdateUrl;
 
             this.checkErrorState();
+
+            jQuery('body').click(this.closeRecord);
         },
         checkErrorState: function() {
             if (jQuery(this.el).find('.has-error').length > 0) {
@@ -28,7 +30,11 @@
                 jQuery(this.el).find('.alert-danger').hide();
             }
         },
+        closeRecord: function(evt) {
+            jQuery(this.el).find('td.selected').removeClass('selected');
+        },
         clickRecord: function(evt) {
+            evt.preventDefault();
             var $td = jQuery(evt.currentTarget);
             jQuery(this.el).find('td.selected').removeClass('selected');
 
@@ -36,6 +42,7 @@
             jQuery(this.el)
                 .find('td[data-record-id="' + dataId + '"]')
                 .addClass('selected');
+            return false;
         },
         refreshRecord: function(json, textStatus, xhr) {
             // remove all status classes

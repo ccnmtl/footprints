@@ -1,11 +1,13 @@
 from audit_log.models.fields import CreatingUserField
+from django.core.exceptions import ValidationError
+from django.core.validators import URLValidator
 from django.db import models
 from django.db.models.query_utils import Q
 from geoposition import Geoposition
 
-from footprints.batch.validators import validate_publication_location, \
-    validate_footprint_location
-from footprints.main.models import Footprint, Imprint
+from footprints.batch.validators import validate_date, validate_numeric, \
+    validate_latlng
+from footprints.main.models import Footprint, Imprint, Role, MEDIUM_CHOICES
 
 
 class BatchJob(models.Model):
@@ -52,13 +54,16 @@ class BatchRow(models.Model):
     LOCATION_HELP_TEXT = (
         "This value is invalid. Please enter a geocode, e.g. "
         "51.752021,-1.2577.")
-    ROLE_HELP_TEXT = (
-        "This value is invalid. See <a target='_blank' "
+    FOOTPRINT_ACTOR_ROLE_HELP_TEXT = (
+        "A role is required when an actor's name is specified. The value is "
+        "invalid or missing. See <a target='_blank' "
         "href='https://github.com/ccnmtl/footprints/wiki/Batch-Import-Format'>"
         "roles</a> for a list of choices.")
     IMPRINT_INTEGRITY = (
         "A <a href='/writtenwork/{}/#imprint-{}'>matching imprint</a> "
         "has conflicting data: <b>{}</b>.")
+    FOOTPRINT_ACTOR_HELP_TEXT = (
+        "An actor name is required when a role is specified.")
 
     job = models.ForeignKey(BatchJob)
 
@@ -106,13 +111,14 @@ class BatchRow(models.Model):
         null=True, blank=True, verbose_name='Call Number')
 
     footprint_actor = models.TextField(
-        null=True, blank=True, verbose_name='Footprint Actor')
+        null=True, blank=True, verbose_name='Footprint Actor',
+        help_text=FOOTPRINT_ACTOR_HELP_TEXT)
     footprint_actor_viaf = models.TextField(
         null=True, blank=True, verbose_name='Footprint Actor VIAF',
         help_text=VIAF_HELP_TEXT)
     footprint_actor_role = models.TextField(
         null=True, blank=True, verbose_name='Footprint Actor Role',
-        help_text=ROLE_HELP_TEXT)
+        help_text=FOOTPRINT_ACTOR_ROLE_HELP_TEXT)
     footprint_actor_birth_date = models.TextField(
         null=True, blank=True, verbose_name='Footprint Actor Birth Date',
         help_text=DATE_HELP_TEXT)
@@ -212,7 +218,7 @@ class BatchRow(models.Model):
                 Q(book_copy__imprint__actor__alias=self.publisher))
 
         if (self.publication_location and
-                validate_publication_location(self.publication_location)):
+                self.validate_publication_location()):
             latlong = self.publication_location.split(',')
             gp = Geoposition(latlong[0].strip(), latlong[1].strip())
             kwargs['book_copy__imprint__place__position'] = gp
@@ -223,9 +229,78 @@ class BatchRow(models.Model):
                 Q(actor__alias=self.footprint_actor))
 
         if (self.footprint_location and
-                validate_footprint_location(self.footprint_location)):
+                self.validate_footprint_location()):
             latlong = self.footprint_location.split(',')
             kwargs['place__position'] = Geoposition(latlong[0], latlong[1])
 
         qs = Footprint.objects.filter(*args, **kwargs)
         return qs.values_list('id', flat=True)
+
+    def validate_catalog_url(self):
+        try:
+            if self.catalog_url:
+                URLValidator()(self.catalog_url)
+            return True
+        except ValidationError:
+            return False
+
+    def validate_bhb_number(self):
+        return validate_numeric(self.bhb_number)
+
+    def validate_writtenwork_author_viaf(self):
+        return validate_numeric(self.writtenwork_author_viaf)
+
+    def validate_writtenwork_author_birth_date(self):
+        return validate_date(self.writtenwork_author_birth_date)
+
+    def validate_writtenwork_author_death_date(self):
+        return validate_date(self.writtenwork_author_death_date)
+
+    def validate_publisher_viaf(self):
+        return validate_numeric(self.publisher_viaf)
+
+    def validate_publication_date(self):
+        return validate_date(self.publication_date)
+
+    def validate_publication_location(self):
+        return validate_latlng(self.publication_location)
+
+    def validate_medium(self):
+        if not self.medium:
+            return True
+
+        return self.medium in MEDIUM_CHOICES
+
+    def validate_footprint_actor(self):
+        # if role is specified, actor must be specified
+        if self.footprint_actor_role and not self.footprint_actor:
+            return False
+
+        return True
+
+    def validate_footprint_actor_viaf(self):
+        return validate_numeric(self.footprint_actor_viaf)
+
+    def validate_footprint_actor_birth_date(self):
+        return validate_date(self.footprint_actor_birth_date)
+
+    def validate_footprint_actor_death_date(self):
+        return validate_date(self.footprint_actor_death_date)
+
+    def validate_footprint_date(self):
+        return validate_date(self.footprint_date)
+
+    def validate_footprint_actor_role(self):
+        # if actor is specified, role must be specified
+        if self.footprint_actor and not self.footprint_actor_role:
+            return False
+
+        if not self.footprint_actor_role:
+            return True
+
+        # role must be known
+        return Role.objects.for_footprint().filter(
+            name=self.footprint_actor_role).exists()
+
+    def validate_footprint_location(self):
+        return validate_latlng(self.footprint_location)

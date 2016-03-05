@@ -194,7 +194,7 @@ class BatchRowUpdateView(LoggedInStaffMixin, JSONResponseMixin, View):
             if fld.name in self.request.POST:
                 value = self.request.POST.get(fld.name)
                 setattr(row, fld.name, value)
-                errors[fld.name] = validate_field_value(fld, value)
+                errors[fld.name] = validate_field_value(row, fld, value)
 
         row.save()
 
