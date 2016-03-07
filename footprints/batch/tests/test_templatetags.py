@@ -16,16 +16,24 @@ class BatchRowTest(TestCase):
     def test_validate_field_value(self):
         # required field
         fld = BatchRow._meta.get_field('imprint_title')
-        self.assertEquals(validate_field_value(fld, None),
+        row = BatchRowFactory(imprint_title='')
+        self.assertEquals(validate_field_value(row, fld, ''),
                           'missing has-error')
-        self.assertEquals(validate_field_value(fld, ''),
-                          'missing has-error')
-        self.assertEquals(validate_field_value(fld, 'Sample'), 'valid')
+
+        row = BatchRowFactory()
+        self.assertEquals(validate_field_value(row, fld, 'Sample'), 'valid')
 
         # non-required field
+        row = BatchRowFactory(footprint_date=None)
         fld = BatchRow._meta.get_field('footprint_date')
-        self.assertEquals(validate_field_value(fld, None), 'empty')
-        self.assertEquals(validate_field_value(fld, ''), 'empty')
-        self.assertEquals(validate_field_value(fld, 'foobar'),
+        self.assertEquals(validate_field_value(row, fld, None), 'empty')
+
+        row = BatchRowFactory(footprint_date='')
+        self.assertEquals(validate_field_value(row, fld, ''), 'empty')
+
+        row = BatchRowFactory(footprint_date='foobar')
+        self.assertEquals(validate_field_value(row, fld, 'foobar'),
                           'invalid has-error')
-        self.assertEquals(validate_field_value(fld, '1902'), 'valid')
+
+        row = BatchRowFactory(footprint_date=1902)
+        self.assertEquals(validate_field_value(row, fld, '1902'), 'valid')

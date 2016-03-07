@@ -1,5 +1,4 @@
 from django import template
-from footprints.batch import validators
 
 register = template.Library()
 
@@ -10,21 +9,23 @@ def field_value(batch_row, field):
 
 
 @register.simple_tag()
-def validate_field_value(field, value):
+def validate_field_value(row, field, value):
     # required field, null or empty?
-    if value is None:
-        return 'empty' if field.null else 'missing has-error'
-
-    if len(value) < 1:
-        return 'empty' if field.blank else 'missing has-error'
+    if not value and (not field.null or not field.blank):
+        return 'missing has-error'
 
     # per field validators
     valid = True
     try:
         method_name = 'validate_{}'.format(field.name)
-        method = getattr(validators, method_name)
-        valid = method(value)
+        method = getattr(row, method_name)
+        valid = method()
     except AttributeError:
-        valid = True
+        valid = True  # some fields don't need additional validation
 
-    return 'valid' if valid else 'invalid has-error'
+    if valid and not value:
+        return 'empty'
+    elif valid:
+        return 'valid'
+    else:
+        return 'invalid has-error'

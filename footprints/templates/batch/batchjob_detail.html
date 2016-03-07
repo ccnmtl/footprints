@@ -133,11 +133,10 @@
                                 {% else %}
                                     <b>{{field.verbose_name|safe}}</b>
                                 {% endif %}
-                                
                             </td>
                             {% for row in rows %}
                                 {% field_value row field as the_value %}
-                                <td class="{% validate_field_value field the_value %}"
+                                <td class="{% validate_field_value row field the_value %}"
                                     data-record-id="{{row.id}}"
                                     data-value="the_value">
                                     <div>
