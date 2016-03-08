@@ -161,8 +161,10 @@ class BatchRow(models.Model):
     def check_imprint_integrity(self):
         msg = None
 
-        imprint = Imprint.objects.filter(
-            standardized_identifier__identifier=self.bhb_number).first()
+        imprints = Imprint.objects.filter(
+            standardized_identifier__identifier=self.bhb_number)
+        imprint = imprints.select_related(
+            'place', 'publication_date', 'work').first()
 
         if imprint is None:
             return msg
