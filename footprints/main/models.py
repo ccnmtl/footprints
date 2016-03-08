@@ -38,9 +38,6 @@ MEDIUM_CHOICES = [
     'Subscription list in imprint'
 ]
 
-SLUG_VIAF = 'VIAF'
-SLUG_BHB = 'BHB'
-
 
 class ExtendedDateManager(models.Manager):
 
@@ -266,13 +263,17 @@ class RoleManager(models.Manager):
         return RoleQuerySet(self.model, self._fields)
 
     def get_author_role(self):
-        return self.get_queryset().get_author_role()
+        if not hasattr(self, 'author_role'):
+            self.author_role = self.get_queryset().get_author_role()
+        return self.author_role
 
     def get_owner_role(self):
         return self.get_queryset().get_owner_role()
 
     def get_publisher_role(self):
-        return self.get_queryset().get_publisher_role()
+        if not hasattr(self, 'publisher_role') is None:
+            self.publisher_role = self.get_queryset().get_publisher_role()
+        return self.publisher_role
 
     def get_printer_role(self):
         return self.get_queryset().get_printer_role()
@@ -380,10 +381,14 @@ class StandardizedIdentificationTypeManager(models.Manager):
         return self.get_queryset().for_work()
 
     def viaf(self):
-        return self.get_queryset().viaf()
+        if not hasattr(self, 'viaf_type'):
+            self.viaf_type = self.get_queryset().viaf()
+        return self.viaf_type
 
     def bhb(self):
-        return self.get_queryset().bhb()
+        if not hasattr(self, 'bhb_type'):
+            self.bhb_type = self.get_queryset().bhb()
+        return self.bhb_type
 
 
 class StandardizedIdentificationType(models.Model):
@@ -468,7 +473,7 @@ class Person(models.Model):
             complete += 1
         if self.standardized_identifier is not None:
             complete += 1
-        if self.digital_object.count() > 0:
+        if self.digital_object.exists():
             complete += 1
         if self.notes is not None and len(self.notes) > 0:
             complete += 1
@@ -484,8 +489,9 @@ class ActorManager(models.Manager):
 
     def get_or_create_by_attributes(self, name, viaf, role, born, died):
         # find by viaf
+        viaf_type = StandardizedIdentificationType.objects.viaf()
         person = Person.objects.filter(
-            standardized_identifier__identifier_type__slug=SLUG_VIAF,
+            standardized_identifier__identifier_type=viaf_type,
             standardized_identifier__identifier=viaf).first()
 
         if person is None:
@@ -496,10 +502,9 @@ class ActorManager(models.Manager):
 
             if viaf and person.standardized_identifier is None:
                 # add identifier
-                sit = StandardizedIdentificationType.objects.viaf()
                 person.standardized_identifier = \
                     StandardizedIdentification.objects.create(
-                        identifier=viaf, identifier_type=sit)
+                        identifier=viaf, identifier_type=viaf_type)
 
             # update birth date & death date
             if born and person.birth_date is None:
@@ -654,7 +659,7 @@ class WrittenWork(models.Model):
 
         if self.title is not None and len(self.title) > 0:
             complete += 1
-        if self.actor.count() > 0:
+        if self.actor.exists():
             complete += 1
         if self.notes is not None and len(self.notes) > 0:
             complete += 1
@@ -687,8 +692,9 @@ class ImprintManager(models.Manager):
     def get_or_create_by_attributes(self, bhb_number, work_title, title,
                                     publication_date):
         created = False
+        bhb_type = StandardizedIdentificationType.objects.bhb()
         imprint = Imprint.objects.filter(
-            standardized_identifier__identifier_type__slug=SLUG_BHB,
+            standardized_identifier__identifier_type=bhb_type,
             standardized_identifier__identifier=bhb_number).first()
 
         if imprint is None:
@@ -699,9 +705,8 @@ class ImprintManager(models.Manager):
 
             # add identifier
             if bhb_number:
-                sit = StandardizedIdentificationType.objects.bhb()
                 si = StandardizedIdentification.objects.create(
-                    identifier=bhb_number, identifier_type=sit)
+                    identifier=bhb_number, identifier_type=bhb_type)
                 imprint.standardized_identifier.add(si)
 
             # add publication date
@@ -789,13 +794,13 @@ class Imprint(models.Model):
         return self.place is not None
 
     def has_at_least_one_actor(self):
-        return self.actor.count() > 0
+        return self.actor.exists()
 
     def has_standardized_identifier(self):
         return self.standardized_identifier is not None
 
     def has_at_least_one_digital_object(self):
-        return self.digital_object.count() > 0
+        return self.digital_object.exists()
 
     def has_notes(self):
         return self.notes is not None
@@ -863,7 +868,7 @@ class BookCopy(models.Model):
         required = 3.0
         completed = 1  # imprint is required
 
-        if self.digital_object.count() > 0:
+        if self.digital_object.exists():
             completed += 1
         if self.notes is not None:
             completed += 1
@@ -936,7 +941,7 @@ class Footprint(models.Model):
         return self.provenance
 
     def has_at_least_one_language(self):
-        return self.language.count() > 0
+        return self.language.exists()
 
     def has_call_number(self):
         return self.call_number is not None
@@ -948,10 +953,10 @@ class Footprint(models.Model):
         return self.associated_date is not None
 
     def has_at_least_one_digital_object(self):
-        return self.digital_object.count() > 0
+        return self.digital_object.exists()
 
     def has_at_least_one_actor(self):
-        return self.actor.count() > 0
+        return self.actor.exists()
 
     def has_notes(self):
         return self.notes is not None and len(self.notes) > 0
@@ -988,6 +993,9 @@ class Footprint(models.Model):
     def owners(self):
         role = Role.objects.get_owner_role()
         return self.actor.filter(role=role)
+
+    def actors(self):
+        return self.actor.all().select_related('person', 'role')
 
     def is_bare(self):
         return self.book_copy.imprint.work.percent_complete() == 0

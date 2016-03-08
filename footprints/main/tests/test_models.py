@@ -6,8 +6,7 @@ from django.test import TestCase
 from footprints.main.models import Language, DigitalFormat, \
     ExtendedDate, StandardizedIdentification, \
     Actor, Imprint, FOOTPRINT_LEVEL, IMPRINT_LEVEL, WRITTENWORK_LEVEL, Role, \
-    Place, Footprint, WrittenWork, BookCopy, StandardizedIdentificationType, \
-    SLUG_BHB
+    Place, Footprint, WrittenWork, BookCopy, StandardizedIdentificationType
 from footprints.main.tests.factories import RoleFactory, \
     ActorFactory, PlaceFactory, CollectionFactory, \
     WrittenWorkFactory, ImprintFactory, BookCopyFactory, FootprintFactory, \
@@ -288,8 +287,9 @@ class ImprintTest(TestCase):
         self.assertEquals(imprint.work.title, 'The Odyssey')
         self.assertEquals(imprint.publication_date.edtf_format, '1984~')
 
+        bhb_type = StandardizedIdentificationType.objects.bhb()
         q = imprint.standardized_identifier.filter(
-            identifier=bhb_number, identifier_type__slug=SLUG_BHB)
+            identifier=bhb_number, identifier_type=bhb_type)
         self.assertTrue(q.exists())
 
 
