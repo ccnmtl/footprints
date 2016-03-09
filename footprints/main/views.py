@@ -34,6 +34,7 @@ from footprints.mixins import (
 
 from .tasks import demo_task
 
+
 class IndexView(TemplateView):
     template_name = "main/index.html"
 
