@@ -42,6 +42,14 @@ sqlparse==0.1.18
 contextlib2==0.5.1
 rcssmin==1.0.6
 rjsmin==1.0.12
+amqp==1.4.9
+amqplib==1.0.2
+kombu==3.0.33
+librabbitmq==1.6.1
+celery==3.1.20
+anyjson==0.3.3
+billiard==3.3.0.22
+pytz==2015.7
 
 djangowind==0.14.3
 sorl==3.1
@@ -74,6 +82,7 @@ django-geoposition==0.2.2
 django-audit-log==0.7.0
 djangorestframework==3.3.0
 djangorestframework-jsonp==1.0.2
+django-celery==3.1.17
 Unidecode==0.04.17
 django-reversion==1.9.3
 python-dateutil==2.4.2

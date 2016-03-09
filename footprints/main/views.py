@@ -7,7 +7,7 @@ from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.db.models.fields import FieldDoesNotExist
 from django.db.models.fields.related import ManyToManyField
-from django.http.response import HttpResponseRedirect
+from django.http.response import HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.template import loader
 from django.template.context import Context
@@ -31,6 +31,8 @@ from footprints.main.models import (
 from footprints.main.serializers import NameSerializer
 from footprints.mixins import (
     JSONResponseMixin, LoggedInMixin, EditableMixin)
+
+from .tasks import demo_task
 
 
 class IndexView(TemplateView):
@@ -529,3 +531,15 @@ class ContactUsView(FormView):
         send_mail(subject, tmpl.render(Context(form_data)), sender, recipients)
 
         return super(ContactUsView, self).form_valid(form)
+
+
+class CeleryTestView(View):
+    """ demo view to test out the celery setup. You can hit this
+    and see the task print out a message in the celery worker log
+    and know that everything is going through from end to end.
+
+    once celery is doing actual work and we know everything is
+    set up properly, we can just delete this view (and the demo task)"""
+    def get(self, request):
+        demo_task.delay()
+        return HttpResponse("you should see a print in the worker logs now")

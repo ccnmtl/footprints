@@ -2,6 +2,7 @@
 # Django settings for footprints project.
 import os.path
 import sys
+import djcelery
 from ccnmtlsettings.shared import common
 
 project = 'footprints'
@@ -52,8 +53,13 @@ INSTALLED_APPS += [  # noqa
     'geoposition',
     'rest_framework',
     'reversion',
+    'djcelery',
     'footprints.batch'
 ]
+
+djcelery.setup_loader()
+BROKER_URL = "amqp://guest:guest@localhost:5672//footprints"
+CELERYD_CONCURRENCY = 2
 
 CONTACT_US_EMAIL = 'footprints@columbia.edu'
 
@@ -73,6 +79,7 @@ REST_FRAMEWORK = {
 }
 
 if 'test' in sys.argv or 'jenkins' in sys.argv:
+    CELERY_ALWAYS_EAGER = True
     HAYSTACK_CONNECTIONS = {
         'default': {
             'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
