@@ -20,7 +20,7 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 
-HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+HAYSTACK_SIGNAL_PROCESSOR = 'celery_haystack.signals.CelerySignalProcessor'
 HAYSTACK_SEARCH_RESULTS_PER_PAGE = 15
 
 PROJECT_APPS = [
@@ -54,6 +54,7 @@ INSTALLED_APPS += [  # noqa
     'rest_framework',
     'reversion',
     'djcelery',
+    'celery_haystack',
     'footprints.batch'
 ]
 

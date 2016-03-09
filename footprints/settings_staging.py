@@ -10,6 +10,18 @@ locals().update(
         INSTALLED_APPS=INSTALLED_APPS
     ))
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'transaction_hooks.backends.postgresql_psycopg2',
+        'NAME': 'footprints',
+        'HOST': '',
+        'PORT': 6432,
+        'USER': '',
+        'PASSWORD': '',
+        'ATOMIC_REQUESTS': True,
+    }
+}
+
 try:
     from local_settings import *
 except ImportError:

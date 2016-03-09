@@ -4,6 +4,7 @@ from haystack import indexes
 from haystack.fields import CharField
 from unidecode import unidecode
 
+from celery_haystack.indexes import CelerySearchIndex
 from footprints.main.models import WrittenWork, Footprint, Person, Place, \
     Imprint
 
@@ -21,7 +22,7 @@ def format_sort_by(sort_term, remove_articles=False):
     return sort_term
 
 
-class WrittenWorkIndex(indexes.SearchIndex, indexes.Indexable):
+class WrittenWorkIndex(CelerySearchIndex, indexes.Indexable):
     object_id = CharField(model_attr='id')
     object_type = CharField()
     text = indexes.NgramField(document=True, use_template=True)
@@ -38,7 +39,7 @@ class WrittenWorkIndex(indexes.SearchIndex, indexes.Indexable):
         return format_sort_by(obj.__unicode__(), remove_articles=True)
 
 
-class ImprintIndex(indexes.SearchIndex, indexes.Indexable):
+class ImprintIndex(CelerySearchIndex, indexes.Indexable):
     object_id = CharField(model_attr='id')
     object_type = CharField()
     text = indexes.NgramField(document=True, use_template=True)
@@ -51,7 +52,7 @@ class ImprintIndex(indexes.SearchIndex, indexes.Indexable):
         return type(obj).__name__
 
 
-class FootprintIndex(indexes.SearchIndex, indexes.Indexable):
+class FootprintIndex(CelerySearchIndex, indexes.Indexable):
     object_id = CharField(model_attr='id')
     object_type = CharField()
     text = indexes.NgramField(document=True, use_template=True)
@@ -68,7 +69,7 @@ class FootprintIndex(indexes.SearchIndex, indexes.Indexable):
         return format_sort_by(obj.title, remove_articles=True)
 
 
-class PersonIndex(indexes.SearchIndex, indexes.Indexable):
+class PersonIndex(CelerySearchIndex, indexes.Indexable):
     object_id = CharField(model_attr='id')
     object_type = CharField()
     text = indexes.NgramField(document=True, use_template=True)
@@ -85,7 +86,7 @@ class PersonIndex(indexes.SearchIndex, indexes.Indexable):
         return format_sort_by(obj.name, remove_articles=True)
 
 
-class PlaceIndex(indexes.SearchIndex, indexes.Indexable):
+class PlaceIndex(CelerySearchIndex, indexes.Indexable):
     object_id = CharField(model_attr='id')
     object_type = CharField()
     text = indexes.NgramField(document=True, use_template=True)
