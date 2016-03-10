@@ -1840,6 +1840,21 @@ ul.additional-questions .editable-container {
     border-radius: 10px;
 }
 
+/* Pagination */
+.pagination {
+    margin: -4px 0 0 30px;
+}
+
+.pagination > li > a, .pagination > li > span {
+    color: #2e5367;
+}
+
+.pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus {
+    color: #fff;
+    background-color: #2e5367;
+    border-color: #2e5367;
+}
+
 /* Browse */
 .object-browse .panel-body {
     padding: 0;
@@ -1849,13 +1864,33 @@ ul.additional-questions .editable-container {
     margin: 20px 0;
 }
 
-.pagination {
-    margin: -4px 0 0 30px;
+.object-browse .tools .col-md-2 {
+    padding-left: 0;
+    padding-right: 0;
 }
 
-.pagination > li > a, .pagination > li > span {
+.object-browse .tools a.btn {
     color: #2e5367;
+    font-size: 12px;
+    border: 1px solid #ddd;
 }
+
+.object-browse .tools input {
+    width: 50px;
+    display: inline;
+    text-align: right;
+}
+
+.object-browse .tools .page-count .error-block {
+    display: none;
+    color: #a94442;
+    margin-bottom: 0;
+}
+
+.object-browse .tools .page-count.has-error .error-block {
+    display: block;
+}
+
 
 .object-browse .btn-sort-direction {
     color: #333;
@@ -1878,12 +1913,6 @@ ul.additional-questions .editable-container {
     color: #333;
     background-color: #e6e6e6;
     border-color: #adadad;
-}
-
-.pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus {
-    color: #fff;
-    background-color: #2e5367;
-    border-color: #2e5367;
 }
 
 .object-browse table {
@@ -1953,6 +1982,7 @@ ul.additional-questions .editable-container {
 
 .object-browse .page-count {
     font-size: 16px;
+    margin: -3px 15px 0px 15px;
 }
 
 /* Search Page & Browse Pages */
