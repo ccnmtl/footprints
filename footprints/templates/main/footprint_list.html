@@ -6,44 +6,16 @@
 {% block js %}
     {% compress js %}
         <script src="{{STATIC_URL}}js/jquery-circle-progress/circle-progress.js"></script>
+        <script src="{{STATIC_URL}}js/app/footprint-list.js"></script>
     {% endcompress %}
-
-    <script type="text/javascript">    
+    
+    <script type="text/javascript">
         jQuery(document).ready(function() {
-            jQuery('.progress-circle').each(function() {
-                var pct = parseInt(jQuery(this).data('value'), 10) / 100;
-                jQuery(this).circleProgress({
-                    animation: false,
-                    value: pct,
-                    size: 50,
-                    startAngle: -Math.PI/2,
-                    emptyFill: '#D7D6D6',
-                    fill: {
-                        color: '#97421b'  //'#2e5367'
-                    }
-                });
-            });
-            
-            var selected_direction = "{{direction}}";
-            var selected_sort = "{{selected_sort}}";
-            var base_url = "{% url 'browse-footprint-list-default' %}";
-
-            jQuery('th.sortable').each(function() {
-                var sort_by = jQuery(this).data('sort-by');
-                if (sort_by === selected_sort) {
-                    jQuery(this).addClass('selected').addClass(selected_direction);
-                }
-            });
-
-            jQuery('th.sortable').click(function() {
-                var direction = 'asc';
-                var sort_by = jQuery(this).data('sort-by');
-                if (sort_by === selected_sort) {
-                    direction = selected_direction === 'asc' ? 'desc' : 'asc';
-                }
-                
-                var url = base_url + sort_by + '/?direction=' + direction;
-                window.location = url;
+            var view = new FootprintListView({
+                el: jQuery(".object-browse"),
+                baseUrl: "{% url 'browse-footprint-list-default' %}",
+                selectedDirection: "{{direction}}",
+                selectedSort: "{{selected_sort}}"
             });
         });
     </script>
@@ -56,26 +28,51 @@
 </div>
 
 <div class="object-browse">
-    <div class="row tools">
-        <div class="col-sm-12">
-            {% if paginator.num_pages > 1 %}
-                <ul class="pagination pagination-sm pull-right">
-                    {% for a_page in paginator.page_range %}
-                        {% ifequal page_obj.number a_page %}
-                            <li class="active"><a class="page-link disabled"
+    {% if paginator.num_pages > 1 %}
+        <div class="row tools">
+            <div class="col-md-12">
+                <div class="pull-right">
+                    <a class="btn btn-white btn-sm {% if not page_obj.has_next %}disabled{% endif %}"
+                        {% if page_obj.has_next %}  
+                            href="{% url 'browse-footprint-list' selected_sort%}?direction={{direction}}&page={{page_obj.next_page_number}}"
                         {% else %}
-                            <li><a class="page-link"
-                        {% endifequal %}
-                            href="?page={{ a_page }}">{{a_page}}</a></li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-            <div class="pull-right page-count">
-                {{page_obj.start_index}} - {{page_obj.end_index}} of {{paginator.count}} items
+                            href="#"
+                        {% endif %}
+                    >
+                        Next <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
+                    </a>
+            
+                    <a class="btn btn-white btn-sm {% if not page_obj.has_next %}disabled{% endif %}" 
+                        href="{% url 'browse-footprint-list' selected_sort%}?direction={{direction}}&page={{paginator.num_pages}}">
+                         Last <span class="glyphicon glyphicon-fast-forward" aria-hidden="true"></span>
+                    </a>                
+                </div>
+                <div class="pull-right page-count">
+                    Page <input data-base-url="{% url 'browse-footprint-list' selected_sort%}?direction={{direction}}&page="
+                            class="form-control" type="text"
+                            value="{{page_obj.number}}"> of <span class="max-page">{{paginator.num_pages}}</span>
+                    <p class="error-block small">
+                        Invalid page number
+                    </p>
+                </div>
+                <div class="pull-right">
+                    <a class="btn btn-white btn-sm {% if not page_obj.has_previous %}disabled{% endif %}" 
+                        href="{% url 'browse-footprint-list' selected_sort%}?direction={{direction}}&page=1">
+                        <span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span> First
+                    </a>
+                    <a class="btn btn-white btn-sm {% if not page_obj.has_previous %}disabled{% endif %}"
+                        {% if page_obj.has_previous %} 
+                            href="{% url 'browse-footprint-list' selected_sort%}?direction={{direction}}&page={{page_obj.previous_page_number}}"
+                        {% else %}
+                            href="#"
+                        {% endif %}
+                    >
+                        <span class="glyphicon glyphicon-backward" aria-hidden="true"></span> Previous
+                    </a>
+                </div>
             </div>
-            <div class="clearfix"></div>
         </div>
-    </div>
+    {% endif %}
 
     <div class="table-responsive">
         <table class="table table-striped table-footprints">
