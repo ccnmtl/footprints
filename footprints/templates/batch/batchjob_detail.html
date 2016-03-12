@@ -87,16 +87,26 @@
                 {% with rows=object.batchrow_set.all %}
                 <h3>{{object.batchrow_set.count}} Records</h3>
                 <table>
+                    {% if object.processed %}
+                        <tr>
+                        <td class="field-name">Created Footprint</td>
+                        {% for row in rows %}
+                            <td data-record-id="{{row.id}}" class="valid">
+                                <div>
+                                    <a target="_blank" href="{% url 'footprint-detail-view' row.footprint.id %}">{{row.footprint.id}}</a>
+                                </div>
+                            </td>
+                        {% endfor %}
+                        </tr>
+                     {% endif %}
                     <tr>
                         <td class="field-name">Similar Footprints</td>
-                        {% for row in rows%}
+                        {% for row in rows %}
                             {% for id in row.similar_footprints %}
                                 {% if forloop.first %}
                                     <td data-record-id="{{row.id}}" class="similar has-warning">
                                         <div class="small">
-                                            {% if not object.processed %}
                                             <p>Review similar footprints to prevent record duplication</p>
-                                            {% endif %}
                                 {% endif %}
                                     <a target="_blank" href="{% url 'footprint-detail-view' id %}">{{id}}</a>{% if not forloop.last %},{% endif %}
                                  {% if forloop.last %}

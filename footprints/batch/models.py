@@ -134,6 +134,9 @@ class BatchRow(models.Model):
         null=True, blank=True, verbose_name='Footprint Date',
         help_text=DATE_HELP_TEXT)
 
+    footprint = models.ForeignKey(
+        Footprint, on_delete=models.SET_NULL, blank=True, null=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
