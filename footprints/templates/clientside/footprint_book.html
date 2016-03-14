@@ -28,7 +28,16 @@ The Literary Work
     <% for (var i=0; i < imprint.work.actor.length; i++) { %> 
         <dt><%=imprint.work.actor[i].role.name%></dt>
         <dd class="border-bottom">
-            <span><%=imprint.work.actor[i].person.name%><% if (imprint.work.actor[i].alias) { %>  as <%=imprint.work.actor[i].alias%> <% } %></span> 
+            <% if (imprint.work.actor[i].person.standardized_identifier) { %>
+                <span class="standard-identifier-logo">
+                    <a href="https://viaf.org/viaf/<%=imprint.work.actor[i].person.standardized_identifier.identifier%>/">
+                        <img src="<%=static_url%>img/oclc.png" alt_text="Link to VIAF Record"/>
+                    </a>
+                </span>
+            <% } %>
+            <span>
+                <%=imprint.work.actor[i].person.name%><% if (imprint.work.actor[i].alias) { %>  as <%=imprint.work.actor[i].alias%> <% } %>
+            </span> 
             <div class="pull-right">
                 <% if (editable) { %>
                     <a href="javascript:void(0);" class="remove-related"
@@ -46,7 +55,7 @@ The Literary Work
         <dd class="border-bottom">
             <div class="pull-left standard-identifier-logo">
                 <a href="http://lccn.loc.gov/<%=imprint.work.standardized_identifier[i].identifier.replace(/\s+/g, '')%>">
-                    <img src="<%=static_url%>img/loc.png" />
+                    <img src="<%=static_url%>img/loc.png" alt_text="Link to the Library of Congress" />
                 </a>
             </div>
             <% if (editable) { %>
@@ -189,7 +198,16 @@ The Literary Work
     <% for (var i=0; i < imprint.actor.length; i++) { %> 
         <dt><%=imprint.actor[i].role.name%></dt>
         <dd class="border-bottom">
-            <span><%=imprint.actor[i].person.name%><% if (imprint.actor[i].alias) { %>  as <%=imprint.actor[i].alias%> <% } %></span> 
+            <% if (imprint.actor[i].person.standardized_identifier) { %>
+                <span class="standard-identifier-logo">
+                    <a href="https://viaf.org/viaf/<%=imprint.actor[i].person.standardized_identifier.identifier%>/">
+                        <img src="<%=static_url%>img/oclc.png" alt_text="Link to VIAF Record"/>
+                    </a>
+                </span>
+            <% } %>
+            <span>
+                <%=imprint.actor[i].person.name%><% if (imprint.actor[i].alias) { %>  as <%=imprint.actor[i].alias%> <% } %>
+            </span> 
             <div class="pull-right">
                 <% if (editable) { %>
                     <a href="javascript:void(0);" class="remove-related"
@@ -208,13 +226,13 @@ The Literary Work
             <% if (imprint.standardized_identifier[i].authority === 'WorldCat (OCLC)') { %>
                 <div class="pull-left standard-identifier-logo">
                     <a href="http://www.worldcat.org/oclc/<%=imprint.standardized_identifier[i].identifier%>">
-                        <img src="<%=static_url%>img/oclc.png" />
+                        <img src="<%=static_url%>img/worldcat.png" alt_text="Link to WorldCAT record" />
                     </a>
                 </div>
             <% } else if (imprint.standardized_identifier[i].authority === 'Bibliography of the Hebrew Book') { %>
                 <div class="pull-left standard-identifier-logo">
                     <a href="http://aleph.nli.org.il:80/F/?func=direct&doc_number=<%=imprint.standardized_identifier[i].identifier%>&local_base=MBI01">
-                    <img src="<%=static_url%>img/bhb.png" />
+                    <img src="<%=static_url%>img/bhb.png" alt_text="Link to Bibliography of the Hebrew Book" />
                     </a>
                 </div>
             <% } %>        
