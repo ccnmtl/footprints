@@ -159,18 +159,19 @@ class BatchJobUpdateView(LoggedInStaffMixin, View):
         pk = kwargs.get('pk', None)
         job = get_object_or_404(BatchJob, pk=pk)
 
-        footprints = []
+        n = 0
         for record in job.batchrow_set.all():
             imprint = self.get_or_create_imprint(record)
             copy = self.get_or_create_copy(record.call_number, imprint)
             footprint = self.create_footprint(record, copy)
-            footprints.append(footprint)
+            record.footprint = footprint
+            record.save()
+            n += 1
 
         job.processed = True
         job.save()
 
-        msg = 'Batch job processed. {} footprints created'.format(
-            len(footprints))
+        msg = 'Batch job processed. {} footprints created'.format(n)
         messages.add_message(self.request, messages.INFO, msg)
 
         return HttpResponseRedirect(

@@ -240,11 +240,15 @@ class BatchJobUpdateViewTest(TestCase):
         a = self.record1.similar_footprints()
         self.assertEquals(a.count(), 1)
         self.assertEquals(a.first(), fp1.id)
+        self.record1.refresh_from_db()
+        self.assertEquals(self.record1.footprint, fp1)
 
         fp2 = Footprint.objects.get(medium='Approbation in imprint')
         a = self.record2.similar_footprints()
         self.assertEquals(a.count(), 1)
         self.assertEquals(a.first(), fp2.id)
+        self.record2.refresh_from_db()
+        self.assertEquals(self.record2.footprint, fp2)
 
         self.assertTrue(fp1.book_copy, fp2.book_copy)
 

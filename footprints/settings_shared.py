@@ -81,12 +81,16 @@ REST_FRAMEWORK = {
 
 if 'test' in sys.argv or 'jenkins' in sys.argv:
     CELERY_ALWAYS_EAGER = True
+    BROKER_BACKEND = 'memory'
     HAYSTACK_CONNECTIONS = {
         'default': {
             'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
         },
     }
     MEDIA_ROOT = './'
+    PASSWORD_HASHERS = (
+        'django.contrib.auth.hashers.MD5PasswordHasher',
+    )
 
 GOOGLE_MAPS_REVERSE_GEOCODE = \
     'https://maps.googleapis.com/maps/api/geocode/json?address={},{}'
