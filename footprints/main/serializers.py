@@ -86,10 +86,12 @@ class DigitalFormatSerializer(HyperlinkedModelSerializer):
 class PersonSerializer(HyperlinkedModelSerializer):
     birth_date = ExtendedDateSerializer()
     death_date = ExtendedDateSerializer()
+    standardized_identifier = StandardizedIdentificationSerializer()
 
     class Meta:
         model = Person
-        fields = ('id', 'name', 'birth_date', 'death_date')
+        fields = ('id', 'name', 'birth_date', 'death_date',
+                  'standardized_identifier')
 
 
 class PlaceSerializer(HyperlinkedModelSerializer):

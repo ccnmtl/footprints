@@ -163,6 +163,13 @@
         <% for (var i=0; i < actor.length; i++) { %> 
             <dt><%=actor[i].role.name%></dt>
             <dd class="border-bottom">
+                <% if (actor[i].person.standardized_identifier) { %>
+                    <span class="standard-identifier-logo">
+                        <a href="https://viaf.org/viaf/<%=actor[i].person.standardized_identifier.identifier%>/">
+                            <img src="<%=static_url%>img/oclc.png" alt_text="Link to VIAF Record"/>
+                        </a>
+                    </span>
+                <% } %>
                 <span><%=actor[i].person.name%><% if (actor[i].alias) { %>  as <%=actor[i].alias%> <% } %></span> 
                 <div class="pull-right">
                     <% if (editable) { %>
