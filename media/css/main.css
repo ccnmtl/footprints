@@ -1670,9 +1670,7 @@ body.affix-container {
 .object-detail.footprint #connect-records-modal .page2 ul li {
     margin-bottom: 20px;
 }
-.object-detail.footprint #connect-records-modal .page2 ul li .separator {
-    border-bottom: 0;
-}
+
 .object-detail.footprint .edit-digital-object {
     margin-top: 5px;
 } 
@@ -2425,4 +2423,12 @@ p.decoy {
     margin: 0;
     padding: 0;
     float: none;
+}
+
+.select2-result {
+    border-bottom: 1px solid #eee;
+}
+
+.select2-results .select2-highlighted {
+    background-color: #5e98b7 !important;
 }
