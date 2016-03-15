@@ -127,9 +127,14 @@ class FootprintListView(ListView):
         context['sort_options'] = self.sort_options
 
         sort_by = self.kwargs.get('sort_by', 'ftitle')
+        direction = self.request.GET.get('direction', 'asc')
+
         context['selected_sort'] = sort_by
         context['selected_sort_label'] = self.sort_options[sort_by]['label']
-        context['direction'] = self.request.GET.get('direction', 'asc')
+        context['direction'] = direction
+
+        base = reverse('browse-footprint-list', args=[sort_by])
+        context['base_url'] = '{}?direction={}&page='.format(base, direction)
         return context
 
     def get_queryset(self):

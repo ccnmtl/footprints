@@ -1349,6 +1349,10 @@ span.glyphicon-question-sign {
     width: 95%;
 }
 
+.object-detail .editable-input .alert a {
+    text-decoration: underline;
+}
+
 .object-detail .editable-input.wide {
     width: 100%;
 }
@@ -1870,9 +1874,23 @@ ul.additional-questions .editable-container {
 }
 
 .object-browse .tools a.btn {
-    color: #2e5367;
     font-size: 12px;
-    border: 1px solid #ddd;
+    color: white;
+    background-color: #5e98b7;
+    border-color: #5e98b7;
+}
+.object-browse .tools a.btn:hover {
+    background-color: #75aecd;
+    color: white;
+}
+
+.object-browse .tools a.btn.disabled {
+    color: #7b7b7b;
+    background-color: white;
+    border-color: #eee;
+}
+.object-browse .tools a.btn.disabled {
+    cursor: not-allowed;
 }
 
 .object-browse .tools input {
