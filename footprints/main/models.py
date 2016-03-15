@@ -670,7 +670,9 @@ class WrittenWork(models.Model):
         return self.actor.filter(role=role)
 
     def description(self):
-        return self.__unicode__()
+        template = loader.get_template('main/writtenwork_description.html')
+        ctx = Context({'work': self})
+        return template.render(ctx)
 
     def references(self):
         # how many footprints reference this work?
