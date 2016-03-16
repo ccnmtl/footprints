@@ -120,6 +120,7 @@ class BatchJobUpdateViewTest(TestCase):
     def test_add_author(self):
         work = WrittenWorkFactory()
         row = BatchRowFactory()
+        RoleFactory(name='Author')
 
         view = BatchJobUpdateView()
         view.add_author(row, work)
