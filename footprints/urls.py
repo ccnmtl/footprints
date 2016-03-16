@@ -15,8 +15,7 @@ from footprints.main.views import (
     WrittenWorkDetailView, TitleListView, NameListView,
     AddPlaceView, AddDateView, RemoveRelatedView, FootprintListView,
     AddIdentifierView, AddDigitalObjectView, ConnectFootprintView,
-    ContactUsView, AddLanguageView, DisplayDateView, CopyFootprintView,
-    CeleryTestView,
+    ContactUsView, AddLanguageView, DisplayDateView, CopyFootprintView
 )
 from footprints.main.viewsets import (
     BookCopyViewSet, ImprintViewSet, ActorViewSet,
@@ -132,8 +131,6 @@ urlpatterns = patterns(
 
     # Batch Import
     (r'^batch/', include('footprints.batch.urls')),
-
-    url('^celerytest/', CeleryTestView.as_view(), name='celerytest'),
 
     (r'^admin/', include(admin.site.urls)),
     url(r'^_impersonate/', include('impersonate.urls')),
