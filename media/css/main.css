@@ -2364,7 +2364,7 @@ p.decoy {
 }
 
 .pathmapper .banner {
-    height: 150px;
+    height: 270px;
     background-image: url("../img/background-viz.png");
     background-repeat: no-repeat;
     background-size: cover;
@@ -2377,13 +2377,23 @@ p.decoy {
 .pathmapper .intro {
     display: block;
     width: auto;
-    height: 130px;
+    height: 90%;
     background-image: url("../img/fp_home_intro_bg.png");
     padding: 10px;
     margin: 10px;
-    font: 400 14px/120% 'Arvo', sans-serif;
     color: #202836;
     text-align: center;
+}
+
+.pathmapper .intro h1 {
+    padding: 0;
+    margin: 0 0 0.5em 0;
+    font: 400 16px/120% 'Arvo', sans-serif;
+}
+.pathmapper .intro .more_intro {
+    font: 400 15px/1.5em 'Asap', sans-serif;
+    padding: 0;
+    margin: 0 0 0.5em 0;
 }
 
 .pathmapper .download {
