@@ -1,4 +1,5 @@
 from json import loads
+import json
 
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
@@ -21,17 +22,27 @@ from footprints.main.viewsets import ImprintViewSet, BookCopyViewSet
 
 
 class BasicTest(TestCase):
-    def setUp(self):
-        self.c = Client()
-
     def test_root(self):
-        response = self.c.get("/")
+        response = self.client.get("/")
         self.assertEquals(response.status_code, 200)
 
     def test_smoketest(self):
-        response = self.c.get("/smoketest/")
+        response = self.client.get("/smoketest/")
         self.assertEquals(response.status_code, 200)
         assert "PASS" in response.content
+
+    def test_sign_s3_view(self):
+        user = UserFactory()
+        self.client.login(username=user.username, password="test")
+        with self.settings(
+                AWS_ACCESS_KEY='',
+                AWS_SECRET_KEY='',
+                AWS_S3_UPLOAD_BUCKET=''):
+            r = self.client.get(
+                "/sign_s3/?s3_object_name=default_name&s3_object_type=foo")
+            self.assertEqual(r.status_code, 200)
+            j = json.loads(r.content)
+            self.assertTrue('signed_request' in j)
 
 
 class PasswordTest(TestCase):

@@ -1,6 +1,23 @@
-/* global csrftoken */
+/* global csrftoken: true, S3Upload: true */
 (function($) {
     'use strict';
+
+    window.s3_upload = function() {
+        var s3upload = new S3Upload({
+            file_dom_selector: 'file',
+            s3_sign_put_url: '/sign_s3/',
+            s3_object_name: encodeURIComponent($('#file')[0].value),
+            onProgress: function(percent, message) {
+                $('#uploaded-status').html(message + ' ' + percent + '%');
+            },
+            onFinishS3Put: function(url) {
+                $('#uploaded-url').val(url);
+            },
+            onError: function(status) {
+                $('#uploaded-status').html('Upload error: ' + status);
+            }
+        });
+    };
 
     var DigitalObject = function(options) {
         this.init('digitalobject', options, DigitalObject.defaults);
@@ -10,90 +27,14 @@
     $.fn.editableutils.inherit(DigitalObject, $.fn.editabletypes.abstractinput);
 
     $.extend(DigitalObject.prototype, {
-        initializeUploader: function(browseButton, fileList) {
-            var headers = {'X-Requested-With': 'XMLHttpRequest'};
-            if (csrftoken !== undefined) {
-                headers['X-CSRFToken'] = csrftoken;
-            }
-
-            var uploader = new plupload.Uploader({
-                browse_button: browseButton,
-                url: '/digitalobject/add/',
-                max_retries: 3,
-                multi_selection: false,
-                runtimes: 'html5,flash,silverlight',
-                headers: headers,
-                flash_swf_url: '/media/js/plupload/Moxie.swf',
-                silverlight_xap_url: '/media/js/js/Moxie.xap',
-                filters: {
-                    mime_types: [
-                        {title: 'Image files',
-                         extensions: 'jpg,jpeg,png,gif,bmp'}
-                    ],
-                    max_file_size: '7500000'
-                }
-            });
-
-            uploader.init();
-
-            return uploader;
-        },
-        filesAdded: function(up, files) {
-            while (this.uploader.files.length > 1) {
-                this.uploader.removeFile(this.uploader.files[0]);
-            }
-
-            this.$tpl.find('.alert').hide();
-
-            var html = '';
-            plupload.each(files, function(file) {
-                html += '<li id="' + file.id + '">' + file.name +
-                    ' (' + plupload.formatSize(file.size) + ') <b></b></li>';
-            });
-            jQuery(this.$list).html(html);
-        },
-        upload: function(evt, params) {
-            evt.stopPropagation();
-            evt.preventDefault();
-
-            var rv = this.validate(this.value2submit());
-            if (typeof rv === 'string') {
-                jQuery('.editable-digital-object')
-                    .parents('.control-group').addClass('has-error');
-                jQuery('.editable-error-block').html(rv).show();
-            } else {
-                this.uploader.setOption('multipart_params', params);
-                this.uploader.start();
-            }
-
-            return false;
-        },
-        uploadComplete: function(up, data, r) {
-            // wait just for a second
-            setTimeout(function() {
-                jQuery('button.editable-submit').click();
-            }, 500);
-        },
-        uploadError: function(up, err) {
-            var $elt;
-            if (err.code === -600) {
-                $elt =  this.$tpl.find('.filesize.alert')[0];
-                jQuery($elt).fadeIn();
-            } else {
-                $elt =  this.$tpl.find('.general.alert')[0];
-                jQuery($elt).fadeIn();
-            }
-        },
-        uploadProgress: function(up, file) {
-            var fileId = document.getElementById(file.id);
-            var elt = fileId.getElementsByTagName('b')[0];
-            elt.innerHTML = '<span>' + file.percent + '%</span>';
-        },
-        validate: function(values) {
-            if (values.count < 1) {
+        validate: function() {
+            var url = this.$url.val();
+            if (!url || url.length < 1) {
                 return 'Use the Browse button to select an image file';
-            } else if (!values.hasOwnProperty('name') ||
-                       values.name.length < 1) {
+            }
+
+            var description = this.$description.val();
+            if (!description || description.length < 1) {
                 return 'Please enter a short description';
             }
         },
@@ -106,32 +47,9 @@
         render: function() {
             var self = this;
 
-            this.$browse = this.$tpl.find('button.browse').first();
-            this.$list = this.$tpl.find('ul.filelist').first();
+            this.$url = this.$tpl.find('input[name="url"]').first();
             this.$description =
                 this.$tpl.find('input[name="description"]').first();
-
-            // hack: steal submit from EditableForm
-            // Hide the submit button, make the input div wider
-            jQuery('button.editable-submit').hide();
-            jQuery(this.$browse).parents('.editable-input').addClass('wide');
-
-            this.uploader = this.initializeUploader(
-                this.$browse[0], this.$list[0]);
-
-            // gather additional submit params
-            var params = $(this.options.scope).data('params');
-            jQuery('button.editable-upload').on('click', function(evt) {
-                params.description =  jQuery(self.$description).val();
-                return self.upload(evt, params);
-            });
-
-            this.uploader.bind('UploadComplete', this.uploadComplete);
-            this.uploader.bind('FilesAdded', function(up, files) {
-                return self.filesAdded(up, files);
-            });
-            this.uploader.bind('UploadProgress', this.uploadProgress);
-            this.uploader.bind('Error', this.uploadError, this);
         },
 
         /**
@@ -205,8 +123,9 @@
         **/
         value2submit: function(value) {
             return {
-                'count': this.uploader.files.length,
-                'name': jQuery(this.$description).val()
+                error: this.validate(),
+                url: this.$url.val(),
+                name: this.$description.val()
             };
         },
 
@@ -231,13 +150,6 @@
                 }
             });
         },
-        error: function(response, newValue) {
-            if (response.status === 500) {
-                return 'Service unavailable. Please try later.';
-            } else {
-                return response.responseText;
-            }
-        }
     });
 
     DigitalObject.defaults = $.extend(

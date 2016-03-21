@@ -15,8 +15,8 @@ from footprints.main.views import (
     WrittenWorkDetailView, TitleListView, NameListView,
     AddPlaceView, AddDateView, RemoveRelatedView, FootprintListView,
     AddIdentifierView, AddDigitalObjectView, ConnectFootprintView,
-    ContactUsView, AddLanguageView, DisplayDateView, CopyFootprintView
-)
+    ContactUsView, AddLanguageView, DisplayDateView, CopyFootprintView,
+    SignS3View)
 from footprints.main.viewsets import (
     BookCopyViewSet, ImprintViewSet, ActorViewSet,
     ExtendedDateViewSet, FootprintViewSet, LanguageViewSet,
@@ -139,6 +139,7 @@ urlpatterns = patterns(
     (r'infranil/', include('infranil.urls')),
     (r'^uploads/(?P<path>.*)$',
      'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
+    (r'^sign_s3/$', SignS3View.as_view()),
 
     # Visualizations for grant application
     (r'^pathmapper/',

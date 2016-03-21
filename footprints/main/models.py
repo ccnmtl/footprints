@@ -327,6 +327,7 @@ class DigitalFormat(models.Model):
 class DigitalObject(models.Model):
     name = models.CharField(max_length=500)
     file = models.FileField(upload_to="%Y/%m/%d/")
+    url = models.CharField(max_length=256, blank=True)
     description = models.TextField(null=True, blank=True)
 
     digital_format = models.ForeignKey(DigitalFormat, null=True, blank=True)

@@ -30,7 +30,7 @@
 
                 <h3>Details</h3>
                 {% for media in person.digital_object.all %}
-                    <img src="{{media.file.url}}"></img>
+                    <img src="{{media.url}}"></img>
                 {% endfor %}
 
                 <dl class="dl-horizontal">

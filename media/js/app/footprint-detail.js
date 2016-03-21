@@ -193,9 +193,8 @@
             var elt = jQuery(this.el).find('.editable-digitalobject');
             jQuery(elt).editable({
                 namedParams: true,
+                validate: this.validate,
                 tpl: jQuery('#xeditable-digitalobject-form').html(),
-                source: this.baseContext.all_mediums,
-                url: function() { return true; /* plupload submits */},
                 success: this.refresh
             });
 

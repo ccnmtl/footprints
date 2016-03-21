@@ -1699,18 +1699,9 @@ body.affix-container {
     margin: 10px 0;
 }
 
-.editable-digital-object ul.filelist {
-    list-style-type: none;
-    display: inline-block;
-    padding-left: 15px;
-    vertical-align: middle;
-}
-
-.editable-digital-object ul.filelist li {
-    width: 250px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+.editable-digital-object #uploaded-status {
+    margin-top: 5px;
+    margin-left: 10px;
 }
 
 .editable-digital-object .editable-upload {
