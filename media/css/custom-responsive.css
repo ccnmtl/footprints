@@ -1,18 +1,27 @@
 @media (min-width: 768px) {
     .pathmapper .banner {
-        height: 200px;
+        height: 300px;
         width: 750px;
     }
     .pathmapper .intro {
         display: block;
         width: 600px;
-        height: 140px;
+        height: 260px;
         padding: 20px;
         position: absolute;
-        margin: -70px 0 0 -300px;
+        margin: -130px 0 0 -300px;
         top: 50%;
         left: 50%;
+    }
+    .pathmapper .intro h1 {
+        padding: 0;
+        margin: 0 0 0.5em 0;
         font: 400 20px/1.2em 'Arvo', sans-serif;
+    }
+    .pathmapper .intro .more_intro {
+        font: 400 15px/1.5em 'Arvo', sans-serif;
+        padding: 0;
+        margin: 0 0 0.5em 0;
     }
     .pathmapper .slidebox {   
         width: 750px;
@@ -26,19 +35,28 @@
 
 @media (min-width: 992px) {
     .pathmapper .banner {
-        height: 200px;
+        height: 260px;
         width: 970px;
     }
     .pathmapper .intro {
         display: block;
         width: 800px;
-        height: 140px;
+        height: 210px;
         padding: 20px;
         position: absolute;
-        margin: -70px 0 0 -400px;
+        margin: -105px 0 0 -400px;
         top: 50%;
         left: 50%;
+    }
+    .pathmapper .intro h1 {
+        padding: 0;
+        margin: 0 0 0.5em 0;
         font: 400 20px/1.2em 'Arvo', sans-serif;
+    }
+    .pathmapper .intro .more_intro {
+        font: 400 15px/1.5em 'Arvo', sans-serif;
+        padding: 0;
+        margin: 0 0 0.5em 0;
     }
     .pathmapper .slidebox h3 {   
         font: 400 20px/1.5em 'Arvo', sans-serif;
@@ -67,19 +85,28 @@
 
 @media (min-width: 1200px) {
     .pathmapper .banner {
-        height: 200px;
+        height: 250px;
         width: 1170px;
     }
     .pathmapper .intro {
         display: block;
         width: 900px;
-        height: 140px;
+        height: 180px;
         padding: 20px;
         position: absolute;
-        margin: -70px 0 0 -450px;
+        margin: -90px 0 0 -450px;
         top: 50%;
         left: 50%;
+    }
+    .pathmapper .intro h1 {
+        padding: 0;
+        margin: 0 0 0.5em 0;
         font: 400 20px/1.2em 'Arvo', sans-serif;
+    }
+    .pathmapper .intro .more_intro {
+        font: 400 15px/1.5em 'Arvo', sans-serif;
+        padding: 0;
+        margin: 0 0 0.5em 0;
     }
     .pathmapper .slidebox h3 {   
         font: 400 20px/1.5em 'Arvo', sans-serif;
@@ -112,19 +139,28 @@
         width: 1400px;
     }
     .pathmapper .banner {
-        height: 200px;
+        height: 250px;
         width: 1400px;
     }
     .pathmapper .intro {
         display: block;
         width: 1000px;
-        height: 140px;
+        height: 180px;
         padding: 20px;
         position: absolute;
-        margin: -70px 0 0 -500px;
+        margin: -90px 0 0 -500px;
         top: 50%;
         left: 50%;
+    }
+    .pathmapper .intro h1 {
+        padding: 0;
+        margin: 0 0 0.5em 0;
         font: 400 20px/1.2em 'Arvo', sans-serif;
+    }
+    .pathmapper .intro .more_intro {
+        font: 400 15px/1.5em 'Arvo', sans-serif;
+        padding: 0;
+        margin: 0 0 0.5em 0;
     }
     .pathmapper .slidebox h3 {   
         font: 400 20px/1.5em 'Arvo', sans-serif;

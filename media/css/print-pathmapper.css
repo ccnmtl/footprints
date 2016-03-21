@@ -14,7 +14,6 @@
     padding: 0;
     margin: 72px auto 0 auto;
     border: 1px solid #ccc;
-    page-break-after: always;
     display: block;
 }
 
@@ -26,8 +25,24 @@
     display: none;
 }
 
-.pathmapper .slidebox {
-    page-break-before: always;
+.pathmapper .banner {
+	page-break-before: always;
+	width: 100%;
+	height: 100%;
+	padding: 1in 1.5in;
+	float: none;
+}
+
+.pathmapper .intro h1 {   
+    font: 400 20px/1.5em 'Arvo', sans-serif;
+    text-align: left;
+}
+
+.pathmapper .intro .more_intro {
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+	font-weight: 300;
+	font-size: 14px;
+	text-align: justify;
 }
 
 .pathmapper .slidebox h3 {
@@ -35,10 +50,11 @@
 }
 
 .pathmapper .slidebox .visual {
+	page-break-before: always;
     width: 100%;
     height: 100%;
     margin: 0;
-    padding: 0;
+    padding: 0.5in 0;
     float: none;
 }
 
@@ -46,7 +62,7 @@
 {
 	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 	font-weight: 300;
-	font-size: 1em;
+	font-size: 14px;
 	page-break-before: always;
 	width: 100%;
 	padding: 1in 1.5in;
