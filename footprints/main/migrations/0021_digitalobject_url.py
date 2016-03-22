@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='digitalobject',
             name='url',
-            field=models.CharField(max_length=256, blank=True),
+            field=models.TextField(blank=True),
         ),
     ]
