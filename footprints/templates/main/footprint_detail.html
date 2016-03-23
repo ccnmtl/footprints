@@ -33,12 +33,12 @@
     <script type="text/javascript" src="//maps.google.com/maps/api/js?libraries=places"></script>
     <script src="{{STATIC_URL}}js/underscore-min.js"></script>
     <script src="{{STATIC_URL}}js/backbone-min.js"></script>
-    <script src="{{STATIC_URL}}js/plupload/plupload.full.min.js"></script>
     <script src="{{STATIC_URL}}tinymce/tinymce.min.js"></script>
 
     {% compress js %}
         <script src="{{STATIC_URL}}select2-3.5.2/select2.js"></script>
         <script src="{{STATIC_URL}}jquery-ui-1.11.2/jquery-ui.js"></script>
+        <script src="{{STATIC_URL}}js/lib/s3upload.js"></script>
         <script src="{{STATIC_URL}}bootstrap3-editable/js/bootstrap-editable.js"></script>
         <script src="{{STATIC_URL}}js/xeditable/bootstrap-editable-actor.js"></script>
         <script src="{{STATIC_URL}}js/xeditable/bootstrap-editable-digitalobject.js"></script>
@@ -157,5 +157,5 @@
         {% include "main/footprint_related.html" %}
 
     </div>
-    </div>
+</div>
 {% endblock %}

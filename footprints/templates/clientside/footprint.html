@@ -35,7 +35,7 @@
                                     <% for (var j=0; j < limit && i < digital_object.length; j++, i++) { %>
                                         <div class="col-sm-2">
                                             <div class="crop">
-                                                <img src="<%=digital_object[i].file%>" alt="Image"
+                                                <img src="<%=digital_object[i].url%>" alt="Image"
                                                     class="img-responsive" data-id="<%=digital_object[i].id%>" />
                                             </div>
                                             <% if (editable) { %>
@@ -339,7 +339,7 @@
                     <li><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
                         <a href="javascript:void(0);" class="editable-digitalobject do-you-know persistant" data-name="digital_object"
                            data-type="digitalobject" data-pk="<%=id%>" data-value="" data-method="post"
-                           data-params='{"parent_id":"<%=id%>","parent_model":"footprint"}'>
+                           data-url="/digitalobject/add/" data-params='{"parent_id":"<%=id%>","parent_model":"footprint"}'>
                             what the evidence looks like? Add some images
                         </a>
                     </li>

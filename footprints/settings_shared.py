@@ -94,3 +94,6 @@ if 'test' in sys.argv or 'jenkins' in sys.argv:
 
 GOOGLE_MAPS_REVERSE_GEOCODE = \
     'https://maps.googleapis.com/maps/api/geocode/json?address={},{}'
+
+AWS_STORAGE_BUCKET_NAME = "ccnmtl-footprints-static-dev"
+MEDIA_URL = 'https://%s.s3.amazonaws.com/uploads/' % AWS_STORAGE_BUCKET_NAME

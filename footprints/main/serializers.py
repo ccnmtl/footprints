@@ -108,7 +108,7 @@ class PlaceSerializer(HyperlinkedModelSerializer):
 class DigitalObjectSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = DigitalObject
-        fields = ('id', 'name', 'description', 'file')
+        fields = ('id', 'name', 'description', 'url')
 
 
 class ActorSerializer(HyperlinkedModelSerializer):

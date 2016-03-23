@@ -1,3 +1,12 @@
+import base64
+from datetime import datetime
+from hashlib import sha1
+import hmac
+import json
+import time
+import urllib
+import uuid
+
 from django.apps import apps
 from django.conf import settings
 from django.contrib.auth import login
@@ -7,7 +16,7 @@ from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.db.models.fields import FieldDoesNotExist
 from django.db.models.fields.related import ManyToManyField
-from django.http.response import HttpResponseRedirect
+from django.http.response import HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.template import loader
 from django.template.context import Context
@@ -465,7 +474,7 @@ class AddDigitalObjectView(AddRelatedRecordView):
     def post(self, *args, **kwargs):
         the_parent = self.get_parent()
 
-        form = DigitalObjectForm(self.request.POST, self.request.FILES)
+        form = DigitalObjectForm(self.request.POST)
         if not form.is_valid():
             return self.render_to_json_response({'success': False})
         else:
@@ -534,3 +543,44 @@ class ContactUsView(FormView):
         send_mail(subject, tmpl.render(Context(form_data)), sender, recipients)
 
         return super(ContactUsView, self).form_valid(form)
+
+
+class SignS3View(LoggedInMixin, View):
+    def get(self, request):
+        AWS_ACCESS_KEY = settings.AWS_ACCESS_KEY
+        AWS_SECRET_KEY = settings.AWS_SECRET_KEY
+        S3_BUCKET = settings.AWS_STORAGE_BUCKET_NAME
+
+        mime_type = request.GET.get('s3_object_type')
+        extension = ".obj"
+        if 'jpeg' in mime_type:
+            extension = ".jpg"
+        elif 'png' in mime_type:
+            extension = ".png"
+        elif 'gif' in mime_type:
+            extension = ".gif"
+
+        now = datetime.now()
+        uid = str(uuid.uuid4())
+        object_name = "uploads/%04d/%02d/%02d/%s%s" % (
+            now.year, now.month, now.day, uid, extension)
+
+        expires = int(time.time()+10)
+        amz_headers = "x-amz-acl:public-read"
+
+        put_request = "PUT\n\n%s\n%d\n%s\n/%s/%s" % (
+            mime_type, expires, amz_headers, S3_BUCKET, object_name)
+
+        signature = base64.encodestring(
+            hmac.new(AWS_SECRET_KEY, put_request, sha1).digest())
+        signature = urllib.quote_plus(signature.strip())
+
+        url = 'https://%s.s3.amazonaws.com/%s' % (S3_BUCKET, object_name)
+        signed_request = '%s?AWSAccessKeyId=%s&Expires=%d&Signature=%s' % (
+            url, AWS_ACCESS_KEY, expires, signature)
+
+        return HttpResponse(
+            json.dumps({
+                'signed_request': signed_request,
+                'url': url
+            }), content_type="application/json")

@@ -13,7 +13,7 @@ from footprints.main.models import Footprint, DigitalObject, WrittenWork, \
 class DigitalObjectForm(ModelForm):
     class Meta:
         model = DigitalObject
-        fields = ['name', 'file', 'description']
+        fields = ['name', 'url', 'description']
 
 
 class FootprintSearchForm(ModelSearchForm):
