@@ -55,7 +55,8 @@ INSTALLED_APPS += [  # noqa
     'reversion',
     'djcelery',
     'celery_haystack',
-    'footprints.batch'
+    'footprints.batch',
+    's3sign'
 ]
 
 djcelery.setup_loader()
