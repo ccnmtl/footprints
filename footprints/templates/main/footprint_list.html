@@ -48,10 +48,10 @@
                 <tr>
                     <td>
                         <div>
-                            {% if footprint.digital_object.count > 0 %}
-                                *
-                            {% endif %}
                             <a href="/footprint/{{footprint.id}}">
+                                {% if footprint.digital_object.count > 0 %}
+                                    <span class="glyphicon glyphicon-camera" aria-hidden="true"></span>
+                                {% endif %}
                                 {{footprint.title}}
                             </a>
                         </div>
