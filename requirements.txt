@@ -44,7 +44,7 @@ rcssmin==1.0.6
 rjsmin==1.0.12
 amqp==1.4.9
 amqplib==1.0.2
-kombu==3.0.34
+kombu==3.0.35
 librabbitmq==1.6.1
 celery==3.1.23
 anyjson==0.3.3
