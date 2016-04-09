@@ -11,7 +11,7 @@ statsd==3.2.1
 pep8==1.7.0
 pyflakes==1.1.0
 mccabe==0.4.0
-pyparsing==2.0.7
+pyparsing==2.1.1
 flake8==2.5.4
 tornado==4.3
 BeautifulSoup==3.2.1
