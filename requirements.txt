@@ -82,7 +82,7 @@ django-audit-log==0.7.0
 djangorestframework==3.3.0
 djangorestframework-jsonp==1.0.2
 django-celery==3.1.17
-Unidecode==0.04.17
+Unidecode==0.04.19
 django-reversion==1.9.3
 python-dateutil==2.5.2
 edtf==0.9.2
