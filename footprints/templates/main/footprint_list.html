@@ -42,7 +42,7 @@
                 <th data-sort-by="flocation" class="sortable flocation">
                     Footprint Location
                 </th>
-                <th class="owners">Owners</th>
+                <th data-sort-by="owners" class="sortable owners">Owners</th>
                 <th data-sort-by="wtitle" class="sortable wtitle">Literary Work / Imprint</th>
                 <th data-sort-by="added" class="sortable added">Added</th>
                 <th data-sort-by="complete" class="sortable complete">Complete</th>
@@ -70,10 +70,7 @@
                         {% endif %}
                     </td>
                     <td>
-                        {% for owner in footprint.owners %}
-                            {{owner.display_name}}
-                            {% if not forloop.last %},{% endif %}
-                        {% endfor %}
+                        {{footprint.owners_list}}
                     </td>
                     <td>
                         <a href="/writtenwork/{{footprint.book_copy.imprint.work.id}}">

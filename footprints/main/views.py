@@ -117,6 +117,9 @@ class FootprintListView(ListView):
             'label': 'Footprint',
             'q': ['title']
         },
+        'owners': {
+            'label': 'Owners'
+        },
         'wtitle': {
             'label': 'Literary Work',
             'q': ['book_copy__imprint__work__title']
@@ -157,6 +160,11 @@ class FootprintListView(ListView):
             lst.sort(reverse=direction == 'desc',
                      key=lambda obj:
                      obj.place.__unicode__() if obj.place else '')
+            return lst
+        elif sort_by == 'owners':
+            lst = list(qs)
+            lst.sort(reverse=direction == 'desc',
+                     key=lambda obj: obj.owners_list())
             return lst
         else:
             qs = qs.order_by(*self.sort_options[sort_by]['q'])

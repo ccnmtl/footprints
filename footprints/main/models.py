@@ -888,7 +888,8 @@ class BookCopy(models.Model):
     def owners(self):
         footprints = Footprint.objects.filter(book_copy=self)
         role = Role.objects.get_owner_role()
-        return Actor.objects.filter(role=role, footprint__in=footprints)
+        return Actor.objects.filter(
+            role=role, footprint__in=footprints).select_related('person')
 
 
 class Footprint(models.Model):
@@ -996,6 +997,9 @@ class Footprint(models.Model):
     def owners(self):
         role = Role.objects.get_owner_role()
         return self.actor.filter(role=role)
+
+    def owners_list(self):
+        return ', '.join([o.display_name() for o in self.owners()])
 
     def actors(self):
         return self.actor.all().select_related('person', 'role')

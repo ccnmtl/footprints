@@ -188,14 +188,25 @@ class FootprintListViewTest(TestCase):
         date2 = ExtendedDateFactory(edtf_format='1493')
         date3 = ExtendedDateFactory(edtf_format='1494')
 
+        role = RoleFactory(name='Owner')
+        owner1 = ActorFactory(role=role, person=PersonFactory(name='Hank'))
+        owner2 = ActorFactory(role=role, person=PersonFactory(name='Banana'))
+        owner3 = ActorFactory(role=role, person=PersonFactory(name='Zed'))
+
         self.footprint1 = FootprintFactory(title='Alpha', provenance='one',
                                            place=place1, associated_date=date1)
+        self.footprint1.actor.add(owner1)
+
         self.footprint2 = FootprintFactory(title='Beta', provenance='two',
                                            place=place2, associated_date=date2)
+        self.footprint2.actor.add(owner2)
+
         self.footprint3 = FootprintFactory(title='Delta', provenance='three',
                                            place=place3, associated_date=date3)
+
         self.footprint4 = FootprintFactory(title='Epsilon', provenance='four',
                                            place=None, associated_date=None)
+        self.footprint4.actor.add(owner3)
 
     def test_default_sort(self):
         url = reverse('browse-footprint-list-default')
@@ -279,6 +290,34 @@ class FootprintListViewTest(TestCase):
         self.assertEquals(ctx['object_list'][1], self.footprint2)
         self.assertEquals(ctx['object_list'][2], self.footprint1)
         self.assertEquals(ctx['object_list'][3], self.footprint4)
+
+    def test_footprint_owner_sort(self):
+        url = reverse('browse-footprint-list', args=['owners'])
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+
+        ctx = response.context_data
+        self.assertTrue('paginator' in ctx)
+        self.assertTrue('sort_options' in ctx)
+        self.assertEquals(ctx['selected_sort'], 'owners')
+        self.assertEquals(ctx['selected_sort_label'], 'Owners')
+
+        self.assertEquals(ctx['object_list'][0], self.footprint3)
+        self.assertEquals(ctx['object_list'][1], self.footprint2)
+        self.assertEquals(ctx['object_list'][2], self.footprint1)
+        self.assertEquals(ctx['object_list'][3], self.footprint4)
+
+        # reverse the sort
+        url += '?direction=desc'
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+
+        ctx = response.context_data
+
+        self.assertEquals(ctx['object_list'][0], self.footprint4)
+        self.assertEquals(ctx['object_list'][1], self.footprint1)
+        self.assertEquals(ctx['object_list'][2], self.footprint2)
+        self.assertEquals(ctx['object_list'][3], self.footprint3)
 
 
 class ApiViewTests(TestCase):
