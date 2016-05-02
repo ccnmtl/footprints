@@ -49,7 +49,7 @@ librabbitmq==1.6.1
 celery==3.1.23
 anyjson==0.3.3
 billiard==3.3.0.23
-pytz==2016.3
+pytz==2016.4
 
 djangowind==0.14.3
 sorl==3.1
