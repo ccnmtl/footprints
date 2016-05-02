@@ -36,8 +36,11 @@
                 <th data-sort-by="ftitle" class="sortable ftitle">
                     Footprint
                 </th>
-                <th data-sort-by="elocation" class="sortable elocation">
-                    Evidence Location
+                <th data-sort-by="fdate" class="sortable fdate">
+                    Footprint Date
+                </th>
+                <th data-sort-by="flocation" class="sortable flocation">
+                    Footprint Location
                 </th>
                 <th class="owners">Owners</th>
                 <th data-sort-by="wtitle" class="sortable wtitle">Literary Work / Imprint</th>
@@ -49,20 +52,23 @@
                     <td>
                         <div>
                             <a href="/footprint/{{footprint.id}}">
-                                {% if footprint.digital_object.count > 0 %}
+                                {% if footprint.digital_object.exists %}
                                     <span class="glyphicon glyphicon-camera" aria-hidden="true"></span>
                                 {% endif %}
                                 {{footprint.title}}
                             </a>
                         </div>
-                        {% if footprint.associated_date %}
-                            <div class="subtext">{{footprint.associated_date}}</div>
-                        {% endif %}
-                        {% if footprint.place %}
-                            <div class="subtext">{{footprint.place}}</div>
-                        {% endif %}</a>
                     </td>
-                    <td>{{footprint.provenance}}</td>
+                    <td>
+                        {% if footprint.associated_date %}
+                            {{footprint.associated_date}}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if footprint.place %}
+                            {{footprint.place}}
+                        {% endif %}
+                    </td>
                     <td>
                         {% for owner in footprint.owners %}
                             {{owner.display_name}}
@@ -76,14 +82,19 @@
                         {% if footprint.book_copy.imprint.title and footprint.book_copy.imprint.title|length > 0 and footprint.book_copy.imprint.work.title != footprint.book_copy.imprint.title %}
                             <div class="subtext">as {{footprint.book_copy.imprint.title}}</div>
                         {% endif %} 
-                        {% if footprint.book_copy.imprint.printers.count > 0 %}
-                            <div class="subtext">
-                                {% for printer in footprint.book_copy.imprint.printers %}
-                                    {{printer.display_name}}
-                                    {% if not forloop.last %},{% endif %}
-                                {% endfor %}
-                            </div>
-                        {% endif %}
+
+                        {% with printers=footprint.book_copy.imprint.printers %}
+                        {% for printer in printers %}
+                            {% if forloop.first %}
+                                <div class="subtext">
+                            {% endif %}
+                                {{printer.display_name}}
+                                {% if not forloop.last %},{% endif %}
+                            {% if forloop.last %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                        {% endwith %}
                         <div class="subtext">
                             {% if footprint.book_copy.imprint.publication_date %}
                                 {{footprint.book_copy.imprint.publication_date}}{% if footprint.book_copy.imprint.place %}, {% endif %}
