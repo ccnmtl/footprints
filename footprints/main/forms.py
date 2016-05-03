@@ -22,7 +22,7 @@ class FootprintSearchForm(ModelSearchForm):
 
         choices = [
             (get_model_ct(Footprint), 'Footprint'),
-            (get_model_ct(WrittenWork), 'Written Work'),
+            (get_model_ct(WrittenWork), 'Literary Work'),
         ]
         self.fields['models'] = forms.MultipleChoiceField(
             choices=choices, required=False, label=_('Search By Record Type'),

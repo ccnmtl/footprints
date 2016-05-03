@@ -1578,6 +1578,7 @@ body.affix-container {
 
 .object-detail.writtenwork .imprint-list-item-marker {
     height: 20px;
+    cursor: pointer;
 }
 
 .object-detail.writtenwork .panel-title {
