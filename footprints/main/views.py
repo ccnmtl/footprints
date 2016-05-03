@@ -97,27 +97,30 @@ class FootprintDetailView(EditableMixin, DetailView):
 
 class FootprintListView(ListView):
     model = Footprint
+    template_name = 'main/footprint_list.html'
     sort_options = {
-        'wtitle': {
-            'label': 'Literary Work',
-            'q': ['book_copy__imprint__work__title']
+        'added': {
+            'label': 'Added',
+            'q': ['-created_at']
+        },
+        'complete': {
+            'label': 'Complete',
+            'q': ['percent_complete']
+        },
+        'fdate': {
+            'label': 'Footprint Date',
+        },
+        'flocation': {
+            'label': 'Footprint Location',
         },
         'ftitle': {
             'label': 'Footprint',
             'q': ['title']
         },
-        'added': {
-            'label': 'Added',
-            'q': ['-created_at']
+        'wtitle': {
+            'label': 'Literary Work',
+            'q': ['book_copy__imprint__work__title']
         },
-        'elocation': {
-            'label': 'Evidence Location',
-            'q': ['provenance']
-        },
-        'complete': {
-            'label': 'Complete',
-            'q': ['percent_complete']
-        }
     }
     paginate_by = 15
 
@@ -140,12 +143,27 @@ class FootprintListView(ListView):
         sort_by = self.kwargs.get('sort_by', 'ftitle')
         direction = self.request.GET.get('direction', 'asc')
 
-        qs = super(FootprintListView, self).get_queryset()
-        qs = qs.order_by(*self.sort_options[sort_by]['q'])
-        if direction == 'asc':
-            return qs
+        qs = super(FootprintListView, self).get_queryset().select_related(
+            'associated_date', 'place').prefetch_related(
+                'actor', 'digital_object', 'book_copy__imprint__actor')
+
+        if sort_by == 'fdate':
+            lst = list(qs)
+            lst.sort(reverse=direction == 'desc',
+                     key=lambda obj: obj.sort_date())
+            return lst
+        elif sort_by == 'flocation':
+            lst = list(qs)
+            lst.sort(reverse=direction == 'desc',
+                     key=lambda obj:
+                     obj.place.__unicode__() if obj.place else '')
+            return lst
         else:
-            return qs.reverse()
+            qs = qs.order_by(*self.sort_options[sort_by]['q'])
+            if direction == 'asc':
+                return qs
+            else:
+                return qs.reverse()
 
 
 class PlaceDetailView(EditableMixin, DetailView):
