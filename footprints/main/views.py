@@ -147,8 +147,11 @@ class FootprintListView(ListView):
         direction = self.request.GET.get('direction', 'asc')
 
         qs = super(FootprintListView, self).get_queryset().select_related(
-            'associated_date', 'place').prefetch_related(
-                'actor', 'digital_object', 'book_copy__imprint__actor')
+            'book_copy', 'associated_date', 'place').prefetch_related(
+                'actor__person', 'actor__role', 'digital_object',
+                'book_copy__imprint__actor__person',
+                'book_copy__imprint__publication_date',
+                'book_copy__imprint__place')
 
         if sort_by == 'fdate':
             lst = list(qs)
