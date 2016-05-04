@@ -319,6 +319,17 @@ class FootprintListViewTest(TestCase):
         self.assertEquals(ctx['object_list'][2], self.footprint2)
         self.assertEquals(ctx['object_list'][3], self.footprint3)
 
+    def test_filter(self):
+        url = reverse('browse-footprint-list', args=['owners'])
+        url += '?direction=asc&q=zed'
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+
+        ctx = response.context_data
+        self.assertEquals(ctx['query'], 'zed')
+
+        self.assertEquals(ctx['object_list'][0], self.footprint4)
+
 
 class ApiViewTests(TestCase):
 
