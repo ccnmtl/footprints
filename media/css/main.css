@@ -2039,6 +2039,10 @@ ul.additional-questions .editable-container {
     margin-left: 10px;
 }
 
+.object-search .details-link {
+    display: none;
+}
+
 /* Admin area record entry styles */
 .mce-container, .mce-container *, .mce-widget, .mce-widget *, .mce-reset, mce-content-body {
     font-size: 12px !important;
