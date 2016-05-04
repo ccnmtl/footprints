@@ -821,6 +821,7 @@ class Imprint(models.Model):
 
 class BookCopy(models.Model):
     imprint = models.ForeignKey(Imprint)
+    call_number = models.CharField(max_length=256, null=True, blank=True)
 
     digital_object = models.ManyToManyField(
         DigitalObject, blank=True)

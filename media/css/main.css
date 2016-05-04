@@ -1578,6 +1578,7 @@ body.affix-container {
 
 .object-detail.writtenwork .imprint-list-item-marker {
     height: 20px;
+    cursor: pointer;
 }
 
 .object-detail.writtenwork .panel-title {
@@ -2036,6 +2037,10 @@ ul.additional-questions .editable-container {
 
 .object-search .no-results h4 {
     margin-left: 10px;
+}
+
+.object-search .details-link {
+    display: none;
 }
 
 /* Admin area record entry styles */
