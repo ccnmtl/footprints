@@ -140,15 +140,15 @@
                                                 <li class="list-group-item"
                                                     data-id="footprint-{{fp.id}}"
                                                     data-book-copy="{{fp.book_copy.identifier}}">
-                                                    <a class="pull-right small" href="/footprint/{{fp.id}}/">
-                                                        details <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
-                                                    </a>
+
+                                                    {% if fp.place %}
+                                                        <img class="pull-right imprint-list-item-marker"
+                                                            src="{{STATIC_URL}}img/marker.png"
+                                                            alt="map marker" />
+                                                    {% endif %}   
+
                                                     <div>
-                                                        {% if fp.place %}
-                                                            <img class="imprint-list-item-marker"
-                                                                src="{{STATIC_URL}}img/marker.png"
-                                                                alt="map marker" />
-                                                        {% endif %}            
+         
                                                         {{fp.associated_date|default:""}}{% if fp.place %}{% if fp.associated_date %}, {% endif %}
                                                             in {{fp.place}}
                                                             <div class="map-marker" style="display: none"
@@ -180,6 +180,8 @@
                                                         </div>
                                                     {% endif %}
                                                     {% endwith %}
+                                                    <a class="small" href="/footprint/{{fp.id}}/"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></a>
+                                                    <a class="small" href="/footprint/{{fp.id}}/">full details</a>
                                                 </li>
                                             {% endfor %}
                                             </ul>
