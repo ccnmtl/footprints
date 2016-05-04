@@ -363,6 +363,35 @@ The Literary Work
 <dl class="dl-horizontal">
     <dt>Copy Identifier</dt>
     <dd><%=imprint.work.id%>-<%=imprint.id%>-<%=id%></dd>
+    
+    <% if (call_number && call_number.length > 0) { %>
+        <dt>Call Number</dt>
+        <dd class="border-bottom">
+            <% if (editable) { %>
+                <a href="javascript:void(0);" class="editable"
+                    data-name="call_number"
+                    data-type="text" data-pk="<%=id%>"
+                    data-url="/api/book/<%=id%>/"><%=call_number%></a>
+            <% } else { %>
+                <%=call_number%>
+            <% } %>
+        </dd>
+    <% } %>    
 </dl>
+<% if (editable && (!call_number || call_number.length < 1)) { %>
+    <dl class="dl-horizontal">
+        <dt>Do you know...</dt>
+        <dd>
+            <ul class="additional-questions">
+                 <li>
+                     <span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
+                     <a href="javascript:void(0);" class="editable do-you-know persistant" data-name="call_number"
+                         data-type="text" data-pk="<%=id%>" data-value=""
+                         data-url="/api/book/<%=id%>/">the call number of the physical copy?</a>
+                 </li>
+            </ul>
+        </dd>  
+    </dl>
+<% } %>
 
 </script>
