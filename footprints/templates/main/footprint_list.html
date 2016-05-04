@@ -70,7 +70,9 @@
                         {% endif %}
                     </td>
                     <td>
-                        {{footprint.owners_list}}
+                        {% for owner in footprint.owners %}
+                            {{owner.display_name}}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
                     </td>
                     <td>
                         <a href="/writtenwork/{{footprint.book_copy.imprint.work.id}}">

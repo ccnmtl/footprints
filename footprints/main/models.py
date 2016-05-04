@@ -973,13 +973,6 @@ class Footprint(models.Model):
         return self.actor.filter(
             role__name=Role.OWNER).select_related('person')
 
-    def owners_list(self):
-        a = ''
-        for actor in self.actor.all():
-            if actor.role.name == Role.OWNER:
-                a += actor.display_name() + ', '
-        return a[:-2]
-
     def actors(self):
         return self.actor.all().select_related('person', 'role')
 

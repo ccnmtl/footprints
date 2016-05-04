@@ -7,6 +7,7 @@ from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.db.models.fields import FieldDoesNotExist
 from django.db.models.fields.related import ManyToManyField
+from django.db.models.query import Prefetch
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.template import loader
@@ -142,39 +143,59 @@ class FootprintListView(ListView):
         context['base_url'] = '{}?direction={}&page='.format(base, direction)
         return context
 
+    def sort_by_date(self, qs, direction):
+        lst = list(qs)
+        lst.sort(reverse=direction == 'desc',
+                 key=lambda obj: obj.sort_date())
+        return lst
+
+    def sort_by_place(self, qs, direction):
+        lst = list(qs)
+        lst.sort(reverse=direction == 'desc',
+                 key=lambda obj:
+                 obj.place.__unicode__() if obj.place else '')
+        return lst
+
+    def format_owner(self, obj):
+        actors = [actor.display_name() for actor in obj.owners]
+        return ', '.join(actors)
+
+    def sort_by_owner(self, qs, direction):
+        owners = Actor.objects.filter(
+            role__name=Role.OWNER).select_related('person')
+        qs = qs.prefetch_related(
+            Prefetch('actor', queryset=owners, to_attr='owners'))
+        lst = list(qs)
+        lst.sort(reverse=direction == 'desc',
+                 key=lambda obj: self.format_owner(obj))
+        return lst
+
+    def default_sort(self, qs, sort_by, direction):
+        qs = qs.order_by(*self.sort_options[sort_by]['q'])
+        if direction == 'asc':
+            return qs
+        else:
+            return qs.reverse()
+
     def get_queryset(self):
         sort_by = self.kwargs.get('sort_by', 'ftitle')
         direction = self.request.GET.get('direction', 'asc')
 
         qs = super(FootprintListView, self).get_queryset().select_related(
             'book_copy', 'associated_date', 'place').prefetch_related(
-                'actor__person', 'actor__role', 'digital_object',
-                'book_copy__imprint__actor__person',
-                'book_copy__imprint__publication_date',
-                'book_copy__imprint__place')
+            'digital_object',
+            'book_copy__imprint__publication_date',
+            'book_copy__imprint__actor__person',
+            'book_copy__imprint__place')
 
         if sort_by == 'fdate':
-            lst = list(qs)
-            lst.sort(reverse=direction == 'desc',
-                     key=lambda obj: obj.sort_date())
-            return lst
+            return self.sort_by_date(qs, direction)
         elif sort_by == 'flocation':
-            lst = list(qs)
-            lst.sort(reverse=direction == 'desc',
-                     key=lambda obj:
-                     obj.place.__unicode__() if obj.place else '')
-            return lst
+            return self.sort_by_place(qs, direction)
         elif sort_by == 'owners':
-            lst = list(qs)
-            lst.sort(reverse=direction == 'desc',
-                     key=lambda obj: obj.owners_list())
-            return lst
+            return self.sort_by_owner(qs, direction)
         else:
-            qs = qs.order_by(*self.sort_options[sort_by]['q'])
-            if direction == 'asc':
-                return qs
-            else:
-                return qs.reverse()
+            return self.default_sort(qs, sort_by, direction)
 
 
 class PlaceDetailView(EditableMixin, DetailView):
