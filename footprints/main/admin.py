@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.admin.models import LogEntry
 import reversion
 
 from footprints.main.models import Footprint, DigitalFormat, Role, \
@@ -123,3 +124,11 @@ class FootprintAdmin(reversion.VersionAdmin):
     )
 
 admin.site.register(Footprint, FootprintAdmin)
+
+
+class LogEntryAdmin(reversion.VersionAdmin):
+    list_display = ('__unicode__', 'user', 'action_time')
+    search_fields = ('user',)
+
+
+admin.site.register(LogEntry, LogEntryAdmin)
