@@ -2,14 +2,18 @@
     window.FootprintListView = Backbone.View.extend({
         events: {
             'click th.sortable': 'clickSortable',
-            'keypress .tools input': 'specifyPage'
+            'click .btn-search-text': 'clickSearch',
+            'keypress input[name="q"]': 'enterSearch',
+            'keypress .tools input.page-number': 'specifyPage',
         },
         initialize: function(options) {
-            _.bindAll(this, 'clickSortable', 'specifyPage');
+            _.bindAll(this, 'clickSortable', 'clickSearch',
+                      'enterSearch', 'specifyPage');
             var self = this;
             this.baseUrl = options.baseUrl;
             this.selectedDirection = options.selectedDirection;
             this.selectedSort = options.selectedSort;
+            this.query = options.query;
 
             jQuery(this.el).find('.progress-circle').each(function() {
                 var pct = parseInt(jQuery(this).data('value'), 10) / 100;
@@ -41,8 +45,22 @@
                 direction = this.selectedDirection === 'asc' ? 'desc' : 'asc';
             }
 
-            var url = this.baseUrl + sortBy + '/?direction=' + direction;
+            var url = this.baseUrl + sortBy +
+                '/?direction=' + direction + '&q=' + this.query;
             window.location = url;
+        },
+        clickSearch: function(evt) {
+            var query = jQuery(this.el).find('input[name="q"]').val();
+            var url = this.baseUrl + this.selectedSort +
+            '/?direction=' + this.selectedDirection + '&q=' + query;
+            window.location = url;
+        },
+        enterSearch: function(evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode;
+            if (charCode === 13) {
+                evt.preventDefault();
+                this.clickSearch();
+            }
         },
         specifyPage: function(evt) {
             var $elt = jQuery(evt.currentTarget);

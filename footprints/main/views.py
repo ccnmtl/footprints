@@ -8,6 +8,7 @@ from django.core.urlresolvers import reverse
 from django.db.models.fields import FieldDoesNotExist
 from django.db.models.fields.related import ManyToManyField
 from django.db.models.query import Prefetch
+from django.db.models.query_utils import Q
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.template import loader
@@ -134,13 +135,16 @@ class FootprintListView(ListView):
 
         sort_by = self.kwargs.get('sort_by', 'ftitle')
         direction = self.request.GET.get('direction', 'asc')
+        query = self.request.GET.get('q', '')
 
         context['selected_sort'] = sort_by
         context['selected_sort_label'] = self.sort_options[sort_by]['label']
         context['direction'] = direction
+        context['query'] = query
 
         base = reverse('browse-footprint-list', args=[sort_by])
-        context['base_url'] = '{}?direction={}&page='.format(base, direction)
+        context['base_url'] = \
+            u'{}?direction={}&q={}&page='.format(base, direction, query)
         return context
 
     def sort_by_date(self, qs, direction):
@@ -177,11 +181,24 @@ class FootprintListView(ListView):
         else:
             return qs.reverse()
 
+    def filter(self, qs):
+        q = self.request.GET.get('q', '')
+        if len(q) < 1:
+            return qs
+
+        return qs.filter(
+            Q(title__icontains=q) |
+            Q(book_copy__imprint__work__title__icontains=q) |
+            Q(actor__person__name__icontains=q) |
+            Q(book_copy__imprint__work__actor__person__name__icontains=q))
+
     def get_queryset(self):
         sort_by = self.kwargs.get('sort_by', 'ftitle')
         direction = self.request.GET.get('direction', 'asc')
 
-        qs = super(FootprintListView, self).get_queryset().select_related(
+        qs = super(FootprintListView, self).get_queryset()
+        qs = self.filter(qs)
+        qs = qs.select_related(
             'book_copy', 'associated_date', 'place').prefetch_related(
             'digital_object',
             'book_copy__imprint__publication_date',
