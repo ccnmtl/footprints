@@ -98,3 +98,4 @@ GOOGLE_MAPS_REVERSE_GEOCODE = \
 
 AWS_STORAGE_BUCKET_NAME = "ccnmtl-footprints-static-dev"
 MEDIA_URL = 'https://%s.s3.amazonaws.com/uploads/' % AWS_STORAGE_BUCKET_NAME
+IMPERSONATE_REQUIRE_SUPERUSER = True
