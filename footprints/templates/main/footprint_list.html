@@ -42,7 +42,7 @@
                 <th data-sort-by="flocation" class="sortable flocation">
                     Footprint Location
                 </th>
-                <th class="owners">Owners</th>
+                <th data-sort-by="owners" class="sortable owners">Owners</th>
                 <th data-sort-by="wtitle" class="sortable wtitle">Literary Work / Imprint</th>
                 <th data-sort-by="added" class="sortable added">Added</th>
                 <th data-sort-by="complete" class="sortable complete">Complete</th>
@@ -71,8 +71,7 @@
                     </td>
                     <td>
                         {% for owner in footprint.owners %}
-                            {{owner.display_name}}
-                            {% if not forloop.last %},{% endif %}
+                            {{owner.display_name}}{% if not forloop.last %}, {% endif %}
                         {% endfor %}
                     </td>
                     <td>

@@ -28,11 +28,6 @@ class BasicModelTest(TestCase):
         author = RoleFactory(name="Author", level=WRITTENWORK_LEVEL)
         printer = RoleFactory(name="Printer", level=IMPRINT_LEVEL)
 
-        self.assertEquals(author, Role.objects.get_author_role())
-        self.assertEquals(owner, Role.objects.get_owner_role())
-        self.assertEquals(publisher, Role.objects.get_publisher_role())
-        self.assertEquals(printer, Role.objects.get_printer_role())
-
         qs = Role.objects.for_footprint()
         self.assertEquals(qs.count(), 1)
         self.assertEquals(qs.first(), owner)
@@ -105,7 +100,7 @@ class BasicModelTest(TestCase):
 
         self.assertEquals(work.percent_complete(), 100)
 
-        author_role = Role.objects.get_author_role()
+        author_role, created = Role.objects.get_or_create(name=Role.AUTHOR)
         work.actor.add(ActorFactory(role=author_role))
         self.assertEquals(work.authors().count(), 1)
 
@@ -153,7 +148,7 @@ class BasicModelTest(TestCase):
 
         self.assertEquals(footprint.display_title(), "The Odyssey")
 
-        owner_role = Role.objects.get_owner_role()
+        owner_role, created = Role.objects.get_or_create(name=Role.OWNER)
         footprint.actor.add(ActorFactory(role=owner_role))
         self.assertEquals(footprint.owners().count(), 1)
 

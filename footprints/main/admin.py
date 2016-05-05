@@ -90,7 +90,7 @@ imprint_date.short_description = 'Imprint Publication Date'
 
 
 def owner(obj):
-    role = Role.objects.get_owner_role()
+    role, created = Role.objects.get_or_create(name=Role.OWNER)
     owners = obj.actor.filter(role=role)
     return ", ".join(owners.values_list('person__name', flat=True))
 
