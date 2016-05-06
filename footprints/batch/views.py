@@ -86,17 +86,18 @@ class BatchJobUpdateView(LoggedInStaffMixin, View):
             obj.place.save()
 
     def add_author(self, record, work):
+        role, created = Role.objects.get_or_create(name=Role.AUTHOR)
+
         author, created = Actor.objects.get_or_create_by_attributes(
-            record.writtenwork_author, record.writtenwork_author_viaf,
-            Role.objects.get_author_role(),
+            record.writtenwork_author, record.writtenwork_author_viaf, role,
             record.writtenwork_author_birth_date,
             record.writtenwork_author_death_date)
         work.actor.add(author)
 
     def add_publisher(self, record, imprint):
+        role, created = Role.objects.get_or_create(name=Role.PUBLISHER)
         publisher, created = Actor.objects.get_or_create_by_attributes(
-            record.publisher, record.publisher_viaf,
-            Role.objects.get_publisher_role(), None, None)
+            record.publisher, record.publisher_viaf, role, None, None)
 
         imprint.actor.add(publisher)
 

@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.admin.models import LogEntry
 import reversion
 
 from footprints.main.models import Footprint, DigitalFormat, Role, \
@@ -90,7 +91,7 @@ imprint_date.short_description = 'Imprint Publication Date'
 
 
 def owner(obj):
-    role = Role.objects.get_owner_role()
+    role, created = Role.objects.get_or_create(name=Role.OWNER)
     owners = obj.actor.filter(role=role)
     return ", ".join(owners.values_list('person__name', flat=True))
 
@@ -123,3 +124,11 @@ class FootprintAdmin(reversion.VersionAdmin):
     )
 
 admin.site.register(Footprint, FootprintAdmin)
+
+
+class LogEntryAdmin(reversion.VersionAdmin):
+    list_display = ('__unicode__', 'user', 'action_time')
+    search_fields = ('user',)
+
+
+admin.site.register(LogEntry, LogEntryAdmin)
