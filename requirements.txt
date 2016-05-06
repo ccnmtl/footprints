@@ -37,7 +37,7 @@ pylint==1.5.5
 six==1.10.0
 fake-factory==0.5.3
 factory_boy==2.6.1
-python-ldap==2.4.22
+python-ldap==2.4.25
 sqlparse==0.1.19
 contextlib2==0.5.1
 rcssmin==1.0.6
