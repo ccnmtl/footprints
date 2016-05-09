@@ -210,11 +210,14 @@ class BatchJobUpdateViewTest(TestCase):
         imprint = ImprintFactory()
 
         view = BatchJobUpdateView()
-        copy = view.get_or_create_copy(fp.call_number, imprint)
+        copy = view.get_or_create_copy(fp.call_number, imprint, 'abcd')
         self.assertNotEquals(fp.book_copy, copy)
+        self.assertEquals(copy.call_number, 'abcd')
 
-        copy = view.get_or_create_copy(fp.call_number, fp.book_copy.imprint)
+        copy = view.get_or_create_copy(fp.call_number,
+                                       fp.book_copy.imprint, 'efgh')
         self.assertEquals(fp.book_copy, copy)
+        self.assertEquals(copy.call_number, 'efgh')
 
     def test_create_footprint(self):
         copy = BookCopyFactory()
