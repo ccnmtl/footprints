@@ -77,3 +77,21 @@ class BatchRowTest(TestCase):
         imprint.save()
 
         self.assertIsNone(row.check_imprint_integrity())
+
+    def test_validate_book_copy_call_number(self):
+        # no book_copy_call_number
+        row = BatchRowFactory(book_copy_call_number=None)
+        self.assertTrue(row.validate_book_copy_call_number())
+
+        row = BatchRowFactory(book_copy_call_number='abcde')
+        self.assertTrue(row.validate_book_copy_call_number())
+
+        # book copy exists, but the imprint title doesn't match batch row title
+        copy = BookCopyFactory()
+        row = BatchRowFactory()
+        self.assertFalse(row.validate_book_copy_call_number())
+
+        # book copy exists, and the imprint title matches batch row title
+        copy.imprint.title = row.imprint_title
+        copy.imprint.save()
+        self.assertTrue(row.validate_book_copy_call_number())

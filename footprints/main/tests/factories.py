@@ -162,6 +162,7 @@ class BookCopyFactory(factory.DjangoModelFactory):
 
     imprint = factory.SubFactory(ImprintFactory)
     notes = "lorem ipsum"
+    call_number = 'B893.1BC'
 
 
 class FootprintFactory(factory.DjangoModelFactory):
