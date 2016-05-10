@@ -125,13 +125,19 @@ class BatchJobUpdateView(LoggedInStaffMixin, View):
 
         return imprint
 
-    def get_or_create_copy(self, call_number, imprint):
-        q = {'call_number': call_number, 'book_copy__imprint': imprint}
+    def get_or_create_copy(self, evidence_call_number,
+                           imprint, book_call_number):
+        q = {'call_number': evidence_call_number,
+             'book_copy__imprint': imprint}
         footprint = Footprint.objects.filter(**q).first()
         if footprint:
             copy = footprint.book_copy
         else:
             copy = BookCopy.objects.create(imprint=imprint)
+
+        if book_call_number:
+            copy.call_number = book_call_number
+            copy.save()
 
         return copy
 
@@ -163,7 +169,8 @@ class BatchJobUpdateView(LoggedInStaffMixin, View):
         n = 0
         for record in job.batchrow_set.all():
             imprint = self.get_or_create_imprint(record)
-            copy = self.get_or_create_copy(record.call_number, imprint)
+            copy = self.get_or_create_copy(
+                record.call_number, imprint, record.book_copy_call_number)
             footprint = self.create_footprint(record, copy)
             record.footprint = footprint
             record.save()
