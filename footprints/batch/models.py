@@ -1,13 +1,14 @@
 from audit_log.models.fields import CreatingUserField
-from django.core.exceptions import ValidationError
-from django.core.validators import URLValidator
 from django.db import models
 from django.db.models.query_utils import Q
 from geoposition import Geoposition
 
+from django.core.exceptions import ValidationError
+from django.core.validators import URLValidator
 from footprints.batch.validators import validate_date, validate_numeric, \
     validate_latlng
-from footprints.main.models import Footprint, Imprint, Role, MEDIUM_CHOICES
+from footprints.main.models import Footprint, Imprint, Role, MEDIUM_CHOICES, \
+    BookCopy
 
 
 class BatchJob(models.Model):
@@ -275,6 +276,19 @@ class BatchRow(models.Model):
 
     def validate_publication_location(self):
         return validate_latlng(self.publication_location)
+
+    def validate_book_copy_call_number(self):
+        if not self.book_copy_call_number:
+            return True
+
+        try:
+            # does a book copy exist with this call number?
+            copy = BookCopy.objects.get(call_number=self.book_copy_call_number)
+
+            # make sure the imprint titles match
+            return self.imprint_title == copy.imprint.title
+        except BookCopy.DoesNotExist:
+            return True
 
     def validate_medium(self):
         if not self.medium:
