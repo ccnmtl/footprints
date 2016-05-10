@@ -11,11 +11,11 @@ from django.test.client import Client, RequestFactory, encode_multipart
 
 from footprints.main.forms import ContactUsForm
 from footprints.main.models import Footprint, Actor, Imprint, \
-    StandardizedIdentificationType, ExtendedDate
+    StandardizedIdentificationType, ExtendedDate, Language
 from footprints.main.tests.factories import (
     UserFactory, WrittenWorkFactory, ImprintFactory, FootprintFactory,
     PersonFactory, RoleFactory, PlaceFactory, ActorFactory, BookCopyFactory,
-    ExtendedDateFactory)
+    ExtendedDateFactory, LanguageFactory)
 from footprints.main.views import (
     CreateFootprintView, AddActorView, ContactUsView)
 from footprints.main.viewsets import ImprintViewSet, BookCopyViewSet
@@ -1044,3 +1044,46 @@ class ContactUsViewTest(TestCase):
                           'sender@ccnmtl.columbia.edu')
         self.assertEquals(mail.outbox[0].to,
                           [settings.CONTACT_US_EMAIL])
+
+
+class AddLanguageViewTest(TestCase):
+
+    def testAddRemove(self):
+        staff = UserFactory(is_staff=True)
+        self.client.login(username=staff.username, password='test')
+        url = reverse('add-language-view')
+
+        footprint = FootprintFactory(title='Alpha')
+        generic = footprint.language.first()
+
+        # add english
+        english = LanguageFactory(name='English')
+
+        data = {'parent_id': footprint.id,
+                'parent_model': 'footprint',
+                'language': [english.id, generic.id]}
+
+        response = self.client.post(url, data,
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+
+        footprint.refresh_from_db()
+        self.assertEquals(footprint.language.count(), 2)
+        self.assertTrue(english in footprint.language.all())
+        self.assertTrue(generic in footprint.language.all())
+
+        # remove generic
+        data = {'parent_id': footprint.id,
+                'parent_model': 'footprint',
+                'language': [english.id]}
+
+        response = self.client.post(url, data,
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+
+        footprint.refresh_from_db()
+        self.assertEquals(footprint.language.count(), 1)
+        self.assertTrue(english in footprint.language.all())
+
+        # generic was not deleted
+        Language.objects.get(id=generic.id)

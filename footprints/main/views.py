@@ -495,8 +495,9 @@ class AddLanguageView(AddRelatedRecordView):
 
         languages = self.request.POST.getlist('language')
 
-        # delete all language that are not in the posted list
-        the_parent.language.exclude(id__in=languages).delete()
+        # remove all language that are not in the posted list
+        to_remove = the_parent.language.exclude(id__in=languages)
+        the_parent.language.remove(*to_remove)
 
         # add all languages. (no-op if already exists)
         for lid in languages:
