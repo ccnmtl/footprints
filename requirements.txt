@@ -30,7 +30,7 @@ ndg-httpsclient==0.4.0
 requests==2.9.1
 logilab-common==1.2.0
 logilab-astng==0.24.3
-lazy-object-proxy==1.2.1
+lazy-object-proxy==1.2.2
 wrapt==1.10.6
 astroid==1.4.4
 pylint==1.5.5
