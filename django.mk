@@ -26,7 +26,7 @@ $(PY_SENTINAL): $(REQUIREMENTS) $(VIRTUALENV) $(SUPPORT_DIR)*
 	touch $@
 
 test: $(PY_SENTINAL)
-	$(MANAGE) jenkins --pep8-exclude=migrations --enable-coverage --coverage-rcfile=.coveragerc --coverage-format=html
+	$(MANAGE) jenkins --pep8-exclude=migrations --enable-coverage --coverage-rcfile=.coveragerc
 
 parallel-tests: $(PY_SENTINAL)
 	$(MANAGE) test --parallel
