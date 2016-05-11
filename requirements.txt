@@ -66,7 +66,7 @@ django-debug-toolbar==1.4
 django-waffle==0.11
 django-jenkins==0.18.1
 django-smoketest==1.0.0
-django-extensions==1.6.1
+django-extensions==1.6.6
 django-stagingcontext==0.1.0
 django-ga-context==0.1.0
 django-impersonate==1.0.1
