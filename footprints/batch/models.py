@@ -1,13 +1,14 @@
 from audit_log.models.fields import CreatingUserField
-from django.core.exceptions import ValidationError
-from django.core.validators import URLValidator
 from django.db import models
 from django.db.models.query_utils import Q
 from geoposition import Geoposition
 
+from django.core.exceptions import ValidationError
+from django.core.validators import URLValidator
 from footprints.batch.validators import validate_date, validate_numeric, \
     validate_latlng
-from footprints.main.models import Footprint, Imprint, Role, MEDIUM_CHOICES
+from footprints.main.models import Footprint, Imprint, Role, MEDIUM_CHOICES, \
+    BookCopy
 
 
 class BatchJob(models.Model):
@@ -31,6 +32,7 @@ class BatchRow(models.Model):
         'publisher_viaf',
         'publication_location',
         'publication_date',
+        'book_copy_call_number',
         'medium',
         'provenance',
         'call_number',
@@ -103,12 +105,17 @@ class BatchRow(models.Model):
         null=True, blank=True, help_text=DATE_HELP_TEXT,
         verbose_name='Publication Date')
 
+    # book copy call number
+    book_copy_call_number = models.CharField(
+        max_length=256, null=True, blank=True,
+        verbose_name='Book Copy Call Number')
+
     medium = models.TextField(
         verbose_name='Evidence Type', help_text='This field is required.')
     provenance = models.TextField(
         verbose_name='Evidence Location', help_text='This field is required.')
     call_number = models.TextField(
-        null=True, blank=True, verbose_name='Call Number')
+        null=True, blank=True, verbose_name='Evidence Call Number')
 
     footprint_actor = models.TextField(
         null=True, blank=True, verbose_name='Footprint Actor',
@@ -269,6 +276,19 @@ class BatchRow(models.Model):
 
     def validate_publication_location(self):
         return validate_latlng(self.publication_location)
+
+    def validate_book_copy_call_number(self):
+        if not self.book_copy_call_number:
+            return True
+
+        try:
+            # does a book copy exist with this call number?
+            copy = BookCopy.objects.get(call_number=self.book_copy_call_number)
+
+            # make sure the imprint titles match
+            return self.imprint_title == copy.imprint.title
+        except BookCopy.DoesNotExist:
+            return True
 
     def validate_medium(self):
         if not self.medium:

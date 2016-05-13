@@ -228,21 +228,6 @@ def fmt_approximate(date_obj, result):
 
 
 class RoleQuerySet(models.query.QuerySet):
-    def get_author_role(self):
-        role, created = self.get_or_create(name='Author')
-        return role
-
-    def get_owner_role(self):
-        role, created = self.get_or_create(name='Owner')
-        return role
-
-    def get_publisher_role(self):
-        role, created = self.get_or_create(name='Publisher')
-        return role
-
-    def get_printer_role(self):
-        role, created = self.get_or_create(name='Printer')
-        return role
 
     def for_footprint(self):
         return self.filter(level=FOOTPRINT_LEVEL)
@@ -262,22 +247,6 @@ class RoleManager(models.Manager):
     def get_queryset(self):
         return RoleQuerySet(self.model, self._fields)
 
-    def get_author_role(self):
-        if not hasattr(self, 'author_role'):
-            self.author_role = self.get_queryset().get_author_role()
-        return self.author_role
-
-    def get_owner_role(self):
-        return self.get_queryset().get_owner_role()
-
-    def get_publisher_role(self):
-        if not hasattr(self, 'publisher_role') is None:
-            self.publisher_role = self.get_queryset().get_publisher_role()
-        return self.publisher_role
-
-    def get_printer_role(self):
-        return self.get_queryset().get_printer_role()
-
     def for_footprint(self):
         return self.get_queryset().for_footprint()
 
@@ -289,6 +258,11 @@ class RoleManager(models.Manager):
 
 
 class Role(models.Model):
+    OWNER = 'Owner'
+    AUTHOR = 'Author'
+    PUBLISHER = 'Publisher'
+    PRINTER = 'Printer'
+
     objects = RoleManager()
 
     name = models.CharField(max_length=256, unique=True)
@@ -667,8 +641,8 @@ class WrittenWork(models.Model):
         return int(complete/required * 100)
 
     def authors(self):
-        role = Role.objects.get_author_role()
-        return self.actor.filter(role=role)
+        return self.actor.filter(
+            role__name=Role.AUTHOR).select_related('person')
 
     def description(self):
         template = loader.get_template('main/writtenwork_description.html')
@@ -827,12 +801,12 @@ class Imprint(models.Model):
         return int(completed/required * 100)
 
     def publishers(self):
-        publisher = Role.objects.get_publisher_role()
-        return self.actor.filter(role=publisher)
+        return self.actor.filter(
+            role__name=Role.PUBLISHER).select_related('person')
 
     def printers(self):
-        printer = Role.objects.get_printer_role()
-        return self.actor.filter(role=printer)
+        return self.actor.filter(
+            role__name=Role.PRINTER).select_related('person')
 
     def references(self):
         # how many footprints reference this imprint?
@@ -847,6 +821,7 @@ class Imprint(models.Model):
 
 class BookCopy(models.Model):
     imprint = models.ForeignKey(Imprint)
+    call_number = models.CharField(max_length=256, null=True, blank=True)
 
     digital_object = models.ManyToManyField(
         DigitalObject, blank=True)
@@ -887,8 +862,9 @@ class BookCopy(models.Model):
 
     def owners(self):
         footprints = Footprint.objects.filter(book_copy=self)
-        role = Role.objects.get_owner_role()
-        return Actor.objects.filter(role=role, footprint__in=footprints)
+        return Actor.objects.filter(
+            role__name=Role.OWNER,
+            footprint__in=footprints).select_related('person')
 
 
 class Footprint(models.Model):
@@ -994,8 +970,8 @@ class Footprint(models.Model):
             return self.title
 
     def owners(self):
-        role = Role.objects.get_owner_role()
-        return self.actor.filter(role=role)
+        return self.actor.filter(
+            role__name=Role.OWNER).select_related('person')
 
     def actors(self):
         return self.actor.all().select_related('person', 'role')

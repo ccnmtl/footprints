@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.admin.models import LogEntry
 import reversion
 
 from footprints.main.models import Footprint, DigitalFormat, Role, \
@@ -13,7 +14,14 @@ admin.site.register(DigitalFormat)
 admin.site.register(DigitalObject)
 admin.site.register(StandardizedIdentification)
 admin.site.register(StandardizedIdentificationType)
-admin.site.register(Person)
+
+
+class PersonAdmin(admin.ModelAdmin):
+    list_display = ('name', 'birth_date', 'death_date',
+                    'standardized_identifier', 'notes')
+    search_fields = ('name',)
+
+admin.site.register(Person, PersonAdmin)
 
 
 class ExtendedDateAdmin(admin.ModelAdmin):
@@ -83,19 +91,24 @@ imprint_date.short_description = 'Imprint Publication Date'
 
 
 def owner(obj):
-    role = Role.objects.get_owner_role()
+    role, created = Role.objects.get_or_create(name=Role.OWNER)
     owners = obj.actor.filter(role=role)
     return ", ".join(owners.values_list('person__name', flat=True))
 
 owner.short_description = 'Owner'
 
 
+def creator(obj):
+    return obj.created_by.get_full_name()
+
+
 class FootprintAdmin(reversion.VersionAdmin):
     list_display = ('title', 'associated_date', 'place', owner,
-                    imprint_title, imprint_date, language)
+                    imprint_title, imprint_date, language, creator)
     readonly_fields = ('created_at', 'modified_at',
                        'created_by', 'last_modified_by')
-    search_fields = ('title',)
+    search_fields = ('title',
+                     'created_by__last_name', 'created_by__first_name')
     fieldsets = (
         (None, {
             'fields': ('book_copy', 'medium', 'medium_description',
@@ -111,3 +124,11 @@ class FootprintAdmin(reversion.VersionAdmin):
     )
 
 admin.site.register(Footprint, FootprintAdmin)
+
+
+class LogEntryAdmin(reversion.VersionAdmin):
+    list_display = ('__unicode__', 'user', 'action_time')
+    search_fields = ('user',)
+
+
+admin.site.register(LogEntry, LogEntryAdmin)

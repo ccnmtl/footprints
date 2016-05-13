@@ -11,11 +11,11 @@ from django.test.client import Client, RequestFactory, encode_multipart
 
 from footprints.main.forms import ContactUsForm
 from footprints.main.models import Footprint, Actor, Imprint, \
-    StandardizedIdentificationType, ExtendedDate
+    StandardizedIdentificationType, ExtendedDate, Language
 from footprints.main.tests.factories import (
     UserFactory, WrittenWorkFactory, ImprintFactory, FootprintFactory,
     PersonFactory, RoleFactory, PlaceFactory, ActorFactory, BookCopyFactory,
-    ExtendedDateFactory)
+    ExtendedDateFactory, LanguageFactory)
 from footprints.main.views import (
     CreateFootprintView, AddActorView, ContactUsView)
 from footprints.main.viewsets import ImprintViewSet, BookCopyViewSet
@@ -179,10 +179,34 @@ class DetailViewTest(TestCase):
 class FootprintListViewTest(TestCase):
     def setUp(self):
         self.user = UserFactory()
-        self.footprint1 = FootprintFactory(title='Alpha', provenance='one')
-        self.footprint2 = FootprintFactory(title='Beta', provenance='two')
-        self.footprint3 = FootprintFactory(title='Delta', provenance='three')
-        self.footprint4 = FootprintFactory(title='Epsilon', provenance='four')
+
+        place1 = PlaceFactory(city='Teit')
+        place2 = PlaceFactory(city='Cheit')
+        place3 = PlaceFactory(city='Zavin')
+
+        date1 = ExtendedDateFactory(edtf_format='1492')
+        date2 = ExtendedDateFactory(edtf_format='1493')
+        date3 = ExtendedDateFactory(edtf_format='1494')
+
+        role = RoleFactory(name='Owner')
+        owner1 = ActorFactory(role=role, person=PersonFactory(name='Hank'))
+        owner2 = ActorFactory(role=role, person=PersonFactory(name='Banana'))
+        owner3 = ActorFactory(role=role, person=PersonFactory(name='Zed'))
+
+        self.footprint1 = FootprintFactory(title='Alpha', provenance='one',
+                                           place=place1, associated_date=date1)
+        self.footprint1.actor.add(owner1)
+
+        self.footprint2 = FootprintFactory(title='Beta', provenance='two',
+                                           place=place2, associated_date=date2)
+        self.footprint2.actor.add(owner2)
+
+        self.footprint3 = FootprintFactory(title='Delta', provenance='three',
+                                           place=place3, associated_date=date3)
+
+        self.footprint4 = FootprintFactory(title='Epsilon', provenance='four',
+                                           place=None, associated_date=None)
+        self.footprint4.actor.add(owner3)
 
     def test_default_sort(self):
         url = reverse('browse-footprint-list-default')
@@ -211,21 +235,21 @@ class FootprintListViewTest(TestCase):
         self.assertEquals(ctx['object_list'][2], self.footprint2)
         self.assertEquals(ctx['object_list'][3], self.footprint1)
 
-    def test_alternate_sort(self):
-        url = reverse('browse-footprint-list', args=['elocation'])
+    def test_footprint_location_sort(self):
+        url = reverse('browse-footprint-list', args=['flocation'])
         response = self.client.get(url)
         self.assertEquals(response.status_code, 200)
 
         ctx = response.context_data
         self.assertTrue('paginator' in ctx)
         self.assertTrue('sort_options' in ctx)
-        self.assertEquals(ctx['selected_sort'], 'elocation')
-        self.assertEquals(ctx['selected_sort_label'], 'Evidence Location')
+        self.assertEquals(ctx['selected_sort'], 'flocation')
+        self.assertEquals(ctx['selected_sort_label'], 'Footprint Location')
 
         self.assertEquals(ctx['object_list'][0], self.footprint4)
-        self.assertEquals(ctx['object_list'][1], self.footprint1)
-        self.assertEquals(ctx['object_list'][2], self.footprint3)
-        self.assertEquals(ctx['object_list'][3], self.footprint2)
+        self.assertEquals(ctx['object_list'][1], self.footprint2)
+        self.assertEquals(ctx['object_list'][2], self.footprint1)
+        self.assertEquals(ctx['object_list'][3], self.footprint3)
 
         # reverse the sort
         url += '?direction=desc'
@@ -234,10 +258,77 @@ class FootprintListViewTest(TestCase):
 
         ctx = response.context_data
 
-        self.assertEquals(ctx['object_list'][0], self.footprint2)
-        self.assertEquals(ctx['object_list'][1], self.footprint3)
+        self.assertEquals(ctx['object_list'][0], self.footprint3)
+        self.assertEquals(ctx['object_list'][1], self.footprint1)
+        self.assertEquals(ctx['object_list'][2], self.footprint2)
+        self.assertEquals(ctx['object_list'][3], self.footprint4)
+
+    def test_footprint_date_sort(self):
+        url = reverse('browse-footprint-list', args=['fdate'])
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+
+        ctx = response.context_data
+        self.assertTrue('paginator' in ctx)
+        self.assertTrue('sort_options' in ctx)
+        self.assertEquals(ctx['selected_sort'], 'fdate')
+        self.assertEquals(ctx['selected_sort_label'], 'Footprint Date')
+
+        self.assertEquals(ctx['object_list'][0], self.footprint4)
+        self.assertEquals(ctx['object_list'][1], self.footprint1)
+        self.assertEquals(ctx['object_list'][2], self.footprint2)
+        self.assertEquals(ctx['object_list'][3], self.footprint3)
+
+        # reverse the sort
+        url += '?direction=desc'
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+
+        ctx = response.context_data
+
+        self.assertEquals(ctx['object_list'][0], self.footprint3)
+        self.assertEquals(ctx['object_list'][1], self.footprint2)
         self.assertEquals(ctx['object_list'][2], self.footprint1)
         self.assertEquals(ctx['object_list'][3], self.footprint4)
+
+    def test_footprint_owner_sort(self):
+        url = reverse('browse-footprint-list', args=['owners'])
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+
+        ctx = response.context_data
+        self.assertTrue('paginator' in ctx)
+        self.assertTrue('sort_options' in ctx)
+        self.assertEquals(ctx['selected_sort'], 'owners')
+        self.assertEquals(ctx['selected_sort_label'], 'Owners')
+
+        self.assertEquals(ctx['object_list'][0], self.footprint3)
+        self.assertEquals(ctx['object_list'][1], self.footprint2)
+        self.assertEquals(ctx['object_list'][2], self.footprint1)
+        self.assertEquals(ctx['object_list'][3], self.footprint4)
+
+        # reverse the sort
+        url += '?direction=desc'
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+
+        ctx = response.context_data
+
+        self.assertEquals(ctx['object_list'][0], self.footprint4)
+        self.assertEquals(ctx['object_list'][1], self.footprint1)
+        self.assertEquals(ctx['object_list'][2], self.footprint2)
+        self.assertEquals(ctx['object_list'][3], self.footprint3)
+
+    def test_filter(self):
+        url = reverse('browse-footprint-list', args=['owners'])
+        url += '?direction=asc&q=zed'
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+
+        ctx = response.context_data
+        self.assertEquals(ctx['query'], 'zed')
+
+        self.assertEquals(ctx['object_list'][0], self.footprint4)
 
 
 class ApiViewTests(TestCase):
@@ -953,3 +1044,46 @@ class ContactUsViewTest(TestCase):
                           'sender@ccnmtl.columbia.edu')
         self.assertEquals(mail.outbox[0].to,
                           [settings.CONTACT_US_EMAIL])
+
+
+class AddLanguageViewTest(TestCase):
+
+    def testAddRemove(self):
+        staff = UserFactory(is_staff=True)
+        self.client.login(username=staff.username, password='test')
+        url = reverse('add-language-view')
+
+        footprint = FootprintFactory(title='Alpha')
+        generic = footprint.language.first()
+
+        # add english
+        english = LanguageFactory(name='English')
+
+        data = {'parent_id': footprint.id,
+                'parent_model': 'footprint',
+                'language': [english.id, generic.id]}
+
+        response = self.client.post(url, data,
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+
+        footprint.refresh_from_db()
+        self.assertEquals(footprint.language.count(), 2)
+        self.assertTrue(english in footprint.language.all())
+        self.assertTrue(generic in footprint.language.all())
+
+        # remove generic
+        data = {'parent_id': footprint.id,
+                'parent_model': 'footprint',
+                'language': [english.id]}
+
+        response = self.client.post(url, data,
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+
+        footprint.refresh_from_db()
+        self.assertEquals(footprint.language.count(), 1)
+        self.assertTrue(english in footprint.language.all())
+
+        # generic was not deleted
+        Language.objects.get(id=generic.id)

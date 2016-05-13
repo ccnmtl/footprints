@@ -1578,6 +1578,7 @@ body.affix-container {
 
 .object-detail.writtenwork .imprint-list-item-marker {
     height: 20px;
+    cursor: pointer;
 }
 
 .object-detail.writtenwork .panel-title {
@@ -1853,15 +1854,6 @@ ul.additional-questions .editable-container {
     padding: 0;
 }
 
-.object-browse .tools {
-    margin: 20px 0;
-}
-
-.object-browse .tools .col-md-2 {
-    padding-left: 0;
-    padding-right: 0;
-}
-
 .object-browse .tools a.btn {
     font-size: 12px;
     color: white;
@@ -1882,7 +1874,7 @@ ul.additional-questions .editable-container {
     cursor: not-allowed;
 }
 
-.object-browse .tools input {
+.object-browse .tools input.page-number {
     width: 50px;
     display: inline;
     text-align: right;
@@ -1959,14 +1951,20 @@ ul.additional-questions .editable-container {
     width: 20%;
 }
 
-.object-browse th.elocation, .object-browse th.owners {
+.object-browse th.flocation, .object-browse th.owners {
     width: 16%;
 }
 
-.object-browse th.added, .object-browse th.complete {
+.object-browse th.fdate {
+    width: 10%;
+}
+
+.object-browse th.added,
+.object-browse th.complete {
     width: 7%;
 }
 
+.object-browse td.fdate,
 .object-browse td.added {
     text-align: center;
 }
@@ -2039,6 +2037,10 @@ ul.additional-questions .editable-container {
 
 .object-search .no-results h4 {
     margin-left: 10px;
+}
+
+.object-search .details-link {
+    display: none;
 }
 
 /* Admin area record entry styles */

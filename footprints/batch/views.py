@@ -86,17 +86,18 @@ class BatchJobUpdateView(LoggedInStaffMixin, View):
             obj.place.save()
 
     def add_author(self, record, work):
+        role, created = Role.objects.get_or_create(name=Role.AUTHOR)
+
         author, created = Actor.objects.get_or_create_by_attributes(
-            record.writtenwork_author, record.writtenwork_author_viaf,
-            Role.objects.get_author_role(),
+            record.writtenwork_author, record.writtenwork_author_viaf, role,
             record.writtenwork_author_birth_date,
             record.writtenwork_author_death_date)
         work.actor.add(author)
 
     def add_publisher(self, record, imprint):
+        role, created = Role.objects.get_or_create(name=Role.PUBLISHER)
         publisher, created = Actor.objects.get_or_create_by_attributes(
-            record.publisher, record.publisher_viaf,
-            Role.objects.get_publisher_role(), None, None)
+            record.publisher, record.publisher_viaf, role, None, None)
 
         imprint.actor.add(publisher)
 
@@ -124,13 +125,28 @@ class BatchJobUpdateView(LoggedInStaffMixin, View):
 
         return imprint
 
-    def get_or_create_copy(self, call_number, imprint):
-        q = {'call_number': call_number, 'book_copy__imprint': imprint}
+    def get_or_create_copy(self, evidence_call_number,
+                           imprint, book_call_number):
+
+        if book_call_number:
+            try:
+                # imprints were validated
+                return BookCopy.objects.get(imprint=imprint,
+                                            call_number=book_call_number)
+            except BookCopy.DoesNotExist:
+                pass  # not unexpected
+
+        q = {'call_number': evidence_call_number,
+             'book_copy__imprint': imprint}
         footprint = Footprint.objects.filter(**q).first()
         if footprint:
             copy = footprint.book_copy
         else:
             copy = BookCopy.objects.create(imprint=imprint)
+
+        if book_call_number:
+            copy.call_number = book_call_number
+            copy.save()
 
         return copy
 
@@ -162,7 +178,8 @@ class BatchJobUpdateView(LoggedInStaffMixin, View):
         n = 0
         for record in job.batchrow_set.all():
             imprint = self.get_or_create_imprint(record)
-            copy = self.get_or_create_copy(record.call_number, imprint)
+            copy = self.get_or_create_copy(
+                record.call_number, imprint, record.book_copy_call_number)
             footprint = self.create_footprint(record, copy)
             record.footprint = footprint
             record.save()

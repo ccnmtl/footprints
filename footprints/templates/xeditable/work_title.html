@@ -2,7 +2,7 @@
     {% with references=footprint.book_copy.imprint.work.references %}
     {% if references > 1 %}
         <div class="alert alert-danger" role="alert">
-            <strong>Important!</strong> This work is referenced by <b>{{references|add:"-1"}} other footprint(s).<br />
+            <strong>Important!</strong> This work is referenced by <b>{{references|add:"-1"}}</b> other footprint(s).<br />
             Changing the standardized work title will change those records too.<br /><br />
             Click <a href="#" class="connect-records imprint">
                 <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>

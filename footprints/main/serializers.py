@@ -165,7 +165,8 @@ class BookCopySerializer(HyperlinkedModelSerializer):
 
     class Meta:
         model = BookCopy
-        fields = ('id', 'imprint', 'notes', 'description', 'owners')
+        fields = ('id', 'call_number', 'imprint',
+                  'notes', 'description', 'owners')
 
 
 class DateTimeZoneField(serializers.DateTimeField):
