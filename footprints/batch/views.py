@@ -127,6 +127,15 @@ class BatchJobUpdateView(LoggedInStaffMixin, View):
 
     def get_or_create_copy(self, evidence_call_number,
                            imprint, book_call_number):
+
+        if book_call_number:
+            try:
+                # imprints were validated
+                return BookCopy.objects.get(imprint=imprint,
+                                            call_number=book_call_number)
+            except BookCopy.DoesNotExist:
+                pass  # not unexpected
+
         q = {'call_number': evidence_call_number,
              'book_copy__imprint': imprint}
         footprint = Footprint.objects.filter(**q).first()

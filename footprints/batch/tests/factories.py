@@ -31,6 +31,7 @@ class BatchRowFactory(factory.DjangoModelFactory):
     publisher_viaf = '297361612'
     publication_location = None
     publication_date = '1542'
+    book_copy_call_number = 'B893.1BC'
 
     medium = 'Library Catalog/Union Catalog'
     provenance = 'Columbia University, New York, New York'
