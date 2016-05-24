@@ -2,23 +2,29 @@ from json import loads
 import json
 
 from django.conf import settings
-from django.contrib.auth.models import AnonymousUser
 from django.core import mail
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.urlresolvers import reverse
-from django.test import TestCase
 from django.test.client import Client, RequestFactory, encode_multipart
 
+from django.contrib.auth.models import AnonymousUser
+from django.test import TestCase
 from footprints.main.forms import ContactUsForm
 from footprints.main.models import Footprint, Actor, Imprint, \
     StandardizedIdentificationType, ExtendedDate, Language
+from footprints.main.search_indexes import format_sort_by
+from footprints.main.serializers import \
+    StandardizedIdentificationTypeSerializer, \
+    StandardizedIdentificationSerializer, LanguageSerializer, \
+    ExtendedDateSerializer, ActorSerializer
 from footprints.main.tests.factories import (
     UserFactory, WrittenWorkFactory, ImprintFactory, FootprintFactory,
     PersonFactory, RoleFactory, PlaceFactory, ActorFactory, BookCopyFactory,
-    ExtendedDateFactory, LanguageFactory)
+    ExtendedDateFactory, LanguageFactory, StandardizedIdentificationFactory)
 from footprints.main.views import (
     CreateFootprintView, AddActorView, ContactUsView)
-from footprints.main.viewsets import ImprintViewSet, BookCopyViewSet
+from footprints.main.viewsets import ImprintViewSet, BookCopyViewSet, \
+    WrittenWorkViewSet
 
 
 class BasicTest(TestCase):
@@ -908,9 +914,9 @@ class AddDigitalObjectViewTest(TestCase):
 class ViewsetsTest(TestCase):
 
     def test_writtenwork_viewset(self):
-        viewset = ImprintViewSet()
-        ww1 = ImprintFactory(title='Alpha')
-        ww2 = ImprintFactory(title='Beta')
+        viewset = WrittenWorkViewSet()
+        ww1 = WrittenWorkFactory(title='Alpha')
+        ww2 = WrittenWorkFactory(title='Beta')
 
         viewset.request = RequestFactory().get('/', {})
         qs = viewset.get_queryset()
@@ -1087,3 +1093,65 @@ class AddLanguageViewTest(TestCase):
 
         # generic was not deleted
         Language.objects.get(id=generic.id)
+
+
+class SearchViewTest(TestCase):
+
+    def test_search(self):
+        url = "{}/?q=foo&models=main.footprint".format(reverse('search'))
+
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(len(response.context['page'].object_list), 0)
+
+
+class SearchIndexTest(TestCase):
+
+    def test_format_sort_by(self):
+        self.assertEquals(format_sort_by('ABCD'), 'abcd')
+        self.assertEquals(format_sort_by('The A', True), 'a')
+
+
+class SerializerTest(TestCase):
+
+    def test_standardized_identification_type_serializer(self):
+        serializer = StandardizedIdentificationTypeSerializer()
+
+        qs = serializer.get_queryset()
+        self.assertEquals(qs.count(), 5)  # preloaded in migrations
+
+    def test_standardized_identification_serializer(self):
+        si = StandardizedIdentificationFactory()
+        serializer = StandardizedIdentificationSerializer()
+
+        qs = serializer.get_queryset()
+        self.assertEquals(qs.count(), 1)
+        self.assertEquals(qs.first(), si)
+
+    def test_language_serializer(self):
+        l = LanguageFactory()
+        serializer = LanguageSerializer()
+
+        qs = serializer.get_queryset()
+        self.assertEquals(qs.count(), 1)
+        self.assertEquals(qs.first(), l)
+
+        self.assertEquals(serializer.to_internal_value(l.id), l)
+
+    def test_extended_date_serializer(self):
+        dt = ExtendedDateFactory()
+        serializer = ExtendedDateSerializer()
+
+        qs = serializer.get_queryset()
+        self.assertEquals(qs.count(), 1)
+        self.assertEquals(qs.first(), dt)
+
+    def test_actor_serializer(self):
+        a = ActorFactory()
+        serializer = ActorSerializer()
+
+        qs = serializer.get_queryset()
+        self.assertEquals(qs.count(), 1)
+        self.assertEquals(qs.first(), a)
+
+        self.assertEquals(serializer.to_internal_value(a.id), a)
