@@ -35,7 +35,8 @@ wrapt==1.10.8
 astroid==1.4.5
 pylint==1.5.5
 six==1.10.0
-fake-factory==0.5.3
+ipaddress==1.0.16
+fake-factory==0.5.7
 factory_boy==2.6.1
 python-ldap==2.4.25
 sqlparse==0.1.19
