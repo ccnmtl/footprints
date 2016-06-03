@@ -1463,7 +1463,8 @@ body.affix-container {
     margin-left: 10px;
 }
 
-.book-detail {
+.physical-copy-detail,
+.written-work-detail {
     border-radius: 4px;
     background-image: url("../img/fp_section_bg.png");
     background-repeat: repeat;
