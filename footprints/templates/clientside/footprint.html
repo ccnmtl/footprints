@@ -181,7 +181,21 @@
                     <% } %>
                 </div>
             </dd>
-        <% } %> 
+        <% } %>
+
+        <% if (notes && notes.length > 0) { %>
+            <dt>Notes</dt>
+            <dd class="border-bottom">
+                <% if (editable) { %>
+                    <a href="javascript:void(0);" class="editable"
+                        data-name="notes"
+                        data-type="textarea" data-pk="<%=id%>"
+                        data-url="/api/footprint/<%=id%>/"><%=notes%></a>
+                <% } else { %>
+                    <%=notes%>
+                <% } %>
+            </dd>
+        <% } %>
     </dl>
     
     <dl class="dl-horizontal">
@@ -245,7 +259,7 @@
         </dd>
 
         <% if (call_number && call_number.length > 0) { %>
-            <dt>Evidence Call Number</dt>
+            <dt>Evidence Source</dt>
             <dd class="border-bottom">
                 <% if (editable) { %>
                     <a href="javascript:void(0);" class="editable"
@@ -254,20 +268,6 @@
                         data-url="/api/footprint/<%=id%>/"><%=call_number%></a>
                 <% } else { %>
                     <%=call_number%>
-                <% } %>
-            </dd>
-        <% } %>
-
-        <% if (notes && notes.length > 0) { %>
-            <dt>Notes</dt>
-            <dd class="border-bottom">
-                <% if (editable) { %>
-                    <a href="javascript:void(0);" class="editable"
-                        data-name="notes"
-                        data-type="textarea" data-pk="<%=id%>"
-                        data-url="/api/footprint/<%=id%>/"><%=notes%></a>
-                <% } else { %>
-                    <%=notes%>
                 <% } %>
             </dd>
         <% } %>
@@ -326,14 +326,7 @@
                         <li><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
                             <a href="javascript:void(0);" class="editable do-you-know persistant" data-name="call_number"
                                 data-type="text" data-pk="<%=id%>" data-value=""
-                                data-url="/api/footprint/<%=id%>/">the call number of the evidence?</a>
-                        </li>
-                    <% } %>
-                    <% if (!notes || notes.length < 1) { %> 
-                        <li><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
-                            <a href="javascript:void(0);" class="editable do-you-know persistant" data-name="notes"
-                               data-type="textarea" data-pk="<%=id%>" data-value=""
-                               data-url="/api/footprint/<%=id%>/">any additional notes, clarifications, deductions or oddities?</a>
+                                data-url="/api/footprint/<%=id%>/">the source of the evidence, e.g. a call number?</a>
                         </li>
                     <% } %>
                     <li><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
@@ -343,6 +336,13 @@
                             what the evidence looks like? Add some images
                         </a>
                     </li>
+                    <% if (!notes || notes.length < 1) { %> 
+                        <li><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
+                            <a href="javascript:void(0);" class="editable do-you-know persistant" data-name="notes"
+                               data-type="textarea" data-pk="<%=id%>" data-value=""
+                               data-url="/api/footprint/<%=id%>/">any additional notes, clarifications, deductions or oddities?</a>
+                        </li>
+                    <% } %>                    
                     <% if (!narrative || narrative.length < 1) { %>
                     <li><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
                         <a href="javascript:void(0);" class="editable do-you-know persistant" data-name="narrative"

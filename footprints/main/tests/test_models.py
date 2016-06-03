@@ -126,17 +126,26 @@ class BasicModelTest(TestCase):
         owner2 = ActorFactory(role=owner)
         owner3 = ActorFactory(role=owner)
 
-        footprint1 = FootprintFactory(book_copy=copy)
+        footprint1 = FootprintFactory(
+            book_copy=copy,
+            associated_date=ExtendedDateFactory(edtf_format='1981'))
         footprint1.actor.add(owner1)
-        footprint2 = FootprintFactory(book_copy=copy)
+        footprint2 = FootprintFactory(
+            book_copy=copy,
+            associated_date=ExtendedDateFactory(edtf_format='1982'))
         footprint2.actor.add(owner2)
-        footprint3 = FootprintFactory()
+        footprint3 = FootprintFactory(
+            associated_date=ExtendedDateFactory(edtf_format='1983'))
         footprint3.actor.add(owner3)
 
         owners = copy.owners()
         self.assertEquals(owners.count(), 2)
         self.assertIsNotNone(owners.get(id=owner1.id))
         self.assertIsNotNone(owners.get(id=owner2.id))
+
+        current_owners = copy.current_owners()
+        self.assertEquals(current_owners.count(), 1)
+        self.assertIsNotNone(current_owners.get(id=owner2.id))
 
     def test_footprint(self):
         footprint = FootprintFactory()
