@@ -866,6 +866,21 @@ class BookCopy(models.Model):
             role__name=Role.OWNER,
             footprint__in=footprints).select_related('person')
 
+    def current_owners(self):
+        footprints = Footprint.objects.filter(book_copy=self)
+        if not footprints.exists():
+            return Actor.objects.none()
+
+        lst = list(footprints)
+        lst.sort(key=lambda obj: obj.sort_date())
+        most_recent_footprint = lst[-1]
+
+        qs = Actor.objects.filter(
+            role__name=Role.OWNER,
+            footprint=most_recent_footprint).select_related('person')
+
+        return qs
+
 
 class Footprint(models.Model):
 

@@ -162,11 +162,12 @@ class ImprintSerializer(HyperlinkedModelSerializer):
 class BookCopySerializer(HyperlinkedModelSerializer):
     imprint = ImprintSerializer()
     owners = ActorSerializer(many=True, read_only=True)
+    current_owners = ActorSerializer(many=True, read_only=True)
 
     class Meta:
         model = BookCopy
         fields = ('id', 'call_number', 'imprint',
-                  'notes', 'description', 'owners')
+                  'notes', 'description', 'owners', 'current_owners')
 
 
 class DateTimeZoneField(serializers.DateTimeField):
