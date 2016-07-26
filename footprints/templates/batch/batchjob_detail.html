@@ -93,7 +93,9 @@
                         {% for row in rows %}
                             <td data-record-id="{{row.id}}" class="valid">
                                 <div>
-                                    <a target="_blank" href="{% url 'footprint-detail-view' row.footprint.id %}">{{row.footprint.id}}</a>
+                                    {% if row.footprint %}
+                                        <a target="_blank" href="{% url 'footprint-detail-view' row.footprint.id %}">{{row.footprint.id}}</a>
+                                    {% endif %}
                                 </div>
                             </td>
                         {% endfor %}
