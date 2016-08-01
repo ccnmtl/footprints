@@ -43,7 +43,7 @@ fake-factory==0.5.9
 factory_boy==2.7.0
 ldap3==1.4.0
 sqlparse==0.2.0
-contextlib2==0.5.3
+contextlib2==0.5.4
 rcssmin==1.0.6
 rjsmin==1.0.12
 vine==1.1.1
