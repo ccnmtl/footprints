@@ -39,7 +39,7 @@ astroid==1.4.8
 pylint==1.6.4
 six==1.10.0
 ipaddress==1.0.16
-fake-factory==0.5.9
+fake-factory==0.5.10
 factory_boy==2.7.0
 ldap3==1.4.0
 sqlparse==0.2.0
