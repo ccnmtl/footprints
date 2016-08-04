@@ -10,18 +10,6 @@ locals().update(
         STATIC_ROOT=STATIC_ROOT
     ))
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'transaction_hooks.backends.postgresql_psycopg2',
-        'NAME': 'footprints',
-        'HOST': '',
-        'PORT': 6432,
-        'USER': '',
-        'PASSWORD': '',
-        'ATOMIC_REQUESTS': True,
-    }
-}
-
 try:
     from local_settings import *
 except ImportError:
