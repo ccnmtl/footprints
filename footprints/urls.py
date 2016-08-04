@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.auth.views import password_change, password_change_done, \
     password_reset_done, password_reset_confirm, password_reset_complete
@@ -28,9 +28,9 @@ from footprints.mixins import is_staff
 
 admin.autodiscover()
 
-auth_urls = (r'^accounts/', include('django.contrib.auth.urls'))
+auth_urls = url(r'^accounts/', include('django.contrib.auth.urls'))
 if hasattr(settings, 'CAS_BASE'):
-    auth_urls = (r'^accounts/', include('djangowind.urls'))
+    auth_urls = url(r'^accounts/', include('djangowind.urls'))
 
 router = routers.DefaultRouter()
 router.register(r'actor', ActorViewSet)
@@ -50,12 +50,11 @@ router.register(r'user', UserViewSet)
 router.register(r'writtenwork', WrittenWorkViewSet)
 
 
-urlpatterns = patterns(
-    '',
-    (r'^$', views.IndexView.as_view()),
+urlpatterns = [
+    url(r'^$', views.IndexView.as_view()),
 
-    (r'^accounts/login/$', LoginView.as_view()),
-    (r'^accounts/logout/$', LogoutView.as_view()),
+    url(r'^accounts/login/$', LoginView.as_view()),
+    url(r'^accounts/logout/$', LogoutView.as_view()),
 
     # password change & reset. overriding to gate them.
     url(r'^accounts/password_change/$',
@@ -125,30 +124,29 @@ urlpatterns = patterns(
     url(r'^api/name/$', NameListView.as_view()),
 
     # Contact us forms.
-    (r'^contact/success/$',
-     TemplateView.as_view(template_name='main/contact_success.html')),
-    (r'^contact/$', ContactUsView.as_view()),
+    url(r'^contact/success/$',
+        TemplateView.as_view(template_name='main/contact_success.html')),
+    url(r'^contact/$', ContactUsView.as_view()),
 
     # Batch Import
-    (r'^batch/', include('footprints.batch.urls')),
+    url(r'^batch/', include('footprints.batch.urls')),
 
-    (r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', include(admin.site.urls)),
     url(r'^_impersonate/', include('impersonate.urls')),
-    (r'^stats/$', TemplateView.as_view(template_name="stats.html")),
-    (r'smoketest/', include('smoketest.urls')),
-    (r'infranil/', include('infranil.urls')),
-    (r'^uploads/(?P<path>.*)$',
-     'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
-    (r'^sign_s3/$', SignS3View.as_view()),
+    url(r'^stats/$', TemplateView.as_view(template_name="stats.html")),
+    url(r'smoketest/', include('smoketest.urls')),
+    url(r'infranil/', include('infranil.urls')),
+    url(r'^uploads/(?P<path>.*)$',
+        'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
+    url(r'^sign_s3/$', SignS3View.as_view()),
 
     # Visualizations for grant application
-    (r'^pathmapper/',
-     TemplateView.as_view(template_name='design/pathmapper.html')),
-)
+    url(r'^pathmapper/',
+        TemplateView.as_view(template_name='design/pathmapper.html')),
+]
 
 if settings.DEBUG:
     import debug_toolbar
-    urlpatterns += patterns(
-        '',
+    urlpatterns += [
         url(r'^__debug__/', include(debug_toolbar.urls)),
-    )
+    ]
