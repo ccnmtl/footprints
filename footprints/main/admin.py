@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.admin.models import LogEntry
-import reversion
+from reversion.admin import VersionAdmin
 
 from footprints.main.models import Footprint, DigitalFormat, Role, \
     ExtendedDate, Actor, Language, DigitalObject, \
@@ -102,7 +102,7 @@ def creator(obj):
     return obj.created_by.get_full_name()
 
 
-class FootprintAdmin(reversion.VersionAdmin):
+class FootprintAdmin(VersionAdmin):
     list_display = ('title', 'associated_date', 'place', owner,
                     imprint_title, imprint_date, language, creator)
     readonly_fields = ('created_at', 'modified_at',
@@ -126,7 +126,7 @@ class FootprintAdmin(reversion.VersionAdmin):
 admin.site.register(Footprint, FootprintAdmin)
 
 
-class LogEntryAdmin(reversion.VersionAdmin):
+class LogEntryAdmin(VersionAdmin):
     list_display = ('__unicode__', 'user', 'action_time')
     search_fields = ('user',)
 
