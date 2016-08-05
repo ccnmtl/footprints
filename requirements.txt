@@ -64,7 +64,7 @@ django-paging==0.2.5
 django-appconf==1.0.2
 django-compressor==2.0
 django-statsd-mozilla==0.3.16
-raven==5.23.0
+raven==5.24.0
 django-bootstrap-form==3.2.1
 django-debug-toolbar==1.5
 django-waffle==0.11.1
