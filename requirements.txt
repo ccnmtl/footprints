@@ -41,7 +41,7 @@ ipaddress==1.0.16
 fake-factory==0.6.0
 factory_boy==2.7.0
 ldap3==1.4.0
-sqlparse==0.2.0
+sqlparse==0.2.1
 contextlib2==0.5.4
 rcssmin==1.0.6
 rjsmin==1.0.12
