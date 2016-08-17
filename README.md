@@ -10,3 +10,13 @@ REQUIREMENTS
 ------------
 Python 2.7  
 Postgres  
+
+
+DOCKER-COMPOSE
+--------------
+
+If you have docker-compose installed, you can do:
+
+    $ make build
+    $ docker-compose run web migrate   # to set up database schema
+    $ docker-compose up
