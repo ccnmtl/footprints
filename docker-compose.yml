@@ -1,0 +1,33 @@
+db:
+  image: mdillon/postgis
+rabbitmq:
+  image: rabbitmq
+web:
+  build: .
+  environment:
+    - APP=footprints
+    - SECRET_KEY=dummy-secret-key
+    - SETTINGS=settings_compose
+  command: manage runserver 0.0.0.0:8000
+  volumes:
+    - .:/app/
+  ports:
+    - "8000:8000"
+  links:
+    - db
+    - rabbitmq
+# NOTES:
+#   - The C_FORCE_ROOT variable allows celery to run as the root user.
+celery:
+  build: .
+  command: worker
+  environment:
+    - APP=footprints
+    - SECRET_KEY=dummy-secret-key
+    - SETTINGS=settings_compose
+    - C_FORCE_ROOT=true
+  volumes:
+    - .:/app/
+  links:
+    - db
+    - rabbitmq
