@@ -1,5 +1,5 @@
 db:
-  image: mdillon/postgis
+  image: postgres
 rabbitmq:
   image: rabbitmq
 web:
