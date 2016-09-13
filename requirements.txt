@@ -52,7 +52,7 @@ kombu==3.0.35
 librabbitmq==1.6.1
 celery==3.1.23
 anyjson==0.3.3
-billiard==3.5.0.0
+billiard==3.5.0.1
 pytz==2016.6.1
 
 djangowind==0.15.0
