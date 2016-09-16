@@ -2,12 +2,12 @@
     <div class="editable-author">
         <div class="alert alert-info helpblock">Enter the author's name and alias, then click the <i class="glyphicon glyphicon-ok"></i> button.<br />
         Information about each author should be added separately.</div>
-    
+
         <div class="form-group">
             <label>Author's Name</label><br />
             <input type="text" class="form-control" name="person-autocomplete" placeholder="Type in a person's name"></input>
             </div>
-            
+
         <div class="form-group">
             <label>Pseudonym or Alias (if applicable)</label><br />
             <input type="text" class="form-control" name="actor-name" placeholder="Specify the person's alias"></select>
@@ -16,9 +16,9 @@
         <div class="form-group" style="display: none">
             <label>Role</label><br />
             <select class="form-control" name="role" placeholder="Type in a role name" disabled="disabled">
-                {% with author=roles.get_author_role %}
-                    <option value="{{author.id}}">{{author.name}}</option>
-                {% endwith %}
+                {% for role in roles.for_work %}
+                    <option selected="selected" value="{{role.id}}">{{role.name}}</option>
+                {% endfor %}
             </select>
         </div>
     </div>
