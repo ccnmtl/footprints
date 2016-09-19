@@ -173,6 +173,12 @@
                         <td class="field-name"></td>
                         {% for row in rows %}
                             <td data-record-id="{{row.id}}">
+                                <div class="success-message" style="display: none;">
+                                    The record has been saved. The record data validates.
+                                </div>
+                                <div class="error-message" style="display: none;">
+                                    The record has been saved, but the record data does not validate. Please correct the errors and try again.
+                                </div>
                                 <div>
                                     <button type="button" class="pull-right btn btn-primary btn-sm has-spinner update-record"
                                      data-loading-text="<span class='glyphicon-left glyphicon glyphicon-refresh spinning'></span>Updating...">
@@ -183,7 +189,7 @@
                                         <button type="submit" class="btn btn-default btn-white btn-sm delete-record">
                                             Delete
                                         </button>
-                                    </form>                                    
+                                    </form>
                                 </div>
                             </td>
                         {% endfor %}

@@ -2243,6 +2243,16 @@ p.decoy {
     background-color: #eeeeee;
 }
 
+.batch-job-detail .error-message{
+    color: #B6212D;
+    margin-bottom: 10px;
+}
+
+.batch-job-detail .success-message {
+    color: green;
+    margin-bottom: 10px;
+}
+
 .batch-job-detail .batch-job-row-container table td.invalid,
 .batch-job-detail .batch-job-row-container table td.missing {
     background-color: #B6212D;
