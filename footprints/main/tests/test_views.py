@@ -1036,7 +1036,7 @@ class ContactUsViewTest(TestCase):
         form = ContactUsForm()
         form.cleaned_data = {
             'name': 'Foo Bar',
-            'email': 'sender@ccnmtl.columbia.edu',
+            'email': 'footprints@ccnmtl.columbia.edu',
             'subject': 'other',
             'description': 'There is a problem'
         }
@@ -1047,7 +1047,7 @@ class ContactUsViewTest(TestCase):
         self.assertEqual(mail.outbox[0].subject,
                          'Footprints Contact Us Request')
         self.assertEquals(mail.outbox[0].from_email,
-                          'sender@ccnmtl.columbia.edu')
+                          'footprints@ccnmtl.columbia.edu')
         self.assertEquals(mail.outbox[0].to,
                           [settings.CONTACT_US_EMAIL])
 
