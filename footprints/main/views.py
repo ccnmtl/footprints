@@ -596,7 +596,7 @@ class ContactUsView(FormView):
         form_data['subject'] = dict(SUBJECT_CHOICES)[form_data['subject']]
 
         # POST to the support email
-        sender = form_data['email']
+        sender = settings.SERVER_EMAIL
         recipients = (getattr(settings, 'CONTACT_US_EMAIL'),)
 
         tmpl = loader.get_template('main/contact_notification_email.txt')
