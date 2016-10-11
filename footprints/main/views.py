@@ -129,11 +129,18 @@ class FootprintListView(ListView):
     }
     paginate_by = 15
 
+    def get_sort_by(self):
+        sort_by = self.kwargs.get('sort_by')
+        if sort_by in self.sort_options.keys():
+            return sort_by
+
+        return 'ftitle'
+
     def get_context_data(self, **kwargs):
         context = super(FootprintListView, self).get_context_data(**kwargs)
         context['sort_options'] = self.sort_options
 
-        sort_by = self.kwargs.get('sort_by', 'ftitle')
+        sort_by = self.get_sort_by()
         direction = self.request.GET.get('direction', 'asc')
         query = self.request.GET.get('q', '')
 
@@ -193,7 +200,7 @@ class FootprintListView(ListView):
             Q(book_copy__imprint__work__actor__person__name__icontains=q))
 
     def get_queryset(self):
-        sort_by = self.kwargs.get('sort_by', 'ftitle')
+        sort_by = self.get_sort_by()
         direction = self.request.GET.get('direction', 'asc')
 
         qs = super(FootprintListView, self).get_queryset()
