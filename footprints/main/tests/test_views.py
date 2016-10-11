@@ -214,6 +214,23 @@ class FootprintListViewTest(TestCase):
                                            place=None, associated_date=None)
         self.footprint4.actor.add(owner3)
 
+    def test_bogus_sort(self):
+        url = reverse('browse-footprint-list-default')
+        url += '101/'
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+
+        ctx = response.context_data
+        self.assertTrue('paginator' in ctx)
+        self.assertTrue('sort_options' in ctx)
+        self.assertEquals(ctx['selected_sort'], 'ftitle')
+        self.assertEquals(ctx['selected_sort_label'], 'Footprint')
+
+        self.assertEquals(ctx['object_list'][0], self.footprint1)
+        self.assertEquals(ctx['object_list'][1], self.footprint2)
+        self.assertEquals(ctx['object_list'][2], self.footprint3)
+        self.assertEquals(ctx['object_list'][3], self.footprint4)
+
     def test_default_sort(self):
         url = reverse('browse-footprint-list-default')
         response = self.client.get(url)
