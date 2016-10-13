@@ -1079,7 +1079,7 @@ class AddLanguageViewTest(TestCase):
         footprint = FootprintFactory(title='Alpha')
         generic = footprint.language.first()
 
-        # add english
+        # add english & generic
         english = LanguageFactory(name='English')
 
         data = {'parent_id': footprint.id,
@@ -1110,6 +1110,21 @@ class AddLanguageViewTest(TestCase):
 
         # generic was not deleted
         Language.objects.get(id=generic.id)
+
+        # remove english too
+        data = {'parent_id': footprint.id,
+                'parent_model': 'footprint',
+                'language': []}
+
+        response = self.client.post(url, data,
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+
+        footprint.refresh_from_db()
+        self.assertEquals(footprint.language.count(), 0)
+
+        # english was not deleted
+        Language.objects.get(id=english.id)
 
 
 class SearchViewTest(TestCase):

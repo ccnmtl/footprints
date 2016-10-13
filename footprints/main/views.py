@@ -502,6 +502,11 @@ class AddLanguageView(AddRelatedRecordView):
 
         languages = self.request.POST.getlist('language')
 
+        if len(languages) < 1 or len(languages[0]) < 1:
+            # remove all languages
+            the_parent.language.clear()
+            return self.render_to_json_response({'success': True})
+
         # remove all language that are not in the posted list
         to_remove = the_parent.language.exclude(id__in=languages)
         the_parent.language.remove(*to_remove)
