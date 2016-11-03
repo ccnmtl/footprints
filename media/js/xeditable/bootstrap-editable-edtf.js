@@ -97,12 +97,14 @@
                      .removeClass('has-error')
                      .find('.help-block').hide();
 
-            if (this.$millenium1.val().length < 1) {
+            if (this.$millenium1.val().length < 1 ||
+                    this.$millenium1.val() < 1) {
                 this.$millenium1.addClass('required');
             }
 
             if (this.$millenium2.is(':visible') &&
-                    this.$millenium2.val().length < 1) {
+                    (this.$millenium2.val().length < 1 ||
+                     this.$millenium2.val() < 1)) {
                 this.$millenium2.addClass('required');
             }
 
@@ -131,10 +133,11 @@
             }
 
             var self = this;
+            var data = this.value2submit();
             jQuery.ajax({
                 url: '/date/display/',
                 type: 'post',
-                data: this.value2submit(),
+                data: data,
                 success: function(data) {
                     self.$tpl.find('.date-display').html(data.display);
                 },
