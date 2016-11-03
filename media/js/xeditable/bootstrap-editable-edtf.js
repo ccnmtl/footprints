@@ -98,7 +98,7 @@
                      .find('.help-block').hide();
 
             if (this.$millenium1.val().length < 1 ||
-                    this.$millenium2.val() < 1) {
+                    this.$millenium1.val() < 1) {
                 this.$millenium1.addClass('required');
             }
 
