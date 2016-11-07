@@ -7,6 +7,6 @@ install:
   - pip install -U setuptools
   - pip install -r requirements.txt
 script:
-  - make
+  - make jenkins
 notifications:
   slack: ccnmtl:GizSNscLWJLldjQrffB8mwgm
