@@ -40,7 +40,7 @@ six==1.10.0
 ipaddress==1.0.17
 fake-factory==0.7.2
 factory_boy==2.7.0
-ldap3==1.4.0
+ldap3==2.1.0
 sqlparse==0.2.2
 contextlib2==0.5.4
 rcssmin==1.0.6
