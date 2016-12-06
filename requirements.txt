@@ -57,7 +57,7 @@ anyjson==0.3.3
 billiard==3.5.0.2
 pytz==2016.7
 
-djangowind==0.16.0
+djangowind==0.16.1
 sorl==3.1
 django-indexer==0.3.0
 django-templatetag-sugar==1.0
