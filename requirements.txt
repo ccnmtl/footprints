@@ -7,7 +7,7 @@ uuid==1.30
 psycopg2==2.6.2
 
 olefile==0.43
-Pillow==3.4.2
+Pillow==4.0.0
 
 versiontools==1.9.1
 statsd==3.2.1
