@@ -187,3 +187,19 @@ class ExtendedDateFormTest(TestCase):
             form.get_error_messages(),
             u'The start date must be earlier than the end date.<br />')
         self.assertEquals(ExtendedDate.objects.count(), 0)
+
+    def test_clean_incomplete_data(self):
+        data = {
+            'approximate1': True, 'approximate2': False, 'attr': u'',
+            'century1': None, 'century2': None, 'day1': None, 'day2': None,
+            'decade1': None, 'decade2': None, 'is_range': False,
+            'millenium1': 1, 'millenium2': None,
+            'month1': None, 'month2': None,
+            'uncertain1': True, 'uncertain2': False,
+            'year1': None, 'year2': None
+        }
+        form = ExtendedDateForm(data=data)
+        self.assertFalse(form.is_valid())
+
+        self.assertEquals(form.get_error_messages(),
+                          u'Please specify a valid date<br />')
