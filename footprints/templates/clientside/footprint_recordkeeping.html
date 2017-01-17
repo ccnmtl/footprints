@@ -1,0 +1,23 @@
+<script type="text/template" id="recordkeeping-template">
+    <div class="breadcrumb">Recordkeeping</div>
+    <dl class="dl-horizontal">
+        <dt>Created</dt>
+        <dd>
+            <% if (footprint.created_by.last_name.length > 0) { %>
+                by <%=footprint.created_by.first_name%> <%=footprint.created_by.last_name %>
+            <% } else { %>
+                by <%=footprint.created_by.username%>
+            <% } %>
+            at <%=footprint.created_at%>
+        </dd>
+        <dt>Last Modified</dt>
+        <dd>
+            <% if (footprint.last_modified_by.last_name.length > 0) { %>
+                by <%=footprint.last_modified_by.first_name%> <%=footprint.last_modified_by.last_name %>
+            <% } else { %>
+                by <%=footprint.last_modified_by.username%> 
+            <% } %>
+            at <%=footprint.modified_at%>
+        </dd>
+    </dl>
+</script>

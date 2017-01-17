@@ -526,6 +526,11 @@
             this.carouselTemplate =
                 _.template(jQuery(options.carouselTemplate).html());
 
+            this.elRecordkeeping =
+                jQuery(this.el).find('.recordkeeping');
+            this.recordkeepingTemplate =
+                _.template(jQuery(options.recordkeepingTemplate).html());
+
             // create child views for each page area
             this.detailView = new window.FootprintDetailView({
                 el: jQuery(this.el).find('.footprint-detail'),
@@ -569,6 +574,10 @@
 
             markup = this.relatedTemplate(ctx);
             jQuery(this.elRelated).html(markup);
+
+            markup = this.recordkeepingTemplate(ctx);
+            jQuery(this.elRecordkeeping).html(markup);
+            jQuery(this.elRecordkeeping).show();
         },
         maximizeCarousel: function(evt) {
             var self = this;

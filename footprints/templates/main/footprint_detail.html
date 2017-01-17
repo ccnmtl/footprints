@@ -10,7 +10,7 @@
 
 {% block extrahead %}
     <link href="{{STATIC_URL}}select2-3.5.2/select2.css" rel="stylesheet" />
-    
+
     {% include "xeditable/actor.html" %}
     {% include "xeditable/author.html" %}
     {% include "xeditable/digitalobject.html" %}
@@ -27,6 +27,7 @@
     {% include "clientside/footprint_connect_confirm.html" %}
     {% include "clientside/footprint_evidence.html" %}
     {% include "clientside/footprint_progress.html" %}
+    {% include "clientside/footprint_recordkeeping.html" %}
 {% endblock %}
 
 {% block js %}
@@ -61,6 +62,7 @@
                 carouselTemplate: jQuery('#carousel-template'), 
                 progressTemplate: jQuery('#progress-sidebar-template'),
                 relatedTemplate: jQuery('#related-evidence-template'),
+                recordkeepingTemplate: jQuery('#recordkeeping-template'),
                 baseContext: {
                     all_languages: [{% for language in languages %}
                                     {value: '{{language.id}}', text: "{{language.name}}"}{% if not forloop.last %},{% endif %}
@@ -98,6 +100,7 @@
                 </h1>
                 <div class="footprint-detail" style="display: none"></div>
                 <div class="book-detail" style="display: none"></div>
+                <div class="recordkeeping object-detail" style="display: none"></div>
             </div>
             <div class="col-md-4">
                 {% if footprint.is_bare and editable %}
@@ -153,7 +156,7 @@
                 </div>
             </div>
         </div>
-        
+
         {% include "main/footprint_related.html" %}
 
     </div>
