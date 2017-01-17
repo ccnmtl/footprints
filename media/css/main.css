@@ -1246,13 +1246,9 @@ img.footicon {
 
 .object-detail dl dd {
     margin-left: 0;
-    padding-left: 200px;
+    padding-left: 175px;
     padding-top: 5px;
     padding-bottom: 2px;
-}
-
-.object-detail dl dd.border-bottom {
-    border-bottom: dotted 1px #ccc;
 }
 
 span.glyphicon-question-sign {
@@ -1464,7 +1460,8 @@ body.affix-container {
 }
 
 .physical-copy-detail,
-.written-work-detail {
+.written-work-detail,
+.recordkeeping {
     border-radius: 4px;
     background-image: url("../img/fp_section_bg.png");
     background-repeat: repeat;
