@@ -141,19 +141,30 @@ class ExtendedDateForm(forms.Form):
             msg += '<br />'
         return msg
 
+    def get_start_date(self, edt):
+        try:
+            return edt.start()
+        except ValueError:
+            return None
+
+    def get_end_date(self, edt):
+        try:
+            return edt.end()
+        except ValueError:
+            return None
+
     def _set_errors(self, edt, cleaned_data):
-        start = edt.start()
-        end = edt.end()
+        start = self.get_start_date(edt)
 
         if cleaned_data['is_range']:
+            end = self.get_end_date(edt)
             self._set_errors_is_range(start, end)
-        else:
-            if start is None:
-                self._errors['__all__'] = self.error_class([
-                    'Please specify a valid date'])
-            elif start > date.today():
-                self._errors['__all__'] = self.error_class([
-                    'The date must be today or earlier'])
+        elif start is None:
+            self._errors['__all__'] = self.error_class([
+                'Please specify a valid date'])
+        elif start > date.today():
+            self._errors['__all__'] = self.error_class([
+                'The date must be today or earlier'])
 
     def _set_errors_is_range(self, start, end):
         if start is None:
