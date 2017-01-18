@@ -497,7 +497,8 @@
     window.FootprintView = Backbone.View.extend({
         events: {
             'click .carousel img': 'maximizeCarousel',
-            'click a.connect-records': 'connectRecords'
+            'click a.connect-records': 'connectRecords',
+            'click .list-group-item': 'clickRelatedFootprint'
         },
         initialize: function(options) {
             _.bindAll(this, 'connectRecords', 'context', 'render',
@@ -526,6 +527,11 @@
             this.carouselTemplate =
                 _.template(jQuery(options.carouselTemplate).html());
 
+            this.elRecordkeeping =
+                jQuery(this.el).find('.recordkeeping');
+            this.recordkeepingTemplate =
+                _.template(jQuery(options.recordkeepingTemplate).html());
+
             // create child views for each page area
             this.detailView = new window.FootprintDetailView({
                 el: jQuery(this.el).find('.footprint-detail'),
@@ -552,6 +558,11 @@
                 template: options.connectTemplate
             });
         },
+        clickRelatedFootprint: function(evt) {
+            location.href =
+                jQuery(evt.currentTarget).children('a').first().attr('href');
+            return false;
+        },
         connectRecords: function() {
             var modal = jQuery(this.connectBookView.el).modal({
                 'backdrop': 'static', 'keyboard': false, 'show': true
@@ -569,6 +580,10 @@
 
             markup = this.relatedTemplate(ctx);
             jQuery(this.elRelated).html(markup);
+
+            markup = this.recordkeepingTemplate(ctx);
+            jQuery(this.elRecordkeeping).html(markup);
+            jQuery(this.elRecordkeeping).show();
         },
         maximizeCarousel: function(evt) {
             var self = this;

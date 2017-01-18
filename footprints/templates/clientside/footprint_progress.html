@@ -14,41 +14,4 @@
             <div class="clearfix"></div>
         </li>
     </ul>
-
-    <% if (editable && work_title.length > 0) { %>
-        <div class="sidebar-box related-footprint">
-            <h4>Related Footprints</h4>
-            <p>Create another footprint for <%= work_title %> based on this footprint.
-            Evidence, imprint and book copy information can be copied.</p>
-            <div class="pull-right">
-                <a data-toggle="modal" data-target="#add-related-footprint" href="javascript:void(0);">
-                    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Create Footprint
-                </a>
-            </div>
-            <div class="clearfix"></div>
-        </div>
-    <% } %>
-
-    <div class="sidebar-box recordkeeping">
-        <h4>Recordkeeping</h4>
-        <div>
-            <b>Last Modified</b><br />
-            <% if (footprint.last_modified_by.last_name.length > 0) { %>
-                by <%=footprint.last_modified_by.first_name%> <%=footprint.last_modified_by.last_name %><br />
-            <% } else { %>
-                by <%=footprint.last_modified_by.username%><br /> 
-            <% } %>
-            at <%=footprint.modified_at%>
-        </div>
-        <br />
-        <div>
-            <b>Created</b><br />
-            <% if (footprint.created_by.last_name.length > 0) { %>
-                by <%=footprint.created_by.first_name%> <%=footprint.created_by.last_name %><br />
-            <% } else { %>
-                by <%=footprint.created_by.username%><br /> 
-            <% } %>
-            at <%=footprint.created_at%>
-        </div>
-    </div>
 </script>
