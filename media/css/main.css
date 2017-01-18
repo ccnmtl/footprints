@@ -1308,8 +1308,39 @@ span.glyphicon-question-sign {
     border-radius: 4px;
 }
 
+.sidebar-box.related-footprint ul {
+    padding-left: 0px;
+}
+
+.sidebar-box.related-footprint li:last-child {
+    border-top-width: 4px;
+} 
+
+.sidebar-box.related-footprint .list-group-item {
+    padding: 10px 10px;
+}
+
+.sidebar-box.related-footprint ul li a .badge {
+    background-color: #2e5367;
+}
+
+.sidebar-box.related-footprint ul li .related-footprint-badge {
+    width: 5%;
+    margin-right: 12px;
+    float: left;
+}
+
+.sidebar-box.related-footprint ul li .related-footprint-info {
+    width: 90%;
+    float: left;
+}
+
+.sidebar-box.related-footprint .glyphicon-book {
+    font-size: 16px;
+}
+
 .object-detail .progress-report {
-    color: #9197a3;
+    color: #737373;
     font-size: 12px;
     line-height: 16px;
     margin-top: -3px;
@@ -1405,6 +1436,10 @@ body.affix-container {
     height: 200px;
 }
 
+.object-detail .footprint-place {
+    margin-bottom: 10px;
+}
+
 .object-detail ul.record-checklist li.list-group-item small {
     margin-left: 22px;
 }
@@ -1437,6 +1472,7 @@ body.affix-container {
 
 .connect-record-prompt h4 {
     color: #836737;
+    font-size: 20px;
 }
 
 .object-detail .connect-record-container .select2-container {
@@ -1536,17 +1572,19 @@ body.affix-container {
     margin-bottom: 20px;
 }
 
-.object-detail.writtenwork .list-group-item {
+.object-detail.writtenwork .list-group-item,
+.sidebar-box.related-footprint .list-group-item {
     background-color: #f6f7f8;
     border-radius: 0;
     border: 1px solid #eee;
     margin-bottom: 0px;
+    cursor: pointer;
 }
 
+.sidebar-box.related-footprint .list-group-item:hover,
 .object-detail.writtenwork .list-group-item:hover {
     border-color: #95c0e9;
 }
-
 
 .object-detail.writtenwork .list-group-item.active,
 .object-detail.writtenwork .imprint-list-item.active {
@@ -1649,12 +1687,14 @@ body.affix-container {
 }
 
 .object-detail.footprint .connect-record-prompt span.emphasis {
-    font-size: 125%;
-    font-weight: 400;
+    font-size: 18px;
+    font-weight: 500;
+    color: #97421b;
 }
 
 .object-detail.footprint .connect-record-prompt a {
-    font-size: 125%;
+    font-size: 18px;
+    font-weight: 500;
 }
 
 .object-detail.footprint #connect-records-modal form .form-group .error-block {

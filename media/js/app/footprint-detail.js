@@ -497,7 +497,8 @@
     window.FootprintView = Backbone.View.extend({
         events: {
             'click .carousel img': 'maximizeCarousel',
-            'click a.connect-records': 'connectRecords'
+            'click a.connect-records': 'connectRecords',
+            'click .list-group-item': 'clickRelatedFootprint'
         },
         initialize: function(options) {
             _.bindAll(this, 'connectRecords', 'context', 'render',
@@ -556,6 +557,11 @@
                 baseContext: options.baseContext,
                 template: options.connectTemplate
             });
+        },
+        clickRelatedFootprint: function(evt) {
+            location.href =
+                jQuery(evt.currentTarget).children('a').first().attr('href');
+            return false;
         },
         connectRecords: function() {
             var modal = jQuery(this.connectBookView.el).modal({
