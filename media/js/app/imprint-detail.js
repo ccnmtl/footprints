@@ -4,7 +4,7 @@
         events: {
             'click .panel-heading': 'onTogglePanel',
             'click .list-group-item': 'onClickFootprint',
-            'click .imprint-list-item h4.mappable': 'onClickImprint'
+            'click .imprint-list-item h4': 'onClickImprint'
         },
         initialize: function(options) {
             _.bindAll(this, 'initializeMap', 'attachInfoWindow',
@@ -16,17 +16,6 @@
             this.spiderIcon = this.iconWithColor('ff6e2d');
 
             this.mapLoaded = false;
-
-            var copyId = null;
-            var copyTemplate = _.template(jQuery(options.template).html());
-            jQuery(this.el).find('.list-group-item').each(function() {
-                var id = jQuery(this).data('book-copy');
-                if (copyId !== id) {
-                    copyId = id;
-                    var markup = copyTemplate({'copyId': copyId});
-                    jQuery(this).before(markup);
-                }
-            });
 
             this.initializeMap();
             jQuery(window).on('resize', this.resize);
@@ -221,7 +210,7 @@
                     google.maps.event.removeListener(boundsChanged);
                 });
 
-                var bounds = new google.maps.LatLngBounds();
+                this.bounds = new google.maps.LatLngBounds();
                 this.oms = new OverlappingMarkerSpiderfier(this.map, {
                     keepSpiderfied: true,
                     markersWontMove: true,
@@ -243,14 +232,14 @@
                         desc: content,
                         dataId: id
                     });
-                    bounds.extend(latlng);
+                    this.bounds.extend(latlng);
                     this.oms.addMarker(marker);
                     this.markers[id] = {'marker': marker, 'content': content};
                 }
 
                 this.attachInfoWindow(this.infowindow, this.map);
 
-                this.map.fitBounds(bounds);
+                this.map.fitBounds(this.bounds);
                 jQuery(mapElt).show();
 
                 jQuery('.imprint-map-container').affix({
@@ -266,8 +255,20 @@
         },
         onTogglePanel: function(evt) {
             evt.preventDefault();
-            jQuery(evt.currentTarget).parent().find(
-                '.panel-collapse').collapse('toggle');
+            jQuery(this.el).find('.active').removeClass('active');
+            this.infowindow.close();
+            this.map.fitBounds(this.bounds);
+
+            var $panel = jQuery(evt.currentTarget).parent();
+            var $elts = $panel.find('.panel-collapse.collapse.in');
+            if ($elts.length > 0) {
+                // hide the panel
+                $elts.collapse('hide');
+            } else {
+                // show the panel
+                $elts.collapse('show');
+                $panel.addClass('active');
+            }
         },
         onClickFootprint: function(evt) {
             this.infowindow.close();
@@ -283,6 +284,8 @@
                 this.infowindow.close();
                 this.infowindow.setContent(this.markers[id].content);
                 this.infowindow.open(this.map, marker);
+            } else {
+                this.map.fitBounds(this.bounds);
             }
         },
         onClickImprint: function(evt) {
@@ -297,11 +300,14 @@
                 this.infowindow.close();
                 this.infowindow.setContent(this.markers[id].content);
                 this.infowindow.open(this.map, marker);
-
-                jQuery(evt.currentTarget)
-                    .parents('.imprint-list-item')
-                    .addClass('active');
+            } else {
+                this.map.fitBounds(this.bounds);
             }
+
+            jQuery(evt.currentTarget)
+                .parents('.imprint-list-item')
+                .addClass('active');
+
         }
     });
 })();

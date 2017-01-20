@@ -43,156 +43,142 @@
 
     <div class="object-detail writtenwork">
         <h1>
-            <span class="glyphicon glyphicon-book pull-left" aria-hidden="true"></span>
             <span class="pull-left object-title">&nbsp;{{work|truncatewords:15}}</span>
             <div class="clearfix"></div>
         </h1>
         <div class="row">
-            <div class="col-md-5">
-                {% if work.actor.count > 0 and work.notes != None %}
-                <div class="writtenwork-detail">
+            <div class="col-md-5 imprint-list-container">
+                <div class="writtenwork-title">
                     <div class="breadcrumb">
-                        THE LITERARY WORK
+                        A Literary Work
                     </div>
-
-                    {% if work.actor.count > 0 %}
-                        {% for actor in work.actor.all %}
-                            <div class="metadata"><strong>{{actor.role}}</strong> {{actor.display_name}}</div>
-                        {% endfor %}
-                    {% endif %}
-
-                    {% if work.notes %}
-                        <div class="metadata"><strong>Notes</strong> {{work.notes|safe}}</div>
-                    {% endif %}
+                    <dl class="dl-horizontal">
+                        <dt>Title</dt><dd>{{work}}</dd>
+                        {% if work.actor.count > 0 %}
+                            {% for actor in work.actor.all %}
+                                <dt>{{actor.role}}</dt><dd>{{actor.display_name}}</dd>
+                            {% endfor %}
+                        {% endif %}
+                        {% if work.notes %}
+                            <dt>Notes</dt><dd>{{work.notes|safe}}</dd>
+                        {% endif %}
+                    </dl>
+                    <div class="clearfix"></div>
                 </div>
-                {% endif %}
                 <div class="imprint-list">
                     <div class="breadcrumb">
-                        IMPRINTS
+                        The Imprints
                     </div>
-
-                {% for imprint in imprints %}
-                    <div class="imprint-list-item">
-                        <a name="imprint-{{imprint.id}}"></a>
-                        <h4 data-id="imprint-{{imprint.id}}" class="{% if imprint.place %}mappable{% endif %}">
-
-                            {% if imprint.place %}
-                                <img class="imprint-list-item-marker"
-                                    src="{{STATIC_URL}}img/marker.png"
-                                    alt="map marker" />
-                                </button>
-                            {% endif %}
-                            <b>
-                            {% if not imprint.display_title %}
-                                Imprint
-                            {% else %}
-                                {{imprint.display_title}}
-                            {% endif %}
-                            </b>
-                        </h4>
-                        {% if imprint.publication_date or imprint.place %}
-                        <div class="imprint-description-published">
-                            Published
-                            {% if imprint.publication_date %}
-                                {{imprint.publication_date}}{% if imprint.place %},{% endif %}
-                            {% endif %}
-                            {% if imprint.place %}
-                                {{imprint.place}}
-                            {% endif %}
-                        </div>
-                        {% endif %}
-
-                        {% if imprint.place %}
-                            <div class="map-marker"
-                                style="display: none"
-                                data-related="imprint-{{imprint.id}}"
-                                data-latitude="{{imprint.place.latitude}}"
-                                data-longitude="{{imprint.place.longitude}}"
-                                data-title="{{imprint.display_title}}">
-                                <div class="iw-container">
-                                    <div class="iw-title iw-imprint">Imprint</div>
-                                    <div class="iw-content">
-                                        {{imprint.description|safe}}
-                                    </div>
-                                </div>
+                    {% for imprint in imprints %}
+                        <div class="imprint-list-item">
+                            <a name="imprint-{{imprint.id}}"></a>
+                            <h4 data-id="imprint-{{imprint.id}}" class="{% if imprint.place %}mappable{% endif %}">
+                                <b>
+                                {% if not imprint.display_title %}
+                                    Imprint
+                                {% else %}
+                                    {{imprint.display_title}}
+                                {% endif %}
+                                </b>
+                            </h4>
+                            {% if imprint.publication_date or imprint.place %}
+                            <div class="imprint-description-published">
+                                Published
+                                {% if imprint.publication_date %}
+                                    {{imprint.publication_date}}{% if imprint.place %},{% endif %}
+                                {% endif %}
+                                {% if imprint.place %}
+                                    {{imprint.place}}
+                                {% endif %}
                             </div>
-                        {% endif %}
+                            {% endif %}
 
-                        {% with footprints=imprint.footprints %}
-
-                        {% if footprints|length > 0 %}
-                            <div class="panel-group" id="accordion" role="tablist">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading" role="tab">
-                                        <h5 class="panel-title pull-left">
-                                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion"
-                                                href="#footprint-{{imprint.id}}" aria-expanded="false" aria-controls="collapseTwo">
-                                                <span>Footprints</span>
-                                            </a>
-                                        </h5>
-                                        <div class="badge pull-right">{{footprints|length}}</div>
-                                        <div class="clearfix"></div>
-                                    </div>
-                                    <div id="footprint-{{imprint.id}}" class="panel-collapse collapse" role="tabpanel">
-                                        <div class="panel-body">
-                                            <ul class="list-group">
-                                            {% for fp in footprints %}
-                                                <li class="list-group-item"
-                                                    data-id="footprint-{{fp.id}}"
-                                                    data-book-copy="{{fp.book_copy.identifier}}">
-
-                                                    {% if fp.place %}
-                                                        <img class="pull-right imprint-list-item-marker"
-                                                            src="{{STATIC_URL}}img/marker.png"
-                                                            alt="map marker" />
-                                                    {% endif %}
-
-                                                    <div>
-                                                        {{fp.associated_date|default:""}}{% if fp.place %}{% if fp.associated_date %}, {% endif %}
-                                                            in {{fp.place}}
-                                                            <div class="map-marker" style="display: none"
-                                                                data-related="footprint-{{fp.id}}"
-                                                                data-latitude="{{fp.place.latitude}}"
-                                                                data-longitude="{{fp.place.longitude}}"
-                                                                data-title="{{fp.title}}">
-
-                                                                <div class="iw-container">
-                                                                    <div class="iw-title iw-footprint">Footprint</div>
-                                                                    <div class="iw-content">
-                                                                        {{fp.description}}
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        {% endif %}
-                                                    </div>
-                                                    <div>
-                                                        as {{fp.title}}&nbsp;
-                                                    </div>
-                                                    {% with owners=fp.owners %}
-                                                    {% if owners|length > 0 %}
-                                                        <div>owned by <span>
-                                                        {% for owner in owners %}
-                                                            {{owner.display_name}}
-                                                            {% if not forloop.last %},{% endif %}
-                                                        {% endfor %}
-                                                        </span>
-                                                        </div>
-                                                    {% endif %}
-                                                    {% endwith %}
-                                                    <a class="small" href="/footprint/{{fp.id}}/"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></a>
-                                                    <a class="small" href="/footprint/{{fp.id}}/">full details</a>
-                                                </li>
-                                            {% endfor %}
-                                            </ul>
+                            {% if imprint.place %}
+                                <div class="map-marker"
+                                    style="display: none"
+                                    data-related="imprint-{{imprint.id}}"
+                                    data-latitude="{{imprint.place.latitude}}"
+                                    data-longitude="{{imprint.place.longitude}}"
+                                    data-title="{{imprint.display_title}}">
+                                    <div class="iw-container">
+                                        <div class="iw-title iw-imprint">Imprint</div>
+                                        <div class="iw-content">
+                                            {{imprint.description|safe}}
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        {% endif %}
-                        {% endwith %}
+                            {% endif %}
+                            {% for copy in imprint.bookcopy_set.all %}
+                                {% if copy.footprint_set.exists %}
+                                <div class="panel-group" id="accordion" role="tablist">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading" role="tab">
+                                            <h5 class="panel-title pull-left">
+                                                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion"
+                                                    href="#book-copy-{{copy.id}}" aria-expanded="false" aria-controls="collapseTwo">
+                                                    <span class="copy-title" title="Book Copy {{copy.identifier}}">Book Copy</span>
+                                                </a>
+                                            </h5>
+                                            <div class="badge pull-right">{{copy.footprint_set.count}} footprints</div>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                        <div id="book-copy-{{copy.id}}" class="panel-collapse collapse" role="tabpanel">
+                                            <div class="panel-body">
+                                                <ul class="list-group">
+                                                {% for fp in copy.footprint_set.all %}
+                                                    <li class="list-group-item"
+                                                        data-id="footprint-{{fp.id}}"
+                                                        data-book-copy="{{fp.book_copy.identifier}}">
+
+                                                        <div>
+                                                            {{fp.associated_date|default:""}}{% if fp.place %}{% if fp.associated_date %}, {% endif %}
+                                                                in {{fp.place}}
+                                                                <div class="map-marker" style="display: none"
+                                                                    data-related="footprint-{{fp.id}}"
+                                                                    data-latitude="{{fp.place.latitude}}"
+                                                                    data-longitude="{{fp.place.longitude}}"
+                                                                    data-title="{{fp.title}}">
+    
+                                                                    <div class="iw-container">
+                                                                        <div class="iw-title iw-footprint">Footprint</div>
+                                                                        <div class="iw-content">
+                                                                            {{fp.description}}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            {% endif %}
+                                                        </div>
+                                                        <div>
+                                                            as {{fp.title}}&nbsp;
+                                                        </div>
+                                                        {% with owners=fp.owners %}
+                                                        {% if owners|length > 0 %}
+                                                            <div>owned by <span>
+                                                            {% for owner in owners %}
+                                                                {{owner.display_name}}
+                                                                {% if not forloop.last %},{% endif %}
+                                                            {% endfor %}
+                                                            </span>
+                                                            </div>
+                                                        {% endif %}
+                                                        {% endwith %}
+                                                        <a class="small" href="/footprint/{{fp.id}}/"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></a>
+                                                        <a class="small" href="/footprint/{{fp.id}}/">full details</a>
+                                                    </li>
+                                                {% endfor %}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            {% empty %}
+                                No book copies
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                    <div class="clearfix"></div>
                     </div>
-                {% endfor %}
-                </div>
             </div>
             <div class="col-md-7">
                 <div class="imprint-map-container">
