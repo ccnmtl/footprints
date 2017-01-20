@@ -126,12 +126,14 @@
                 {% else %}
                     <div class="progress-detail"></div>
 
-                    {% book_copy_footprints footprint as footprints %}
                     {% with imprint=footprint.book_copy.imprint %}
+                    {% if imprint.work.references > 1 %}
 
-                    {% if footprints.count > 0 %}
+                    {% book_copy_footprints footprint as footprints %}
+
                     <div class="sidebar-box related-footprint">
                         <h4>Related Footprints</h4>
+                            {% if footprints.exist %}
                             <p class="info">
                                 This physical copy of {{footprint.book_copy.imprint.display_title}}{% if imprint.publication_date or imprint.place %}, published
                                     {% if imprint.publication_date %}
@@ -141,6 +143,7 @@
                                 {% endif %}
                                 has {{footprints.count}} additional footprints.
                             </p>
+                            {% endif %}
                             <ul>
                             {% for fp in footprints %}
                                 <li class="list-group-item">
