@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load compress %}
+{% load waffle_tags %}
 
 {% block title %}Browse{% endblock %}
 
@@ -26,6 +27,13 @@
 <div class="page-header">
   <h1>Browse Footprints</h1>
 </div>
+
+{% flag "export_csv" %}
+<form action="/browse/footprints/" method="post">
+    {% csrf_token %}
+    <button name="export">Export</button>
+</form>
+{% endflag %}
 
 <div class="object-browse">
     <div class="row tools">
