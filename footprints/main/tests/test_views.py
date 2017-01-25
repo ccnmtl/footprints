@@ -60,7 +60,7 @@ class PasswordTest(TestCase):
 
     def test_logged_out(self):
         response = self.client.get('/accounts/password_change/')
-        self.assertEquals(response.status_code, 405)
+        self.assertEquals(response.status_code, 302)
 
         response = self.client.get('/accounts/password_reset/')
         self.assertEquals(response.status_code, 200)

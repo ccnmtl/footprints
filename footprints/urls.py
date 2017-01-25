@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import password_change, password_change_done, \
     password_reset_done, password_reset_confirm, password_reset_complete
 from django.views.generic import TemplateView
@@ -23,7 +24,6 @@ from footprints.main.viewsets import (
     PersonViewSet, PlaceViewSet, RoleViewSet, WrittenWorkViewSet, UserViewSet,
     StandardizedIdentificationViewSet, DigitalFormatViewSet,
     DigitalObjectViewSet, StandardizedIdentificationTypeViewSet)
-from footprints.mixins import is_staff
 
 
 admin.autodiscover()
@@ -58,10 +58,10 @@ urlpatterns = [
 
     # password change & reset. overriding to gate them.
     url(r'^accounts/password_change/$',
-        is_staff(password_change),
+        login_required(password_change),
         name='password_change'),
     url(r'^accounts/password_change/done/$',
-        is_staff(password_change_done),
+        login_required(password_change_done),
         name='password_change_done'),
     url(r'^password/reset/done/$', password_reset_done,
         name='password_reset_done'),
