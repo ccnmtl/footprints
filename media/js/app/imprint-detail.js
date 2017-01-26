@@ -254,19 +254,13 @@
             jQuery(this.el).find('[data-toggle="tooltip"]').tooltip();
         },
         onTogglePanel: function(evt) {
-            evt.preventDefault();
             jQuery(this.el).find('.active').removeClass('active');
             this.infowindow.close();
             this.map.fitBounds(this.bounds);
 
             var $panel = jQuery(evt.currentTarget).parent();
             var $elts = $panel.find('.panel-collapse.collapse.in');
-            if ($elts.length > 0) {
-                // hide the panel
-                $elts.collapse('hide');
-            } else {
-                // show the panel
-                $elts.collapse('show');
+            if ($elts.length < 1) {
                 $panel.addClass('active');
             }
         },
