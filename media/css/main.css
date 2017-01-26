@@ -1513,6 +1513,10 @@ body.affix-container {
     margin-bottom: 0px;
 }
 
+.writtenwork .writtenwork-title {
+    padding: 0 15px;
+}
+
 .object-detail.writtenwork h1 .object-title {
     width: auto;
     margin-left: 0px;
