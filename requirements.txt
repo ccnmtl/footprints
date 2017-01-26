@@ -1,7 +1,7 @@
 --index-url https://pypi.ccnmtl.columbia.edu/
 Django==1.9.12
 feedparser==5.2.1
-Markdown==2.6.7
+Markdown==2.6.8
 smartypants==2.0.0
 uuid==1.30
 psycopg2==2.6.2
