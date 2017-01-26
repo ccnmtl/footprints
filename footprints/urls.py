@@ -101,7 +101,14 @@ urlpatterns = [
         PersonDetailView.as_view(), name='person-detail-view'),
     url(r'^place/(?P<pk>\d+)/$',
         PlaceDetailView.as_view(), name='place-detail-view'),
-    url(r'^writtenwork/(?P<pk>[-_\w]+)/$',
+    url(r'^writtenwork/(?P<pk>\d+)/(?P<imprint>\d+)/'
+        '(?P<copy>\d+)/(?P<footprint>\d+)/$',
+        WrittenWorkDetailView.as_view(), name='writtenwork-detail-view'),
+    url(r'^writtenwork/(?P<pk>\d+)/(?P<imprint>\d+)/(?P<copy>\d+)/$',
+        WrittenWorkDetailView.as_view(), name='writtenwork-detail-view'),
+    url(r'^writtenwork/(?P<pk>\d+)/(?P<imprint>\d+)/$',
+        WrittenWorkDetailView.as_view(), name='writtenwork-detail-view'),
+    url(r'^writtenwork/(?P<pk>\d+)/$',
         WrittenWorkDetailView.as_view(), name='writtenwork-detail-view'),
 
     url(r'^browse/footprints/$', FootprintListView.as_view(),

@@ -33,7 +33,12 @@
                 el: jQuery('div.object-detail'),
                 work: {'id': '{{object.id}}'},
                 template: jQuery('#book-copy-template'),
-                urlBase: '{% url "writtenwork-detail-view" object.id %}'
+                urlBase: '{% url "writtenwork-detail-view" object.id %}',
+                state: {
+                    imprint: {% if state.imprint %}{{state.imprint}}{% else %}undefined{% endif %},
+                    copy: {% if state.copy %}{{state.copy}}{% else %}undefined{% endif %},
+                    footprint: {% if state.footprint %}{{state.footprint}}{% else %}undefined{% endif %},
+                }
             });
         });
     </script>

@@ -23,6 +23,9 @@
             this.initializeMap();
             jQuery(window).on('resize', this.resize);
             jQuery(window).on('popstate', this.popState);
+
+            this.setState(options.state.imprint, options.state.copy,
+                options.state.footprint);
         },
         mapOptions: {
             zoom: 10,
@@ -330,14 +333,17 @@
             var fpId = evt.originalEvent.state.footprint;
             var copyId = evt.originalEvent.state.copy;
             var imprintId = evt.originalEvent.state.imprint;
+            this.setState(imprintId, copyId, fpId);
+        },
+        setState: function(imprintId, copyId, footprintId) {
             var $elt;
-            if (fpId) {
+            if (footprintId) {
                 $elt = jQuery('div.panel-collapse[data-copy-id="' +
                     copyId + '"]');
                 $elt.collapse('show');
 
                 $elt = jQuery('.list-group-item[data-footprint-id="' +
-                    fpId + '"]');
+                    footprintId + '"]');
                 $elt.addClass('active');
                 this.syncMap($elt.data('map-id'));
             } else if (copyId) {
@@ -352,6 +358,9 @@
                 $elt = jQuery('h4[data-imprint-id="' + imprintId + '"]');
                 $elt.parent().addClass('active');
                 this.syncMap($elt.data('map-id'));
+            }
+            if ($elt) {
+                this.scrollToItem($elt);
             }
         }
     });
