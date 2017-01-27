@@ -1123,15 +1123,14 @@ ul.wizard-tabs.has-error li.active a {
 
 /* Footprint Details */
 
+.writtenwork .writtenwork-title,
 .writtenwork .imprint-list,
-.writtenwork .writtenwork-detail,
 .footprint-detail {
     border-radius: 4px;
     background-image: url("../img/fp_section_bg.png");
     background-repeat: repeat;
     box-shadow: none;
     margin: 0 0 10px 0;
-    padding: 10px;
 }
 
 .footprint-detail {
@@ -1519,43 +1518,58 @@ body.affix-container {
     margin-left: 0px;
 }
 
-.object-detail.writtenwork .writtenwork-detail .metadata {
+.object-detail.writtenwork .metadata {
     margin-left: 17px;
 }
 
-.object-detail.writtenwork .writtenwork-detail .metadata strong {
+.object-detail.writtenwork .metadata strong {
     margin-right: 10px;
 }
 
-/*.object-detail.writtenwork .imprint-list {
-    overflow-y: auto;
-}
-*/
-
-.object-detail.writtenwork .imprint-list-item {
+.object-detail.writtenwork .metadata-container {
+    background-image: url("../img/fp_section_bg.png");
+    background-repeat: repeat;
+    box-shadow: none;
     padding: 5px 12px 12px 12px;
     margin: 0 0 3px 0;
-    border: 1px solid #eee;
-    background-color: white;
+}
+
+.object-detail.writtenwork .imprint-list-item {
+    background-image: url("../img/fp_section_bg.png");
+    background-repeat: repeat;
+    box-shadow: none;
+    padding: 0 15px 5px 15px;
+    margin-bottom: 20px;
 }
 
 .object-detail.writtenwork .panel {
     border: 0;
     box-shadow: none;
     -webkit-box-shadow: none;
+    padding: 5px;
+    background-color: inherit;
 }
 
 .object-detail.writtenwork .panel-group {
     margin-bottom: 0;
-    margin-top: -2px;
+    margin-top: 5px;
+}
+
+.object-detail.writtenwork .imprint-list-item .panel-group:first-child {
+    margin-top: 5px;
 }
 
 .object-detail.writtenwork .panel-group .panel-heading {
+    background-image: url("../img/fp_section_bg.png");
+    background-repeat: repeat;
+    box-shadow: none;
     border: 0;
     cursor: pointer;
     box-shadow: none;
     padding-left: 0;
     padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
 }
 
 .object-detail.writtenwork .panel-heading {
@@ -1564,12 +1578,15 @@ body.affix-container {
 }
 
 .object-detail.writtenwork .panel-body {
+    background-image: url("../img/fp_section_bg.png");
+    background-repeat: repeat;
+    box-shadow: none;
     padding: 0 !important;
     border-top: 0 !important;
 }
 
 .object-detail.writtenwork .list-group {
-    margin-bottom: 20px;
+    margin-bottom: 5px;
 }
 
 .object-detail.writtenwork .list-group-item,
@@ -1586,11 +1603,21 @@ body.affix-container {
     border-color: #95c0e9;
 }
 
+.object-detail.writtenwork .imprint-list-container dl dt {
+    width: 50px;
+}
+
+.object-detail.writtenwork .imprint-list-container dl dd {
+    padding-left: 60px;
+}
+
+.object-detail.writtenwork .panel.active,
 .object-detail.writtenwork .list-group-item.active,
 .object-detail.writtenwork .imprint-list-item.active {
     border-color: #95c0e9;
     color: #333;
     box-shadow: 0 0 10px #95c0e9;
+    border: 1px solid #95c0e9;
 }
 
 .object-detail.writtenwork .list-group-item.active {
@@ -1602,9 +1629,6 @@ body.affix-container {
     margin-bottom: 0;    
     line-height: 30px;
     font-size: 16px;
-}
-
-.object-detail.writtenwork .imprint-list-item h4.mappable {
     cursor: pointer;
 }
 
@@ -1627,15 +1651,15 @@ body.affix-container {
     text-decoration: none;
 }
 
-.object-detail.writtenwork .panel-title a span:before {
+.object-detail.writtenwork .panel-title a span.copy-title:before {
     content: "\2212";
     font-family: "Glyphicons Halflings";
     margin-right: 3px;
-    font-size: 10px;
-    color: #2e5367;    
+    font-size: 9px;
+    color: #2e5367;
 }
 
-.object-detail.writtenwork .panel-title a.collapsed span:before {
+.object-detail.writtenwork .panel-title a.collapsed span.copy-title:before {
     content: "\2b";
 }
 
@@ -1644,7 +1668,12 @@ body.affix-container {
 }
 
 .object-detail.writtenwork .panel-default>.panel-heading .badge {
-    background-color: #2e5367;
+    background-color: transparent;
+    margin-top: 4px;
+    font-weight: normal;
+    color: #2e5367;
+    font-size: 14px;
+    padding-right: 0;
 }
 
 .object-detail.writtenwork .divider {
