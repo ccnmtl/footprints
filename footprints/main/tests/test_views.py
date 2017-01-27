@@ -1,5 +1,6 @@
 from json import loads
 import json
+import time
 
 from django.conf import settings
 from django.core import mail
@@ -11,7 +12,8 @@ from django.contrib.auth.models import AnonymousUser
 from django.test import TestCase
 from footprints.main.forms import ContactUsForm
 from footprints.main.models import Footprint, Actor, Imprint, \
-    StandardizedIdentificationType, ExtendedDate, Language
+    StandardizedIdentificationType, ExtendedDate, Language, \
+    WrittenWork, BookCopy
 from footprints.main.search_indexes import format_sort_by
 from footprints.main.serializers import \
     StandardizedIdentificationTypeSerializer, \
@@ -352,6 +354,55 @@ class FootprintListViewTest(TestCase):
         self.assertEquals(ctx['query'], 'zed')
 
         self.assertEquals(ctx['object_list'][0], self.footprint4)
+
+
+class FootprintListExportTest(TestCase):
+    def setUp(self):
+        work = WrittenWork.objects.create()
+        imprint = Imprint.objects.create(work=work)
+        book_copy = BookCopy.objects.create(imprint=imprint)
+
+        self.footprint1 = Footprint.objects.create(
+            title='Empty Footprint', book_copy=book_copy)
+        self.footprint2 = FootprintFactory()
+
+        role = RoleFactory(name='Printer')
+        self.printer = ActorFactory(role=role,
+                                    person=PersonFactory(name='Hank2'))
+        self.footprint2.book_copy.imprint.actor.add(self.printer)
+
+        role = RoleFactory(name='Owner')
+        self.owner = ActorFactory(role=role, person=PersonFactory(name='Tim'))
+        self.footprint2.actor.add(self.owner)
+
+    def test_export_list(self):
+        url = reverse('export-footprint-list', args=['ftitle'])
+        response = self.client.get(url)
+
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(Footprint.objects.all().count(), 2)
+
+        # owners
+        o = [owner.display_name().encode('utf-8')
+             for owner in self.footprint2.owners()]
+        o = '; '.join(o)
+
+        # Imprint Printers
+        p = [p.display_name().encode('utf-8')
+             for p in self.footprint2.book_copy.imprint.printers()]
+        p = '; '.join(p)
+
+        today = time.strftime('%m/%d/%Y')
+        row1 = ('Empty Footprint,None,None,,None,None,'
+                ',None,{},0\r\n').format(today)
+        row2 = ('Odyssey,c. 1984,"Cracow, Poland",{},'
+                'The Odyssey,"The Odyssey, Edition 1",{},'
+                'c. 1984,{},90\r\n').format(o, p, today)
+        self.assertEquals(response.streaming_content.next(), row1)
+        self.assertEquals(response.streaming_content.next(), row2)
+
+        with self.assertRaises(StopIteration):
+            response.streaming_content.next()
 
 
 class ApiViewTests(TestCase):

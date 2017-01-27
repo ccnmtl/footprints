@@ -17,7 +17,7 @@ from footprints.main.views import (
     AddPlaceView, AddDateView, RemoveRelatedView, FootprintListView,
     AddIdentifierView, AddDigitalObjectView, ConnectFootprintView,
     ContactUsView, AddLanguageView, DisplayDateView, CopyFootprintView,
-    SignS3View)
+    SignS3View, ExportFootprintListView)
 from footprints.main.viewsets import (
     BookCopyViewSet, ImprintViewSet, ActorViewSet,
     ExtendedDateViewSet, FootprintViewSet, LanguageViewSet,
@@ -119,6 +119,9 @@ urlpatterns = [
         name='browse-footprint-list-default'),
     url(r'^browse/footprints/(?P<sort_by>\w+)/$', FootprintListView.as_view(),
         name='browse-footprint-list'),
+    url(r'^export/footprints/(?P<sort_by>\w+)/$',
+        ExportFootprintListView.as_view(),
+        name='export-footprint-list'),
 
     url(r'^date/display/$',
         DisplayDateView.as_view(), name='display-date-view'),
