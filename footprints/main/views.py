@@ -244,6 +244,11 @@ class WrittenWorkDetailView(EditableMixin, DetailView):
         context['related'] = []
         context['editable'] = self.has_edit_permission(self.request.user)
         context['imprints'] = self.object.imprints()
+        context['state'] = {
+            'imprint': self.kwargs.get('imprint', None),
+            'copy': self.kwargs.get('copy', None),
+            'footprint': self.kwargs.get('footprint', None)
+        }
         return context
 
 
