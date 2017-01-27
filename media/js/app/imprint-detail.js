@@ -10,7 +10,10 @@
             _.bindAll(this, 'initializeMap', 'attachInfoWindow',
                       'initializeTooltips', 'onTogglePanel', 'resize',
                       'onClickFootprint', 'onClickImprint',
-                      'updateMarkerIcons');
+                      'updateMarkerIcons', 'syncMap',
+                      'addHistory', 'popState');
+
+            this.urlBase = options.urlBase;
 
             this.markerIcon = this.iconWithColor('ffa881');
             this.spiderIcon = this.iconWithColor('ff6e2d');
@@ -19,6 +22,7 @@
 
             this.initializeMap();
             jQuery(window).on('resize', this.resize);
+            jQuery(window).on('popstate', this.popState);
         },
         mapOptions: {
             zoom: 10,
@@ -263,13 +267,29 @@
             if ($elts.length < 1) {
                 $panel.addClass('active');
             }
+
+            this.addHistory(jQuery(evt.currentTarget).next());
         },
         onClickFootprint: function(evt) {
             this.infowindow.close();
             jQuery(this.el).find('.active').removeClass('active');
             jQuery(evt.currentTarget).addClass('active');
 
-            var id = jQuery(evt.currentTarget).data('id');
+            var id = jQuery(evt.currentTarget).data('map-id');
+            this.syncMap(id);
+            this.addHistory(jQuery(evt.currentTarget));
+        },
+        onClickImprint: function(evt) {
+            this.infowindow.close();
+            jQuery(this.el).find('.active').removeClass('active');
+            this.syncMap(jQuery(evt.currentTarget).data('map-id'));
+
+            jQuery(evt.currentTarget)
+                .parents('.imprint-list-item')
+                .addClass('active');
+            this.addHistory(jQuery(evt.currentTarget));
+        },
+        syncMap: function(id) {
             if (id in this.markers) {
                 var marker = this.markers[id].marker;
                 this.map.setCenter(marker.getPosition());
@@ -282,26 +302,57 @@
                 this.map.fitBounds(this.bounds);
             }
         },
-        onClickImprint: function(evt) {
+        addHistory: function($elt) {
+            if (window.history.pushState) {
+                var state = {
+                    imprint: $elt.data('imprint-id'),
+                    copy: $elt.data('copy-id'),
+                    footprint: $elt.data('footprint-id')
+                };
+
+                var url = this.urlBase + state.imprint + '/';
+                if (state.copy) {
+                    url += state.copy + '/';
+                }
+                if (state.footprint) {
+                    url += state.footprint + '/';
+                }
+                window.history.pushState(state, '', url);
+            }
+        },
+        popState: function(evt) {
             this.infowindow.close();
             jQuery(this.el).find('.active').removeClass('active');
-            var id = jQuery(evt.currentTarget).data('id');
-            if (id in this.markers) {
-                var marker = this.markers[id].marker;
-                this.map.setCenter(marker.getPosition());
-                this.map.setZoom(8);
-
-                this.infowindow.close();
-                this.infowindow.setContent(this.markers[id].content);
-                this.infowindow.open(this.map, marker);
-            } else {
-                this.map.fitBounds(this.bounds);
+            if (!evt.originalEvent.state) {
+                return;
             }
 
-            jQuery(evt.currentTarget)
-                .parents('.imprint-list-item')
-                .addClass('active');
+            var fpId = evt.originalEvent.state.footprint;
+            var copyId = evt.originalEvent.state.copy;
+            var imprintId = evt.originalEvent.state.imprint;
+            var $elt;
+            if (fpId) {
+                $elt = jQuery('div.panel-collapse[data-copy-id="' +
+                    copyId + '"]');
+                $elt.collapse('show');
 
+                $elt = jQuery('.list-group-item[data-footprint-id="' +
+                    fpId + '"]');
+                $elt.addClass('active');
+                this.syncMap($elt.data('map-id'));
+            } else if (copyId) {
+                // open bookcopy & mark as active
+                $elt = jQuery('div.panel-collapse[data-copy-id="' +
+                    copyId + '"]');
+                $elt.collapse('show');
+                $elt.parents('.panel').addClass('active');
+                this.map.fitBounds(this.bounds);
+            } else if (imprintId) {
+                // mark imprint as active
+                $elt = jQuery('h4[data-imprint-id="' + imprintId + '"]');
+                $elt.parent().addClass('active');
+                this.syncMap($elt.data('map-id'));
+            }
         }
     });
 })();
