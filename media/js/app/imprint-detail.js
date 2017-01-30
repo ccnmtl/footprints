@@ -246,6 +246,16 @@
         initializeTooltips: function() {
             jQuery(this.el).find('[data-toggle="tooltip"]').tooltip();
         },
+        onClickImprint: function(evt) {
+            this.infowindow.close();
+            jQuery(this.el).find('.active').removeClass('active');
+            this.syncMap(jQuery(evt.currentTarget).data('map-id'));
+
+            jQuery(evt.currentTarget)
+                .parents('.imprint-list-item')
+                .addClass('active');
+            this.addHistory(jQuery(evt.currentTarget));
+        },
         onClickBookCopy: function(evt) {
             jQuery(this.el).find('.active').removeClass('active');
             this.infowindow.close();
@@ -266,15 +276,16 @@
             this.syncMap(id);
             this.addHistory(jQuery(evt.currentTarget));
         },
-        onClickImprint: function(evt) {
-            this.infowindow.close();
-            jQuery(this.el).find('.active').removeClass('active');
-            this.syncMap(jQuery(evt.currentTarget).data('map-id'));
+        openBookCopy: function(copyId) {
+            var $elt = jQuery('.book-copy-container a[data-copy-id="' +
+                    copyId + '"]');
+            $elt.removeClass('collapsed');
 
-            jQuery(evt.currentTarget)
-                .parents('.imprint-list-item')
-                .addClass('active');
-            this.addHistory(jQuery(evt.currentTarget));
+            var $parent = $elt.parent();
+            $elt = $parent.find('.footprint-container');
+            $elt.addClass('in');
+            $elt.prop('style').removeProperty('height');
+            return $parent;
         },
         syncMap: function(id) {
             if (id in this.markers) {
@@ -334,24 +345,15 @@
         setState: function(imprintId, copyId, footprintId) {
             var $elt;
             if (footprintId) {
-                $elt = jQuery('.book-copy-container a[data-copy-id="' +
-                        copyId + '"]');
-                $elt.removeClass('collaped');
-                $elt.parent().find('.footprint-container').addClass('in');
+                this.openBookCopy(copyId);
 
                 $elt = jQuery('.list-group-item[data-footprint-id="' +
                     footprintId + '"]');
                 $elt.addClass('active');
                 this.syncMap($elt.data('map-id'));
             } else if (copyId) {
-                // open bookcopy & mark as active
-                $elt = jQuery('.book-copy-container a[data-copy-id="' +
-                    copyId + '"]');
-                $elt.removeClass('collaped');
-
-                var $parent = $elt.parent();
-                $parent.addClass('active');
-                $parent.find('.footprint-container').addClass('in');
+                $elt = this.openBookCopy(copyId);
+                $elt.addClass('active');
                 this.map.fitBounds(this.bounds);
             } else if (imprintId) {
                 // mark imprint as active
