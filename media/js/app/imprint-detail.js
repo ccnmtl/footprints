@@ -2,13 +2,13 @@
 (function() {
     window.ImprintView = Backbone.View.extend({
         events: {
-            'click .panel-heading': 'onTogglePanel',
+            'click a.book-copy-toggle': 'onClickBookCopy',
             'click .list-group-item': 'onClickFootprint',
             'click .imprint-list-item h4': 'onClickImprint'
         },
         initialize: function(options) {
             _.bindAll(this, 'initializeMap', 'attachInfoWindow',
-                      'initializeTooltips', 'onTogglePanel', 'resize',
+                      'initializeTooltips', 'onClickBookCopy', 'resize',
                       'onClickFootprint', 'onClickImprint',
                       'updateMarkerIcons', 'syncMap',
                       'addHistory', 'popState');
@@ -77,20 +77,6 @@
                     $elt.addClass('active');
                 } else {
                     $elt.parent().addClass('active');
-                }
-
-                if (!$elt.is(':visible')) {
-                    var $collapsible =
-                        $elt.parents('.panel').find('.panel-collapse').first();
-
-                    // wait until the collapsible is open to calc scrollTop
-                    $collapsible.one('shown.bs.collapse', function() {
-                        self.scrollToItem($elt);
-                    });
-
-                    $collapsible.collapse('toggle');
-                } else {
-                    self.scrollToItem($elt);
                 }
             });
 
@@ -260,18 +246,16 @@
         initializeTooltips: function() {
             jQuery(this.el).find('[data-toggle="tooltip"]').tooltip();
         },
-        onTogglePanel: function(evt) {
+        onClickBookCopy: function(evt) {
             jQuery(this.el).find('.active').removeClass('active');
             this.infowindow.close();
             this.map.fitBounds(this.bounds);
 
-            var $panel = jQuery(evt.currentTarget).parent();
-            var $elts = $panel.find('.panel-collapse.collapse.in');
-            if ($elts.length < 1) {
-                $panel.addClass('active');
+            if (jQuery(evt.currentTarget).hasClass('collapsed')) {
+                // opening
+                jQuery(evt.currentTarget).parent().addClass('active');
+                this.addHistory(jQuery(evt.currentTarget));
             }
-
-            this.addHistory(jQuery(evt.currentTarget).next());
         },
         onClickFootprint: function(evt) {
             this.infowindow.close();
@@ -304,6 +288,18 @@
             } else {
                 this.map.fitBounds(this.bounds);
             }
+        },
+        inView: function($elt) {
+            var rect = $elt.get(0).getBoundingClientRect();
+
+            return (
+                rect.top >= 0 &&
+                rect.left >= 0 &&
+                rect.bottom <= (window.innerHeight ||
+                                document.documentElement.clientHeight) &&
+                rect.right <= (window.innerWidth ||
+                               document.documentElement.clientWidth)
+            );
         },
         addHistory: function($elt) {
             if (window.history.pushState) {
@@ -338,9 +334,10 @@
         setState: function(imprintId, copyId, footprintId) {
             var $elt;
             if (footprintId) {
-                $elt = jQuery('div.panel-collapse[data-copy-id="' +
-                    copyId + '"]');
-                $elt.collapse('show');
+                $elt = jQuery('.book-copy-container a[data-copy-id="' +
+                        copyId + '"]');
+                $elt.removeClass('collaped');
+                $elt.parent().find('.footprint-container').addClass('in');
 
                 $elt = jQuery('.list-group-item[data-footprint-id="' +
                     footprintId + '"]');
@@ -348,18 +345,22 @@
                 this.syncMap($elt.data('map-id'));
             } else if (copyId) {
                 // open bookcopy & mark as active
-                $elt = jQuery('div.panel-collapse[data-copy-id="' +
+                $elt = jQuery('.book-copy-container a[data-copy-id="' +
                     copyId + '"]');
-                $elt.collapse('show');
-                $elt.parents('.panel').addClass('active');
+                $elt.removeClass('collaped');
+
+                var $parent = $elt.parent();
+                $parent.addClass('active');
+                $parent.find('.footprint-container').addClass('in');
                 this.map.fitBounds(this.bounds);
             } else if (imprintId) {
                 // mark imprint as active
                 $elt = jQuery('h4[data-imprint-id="' + imprintId + '"]');
-                $elt.parent().addClass('active');
+                $elt.parents('.imprint-list-item').addClass('active');
                 this.syncMap($elt.data('map-id'));
             }
-            if ($elt) {
+            if ($elt && !this.inView($elt)) {
+                // is $elt in view?
                 this.scrollToItem($elt);
             }
         }

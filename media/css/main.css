@@ -1546,49 +1546,6 @@ body.affix-container {
     margin-bottom: 20px;
 }
 
-.object-detail.writtenwork .panel {
-    border: 0;
-    box-shadow: none;
-    -webkit-box-shadow: none;
-    padding: 5px;
-    background-color: inherit;
-}
-
-.object-detail.writtenwork .panel-group {
-    margin-bottom: 0;
-    margin-top: 5px;
-}
-
-.object-detail.writtenwork .imprint-list-item .panel-group:first-child {
-    margin-top: 5px;
-}
-
-.object-detail.writtenwork .panel-group .panel-heading {
-    background-image: url("../img/fp_section_bg.png");
-    background-repeat: repeat;
-    box-shadow: none;
-    border: 0;
-    cursor: pointer;
-    box-shadow: none;
-    padding-left: 0;
-    padding-top: 0;
-    padding-right: 0;
-    padding-bottom: 0;
-}
-
-.object-detail.writtenwork .panel-heading {
-    background-color: white;
-    border-radius: 0;
-}
-
-.object-detail.writtenwork .panel-body {
-    background-image: url("../img/fp_section_bg.png");
-    background-repeat: repeat;
-    box-shadow: none;
-    padding: 0 !important;
-    border-top: 0 !important;
-}
-
 .object-detail.writtenwork .list-group {
     margin-bottom: 5px;
 }
@@ -1615,7 +1572,7 @@ body.affix-container {
     padding-left: 60px;
 }
 
-.object-detail.writtenwork .panel.active,
+.object-detail.writtenwork .book-copy-container.active,
 .object-detail.writtenwork .list-group-item.active,
 .object-detail.writtenwork .imprint-list-item.active {
     border-color: #95c0e9;
@@ -1645,17 +1602,34 @@ body.affix-container {
     cursor: pointer;
 }
 
-.object-detail.writtenwork .panel-title {
+.object-detail.writtenwork a.book-copy-toggle {
     font-size: 14px;
     color: #2e5367;
 }
 
-.object-detail.writtenwork .panel-title a,
-.object-detail.writtenwork .panel-title a:hover {
+.object-detail.writtenwork a.book-copy-toggle,
+.object-detail.writtenwork a.book-copy-toggle:hover {
     text-decoration: none;
 }
 
-.object-detail.writtenwork .panel-title a span.copy-title:before {
+.object-detail.writtenwork .book-copy-container {
+    padding: 5px;
+}
+
+.object-detail.writtenwork .badge {
+    background-color: transparent;
+    margin: 4px 0 2px 0;
+    font-weight: normal;
+    color: #2e5367;
+    font-size: 14px;
+    padding-right: 0;
+}
+
+.object-detail.writtenwork .imprint-list-item-header {
+    margin-bottom: 8px;
+}
+
+.object-detail.writtenwork a.book-copy-toggle span.book-copy-title:before {
     content: "\2212";
     font-family: "Glyphicons Halflings";
     margin-right: 3px;
@@ -1663,21 +1637,12 @@ body.affix-container {
     color: #2e5367;
 }
 
-.object-detail.writtenwork .panel-title a.collapsed span.copy-title:before {
+.object-detail.writtenwork a.book-copy-toggle.collapsed span.book-copy-title:before {
     content: "\2b";
 }
 
-.object-detail.writtenwork .panel-title .glyphicon {
+.object-detail.writtenwork a.book-copy-toggle .glyphicon {
     color: #2e5367;
-}
-
-.object-detail.writtenwork .panel-default>.panel-heading .badge {
-    background-color: transparent;
-    margin-top: 4px;
-    font-weight: normal;
-    color: #2e5367;
-    font-size: 14px;
-    padding-right: 0;
 }
 
 .object-detail.writtenwork .divider {
