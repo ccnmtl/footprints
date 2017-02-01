@@ -1,12 +1,21 @@
 {% extends 'base.html' %}
 {% load compress %}
 
-{% block title %}Written Work{% endblock %}
+{% block title %}Written Work {{object.title}}{% endblock %}
 
 {% block css %}
 {% endblock %}
 
+{% block description %}
+    Written Work {{object.title}}
+{% endblock %}
+
 {% block extrahead %}
+    <meta property="og:url" content="{{request.build_absolute_uri}}" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="{{object}}" />
+    <meta property="og:description" content="{{object}}" />
+    <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{STATIC_URL}}img/share_logo.png">
 {% endblock %}
 
 {% block js %}
@@ -24,7 +33,8 @@
     <script src="{{STATIC_URL}}js/backbone-min.js"></script>
     <script src="{{STATIC_URL}}js/overlapping_marker_spidifier.min.js"></script>
     {% compress js %}
-    <script src="{{STATIC_URL}}js/app/imprint-detail.js"></script>
+        <script src="{{STATIC_URL}}js/app/imprint-detail.js"></script>
+        <script src="{{STATIC_URL}}js/app/sharing.js"></script>
     {% endcompress %} 
 
     <script type="text/javascript">
@@ -33,6 +43,7 @@
                 el: jQuery('div.object-detail'),
                 work: {'id': '{{object.id}}'},
                 template: jQuery('#book-copy-template'),
+                shareTemplate: jQuery('#share-template'),
                 urlBase: '{% url "writtenwork-detail-view" object.id %}',
                 state: {
                     imprint: {% if state.imprint %}{{state.imprint}}{% else %}undefined{% endif %},
@@ -42,158 +53,213 @@
             });
         });
     </script>
+
+    <script type="text/template" id="share-template">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Share This <%= type %></h4>
+        </div>
+        <div class="modal-body">
+            <div class="widget-share">
+                <ul class="widget-share-icons clearfix">
+                    <li>
+                        <span class="widget-share-icon share-facebook">
+                            <a rel="nofollow" class="share-window" href="http://www.facebook.com/share.php?u=<%=permalink%>&title=<%=title%>"></a>
+                        </span>
+                    </li>
+                    <li>
+                        <span class="widget-share-icon share-twitter">
+                            <a rel="nofollow" class="share-window" href="https://twitter.com/intent/tweet?text=Footprints:%20<%=title%>&url=<%=permalink%>&hashtags=footprints&via=ColumbiaCTL"></a>
+                        </span>
+                    </li>
+                    <li>
+                        <span class="widget-share-icon share-googleplus">
+                            <a rel="nofollow" class="share-window" href="https://plus.google.com/share?url=<%=permalink%>"></a>
+                        </span>
+                    </li>
+                </ul>
+                <div>
+                    <input type="text" class="form-control" onclick="this.select()" value="<%=link%>" />
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </script>
 {% endblock %}
 
 {% block content %}
 {% with work=object %}
 
-    <div class="object-detail writtenwork">
-        <h1>
-            <span class="pull-left object-title">&nbsp;{{work|truncatewords:15}}</span>
-            <div class="clearfix"></div>
-        </h1>
-        <div class="row">
-            <div class="col-md-5 imprint-list-container">
-                <div class="writtenwork-title">
-                    <div class="breadcrumb">
-                        A Literary Work
-                    </div>
-                    <dl class="dl-horizontal">
-                        <dt>Title</dt><dd>{{work}}</dd>
-                        {% if work.actor.count > 0 %}
-                            {% for actor in work.actor.all %}
-                                <dt>{{actor.role}}</dt><dd>{{actor.display_name}}</dd>
-                            {% endfor %}
-                        {% endif %}
-                        {% if work.notes %}
-                            <dt>Notes</dt><dd>{{work.notes|safe}}</dd>
-                        {% endif %}
-                    </dl>
-                    <div class="clearfix"></div>
+<div class="object-detail writtenwork">
+    <h1>
+        <span class="pull-left object-title">&nbsp;{{work|truncatewords:15}}</span>
+        <div class="clearfix"></div>
+    </h1>
+    <div class="row">
+        <div class="col-md-5 imprint-list-container">
+            <div class="writtenwork-title">
+                <div class="breadcrumb">
+                    A Literary Work
                 </div>
-                <div class="imprint-list">
-                    <div class="breadcrumb">
-                        The Imprints
-                    </div>
-                    {% for imprint in imprints %}
-                        <div class="imprint-list-item">
-                            <div class="imprint-list-item-header">
-                                <h4 data-imprint-id="{{imprint.id}}"
-                                    data-map-id="imprint-{{imprint.id}}"
-                                        class="{% if imprint.place %}mappable{% endif %}">
-                                    <b>
-                                    {% if not imprint.display_title %}
-                                        Imprint
-                                    {% else %}
-                                        {{imprint.display_title}}
-                                    {% endif %}
-                                    </b>
-                                </h4>
-                                {% if imprint.publication_date or imprint.place %}
-                                <div class="imprint-description-published">
-                                    Published
-                                    {% if imprint.publication_date %}
-                                        {{imprint.publication_date}}{% if imprint.place %},{% endif %}
-                                    {% endif %}
-                                    {% if imprint.place %}
-                                        {{imprint.place}}
-                                    {% endif %}
-                                </div>
+                <dl class="dl-horizontal">
+                    <dt>Title</dt><dd>{{work}}</dd>
+                    {% if work.actor.count > 0 %}
+                        {% for actor in work.actor.all %}
+                            <dt>{{actor.role}}</dt><dd>{{actor.display_name}}</dd>
+                        {% endfor %}
+                    {% endif %}
+                    {% if work.notes %}
+                        <dt>Notes</dt><dd>{{work.notes|safe}}</dd>
+                    {% endif %}
+                </dl>
+                <div class="clearfix"></div>
+            </div>
+            <div class="imprint-list">
+                <div class="breadcrumb">
+                    The Imprints
+                </div>
+                {% for imprint in imprints %}
+                    <div class="imprint-list-item">
+                        <div class="imprint-list-item-header">
+                            <a class="small share-link pull-right"
+                               data-type="Imprint"
+                               data-title="{{imprint.display_title}}"
+                               href="{{ request.scheme }}://{{ request.get_host }}{% url 'writtenwork-detail-view-imprint' work.id imprint.id %}">
+                                <span class="glyphicon glyphicon-share" aria-hidden="true"></span> share</a>
+
+                            <h4 data-imprint-id="{{imprint.id}}"
+                                data-map-id="imprint-{{imprint.id}}"
+                                    class="{% if imprint.place %}mappable{% endif %}">
+                                <b>
+                                {% if not imprint.display_title %}
+                                    Imprint
+                                {% else %}
+                                    {{imprint.display_title}}
+                                {% endif %}
+                                </b>
+                            </h4>
+                            {% if imprint.publication_date or imprint.place %}
+                            <div class="imprint-description-published">
+                                Published
+                                {% if imprint.publication_date %}
+                                    {{imprint.publication_date}}{% if imprint.place %},{% endif %}
                                 {% endif %}
                                 {% if imprint.place %}
-                                    <div class="map-marker"
-                                        style="display: none"
-                                        data-related="imprint-{{imprint.id}}"
-                                        data-latitude="{{imprint.place.latitude}}"
-                                        data-longitude="{{imprint.place.longitude}}"
-                                        data-title="{{imprint.display_title}}">
-                                        <div class="iw-container">
-                                            <div class="iw-title iw-imprint">Imprint</div>
-                                            <div class="iw-content">
-                                                {{imprint.description|safe}}
-                                            </div>
-                                        </div>
-                                    </div>
+                                    {{imprint.place}}
                                 {% endif %}
                             </div>
-                            {% for copy in imprint.bookcopy_set.all %}
-                                {% if copy.footprint_set.exists %}
-                                    <div class="book-copy-container">
-                                        <a class="book-copy-toggle collapsed" role="button" data-toggle="collapse"
-                                            href="#book-copy-{{copy.id}}"
-                                            data-imprint-id="{{imprint.id}}"
-                                            data-copy-id="{{copy.id}}"
-                                            data-book-copy="{{fp.book_copy.identifier}}"
-                                            aria-expanded="false" aria-controls="collapseTwo">
-                                            <span class="book-copy-title" title="Book Copy {{copy.identifier}}">Book Copy</span>
-                                        </a>
-                                        <div class="badge pull-right">{{copy.footprint_set.count}} footprints</div>
-                                        <div class="clearfix"></div>
-
-                                        <div id="book-copy-{{copy.id}}" class="footprint-container collapse" role="tabpanel">
-                                            <ul class="list-group">
-                                            {% for fp in copy.footprint_set.all %}
-                                                <li class="list-group-item"
-                                                    data-map-id="footprint-{{fp.id}}"
-                                                    data-footprint-id="{{fp.id}}"
-                                                    data-copy-id="{{copy.id}}"
-                                                    data-imprint-id="{{imprint.id}}"
-                                                    data-book-copy="{{fp.book_copy.identifier}}">
-
-                                                    <div>
-                                                        {{fp.associated_date|default:""}}{% if fp.place %}{% if fp.associated_date %}, {% endif %}
-                                                            in {{fp.place}}
-                                                            <div class="map-marker" style="display: none"
-                                                                data-related="footprint-{{fp.id}}"
-                                                                data-latitude="{{fp.place.latitude}}"
-                                                                data-longitude="{{fp.place.longitude}}"
-                                                                data-title="{{fp.title}}">
-    
-                                                                <div class="iw-container">
-                                                                    <div class="iw-title iw-footprint">Footprint</div>
-                                                                    <div class="iw-content">
-                                                                        {{fp.description}}
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        {% endif %}
-                                                    </div>
-                                                    <div>
-                                                        as {{fp.title}}&nbsp;
-                                                    </div>
-                                                    {% with owners=fp.owners %}
-                                                    {% if owners|length > 0 %}
-                                                        <div>owned by <span>
-                                                        {% for owner in owners %}
-                                                            {{owner.display_name}}
-                                                            {% if not forloop.last %},{% endif %}
-                                                        {% endfor %}
-                                                        </span>
-                                                        </div>
-                                                    {% endif %}
-                                                    {% endwith %}
-                                                    <a class="small" href="/footprint/{{fp.id}}/"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></a>
-                                                    <a class="small" href="/footprint/{{fp.id}}/">full details</a>
-                                                </li>
-                                            {% endfor %}
-                                            </ul>
+                            {% endif %}
+                            {% if imprint.place %}
+                                <div class="map-marker"
+                                    style="display: none"
+                                    data-related="imprint-{{imprint.id}}"
+                                    data-latitude="{{imprint.place.latitude}}"
+                                    data-longitude="{{imprint.place.longitude}}"
+                                    data-title="{{imprint.display_title}}">
+                                    <div class="iw-container">
+                                        <div class="iw-title iw-imprint">Imprint</div>
+                                        <div class="iw-content">
+                                            {{imprint.description|safe}}
                                         </div>
                                     </div>
-                                {% endif %}
-                            {% empty %}
-                                No book copies
-                            {% endfor %}
+                                </div>
+                            {% endif %}
                         </div>
-                    {% endfor %}
-                </div>
+                        {% for copy in imprint.bookcopy_set.all %}
+                            {% if copy.footprint_set.exists %}
+                                <div class="book-copy-container">
+                                    <a class="book-copy-toggle collapsed" role="button" data-toggle="collapse"
+                                        href="#book-copy-{{copy.id}}"
+                                        data-imprint-id="{{imprint.id}}"
+                                        data-copy-id="{{copy.id}}"
+                                        data-book-copy="{{fp.book_copy.identifier}}"
+                                        aria-expanded="false" aria-controls="collapseTwo">
+                                        <span class="book-copy-title" title="Book Copy {{copy.identifier}}">Book Copy</span>
+                                        <span class="badge">{{copy.footprint_set.count}} footprints</span>
+                                    </a>
+                                    <div class="pull-right book-copy-metadata">
+                                        <a class="small share-link"
+                                            data-type="Book Copy"
+                                            data-title="{{imprint.display_title}}"
+                                            href="{{ request.scheme }}://{{ request.get_host }}{% url 'writtenwork-detail-view-copy' work.id imprint.id copy.id %}" >
+                                            <span class="glyphicon glyphicon-share" aria-hidden="true"></span> share</a>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div id="book-copy-{{copy.id}}" class="footprint-container collapse" role="tabpanel">
+                                        <ul class="list-group">
+                                        {% for fp in copy.footprint_set.all %}
+                                            <li class="list-group-item"
+                                                data-map-id="footprint-{{fp.id}}"
+                                                data-footprint-id="{{fp.id}}"
+                                                data-copy-id="{{copy.id}}"
+                                                data-imprint-id="{{imprint.id}}"
+                                                data-book-copy="{{fp.book_copy.identifier}}">
+
+                                                <a class="small share-link pull-right"
+                                                    data-type="Footprint"
+                                                    data-title="{{fp.display_title}}"
+                                                    href="{{ request.scheme }}://{{ request.get_host }}{% url 'writtenwork-detail-view-footprint' work.id imprint.id copy.id fp.id %}">
+                                                    <span class="glyphicon glyphicon-share" aria-hidden="true"></span> share</a>
+
+                                                <div>
+                                                    {{fp.associated_date|default:""}}{% if fp.place %}{% if fp.associated_date %}, {% endif %}
+                                                        in {{fp.place}}
+                                                        <div class="map-marker" style="display: none"
+                                                            data-related="footprint-{{fp.id}}"
+                                                            data-latitude="{{fp.place.latitude}}"
+                                                            data-longitude="{{fp.place.longitude}}"
+                                                            data-title="{{fp.title}}">
+
+                                                            <div class="iw-container">
+                                                                <div class="iw-title iw-footprint">Footprint</div>
+                                                                <div class="iw-content">
+                                                                    {{fp.description}}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                                <div>
+                                                    as {{fp.title}}&nbsp;
+                                                </div>
+                                                {% with owners=fp.owners %}
+                                                {% if owners|length > 0 %}
+                                                    <div>owned by <span>
+                                                    {% for owner in owners %}
+                                                        {{owner.display_name}}
+                                                        {% if not forloop.last %},{% endif %}
+                                                    {% endfor %}
+                                                    </span>
+                                                    </div>
+                                                {% endif %}
+                                                {% endwith %}
+                                                <a class="small" href="/footprint/{{fp.id}}/"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></a>
+                                                <a class="small" href="/footprint/{{fp.id}}/">full details</a>
+                                            </li>
+                                        {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% empty %}
+                            No book copies
+                        {% endfor %}
+                    </div>
+                {% endfor %}
             </div>
-            <div class="col-md-7">
-                <div class="imprint-map-container">
-                    <div class="imprint-map"></div>
-                </div>
+        </div>
+        <div class="col-md-7">
+            <div class="imprint-map-container">
+                <div class="imprint-map"></div>
             </div>
         </div>
     </div>
-
+    <!-- Modal -->
+    <div class="modal fade" id="share-dialog" tabindex="-1" role="dialog" aria-labelledby="share dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content"></div>
+        </div>
+    </div>
+</div>
 {% endwith %} 
 {% endblock %}

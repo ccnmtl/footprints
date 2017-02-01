@@ -4,14 +4,15 @@
         events: {
             'click a.book-copy-toggle': 'onClickBookCopy',
             'click .list-group-item': 'onClickFootprint',
-            'click .imprint-list-item h4': 'onClickImprint'
+            'click .imprint-list-item h4': 'onClickImprint',
+            'click .share-link': 'onShareLink'
         },
         initialize: function(options) {
             _.bindAll(this, 'initializeMap', 'attachInfoWindow',
                       'initializeTooltips', 'onClickBookCopy', 'resize',
                       'onClickFootprint', 'onClickImprint',
                       'updateMarkerIcons', 'syncMap',
-                      'addHistory', 'popState');
+                      'addHistory', 'popState', 'onShareLink');
 
             this.urlBase = options.urlBase;
 
@@ -26,6 +27,8 @@
 
             this.setState(options.state.imprint, options.state.copy,
                 options.state.footprint);
+            this.shareTemplate =
+                _.template(jQuery(options.shareTemplate).html());
         },
         mapOptions: {
             zoom: 10,
@@ -261,11 +264,9 @@
             this.infowindow.close();
             this.map.fitBounds(this.bounds);
 
-            if (jQuery(evt.currentTarget).hasClass('collapsed')) {
-                // opening
-                jQuery(evt.currentTarget).parent().addClass('active');
-                this.addHistory(jQuery(evt.currentTarget));
-            }
+            // opening
+            jQuery(evt.currentTarget).parent().addClass('active');
+            this.addHistory(jQuery(evt.currentTarget));
         },
         onClickFootprint: function(evt) {
             this.infowindow.close();
@@ -365,6 +366,20 @@
                 // is $elt in view?
                 this.scrollToItem($elt);
             }
+        },
+        onShareLink: function(evt) {
+            var $elt = jQuery(evt.currentTarget);
+            var $modal = jQuery('#share-dialog');
+
+            var markup = this.shareTemplate({
+                type: $elt.attr('data-type'),
+                title: $elt.attr('data-title'),
+                link: $elt.attr('href'),
+                permalink: encodeURIComponent($elt.attr('href'))
+            });
+            $modal.find('.modal-content').html(markup);
+            $modal.modal('show');
+            return false;
         }
     });
 })();

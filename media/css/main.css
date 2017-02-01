@@ -1585,12 +1585,20 @@ body.affix-container {
     background-color: #f6f7f8;
 }
 
+.object-detail.writtenwork .list-group-item.active .share-link {
+    margin-right: -9px;
+    margin-top: -5px;
+    display: block;
+}
+
 .object-detail.writtenwork .imprint-list-item h4 {
     margin-top: 0;
-    margin-bottom: 0;    
+    margin-bottom: 0;
     line-height: 30px;
     font-size: 16px;
     cursor: pointer;
+    text-decoration: underline;
+    color: #2e5367;
 }
 
 .object-detail.writtenwork .imprint-list-item h5 {
@@ -1618,15 +1626,29 @@ body.affix-container {
 
 .object-detail.writtenwork .badge {
     background-color: transparent;
-    margin: 4px 0 2px 0;
     font-weight: normal;
     color: #2e5367;
     font-size: 14px;
-    padding-right: 0;
+    margin-top: -2px;
 }
 
 .object-detail.writtenwork .imprint-list-item-header {
     margin-bottom: 8px;
+}
+
+.object-detail.writtenwork .imprint-list-item.active .imprint-list-item-header .share-link {
+    margin-top: 8px;
+    margin-right: 2px;
+    display: block;
+}
+
+.object-detail.writtenwork .book-copy-container.active .book-copy-metadata .share-link {
+    display: inline;
+    margin-left: 5px;
+}
+
+.object-detail.writtenwork a.book-copy-toggle span.book-copy-title {
+    font-weight: bold;
 }
 
 .object-detail.writtenwork a.book-copy-toggle span.book-copy-title:before {
@@ -1655,6 +1677,10 @@ body.affix-container {
 .object-detail.writtenwork .divider:hover {
     border: 0 !important;
     box-shadow: none;
+}
+
+.object-detail.writtenwork .share-link {
+    display: none;
 }
 
 .object-detail.writtenwork .divider div.small {
@@ -2498,4 +2524,51 @@ p.decoy {
 
 .select2-results .select2-highlighted {
     background-color: #5e98b7 !important;
+}
+
+/** Share **/
+.widget-share-icons {
+    margin: 0px 38% 20px;
+    padding: 0;
+    border: 0;
+    list-style: none;
+}
+
+.widget-share-icon {
+    margin: 0 10px 0 0;
+    padding: 0;
+    border: 0;
+    width: 32px;
+    height: 32px;
+    display: block;
+    float: left;
+}
+
+.widget-share-icon a {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    width: 32px;
+    height: 32px;
+    display: block;
+}
+
+.share-facebook {
+    background: transparent url('../img/sprite-page-sharetool.png') 0 0 no-repeat;
+}
+
+.share-twitter {
+    background: transparent url('../img/sprite-page-sharetool.png') -42px 0 no-repeat;
+}
+
+.share-googleplus {
+    background: transparent url('../img/sprite-page-sharetool.png') -84px 0 no-repeat;
+}
+
+.share-email {
+    background: transparent url('../img/sprite-page-sharetool.png') -126px 0 no-repeat;
+}
+
+.share-url {
+    background: transparent url('../img/sprite-page-sharetool.png') -168px 0 no-repeat;
 }
