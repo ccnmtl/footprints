@@ -107,7 +107,7 @@ django-geoposition==0.2.2
 django-audit-log==0.7.0
 djangorestframework==3.4.6
 djangorestframework-jsonp==1.0.2
-django-celery==3.1.17
+django-celery==3.2.1
 Unidecode==0.04.20
 django-reversion==1.10.2
 python-dateutil==2.6.0
