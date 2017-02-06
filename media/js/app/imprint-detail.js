@@ -33,6 +33,7 @@
         },
         mapOptions: {
             zoom: 10,
+            maxZoom: 10,
             draggable: true,
             scrollwheel: false,
             navigationControl: false,
@@ -323,7 +324,7 @@
             }
 
             if (subset.length < 1) {
-                // @todo - show messaging
+                // @todo - add overlay
                 this.map.fitBounds(this.bounds);
             } else if (!highlight) {
                 this.map.fitBounds(bounds);
