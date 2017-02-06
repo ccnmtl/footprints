@@ -157,19 +157,12 @@
         },
         resize: function() {
             var height = this.getVisibleContentHeight();
-
-            jQuery(this.el).css('min-height', height);
-
             var $elt = jQuery(this.el).find('.imprint-map-container').first();
             $elt.css('height', height);
             $elt.css('width', $elt.parent().width());
 
             $elt = jQuery(this.el).find('.imprint-map').first();
-            $elt.css('height', height);
-            $elt.css('width', $elt.parent().width());
-
-            height -= jQuery(this.el).find('.writtenwork-detail')
-                                     .outerHeight();
+            $elt.css('height', height - 10);
         },
         getIcon: function(dataId) {
             return dataId.indexOf('footprint') > -1 ?
@@ -335,10 +328,13 @@
             }
 
             if (subset.length < 1) {
+                this.$el.find('.empty-map-message').show();
                 this.map.fitBounds(this.bounds);
             } else if (!highlight) {
+                this.$el.find('.empty-map-message').hide();
                 this.map.fitBounds(bounds);
             } else {
+                this.$el.find('.empty-map-message').hide();
                 this.activeBounds = bounds;
                 this.infowindow.setContent(this.markers[highlight].content);
                 this.infowindow.open(this.map, this.markers[highlight].marker);
