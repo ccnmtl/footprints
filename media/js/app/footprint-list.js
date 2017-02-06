@@ -3,11 +3,12 @@
         events: {
             'click th.sortable': 'clickSortable',
             'click .btn-search-text': 'clickSearch',
+            'click .btn-export': 'clickExport',
             'keypress input[name="q"]': 'enterSearch',
             'keypress .tools input.page-number': 'specifyPage',
         },
         initialize: function(options) {
-            _.bindAll(this, 'clickSortable', 'clickSearch',
+            _.bindAll(this, 'clickSortable', 'clickSearch', 'clickExport',
                       'enterSearch', 'specifyPage');
             var self = this;
             this.baseUrl = options.baseUrl;
@@ -52,6 +53,12 @@
         clickSearch: function(evt) {
             var query = jQuery(this.el).find('input[name="q"]').val();
             var url = this.baseUrl + this.selectedSort +
+            '/?direction=' + this.selectedDirection + '&q=' + query;
+            window.location = url;
+        },
+        clickExport: function(evt) {
+            var query = jQuery(this.el).find('input[name="q"]').val();
+            var url = '/export/footprints/ftitle' +
             '/?direction=' + this.selectedDirection + '&q=' + query;
             window.location = url;
         },

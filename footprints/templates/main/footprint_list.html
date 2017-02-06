@@ -28,13 +28,6 @@
   <h1>Browse Footprints</h1>
 </div>
 
-{% flag "export_csv" %}
-<form action="/browse/footprints/" method="post">
-    {% csrf_token %}
-    <button name="export">Export</button>
-</form>
-{% endflag %}
-
 <div class="object-browse">
     <div class="row tools">
         <div class="col-md-4">
@@ -46,6 +39,11 @@
                     <button class="btn btn-white btn-search-text" type="button">
                         <span class="glyphicon glyphicon-search"></span>
                     </button>
+                    {% flag "export_csv" %}
+                    <button class="btn btn-white btn-export" type="button">
+                        Export
+                    </button>
+                    {% endflag %}
                 </span>
             </div>
         </div>
