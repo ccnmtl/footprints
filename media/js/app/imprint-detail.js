@@ -17,8 +17,9 @@
 
             this.urlBase = options.urlBase;
 
-            this.markerIcon = this.iconWithColor('ffa881');
-            this.spiderIcon = this.iconWithColor('ff6e2d');
+            this.footprintIcon = this.iconWithColor('ffa881');
+            this.imprintIcon = this.iconWithColor('5e98b7');
+            this.spiderIcon = this.iconWithColor('ff6e2d', true);
 
             this.shareTemplate =
                 _.template(jQuery(options.shareTemplate).html());
@@ -50,7 +51,8 @@
         updateMarkerIcons: function() {
             for (var key in this.markers) {
                 if (this.markers.hasOwnProperty(key)) {
-                    this.markers[key].marker.setIcon(this.markerIcon);
+                    var icon = this.getIcon(this.markers[key].marker.dataId);
+                    this.markers[key].marker.setIcon(icon);
                 }
             }
 
@@ -75,19 +77,19 @@
                 infowindow.setContent(marker.desc);
                 infowindow.open(map, marker);
 
-                jQuery(self.el).find('.active').removeClass('active');
+                var q = '[data-map-id="' + marker.dataId + '"]';
+                var $elt = self.$el.find(q).first();
 
-                var $elt = jQuery('[data-id="' + marker.dataId + '"]').first();
-                if (marker.dataId.startsWith('footprint')) {
-                    $elt.addClass('active');
-                } else {
-                    $elt.parent().addClass('active');
-                }
+                jQuery(self.el).find('.active').removeClass('active');
+                self.setState($elt.data('imprint-id'),
+                              $elt.data('copy-id'),
+                              $elt.data('footprint-id'),
+                              false /* sync map */);
             });
 
             this.spiderfier.addListener('spiderfy', function(markers) {
                 for (var i = 0; i < markers.length; i ++) {
-                    markers[i].setIcon(self.markerIcon);
+                    markers[i].setIcon(self.getIcon(markers[i].dataId));
                 }
 
                 infowindow.close();
@@ -169,9 +171,14 @@
             height -= jQuery(this.el).find('.writtenwork-detail')
                                      .outerHeight();
         },
-        iconWithColor: function(color) {
+        getIcon: function(dataId) {
+            return dataId.indexOf('footprint') > -1 ?
+                    this.footprintIcon : this.imprintIcon;
+        },
+        iconWithColor: function(color, multiple) {
+            var c = multiple ? '%2B' : '%E2%80%A2';
             return 'https://chart.googleapis.com/chart?' +
-            'chst=d_map_pin_letter&chld=%E2%80%A2|' + color;
+            'chst=d_map_pin_letter&chld=' + c + '|' + color;
         },
         initializeMap: function(options) {
             var self = this;
@@ -192,7 +199,7 @@
                 this.spiderfier = new OverlappingMarkerSpiderfier(this.map, {
                     keepSpiderfied: true,
                     markersWontMove: true,
-                    markersWontHide: true});
+                    markersWontHide: false});
 
                 this.markers = {};
                 for (var i = 0; i < markers.length; i++) {
@@ -207,12 +214,11 @@
                     var marker = new google.maps.Marker({
                         position: latlng,
                         map: this.map,
-                        icon: this.markerIcon,
+                        icon: this.getIcon(id),
                         desc: content,
                         dataId: id
                     });
                     this.bounds.extend(latlng);
-                    this.spiderfier.addMarker(marker);
                     this.markers[id] = {'marker': marker, 'content': content};
                 }
                 this.map.fitBounds(this.bounds);
@@ -224,7 +230,8 @@
                         self.projection = self.map.getProjection();
                         self.setState(options.state.imprint,
                                       options.state.copy,
-                                      options.state.footprint);
+                                      options.state.footprint,
+                                      true);
                         self.updateMarkerIcons();
                     }
                 });
@@ -244,6 +251,8 @@
                             if (self.mapLoaded && self.activeBounds) {
                                 self.map.fitBounds(self.activeBounds);
                                 delete self.activeBounds;
+
+                                self.map.setZoom(self.map.getZoom() - 1);
                             }
                         }
                     );
@@ -317,14 +326,15 @@
                     if (subset.indexOf(key) > -1) {
                         mk.setVisible(true);
                         bounds.extend(mk.getPosition());
+                        this.spiderfier.addMarker(mk);
                     } else {
                         mk.setVisible(false);
+                        this.spiderfier.removeMarker(mk);
                     }
                 }
             }
 
             if (subset.length < 1) {
-                // @todo - add overlay
                 this.map.fitBounds(this.bounds);
             } else if (!highlight) {
                 this.map.fitBounds(bounds);
@@ -366,7 +376,7 @@
         },
         clearState: function() {
             this.infowindow.close();
-            delete this.activeBounds;
+            this.spiderfier.clearMarkers();
             jQuery(this.el).find('.active').removeClass('active');
         },
         popHistory: function(evt) {
@@ -378,31 +388,31 @@
             var fpId = evt.originalEvent.state.footprint;
             var copyId = evt.originalEvent.state.copy;
             var imprintId = evt.originalEvent.state.imprint;
-            this.setState(imprintId, copyId, fpId);
+            this.setState(imprintId, copyId, fpId, true);
         },
-        setState: function(imprintId, copyId, footprintId) {
-            this.clearState();
-
+        setState: function(imprintId, copyId, footprintId, syncMap) {
             var $elt = this.$el;
+            var activeId;
             if (footprintId) {
                 this.openBookCopy(copyId);
 
                 $elt = jQuery('.list-group-item[data-footprint-id="' +
                     footprintId + '"]');
                 $elt.addClass('active');
-                this.syncMap($elt, $elt.data('map-id'));
+                activeId = $elt.data('map-id');
             } else if (copyId) {
                 $elt = this.openBookCopy(copyId);
                 $elt.addClass('active');
-                this.syncMap($elt);
             } else if (imprintId) {
-                // mark imprint as active
                 $elt = jQuery('h4[data-imprint-id="' + imprintId + '"]');
-                var $parent = $elt.parents('.imprint-list-item');
-                $parent.addClass('active');
-                this.syncMap($parent, $elt.data('map-id'));
-            } else {
-                this.syncMap($elt);
+                activeId = $elt.data('map-id');
+
+                $elt = $elt.parents('.imprint-list-item');
+                $elt.addClass('active');
+            }
+
+            if (syncMap) {
+                this.syncMap($elt, activeId);
             }
 
             if (!this.inView($elt)) {
