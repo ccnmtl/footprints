@@ -1430,10 +1430,24 @@ body.affix-container {
     position: absolute;
 }
 
+.object-detail .imprint-map-container .empty-map-message {
+    position: absolute;
+    background-color: #efeeee;
+    border: 2px solid #ccc;
+    z-index: 1000;
+    text-align: center;
+    height: 100px;
+    padding-top: 35px;
+    left: 50%;
+    width: 300px;
+    margin-left: -150px;
+    top: 40%;
+}
+
 .object-detail .imprint-map-container .imprint-map-key {
     width: 100%;
     background-color: #efeeee;
-    border: 1px solid #ccc;
+    border-top: 2px solid #ccc;
     height: 30px;
     padding: 5px 5px;
 }
