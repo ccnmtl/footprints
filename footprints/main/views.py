@@ -289,7 +289,6 @@ class ExportFootprintListView(FootprintListView):
             (writer.writerow(row) for row in rows), content_type="text/csv"
         )
         response['Content-Disposition'] = 'attachment; filename="' + fnm + '"'
-        # pdb.set_trace()
         return response
 
 

@@ -39,15 +39,15 @@
                     <button class="btn btn-white btn-search-text" type="button">
                         <span class="glyphicon glyphicon-search"></span>
                     </button>
-                    {% flag "export_csv" %}
-                    <button class="btn btn-white btn-export" type="button">
-                        Export
-                    </button>
-                    {% endflag %}
                 </span>
             </div>
         </div>
         <div class="col-md-8">
+            {% flag "export_csv" %}
+            <button class="btn btn-white btn-export" type="button">
+                Export
+            </button>
+            {% endflag %}
             {% include 'main/pagination.html' %}
         </div>
     </div>
