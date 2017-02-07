@@ -15,7 +15,7 @@
     <meta property="og:type" content="article" />
     <meta property="og:title" content="{{object}}" />
     <meta property="og:description" content="{{object}}" />
-    <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{STATIC_URL}}img/share_logo.png">
+    <meta property="og:image" content="{{STATIC_URL}}img/share_logo.png">
 {% endblock %}
 
 {% block js %}
@@ -98,11 +98,17 @@
     <div class="row">
         <div class="col-md-5 imprint-list-container">
             <div class="writtenwork-title">
+                <a class="small share-link pull-right"
+                   data-type="Literary Work"
+                   data-title="{{work}}"
+                   href="{{ request.scheme }}://{{ request.get_host }}{% url 'writtenwork-detail-view' work.id %}">
+                    <span class="glyphicon glyphicon-share" aria-hidden="true"></span> share</a>
+
                 <div class="breadcrumb">
                     A Literary Work
                 </div>
+
                 <dl class="dl-horizontal">
-                    <dt>Title</dt><dd>{{work}}</dd>
                     {% if work.actor.count > 0 %}
                         {% for actor in work.actor.all %}
                             <dt>{{actor.role}}</dt><dd>{{actor.display_name}}</dd>
@@ -127,9 +133,7 @@
                                href="{{ request.scheme }}://{{ request.get_host }}{% url 'writtenwork-detail-view-imprint' work.id imprint.id %}">
                                 <span class="glyphicon glyphicon-share" aria-hidden="true"></span> share</a>
 
-                            <h4 data-imprint-id="{{imprint.id}}"
-                                data-map-id="imprint-{{imprint.id}}"
-                                    class="{% if imprint.place %}mappable{% endif %}">
+                            <h4 data-imprint-id="{{imprint.id}}" data-map-id="imprint-{{imprint.id}}">
                                 <b>
                                 {% if not imprint.display_title %}
                                     Imprint
@@ -250,8 +254,10 @@
         </div>
         <div class="col-md-7">
             <div class="imprint-map-container">
+                <div class="empty-map-message" style="display: none;">There are no associated locations</div>
+                <div class="imprint-map"></div>
                 <div class="imprint-map-key">
-                    <div class="legend pull-right">
+                    <div class="legend">
                         <img src="https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|5e98b7" alt-text="Imprint Icon"/>
                             <span class="small">Imprint</span>
                         <img src="https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|ffa881" alt-text="Footprint Icon"/>
@@ -260,7 +266,6 @@
                             <span class="small">Multiple</span>
                     </div>
                 </div>
-                <div class="imprint-map"></div>
             </div>
         </div>
     </div>

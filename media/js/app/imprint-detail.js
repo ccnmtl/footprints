@@ -5,13 +5,14 @@
             'click a.book-copy-toggle': 'onClickBookCopy',
             'click .list-group-item': 'onClickFootprint',
             'click .imprint-list-item h4': 'onClickImprint',
+            'click .writtenwork-title': 'onClickWork',
             'click .share-link': 'onShareLink'
         },
         initialize: function(options) {
             _.bindAll(this, 'initializeMap', 'attachInfoWindow', 'resize',
-                      'onClickBookCopy', 'onClickFootprint', 'onClickImprint',
-                      'updateMarkerIcons', 'syncMap', 'onShareLink',
-                      'clearState', 'setState', 'addHistory', 'popHistory');
+                'onClickBookCopy', 'onClickFootprint', 'onClickImprint',
+                'onClickWork', 'updateMarkerIcons', 'syncMap', 'onShareLink',
+                'clearState', 'setState', 'addHistory', 'popHistory');
 
             var self = this;
 
@@ -79,7 +80,6 @@
 
                 var q = '[data-map-id="' + marker.dataId + '"]';
                 var $elt = self.$el.find(q).first();
-
                 jQuery(self.el).find('.active').removeClass('active');
                 self.setState($elt.data('imprint-id'),
                               $elt.data('copy-id'),
@@ -157,19 +157,16 @@
         },
         resize: function() {
             var height = this.getVisibleContentHeight();
-
-            jQuery(this.el).css('min-height', height);
-
             var $elt = jQuery(this.el).find('.imprint-map-container').first();
             $elt.css('height', height);
             $elt.css('width', $elt.parent().width());
 
             $elt = jQuery(this.el).find('.imprint-map').first();
-            $elt.css('height', height);
-            $elt.css('width', $elt.parent().width());
-
-            height -= jQuery(this.el).find('.writtenwork-detail')
-                                     .outerHeight();
+            $elt.css('height', height - 10);
+        },
+        getIcon: function(dataId) {
+            return dataId.indexOf('footprint') > -1 ?
+                    this.footprintIcon : this.imprintIcon;
         },
         getIcon: function(dataId) {
             return dataId.indexOf('footprint') > -1 ?
@@ -265,6 +262,12 @@
                 });
             }
         },
+        onClickWork: function(evt) {
+            this.clearState();
+            jQuery(evt.currentTarget).addClass('active');
+            this.syncMap(this.$el);
+            this.addHistory(this.$el);
+        },
         onClickImprint: function(evt) {
             this.clearState();
 
@@ -335,10 +338,13 @@
             }
 
             if (subset.length < 1) {
+                this.$el.find('.empty-map-message').show();
                 this.map.fitBounds(this.bounds);
             } else if (!highlight) {
+                this.$el.find('.empty-map-message').hide();
                 this.map.fitBounds(bounds);
             } else {
+                this.$el.find('.empty-map-message').hide();
                 this.activeBounds = bounds;
                 this.infowindow.setContent(this.markers[highlight].content);
                 this.infowindow.open(this.map, this.markers[highlight].marker);
@@ -364,7 +370,10 @@
                     footprint: $elt.data('footprint-id')
                 };
 
-                var url = this.urlBase + state.imprint + '/';
+                var url = this.urlBase;
+                if (state.imprint) {
+                    url += state.imprint + '/';
+                }
                 if (state.copy) {
                     url += state.copy + '/';
                 }
@@ -381,13 +390,15 @@
         },
         popHistory: function(evt) {
             this.clearState();
-            if (!evt.originalEvent.state) {
-                return;
-            }
+            var fpId;
+            var copyId;
+            var imprintId;
 
-            var fpId = evt.originalEvent.state.footprint;
-            var copyId = evt.originalEvent.state.copy;
-            var imprintId = evt.originalEvent.state.imprint;
+            if (evt.originalEvent.state) {
+                fpId = evt.originalEvent.state.footprint;
+                copyId = evt.originalEvent.state.copy;
+                imprintId = evt.originalEvent.state.imprint;
+            }
             this.setState(imprintId, copyId, fpId, true);
         },
         setState: function(imprintId, copyId, footprintId, syncMap) {
@@ -409,6 +420,8 @@
 
                 $elt = $elt.parents('.imprint-list-item');
                 $elt.addClass('active');
+            } else {
+                this.$el.find('.writtenwork-title').addClass('active');
             }
 
             if (syncMap) {
