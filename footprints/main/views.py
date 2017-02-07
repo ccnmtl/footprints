@@ -1,3 +1,4 @@
+import csv
 from django.apps import apps
 from django.conf import settings
 from django.contrib.auth import login
@@ -9,7 +10,7 @@ from django.db.models.fields import FieldDoesNotExist
 from django.db.models.fields.related import ManyToManyField
 from django.db.models.query import Prefetch
 from django.db.models.query_utils import Q
-from django.http.response import HttpResponseRedirect
+from django.http.response import HttpResponseRedirect, StreamingHttpResponse
 from django.shortcuts import get_object_or_404
 from django.template import loader
 from django.template.context import Context
@@ -152,6 +153,11 @@ class FootprintListView(ListView):
         base = reverse('browse-footprint-list', args=[sort_by])
         context['base_url'] = \
             u'{}?direction={}&q={}&page='.format(base, direction, query)
+
+        export = reverse('export-footprint-list', args=[sort_by])
+        context['export_url'] = \
+            u'{}?direction={}&q={}&page='.format(export, direction, query)
+
         return context
 
     def sort_by_date(self, qs, direction):
@@ -220,6 +226,71 @@ class FootprintListView(ListView):
             return self.sort_by_owner(qs, direction)
         else:
             return self.default_sort(qs, sort_by, direction)
+
+
+class Echo(object):
+        """An object that implements just the write method of the file-like
+        interface.
+        """
+        def write(self, value):
+            """
+            Write the value by returning it, instead of storing in a buffer.
+            """
+            return value
+
+
+class ExportFootprintListView(FootprintListView):
+    def get_rows(self):
+        for o in self.object_list:
+            row = []
+            # Footprint title
+            row.append(unicode(o.title).encode('utf-8'))
+            # Footprint date
+            row.append(unicode(o.associated_date))
+
+            # Footprint location
+            row.append(unicode(o.place).encode('utf-8'))
+
+            # owners
+            a = [owner.display_name().encode('utf-8') for owner in o.owners()]
+            row.append('; '.join(a))
+
+            # Written work title
+            row.append(unicode(o.book_copy.imprint.work.title).encode('utf-8'))
+
+            # Imprint display_title
+            a = unicode(o.book_copy.imprint.display_title()).encode('utf-8')
+            row.append(a)
+
+            # Imprint Printers
+            a = [p.display_name().encode('utf-8')
+                 for p in o.book_copy.imprint.printers()]
+            row.append('; '.join(a))
+
+            # Imprint publication date
+            row.append(unicode(o.book_copy.imprint.publication_date))
+
+            # Imprint created at date
+            row.append(o.created_at.strftime('%m/%d/%Y'))
+
+            # Footprint percent complete
+            row.append(o.percent_complete)
+
+            yield row
+
+    def get(self, request, *args, **kwargs):
+        self.object_list = self.get_queryset()
+        rows = self.get_rows()
+        pseudo_buffer = Echo()
+        writer = csv.writer(pseudo_buffer)
+
+        fnm = "footprints.csv"
+        response = StreamingHttpResponse(
+            (writer.writerow(row) for row in rows), content_type="text/csv"
+        )
+        response['Content-Disposition'] = 'attachment; filename="' + fnm + '"'
+        # pdb.set_trace()
+        return response
 
 
 class PlaceDetailView(EditableMixin, DetailView):
