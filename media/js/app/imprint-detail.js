@@ -8,30 +8,32 @@
             'click .share-link': 'onShareLink'
         },
         initialize: function(options) {
-            _.bindAll(this, 'initializeMap', 'attachInfoWindow',
-                      'initializeTooltips', 'onClickBookCopy', 'resize',
-                      'onClickFootprint', 'onClickImprint',
-                      'updateMarkerIcons', 'syncMap',
-                      'addHistory', 'popState', 'onShareLink');
+            _.bindAll(this, 'initializeMap', 'attachInfoWindow', 'resize',
+                      'onClickBookCopy', 'onClickFootprint', 'onClickImprint',
+                      'updateMarkerIcons', 'syncMap', 'onShareLink',
+                      'clearState', 'setState', 'addHistory', 'popHistory');
+
+            var self = this;
 
             this.urlBase = options.urlBase;
 
             this.markerIcon = this.iconWithColor('ffa881');
             this.spiderIcon = this.iconWithColor('ff6e2d');
 
-            this.mapLoaded = false;
-
-            this.initializeMap();
-            jQuery(window).on('resize', this.resize);
-            jQuery(window).on('popstate', this.popState);
-
-            this.setState(options.state.imprint, options.state.copy,
-                options.state.footprint);
             this.shareTemplate =
                 _.template(jQuery(options.shareTemplate).html());
+
+            this.mapLoaded = false;
+
+            jQuery(window).on('resize', this.resize);
+            jQuery(window).on('popstate', this.popHistory);
+
+            this.initializeMap(options);
+            jQuery(this.el).find('[data-toggle="tooltip"]').tooltip();
         },
         mapOptions: {
             zoom: 10,
+            maxZoom: 10,
             draggable: true,
             scrollwheel: false,
             navigationControl: false,
@@ -52,7 +54,7 @@
                 }
             }
 
-            var markers = this.oms.markersNearAnyOtherMarker();
+            var markers = this.spiderfier.markersNearAnyOtherMarker();
             for (var i = 0; i < markers.length; i++) {
                 markers[i].setIcon(this.spiderIcon);
             }
@@ -69,7 +71,7 @@
         attachInfoWindow: function(infowindow, map, marker, content) {
             var self = this;
 
-            this.oms.addListener('click', function(marker, event) {
+            this.spiderfier.addListener('click', function(marker, event) {
                 infowindow.setContent(marker.desc);
                 infowindow.open(map, marker);
 
@@ -83,7 +85,7 @@
                 }
             });
 
-            this.oms.addListener('spiderfy', function(markers) {
+            this.spiderfier.addListener('spiderfy', function(markers) {
                 for (var i = 0; i < markers.length; i ++) {
                     markers[i].setIcon(self.markerIcon);
                 }
@@ -91,7 +93,7 @@
                 infowindow.close();
             });
 
-            this.oms.addListener('unspiderfy', function(markers) {
+            this.spiderfier.addListener('unspiderfy', function(markers) {
                 for (var i = 0; i < markers.length; i ++) {
                     markers[i].setIcon(self.spiderIcon);
                 }
@@ -99,19 +101,6 @@
 
             google.maps.event.addListener(map, 'click', function() {
                 infowindow.close();
-            });
-
-            google.maps.event.addListener(map, 'idle', function() {
-                if (!self.mapLoaded) {
-                    self.updateMarkerIcons();
-                    self.mapLoaded = true;
-                }
-            });
-
-            google.maps.event.addListener(map, 'zoom_changed', function() {
-                if (self.mapLoaded) {
-                    self.updateMarkerIcons();
-                }
             });
 
             // *
@@ -184,7 +173,7 @@
             return 'https://chart.googleapis.com/chart?' +
             'chst=d_map_pin_letter&chld=%E2%80%A2|' + color;
         },
-        initializeMap: function() {
+        initializeMap: function(options) {
             var self = this;
 
             // compile lat/longs
@@ -195,19 +184,12 @@
                 });
 
                 this.resize();
-                var mapElt = jQuery(this.el).find('.imprint-map')[0];
 
+                var mapElt = jQuery(this.el).find('.imprint-map')[0];
                 this.map = new google.maps.Map(mapElt, this.mapOptions);
-                var boundsChanged = google.maps.event
-                    .addListener(this.map, 'bounds_changed', function(event) {
-                    if (self.map.getZoom() > 10) {
-                        self.map.setZoom(10);
-                    }
-                    google.maps.event.removeListener(boundsChanged);
-                });
 
                 this.bounds = new google.maps.LatLngBounds();
-                this.oms = new OverlappingMarkerSpiderfier(this.map, {
+                this.spiderfier = new OverlappingMarkerSpiderfier(this.map, {
                     keepSpiderfied: true,
                     markersWontMove: true,
                     markersWontHide: true});
@@ -217,8 +199,9 @@
                     var id = jQuery(markers[i]).data('related');
                     var lat = jQuery(markers[i]).data('latitude');
                     var lng = jQuery(markers[i]).data('longitude');
-                    var title = jQuery(markers[i]).data('title');
                     var latlng = new google.maps.LatLng(lat, lng);
+
+                    var title = jQuery(markers[i]).data('title');
                     var content = jQuery(markers[i]).html();
 
                     var marker = new google.maps.Marker({
@@ -229,14 +212,41 @@
                         dataId: id
                     });
                     this.bounds.extend(latlng);
-                    this.oms.addMarker(marker);
+                    this.spiderfier.addMarker(marker);
                     this.markers[id] = {'marker': marker, 'content': content};
                 }
-
+                this.map.fitBounds(this.bounds);
                 this.attachInfoWindow(this.infowindow, this.map);
 
-                this.map.fitBounds(this.bounds);
-                jQuery(mapElt).show();
+                google.maps.event.addListener(this.map, 'idle', function() {
+                    if (!self.mapLoaded) {
+                        self.mapLoaded = true;
+                        self.projection = self.map.getProjection();
+                        self.setState(options.state.imprint,
+                                      options.state.copy,
+                                      options.state.footprint);
+                        self.updateMarkerIcons();
+                    }
+                });
+
+                google.maps.event.addListener(this.map, 'zoom_changed',
+                    function() {
+                        if (self.mapLoaded) {
+                            self.updateMarkerIcons();
+                        }
+                    }
+                );
+
+                google.maps.event.addListener(this.map, 'bounds_changed',
+                        function() {
+                            // An infowindow opening throws off the fitBounds
+                            // logic. Call fitBounds again when necessary
+                            if (self.mapLoaded && self.activeBounds) {
+                                self.map.fitBounds(self.activeBounds);
+                                delete self.activeBounds;
+                            }
+                        }
+                    );
 
                 jQuery('.imprint-map-container').affix({
                     offset: {
@@ -246,36 +256,32 @@
                 });
             }
         },
-        initializeTooltips: function() {
-            jQuery(this.el).find('[data-toggle="tooltip"]').tooltip();
-        },
         onClickImprint: function(evt) {
-            this.infowindow.close();
-            jQuery(this.el).find('.active').removeClass('active');
-            this.syncMap(jQuery(evt.currentTarget).data('map-id'));
+            this.clearState();
 
-            jQuery(evt.currentTarget)
-                .parents('.imprint-list-item')
-                .addClass('active');
-            this.addHistory(jQuery(evt.currentTarget));
+            var $elt = jQuery(evt.currentTarget);
+            var $parent = $elt.parents('.imprint-list-item');
+
+            $parent.addClass('active');
+            this.syncMap($parent, $elt.data('map-id'));
+            this.addHistory($elt);
         },
         onClickBookCopy: function(evt) {
-            jQuery(this.el).find('.active').removeClass('active');
-            this.infowindow.close();
-            this.map.fitBounds(this.bounds);
+            this.clearState();
+            var $elt = jQuery(evt.currentTarget);
+            var $parent = $elt.parent();
 
-            // opening
-            jQuery(evt.currentTarget).parent().addClass('active');
-            this.addHistory(jQuery(evt.currentTarget));
+            $parent.addClass('active');
+            this.syncMap($parent);
+            this.addHistory($elt);
         },
         onClickFootprint: function(evt) {
-            this.infowindow.close();
-            jQuery(this.el).find('.active').removeClass('active');
-            jQuery(evt.currentTarget).addClass('active');
+            this.clearState();
 
-            var id = jQuery(evt.currentTarget).data('map-id');
-            this.syncMap(id);
-            this.addHistory(jQuery(evt.currentTarget));
+            var $elt = jQuery(evt.currentTarget);
+            $elt.addClass('active');
+            this.syncMap($elt, $elt.data('map-id'));
+            this.addHistory($elt);
         },
         openBookCopy: function(copyId) {
             var $elt = jQuery('.book-copy-container a[data-copy-id="' +
@@ -288,17 +294,44 @@
             $elt.prop('style').removeProperty('height');
             return $parent;
         },
-        syncMap: function(id) {
-            if (id in this.markers) {
-                var marker = this.markers[id].marker;
-                this.map.setCenter(marker.getPosition());
-                this.map.setZoom(8);
+        syncMap: function($parent, activeId) {
+            var subset = [];
+            var highlight;
 
-                this.infowindow.close();
-                this.infowindow.setContent(this.markers[id].content);
-                this.infowindow.open(this.map, marker);
-            } else {
+            $parent.find('.map-marker').each(function() {
+                subset.push(jQuery(this).data('related'));
+            });
+
+            if (activeId && this.markers.hasOwnProperty(activeId)) {
+                // the active element has an associated place
+                highlight = activeId;
+                if (subset.indexOf(highlight) === -1) {
+                    subset.push(highlight);
+                }
+            }
+
+            var bounds = new google.maps.LatLngBounds();
+            for (var key in this.markers) {
+                if (this.markers.hasOwnProperty(key)) {
+                    var mk = this.markers[key].marker;
+                    if (subset.indexOf(key) > -1) {
+                        mk.setVisible(true);
+                        bounds.extend(mk.getPosition());
+                    } else {
+                        mk.setVisible(false);
+                    }
+                }
+            }
+
+            if (subset.length < 1) {
+                // @todo - add overlay
                 this.map.fitBounds(this.bounds);
+            } else if (!highlight) {
+                this.map.fitBounds(bounds);
+            } else {
+                this.activeBounds = bounds;
+                this.infowindow.setContent(this.markers[highlight].content);
+                this.infowindow.open(this.map, this.markers[highlight].marker);
             }
         },
         inView: function($elt) {
@@ -331,9 +364,13 @@
                 window.history.pushState(state, '', url);
             }
         },
-        popState: function(evt) {
+        clearState: function() {
             this.infowindow.close();
+            delete this.activeBounds;
             jQuery(this.el).find('.active').removeClass('active');
+        },
+        popHistory: function(evt) {
+            this.clearState();
             if (!evt.originalEvent.state) {
                 return;
             }
@@ -344,26 +381,31 @@
             this.setState(imprintId, copyId, fpId);
         },
         setState: function(imprintId, copyId, footprintId) {
-            var $elt;
+            this.clearState();
+
+            var $elt = this.$el;
             if (footprintId) {
                 this.openBookCopy(copyId);
 
                 $elt = jQuery('.list-group-item[data-footprint-id="' +
                     footprintId + '"]');
                 $elt.addClass('active');
-                this.syncMap($elt.data('map-id'));
+                this.syncMap($elt, $elt.data('map-id'));
             } else if (copyId) {
                 $elt = this.openBookCopy(copyId);
                 $elt.addClass('active');
-                this.map.fitBounds(this.bounds);
+                this.syncMap($elt);
             } else if (imprintId) {
                 // mark imprint as active
                 $elt = jQuery('h4[data-imprint-id="' + imprintId + '"]');
-                $elt.parents('.imprint-list-item').addClass('active');
-                this.syncMap($elt.data('map-id'));
+                var $parent = $elt.parents('.imprint-list-item');
+                $parent.addClass('active');
+                this.syncMap($parent, $elt.data('map-id'));
+            } else {
+                this.syncMap($elt);
             }
-            if ($elt && !this.inView($elt)) {
-                // is $elt in view?
+
+            if (!this.inView($elt)) {
                 this.scrollToItem($elt);
             }
         },
