@@ -755,6 +755,10 @@ class Imprint(models.Model):
                   obj.sort_date()))
         return lst
 
+    def photos(self):
+        return DigitalObject.objects.filter(
+            footprint__in=Footprint.objects.filter(book_copy__imprint=self))
+
     def has_work(self):
         return self.work is not None
 

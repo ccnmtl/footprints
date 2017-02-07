@@ -1,10 +1,24 @@
 <script type="text/template" id="carousel-template">
 <div id="carousel-fullsize" class="carousel slide" data-ride="carousel">
+    <!-- Indicators -->
+    <% if (digital_object.length > 1) { %>
+    <ol class="carousel-indicators">
+        <% for (var i=0; i < digital_object.length; i++) { %>
+            <li data-target="#photo-<%=digital_object[i].id %>"
+                data-slide-to="<%=i%>"
+                <% if (active_id == digital_object[i].id) { %>
+                    class="active"
+                <% } %>
+            ></li>
+        <% } %>
+    </ol>
+    <% } %>
+
     <!-- Wrapper for slides -->
     <div class="carousel-inner" role="listbox">
         <% for (var i=0; i < digital_object.length; i++) { %>
             <div class="item <% if (active_id == digital_object[i].id) { %>active<% } %>">
-                <center><img src="<%=digital_object[i].url%>" alt="image"></center>
+                <img src="<%=digital_object[i].url%>" alt="image">
                 <div class="carousel-caption">
                     <% if (digital_object[i].description && digital_object[i].description.length > 0) { %>
                         <%=digital_object[i].description%>
@@ -16,15 +30,17 @@
         <% } %>
     </div>
 
-  <!-- Controls -->
-  <a class="left carousel-control" href="#carousel-fullsize" role="button" data-slide="prev">
-    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-    <span class="sr-only">Previous</span>
-  </a>
-  <a class="right carousel-control" href="#carousel-fullsize" role="button" data-slide="next">
-    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-    <span class="sr-only">Next</span>
-  </a>
+  <% if (digital_object.length > 1) { %>
+    <!-- Controls -->
+    <a class="left carousel-control" href="#carousel-fullsize" role="button" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control" href="#carousel-fullsize" role="button" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+  <% } %>
 </div>
 
 </script>
