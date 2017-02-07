@@ -168,10 +168,6 @@
             return dataId.indexOf('footprint') > -1 ?
                     this.footprintIcon : this.imprintIcon;
         },
-        getIcon: function(dataId) {
-            return dataId.indexOf('footprint') > -1 ?
-                    this.footprintIcon : this.imprintIcon;
-        },
         iconWithColor: function(color, multiple) {
             var c = multiple ? '%2B' : '%E2%80%A2';
             return 'https://chart.googleapis.com/chart?' +
