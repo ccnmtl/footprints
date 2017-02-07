@@ -1447,6 +1447,7 @@ body.affix-container {
 .object-detail .imprint-map-container .imprint-map-key {
     width: 100%;
     background-color: #efeeee;
+    border-top: 2px solid #ccc;
     height: 30px;
     padding: 5px 5px;
 }
