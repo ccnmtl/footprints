@@ -19,15 +19,6 @@
 {% endblock %}
 
 {% block js %}
-    <script type="text/template" id="book-copy-template">
-        <li class="list-group-item divider">
-            <div class="small">
-                <%=copyId%>
-            </div>
-            <div class="clearfix"></div>
-        </li>
-    </script>
-
     <script type="text/javascript" src="//maps.google.com/maps/api/js?libraries=places"></script>
     <script src="{{STATIC_URL}}js/underscore-min.js"></script>
     <script src="{{STATIC_URL}}js/backbone-min.js"></script>
@@ -42,7 +33,6 @@
             var view = new ImprintView({
                 el: jQuery('div.object-detail'),
                 work: {'id': '{{object.id}}'},
-                template: jQuery('#book-copy-template'),
                 shareTemplate: jQuery('#share-template'),
                 urlBase: '{% url "writtenwork-detail-view" object.id %}',
                 state: {

@@ -1569,27 +1569,27 @@ body.affix-container {
     padding-left: 60px;
 }
 
-.object-detail.writtenwork .writtenwork-title.active,
-.object-detail.writtenwork .book-copy-container.active,
-.object-detail.writtenwork .list-group-item.active,
-.object-detail.writtenwork .imprint-list-item.active {
+.object-detail.writtenwork .writtenwork-title.infocus,
+.object-detail.writtenwork .book-copy-container.infocus,
+.object-detail.writtenwork .list-group-item.infocus,
+.object-detail.writtenwork .imprint-list-item.infocus {
     border-color: #95c0e9;
     color: #333;
     box-shadow: 0 0 10px #95c0e9;
     border: 1px solid #95c0e9;
 }
 
-.object-detail.writtenwork .writtenwork-title.active .share-link {
+.object-detail.writtenwork .writtenwork-title.infocus .share-link {
     display: block;
     margin-right: 5px;
     margin-top: 5px;
 }
 
-.object-detail.writtenwork .list-group-item.active {
+.object-detail.writtenwork .list-group-item.infocus {
     background-color: #f6f7f8;
 }
 
-.object-detail.writtenwork .list-group-item.active .share-link {
+.object-detail.writtenwork .list-group-item.infocus .share-link {
     margin-right: -9px;
     margin-top: -5px;
     display: block;
@@ -1640,13 +1640,13 @@ body.affix-container {
     margin-bottom: 8px;
 }
 
-.object-detail.writtenwork .imprint-list-item.active .imprint-list-item-header .share-link {
+.object-detail.writtenwork .imprint-list-item.infocus .imprint-list-item-header .share-link {
     margin-top: 8px;
     margin-right: 2px;
     display: block;
 }
 
-.object-detail.writtenwork .book-copy-container.active .book-copy-metadata .share-link {
+.object-detail.writtenwork .book-copy-container.infocus .book-copy-metadata .share-link {
     display: inline;
     margin-left: 5px;
 }
@@ -1671,29 +1671,8 @@ body.affix-container {
     color: #2e5367;
 }
 
-.object-detail.writtenwork .divider {
-    margin-top: 1px;
-    border: 0;
-    background-color: white;
-}
-
-.object-detail.writtenwork .divider.active,
-.object-detail.writtenwork .divider:hover {
-    border: 0 !important;
-    box-shadow: none;
-}
-
 .object-detail.writtenwork .share-link {
     display: none;
-}
-
-.object-detail.writtenwork .divider div.small {
-    padding: 5px;
-    margin-left: -20px;
-    margin-bottom: -14px;
-    position: relative;
-    z-index: 1;
-    border: 0;
 }
 
 .object-detail.footprint .breadcrumb a {

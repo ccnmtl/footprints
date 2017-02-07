@@ -80,7 +80,7 @@
 
                 var q = '[data-map-id="' + marker.dataId + '"]';
                 var $elt = self.$el.find(q).first();
-                jQuery(self.el).find('.active').removeClass('active');
+                jQuery(self.el).find('.infocus').removeClass('infocus');
                 self.setState($elt.data('imprint-id'),
                               $elt.data('copy-id'),
                               $elt.data('footprint-id'),
@@ -260,7 +260,7 @@
         },
         onClickWork: function(evt) {
             this.clearState();
-            jQuery(evt.currentTarget).addClass('active');
+            jQuery(evt.currentTarget).addClass('infocus');
             this.syncMap(this.$el);
             this.addHistory(this.$el);
         },
@@ -270,7 +270,7 @@
             var $elt = jQuery(evt.currentTarget);
             var $parent = $elt.parents('.imprint-list-item');
 
-            $parent.addClass('active');
+            $parent.addClass('infocus');
             this.syncMap($parent, $elt.data('map-id'));
             this.addHistory($elt);
         },
@@ -279,7 +279,7 @@
             var $elt = jQuery(evt.currentTarget);
             var $parent = $elt.parent();
 
-            $parent.addClass('active');
+            $parent.addClass('infocus');
             this.syncMap($parent);
             this.addHistory($elt);
         },
@@ -287,7 +287,7 @@
             this.clearState();
 
             var $elt = jQuery(evt.currentTarget);
-            $elt.addClass('active');
+            $elt.addClass('infocus');
             this.syncMap($elt, $elt.data('map-id'));
             this.addHistory($elt);
         },
@@ -382,7 +382,7 @@
         clearState: function() {
             this.infowindow.close();
             this.spiderfier.clearMarkers();
-            jQuery(this.el).find('.active').removeClass('active');
+            jQuery(this.el).find('.infocus').removeClass('infocus');
         },
         popHistory: function(evt) {
             this.clearState();
@@ -405,19 +405,19 @@
 
                 $elt = jQuery('.list-group-item[data-footprint-id="' +
                     footprintId + '"]');
-                $elt.addClass('active');
+                $elt.addClass('infocus');
                 activeId = $elt.data('map-id');
             } else if (copyId) {
                 $elt = this.openBookCopy(copyId);
-                $elt.addClass('active');
+                $elt.addClass('infocus');
             } else if (imprintId) {
                 $elt = jQuery('h4[data-imprint-id="' + imprintId + '"]');
                 activeId = $elt.data('map-id');
 
                 $elt = $elt.parents('.imprint-list-item');
-                $elt.addClass('active');
+                $elt.addClass('infocus');
             } else {
-                this.$el.find('.writtenwork-title').addClass('active');
+                this.$el.find('.writtenwork-title').addClass('infocus');
             }
 
             if (syncMap) {
