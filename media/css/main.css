@@ -1133,17 +1133,38 @@ ul.wizard-tabs.has-error li.active a {
     margin: 0 0 10px 0;
 }
 
-.footprint-detail {
-    padding-right: 20px;
-}
-
 img.footicon {
     height: 40px;
+}
+
+.footprint-detail {
+    padding-right: 20px;
 }
 
 .footprint-detail > span.object-title {
     color: #202836;
 }
+
+.footprint-detail .footprint-photo-gallery {
+    position: relative;
+}
+
+.footprint-detail .footprint-photo-gallery .carousel.slide {
+    margin: 0 10px 25px 30px;
+}
+
+.footprint-detail .footprint-photo-gallery .prev-arrow {
+    position: absolute;
+    top: 40px;
+    left: 10px;
+}
+
+.footprint-detail .footprint-photo-gallery .next-arrow {
+    position: absolute;
+    top: 40px;
+    right: 10px;
+}
+
 
 /* Carousel */
 
@@ -1169,6 +1190,13 @@ img.footicon {
 .modal-carousel .modal-body {
     padding-top: 10px;
 }
+
+#carousel-fullsize img {
+    height: 600px;
+    width: auto;
+    margin: 0 auto;
+}
+
 
 /* Object detail pages */
 
@@ -1453,9 +1481,11 @@ body.affix-container {
 }
 
 .object-detail .crop {
-    width: 100px;
-    height: 75px;
+    width: 102px;
+    height: 78px;
     overflow: hidden;
+    border: 2px solid #ccc;
+    cursor: pointer;
 }
 
 .connect-record-prompt {
@@ -1725,8 +1755,9 @@ body.affix-container {
     margin-top: 5px;
 } 
 .object-detail.footprint .toggle-edit-digital-object {
-    margin-top: -12px;
-    margin-bottom: 5px;
+    position: absolute;
+    right: 10px;
+    z-index: 1;
 }
 
 
