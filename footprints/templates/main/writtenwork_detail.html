@@ -98,11 +98,17 @@
     <div class="row">
         <div class="col-md-5 imprint-list-container">
             <div class="writtenwork-title">
+                <a class="small share-link pull-right"
+                   data-type="Literary Work"
+                   data-title="{{work}}"
+                   href="{{ request.scheme }}://{{ request.get_host }}{% url 'writtenwork-detail-view' work.id %}">
+                    <span class="glyphicon glyphicon-share" aria-hidden="true"></span> share</a>
+
                 <div class="breadcrumb">
                     A Literary Work
                 </div>
+
                 <dl class="dl-horizontal">
-                    <dt>Title</dt><dd>{{work}}</dd>
                     {% if work.actor.count > 0 %}
                         {% for actor in work.actor.all %}
                             <dt>{{actor.role}}</dt><dd>{{actor.display_name}}</dd>
@@ -127,9 +133,7 @@
                                href="{{ request.scheme }}://{{ request.get_host }}{% url 'writtenwork-detail-view-imprint' work.id imprint.id %}">
                                 <span class="glyphicon glyphicon-share" aria-hidden="true"></span> share</a>
 
-                            <h4 data-imprint-id="{{imprint.id}}"
-                                data-map-id="imprint-{{imprint.id}}"
-                                    class="{% if imprint.place %}mappable{% endif %}">
+                            <h4 data-imprint-id="{{imprint.id}}" data-map-id="imprint-{{imprint.id}}">
                                 <b>
                                 {% if not imprint.display_title %}
                                     Imprint

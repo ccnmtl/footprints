@@ -1541,29 +1541,17 @@ body.affix-container {
     margin-bottom: 0px;
 }
 
-.writtenwork .writtenwork-title {
-    padding: 0 15px;
-}
-
 .object-detail.writtenwork h1 .object-title {
     width: auto;
     margin-left: 0px;
 }
 
-.object-detail.writtenwork .metadata {
-    margin-left: 17px;
+.writtenwork .writtenwork-title {
+    cursor: pointer;
 }
 
-.object-detail.writtenwork .metadata strong {
-    margin-right: 10px;
-}
-
-.object-detail.writtenwork .metadata-container {
-    background-image: url("../img/fp_section_bg.png");
-    background-repeat: repeat;
-    box-shadow: none;
-    padding: 5px 12px 12px 12px;
-    margin: 0 0 3px 0;
+.object-detail.writtenwork .dl-horizontal {
+    margin: 0 8px 10px 8px !important;
 }
 
 .object-detail.writtenwork .imprint-list-item {
@@ -1600,6 +1588,7 @@ body.affix-container {
     padding-left: 60px;
 }
 
+.object-detail.writtenwork .writtenwork-title.active,
 .object-detail.writtenwork .book-copy-container.active,
 .object-detail.writtenwork .list-group-item.active,
 .object-detail.writtenwork .imprint-list-item.active {
@@ -1607,6 +1596,12 @@ body.affix-container {
     color: #333;
     box-shadow: 0 0 10px #95c0e9;
     border: 1px solid #95c0e9;
+}
+
+.object-detail.writtenwork .writtenwork-title.active .share-link {
+    display: block;
+    margin-right: 5px;
+    margin-top: 5px;
 }
 
 .object-detail.writtenwork .list-group-item.active {
