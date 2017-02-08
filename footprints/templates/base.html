@@ -256,6 +256,10 @@
            }).bind("ajaxStop", function() {  
               jQuery(this).removeClass("busy");
            });
+
+           jQuery('a[href="#"]').click(function(e) {
+               e.preventDefault ? e.preventDefault() : e.returnValue = false;
+           });
         });
     </script>
     
