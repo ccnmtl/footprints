@@ -392,7 +392,7 @@ class FootprintListExportTest(TestCase):
              for p in self.footprint2.book_copy.imprint.printers()]
         p = '; '.join(p)
 
-        today = time.strftime('%m/%d/%Y')
+        today = self.footprint1.created_at.strftime('%m/%d/%Y')
         row1 = ('Empty Footprint,None,None,,None,None,'
                 ',None,{},0\r\n').format(today)
         row2 = ('Odyssey,c. 1984,"Cracow, Poland",{},'
