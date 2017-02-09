@@ -17,7 +17,7 @@
     <!-- Wrapper for slides -->
     <div class="carousel-inner" role="listbox">
         <% for (var i=0; i < digital_object.length; i++) { %>
-            <div class="item <% if (active_id == digital_object[i].id) { %>active<% } %>">
+            <div class="text-center item <% if (active_id == digital_object[i].id) { %>active<% } %>">
                 <img src="<%=digital_object[i].url%>" alt="image">
                 <div class="carousel-caption">
                     <% if (digital_object[i].description && digital_object[i].description.length > 0) { %>
