@@ -241,6 +241,14 @@ class Echo(object):
 
 class ExportFootprintListView(FootprintListView):
     def get_rows(self):
+        headers = ['Footprint Title', 'Footprint Date', 'Footprint Location',
+                   'Footprint Owners', 'Written Work Title',
+                   'Imprint Display Title', 'Imprint Printers',
+                   'Imprint Publicaton Date', 'Imprint Creation Date',
+                   'Footprint Percent Complete']
+
+        yield headers
+
         for o in self.object_list:
             row = []
             # Footprint title
@@ -289,7 +297,6 @@ class ExportFootprintListView(FootprintListView):
             (writer.writerow(row) for row in rows), content_type="text/csv"
         )
         response['Content-Disposition'] = 'attachment; filename="' + fnm + '"'
-        # pdb.set_trace()
         return response
 
 

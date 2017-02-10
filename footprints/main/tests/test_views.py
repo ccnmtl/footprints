@@ -1,5 +1,6 @@
 from json import loads
 import json
+import time
 
 from django.conf import settings
 from django.core import mail
@@ -391,12 +392,18 @@ class FootprintListExportTest(TestCase):
              for p in self.footprint2.book_copy.imprint.printers()]
         p = '; '.join(p)
 
-        today = self.footprint1.created_at.strftime('%m/%d/%Y')
+        today = time.strftime('%m/%d/%Y')
+        headers = ('Footprint Title,Footprint Date,Footprint Location,'
+                   'Footprint Owners,Written Work Title,'
+                   'Imprint Display Title,Imprint Printers,'
+                   'Imprint Publicaton Date,Imprint Creation Date,'
+                   'Footprint Percent Complete\r\n')
         row1 = ('Empty Footprint,None,None,,None,None,'
                 ',None,{},0\r\n').format(today)
         row2 = ('Odyssey,c. 1984,"Cracow, Poland",{},'
                 'The Odyssey,"The Odyssey, Edition 1",{},'
                 'c. 1984,{},90\r\n').format(o, p, today)
+        self.assertEquals(response.streaming_content.next(), headers)
         self.assertEquals(response.streaming_content.next(), row1)
         self.assertEquals(response.streaming_content.next(), row2)
 
