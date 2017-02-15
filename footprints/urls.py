@@ -17,7 +17,7 @@ from footprints.main.views import (
     AddPlaceView, AddDateView, RemoveRelatedView, FootprintListView,
     AddIdentifierView, AddDigitalObjectView, ConnectFootprintView,
     ContactUsView, AddLanguageView, DisplayDateView, CopyFootprintView,
-    SignS3View, ExportFootprintListView)
+    SignS3View, ExportFootprintListView, ModerationView)
 from footprints.main.viewsets import (
     BookCopyViewSet, ImprintViewSet, ActorViewSet,
     ExtendedDateViewSet, FootprintViewSet, LanguageViewSet,
@@ -144,6 +144,9 @@ urlpatterns = [
 
     # Batch Import
     url(r'^batch/', include('footprints.batch.urls')),
+
+    # Moderation Interface
+    url(r'^moderate/', ModerationView.as_view(), name='moderation-view'),
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^_impersonate/', include('impersonate.urls')),
