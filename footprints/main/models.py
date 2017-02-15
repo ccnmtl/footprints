@@ -925,6 +925,8 @@ class Footprint(models.Model):
 
     percent_complete = models.IntegerField(default=0)
 
+    verified = models.BooleanField(default=False)
+
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
@@ -1005,6 +1007,7 @@ class Footprint(models.Model):
 
     def save(self, *args, **kwargs):
         self.percent_complete = self.calculate_percent_complete()
+        self.verified = False
         super(Footprint, self).save(*args, **kwargs)
 
     def sort_date(self):
