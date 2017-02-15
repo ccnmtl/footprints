@@ -13,50 +13,8 @@
     </script>
 {% endblock %}
 
-{% block topnavbar %}
-<div class="container header front">
-    <nav class="navbar navbar-default" role="navigation">
-        <div class="navbar-header front">
-            <button type="button" class="navbar-toggle"
-                data-toggle="collapse"
-                data-target="#navbar-collapse-pl"  style="border: 1px solid #ccc;">
-                <span class="sr-only">Toggle Navigation</span> <span
-                    class="icon-bar"></span> <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-             </button>
-             
-             <a class="navbar-brand front" href="/"><img src="{{STATIC_URL}}img/fp_header_logo_center.png" alt="Footprints" /></a>
-        </div>
-    </nav>
-    <div class="collapse navbar-collapse" id="navbar-collapse-pl">
-        <ul class="front nav navbar-nav navbar-nav-pl">
-                {% block usernav %}
-                    <li><a href="/about/">About</a></li>
-                    {% if not request.user.is_anonymous %}
-                        <li><a href="/footprint/create/">Create</a></li>
-                        {% if request.user.is_staff %}
-                            <li><a href="/batch/">Import</a></li>
-                        {% endif %}
-                    {% endif %}
-                    <li><a href="/browse/footprints/">Browse</a></li>
-                    {% flag "enable_search" %}
-                        <li><a href="/search/">Search</a></li>
-                    {% endflag %}
-                    <li><a href="http://edblogs.columbia.edu/footprints/" target="_blank">Blog</a></li>
-
-                    {% if request.user.is_anonymous %}
-                        <li><a id="login-link" href="#" data-toggle="modal" data-target="#login-modal">Log In</a></li>
-                    {% else %}
-                        <li class="logged-in-greeting">
-                            <a href="/accounts/logout/?next=/"><span title="Log Out">Log Out</span></a>
-                        </li>
-                {% endif %}
-                
-            {% endblock %}
-         </ul>
-    </div>
-</div>    
-{% endblock %}
+{% block container_header_ex %}front{% endblock %}
+{% block logo %}{% endblock %}
 
 {% block outercontainer %}
     <div class="container container-pl home" id="outer-container">
@@ -75,7 +33,6 @@
 Every literary work represents a moment in time and space where an idea was conceived and documented. But the history of a book continues long after composition as it is bought, sold, shared, read, confiscated, stored, or even discarded. This history is the essence of Footprints.</p>
 
                   </div>
-                  
               </div>
               {% flag "enable_search" %}
               <div class="col-md-4 home-search">

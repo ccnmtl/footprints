@@ -127,7 +127,7 @@ blockquote {
     float: left;
 }
 
-.in ul.front.navbar-nav li {
+.container.header.front .in ul.navbar-nav li {
     display: block;
     clear: both;
 }
@@ -160,6 +160,26 @@ blockquote {
     letter-spacing: 1px;
 }
 
+.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover {
+    background-color: #97421b;
+    padding-bottom: 2px;
+}
+
+.navbar-default .dropdown-menu > li > a:hover,
+.navbar-default .dropdown-menu > li > a:focus {
+  color: #333;
+  text-decoration: underline !important;
+  background-color: white;
+}
+.navbar-default .dropdown-menu > .active > a,
+.navbar-default .dropdown-menu > .active > a:hover,
+.navbar-default .dropdown-menu > .active > a:focus {
+  color: #fff;
+  text-decoration: underline !important;
+  background-color: white;
+  outline: 0;
+}
+
 /* Header FRONT PAGE ONLY */
 
 .container.header.front {
@@ -175,21 +195,21 @@ blockquote {
     height: 125px;
 }
 
-.navbar-header.front {
+.container.header.front .navbar-header {
     width: 100%;
     display: block;
     height: 125px;
     float: left;
 }
 
-a.navbar-brand.front {
+.container.header.front a.navbar-brand {
   display: block;
   float: left;
   width: 250px;
   height: inherit;
   margin: 1em 0 0 1em;
 }
-a.navbar-brand.front.cjh {
+.container.header.front a.navbar-brand.cjh {
   display: block;
   float: left;
   width: 126px;
@@ -206,19 +226,19 @@ a.navbar-brand {
     margin: 0;
 }
 
-ul.front.navbar-nav {
+.container.header.front ul.navbar-nav {
     text-align: center;
     margin: 0 auto;
-    float: none;
+    float: none !important;
 }
 
-ul.front.navbar-nav li {
+.container.header.front ul.navbar-nav li {
     padding: 0 30px 0 0;
     float: none;
     display: inline-block;
 }
 
-ul.front > li > a:hover {
+.container.header.front ul > li > a:hover {
     text-decoration: none;
     background-color: transparent;
 }
@@ -647,7 +667,7 @@ ul.footer-logos li {
       vertical-align: middle;
       padding: 20px 0px;
     }
-	a.navbar-brand.front {
+	.container.header.front a.navbar-brand {
 	display: block;
 	float: left;
 	width: 300px;
@@ -655,7 +675,7 @@ ul.footer-logos li {
 	margin: 1em 0 0 2em;
 	}
 
-	a.navbar-brand.front.cjh {
+	.container.header.front a.navbar-brand.cjh {
 	display: block;
 	float: right;
 	width: 141px;
