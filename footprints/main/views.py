@@ -34,7 +34,7 @@ from footprints.main.models import (
     StandardizedIdentificationType, ExtendedDate, MEDIUM_CHOICES)
 from footprints.main.serializers import NameSerializer
 from footprints.mixins import (
-    JSONResponseMixin, LoggedInMixin, EditableMixin)
+    JSONResponseMixin, LoggedInMixin, EditableMixin, LoggedInStaffMixin)
 
 
 class IndexView(TemplateView):
@@ -705,3 +705,13 @@ class SignS3View(LoggedInMixin, BaseSignS3View):
 
     def get_bucket(self):
         return settings.AWS_STORAGE_BUCKET_NAME
+
+
+class ModerationView(LoggedInStaffMixin, TemplateView):
+    template_name = 'main/moderation.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ModerationView, self).get_context_data(**kwargs)
+
+        context['footprints'] = Footprint.objects.all()
+        return context

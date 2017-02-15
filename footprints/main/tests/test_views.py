@@ -1,6 +1,5 @@
 from json import loads
 import json
-import time
 
 from django.conf import settings
 from django.core import mail
@@ -392,17 +391,18 @@ class FootprintListExportTest(TestCase):
              for p in self.footprint2.book_copy.imprint.printers()]
         p = '; '.join(p)
 
-        today = time.strftime('%m/%d/%Y')
         headers = ('Footprint Title,Footprint Date,Footprint Location,'
                    'Footprint Owners,Written Work Title,'
                    'Imprint Display Title,Imprint Printers,'
                    'Imprint Publicaton Date,Imprint Creation Date,'
                    'Footprint Percent Complete\r\n')
         row1 = ('Empty Footprint,None,None,,None,None,'
-                ',None,{},0\r\n').format(today)
+                ',None,{},0\r\n').format(
+            self.footprint1.created_at.strftime('%m/%d/%Y'))
         row2 = ('Odyssey,c. 1984,"Cracow, Poland",{},'
                 'The Odyssey,"The Odyssey, Edition 1",{},'
-                'c. 1984,{},90\r\n').format(o, p, today)
+                'c. 1984,{},90\r\n').format(
+            o, p, self.footprint2.created_at.strftime('%m/%d/%Y'))
         self.assertEquals(response.streaming_content.next(), headers)
         self.assertEquals(response.streaming_content.next(), row1)
         self.assertEquals(response.streaming_content.next(), row2)
@@ -1244,3 +1244,19 @@ class SerializerTest(TestCase):
         self.assertEquals(qs.first(), a)
 
         self.assertEquals(serializer.to_internal_value(a.id), a)
+
+
+class ModerationViewTest(TestCase):
+
+    def test_get(self):
+        user = UserFactory()
+        staff = UserFactory(is_staff=True)
+
+        url = reverse('moderation-view')
+        self.assertEquals(self.client.get(url).status_code, 405)
+
+        self.client.login(username=user.username, password='test')
+        self.assertEquals(self.client.get(url).status_code, 405)
+
+        self.client.login(username=staff.username, password='test')
+        self.assertEquals(self.client.get(url).status_code, 200)
