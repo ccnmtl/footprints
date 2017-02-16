@@ -165,6 +165,17 @@ class BookCopyFactory(factory.DjangoModelFactory):
     call_number = 'B893.1BC'
 
 
+class EmptyFootprintFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = Footprint
+
+    book_copy = factory.SubFactory(BookCopyFactory)
+    medium = 'Medium'
+    provenance = 'Provenance'
+    title = 'The Iliad'
+    narrative = 'Achilles is forced to fight'
+
+
 class FootprintFactory(factory.DjangoModelFactory):
     class Meta:
         model = Footprint
@@ -181,7 +192,9 @@ class FootprintFactory(factory.DjangoModelFactory):
     call_number = 'call number'
     collection = factory.SubFactory(CollectionFactory)
 
-    notes = "lorem ipsum"
+    notes = 'lorem ipsum'
+
+    narrative = 'Odysseus struggles to return home after the Trojan War.'
 
     @factory.post_generation
     def actors(self, create, extracted, **kwargs):
