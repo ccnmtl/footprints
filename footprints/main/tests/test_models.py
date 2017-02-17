@@ -10,7 +10,8 @@ from footprints.main.models import Language, DigitalFormat, \
 from footprints.main.tests.factories import RoleFactory, \
     ActorFactory, PlaceFactory, CollectionFactory, \
     WrittenWorkFactory, ImprintFactory, BookCopyFactory, FootprintFactory, \
-    PersonFactory, DigitalObjectFactory, ExtendedDateFactory
+    PersonFactory, DigitalObjectFactory, ExtendedDateFactory,\
+    EmptyFootprintFactory, StandardizedIdentificationFactory
 
 
 class BasicModelTest(TestCase):
@@ -116,8 +117,6 @@ class BasicModelTest(TestCase):
         copy = BookCopyFactory()
         self.assertTrue(
             copy.__unicode__().endswith('The Odyssey, Edition 1 (c. 1984)'))
-        # copy.digital_object.add(DigitalObjectFactory())
-        # self.assertEquals(copy.percent_complete(), 100)
 
     def test_book_copy_owners(self):
         copy = BookCopyFactory()
@@ -146,28 +145,6 @@ class BasicModelTest(TestCase):
         current_owners = copy.current_owners()
         self.assertEquals(current_owners.count(), 1)
         self.assertIsNotNone(current_owners.get(id=owner2.id))
-
-    def test_footprint(self):
-        footprint = FootprintFactory()
-        self.assertEquals(footprint.__unicode__(), 'Provenance')
-        self.assertFalse(footprint.is_bare())
-
-        footprint.digital_object.add(DigitalObjectFactory())
-        self.assertEquals(footprint.calculate_percent_complete(), 100)
-
-        self.assertEquals(footprint.display_title(), "The Odyssey")
-
-        owner_role, created = Role.objects.get_or_create(name=Role.OWNER)
-        footprint.actor.add(ActorFactory(role=owner_role))
-        self.assertEquals(footprint.owners().count(), 1)
-
-        work = WrittenWork.objects.create()
-        imprint = Imprint.objects.create(work=work)
-        book_copy = BookCopy.objects.create(imprint=imprint)
-        footprint = Footprint.objects.create(medium="Medium",
-                                             provenance="Provenance",
-                                             book_copy=book_copy)
-        self.assertTrue(footprint.is_bare())
 
 
 class ExtendedDateTest(TestCase):
@@ -368,3 +345,52 @@ class ActorTest(TestCase):
         self.assertNotEquals(actor, actor2)
         self.assertEquals(actor2.alias, 'Amazing Grace')
         self.assertEquals(actor.person, actor2.person)
+
+
+class FootprintTest(TestCase):
+
+    def test_footprint(self):
+        footprint = FootprintFactory()
+        self.assertEquals(footprint.__unicode__(), 'Provenance')
+        self.assertFalse(footprint.is_bare())
+
+        footprint.digital_object.add(DigitalObjectFactory())
+        self.assertEquals(footprint.calculate_percent_complete(), 100)
+
+        self.assertEquals(footprint.display_title(), "The Odyssey")
+
+        owner_role, created = Role.objects.get_or_create(name=Role.OWNER)
+        footprint.actor.add(ActorFactory(role=owner_role))
+        self.assertEquals(footprint.owners().count(), 1)
+
+        work = WrittenWork.objects.create()
+        imprint = Imprint.objects.create(work=work)
+        book_copy = BookCopy.objects.create(imprint=imprint)
+        footprint = Footprint.objects.create(medium="Medium",
+                                             provenance="Provenance",
+                                             book_copy=book_copy)
+        self.assertTrue(footprint.is_bare())
+
+    def test_flagged(self):
+        f1 = EmptyFootprintFactory()  # < 50% complete
+        f2 = FootprintFactory(narrative=None)  # empty narrative
+        f3 = FootprintFactory(
+            medium='Bookseller/auction catalog (1850-present)',
+            call_number=None)
+
+        # excluded footprints
+        f4 = FootprintFactory(verified=True)
+
+        # has a bhb identifier
+        bhb_type = StandardizedIdentificationType.objects.bhb()
+        idf = StandardizedIdentificationFactory(identifier_type=bhb_type)
+        f5 = FootprintFactory()
+        f5.book_copy.imprint.standardized_identifier.add(idf)
+
+        self.assertEquals(Footprint.objects.flagged().count(), 3)
+
+        self.assertTrue(f1.is_flagged())
+        self.assertTrue(f2.is_flagged())
+        self.assertTrue(f3.is_flagged())
+        self.assertFalse(f4.is_flagged())
+        self.assertFalse(f5.is_flagged())

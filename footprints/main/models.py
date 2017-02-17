@@ -3,6 +3,7 @@ from decimal import Decimal
 
 from audit_log.models.fields import LastUserField, CreatingUserField
 from django.db import models
+from django.db.models.query_utils import Q
 from django.template import loader
 from django.template.context import Context
 from edtf import EDTF, edtf_date
@@ -37,6 +38,10 @@ MEDIUM_CHOICES = [
     'Reference in another text',
     'Subscription list in imprint'
 ]
+
+
+SLUG_VIAF = 'VIAF'
+SLUG_BHB = 'BHB'
 
 
 class ExtendedDateManager(models.Manager):
@@ -324,9 +329,6 @@ class DigitalObject(models.Model):
 
 class StandardizedIdentificationTypeQuerySet(models.query.QuerySet):
 
-    SLUG_VIAF = 'VIAF'
-    SLUG_BHB = 'BHB'
-
     def for_imprint(self):
         return self.filter(level=IMPRINT_LEVEL)
 
@@ -334,10 +336,10 @@ class StandardizedIdentificationTypeQuerySet(models.query.QuerySet):
         return self.filter(level=WRITTENWORK_LEVEL)
 
     def viaf(self):
-        return self.get(slug=self.SLUG_VIAF)
+        return self.get(slug=SLUG_VIAF)
 
     def bhb(self):
-        return self.get(slug=self.SLUG_BHB)
+        return self.get(slug=SLUG_BHB)
 
 
 class StandardizedIdentificationTypeManager(models.Manager):
@@ -886,7 +888,19 @@ class BookCopy(models.Model):
         return qs
 
 
+class FootprintManager(models.Manager):
+
+    def flagged(self):
+        return Footprint.objects.exclude(verified=True).filter(
+            Q(percent_complete__lt=50) |
+            Q(narrative__isnull=True) |
+            Q(medium='Bookseller/auction catalog (1850-present)',
+              call_number__isnull=True) |
+            ~Q(book_copy__imprint__standardized_identifier__identifier_type__slug=SLUG_BHB))  # noqa:251
+
+
 class Footprint(models.Model):
+    objects = FootprintManager()
 
     book_copy = models.ForeignKey(BookCopy)
     medium = models.CharField(
@@ -1000,6 +1014,9 @@ class Footprint(models.Model):
     def is_bare(self):
         return self.book_copy.imprint.work.percent_complete() == 0
 
+    def is_flagged(self):
+        return self in Footprint.objects.flagged()
+
     def description(self):
         template = loader.get_template('main/footprint_description.html')
         ctx = Context({'footprint': self})
@@ -1007,7 +1024,6 @@ class Footprint(models.Model):
 
     def save(self, *args, **kwargs):
         self.percent_complete = self.calculate_percent_complete()
-        self.verified = False
         super(Footprint, self).save(*args, **kwargs)
 
     def sort_date(self):
