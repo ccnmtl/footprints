@@ -2614,3 +2614,11 @@ p.decoy {
 .table-moderation ul {
     padding-left: 15px;
 }
+
+.tablesorter thead .disabled {
+    display: none;
+}
+
+.tablesorter tr.filtered {
+    display: none;
+}

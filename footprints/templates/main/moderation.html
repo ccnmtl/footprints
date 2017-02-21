@@ -3,6 +3,46 @@
 {% block title %}Moderation{% endblock %}
 
 {% block js %}
+    <script src="{{STATIC_URL}}js/tablesorter/jquery.tablesorter.combined.min.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            jQuery('.table-moderation').bind('filterEnd', function(event, config) {
+                jQuery('.footprint-count').html(jQuery('.table-moderation tbody tr').not('.filtered').length);
+            });
+
+            jQuery('.table-moderation').tablesorter({
+                headers: {
+                    '.nosort': {
+                        sorter: false
+                    }
+                },
+                widgets: ['filter'],
+                widgetOptions: {
+                    filter_searchDelay: 0,
+                    filter_functions: {
+                        5: {
+                            "Catalog's call number is empty":
+                                function (e, n, f, i, $r, c, data) {
+                                    return $r.find('.err-call-number').length > 0;
+                                },
+                            "Imprint has no BHB number": 
+                                function (e, n, f, i, $r, c, data) {
+                                    return $r.find('.err-bhb-number').length > 0;
+                                },
+                            "Narrative is empty":
+                                function (e, n, f, i, $r, c, data) {
+                                    return $r.find('.err-narrative').length > 0;
+                                },
+                            "Percent complete is less than 50%":
+                                function (e, n, f, i, $r, c, data) {
+                                    return $r.find('.err-percent-complete').length > 0;
+                                }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
 {% endblock %}
 
 {% block content %}
@@ -14,20 +54,23 @@
 <div class="row">
     <div class="col-md-12">
         <div>
-            <div class="pull-right">{{footprints.count}} footprints found</div>
+            <div class="pull-right"><span class="footprint-count">{{footprints.count}}</span> footprints found</div>
         </div>
         <div class="clearfix"></div><br />
         <table class="table table-striped table-moderation">
-            <tr>
-                <th data-sort-by="ftitle" class="sortable ftitle" style="width: 20%">
-                    Footprint
-                </th>
-                <th data-sort-by="added" class="sortable added">Created</th>
-                <th data-sort-by="owners" class="sortable owners">Created By</th>
-                <th data-sort-by="wtitle" class="sortable wtitle">Modified</th>
-                <th data-sort-by="complete" class="sortable complete">Modified By</th>
-                <th>Errors</th>
-            </tr>
+            <thead>
+                <tr>
+                    <th data-filter="false" data-sort-by="ftitle" class="sortable ftitle" style="width: 20%">
+                        Footprint
+                    </th>
+                    <th data-filter="false" data-sort-by="added" class="sortable added">Created</th>
+                    <th data-filter="false" data-sort-by="owners" class="sortable owners">Created By</th>
+                    <th data-filter="false" data-sort-by="wtitle" class="sortable wtitle">Modified</th>
+                    <th data-filter="false" data-sort-by="complete" class="sortable complete">Modified By</th>
+                    <th data-placeholder="All Rows">Errors</th>
+                </tr>
+            </thead>
+            <tbody>
             {% for footprint in footprints %}
                 <tr>
                     <td><a href="{% url 'footprint-detail-view' footprint.id %}">{{footprint.title}}</a></td>
@@ -35,11 +78,12 @@
                     <td>{{footprint.created_by.get_full_name}}</td>
                     <td>{{footprint.modified_at|date:"m/d/y"}}</td>
                     <td>{{footprint.last_modified_by.get_full_name}}</td>
-                    <td>
+                    <td class="col-errors">
                         {% include "main/moderation_errors.html" %}
                     </td>
                 </tr>
             {% endfor %}
+            </tbody>
         </table>
     </div>
 </div>
