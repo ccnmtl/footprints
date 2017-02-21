@@ -713,5 +713,9 @@ class ModerationView(LoggedInStaffMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ModerationView, self).get_context_data(**kwargs)
 
-        context['footprints'] = Footprint.objects.all()
+        context['footprints'] = Footprint.objects.flagged().select_related(
+            'created_by', 'last_modified_by',
+            'book_copy__imprint').prefetch_related(
+            'book_copy__imprint__standardized_identifier__identifier_type')
+
         return context
