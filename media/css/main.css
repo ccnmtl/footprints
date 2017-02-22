@@ -2610,3 +2610,7 @@ p.decoy {
 .share-url {
     background: transparent url('../img/sprite-page-sharetool.png') -168px 0 no-repeat;
 }
+
+.table-moderation ul {
+    padding-left: 15px;
+}
