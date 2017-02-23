@@ -1,17 +1,65 @@
 <script type="text/template" id="progress-sidebar-template">
-    <ul class="list-group">
-        <li class="list-group-item checklist">
-            <h4>Record Checklist</h4>
-            <div>
-                <div class="progress pull-left">
-                    <div class="progress-bar" role="progressbar"
-                        aria-valuenow="<%=footprint.percent_complete%>" aria-valuemin="0"
-                        aria-valuemax="100" style="width: <%=footprint.percent_complete%>%;">
+    <% if (editable) { %>
+        <a href="#" class="pull-right integrity-flag <% if (footprint.is_flagged) { %> flagged <% } %>"
+            data-toggle="modal" data-target="#integrity-modal">
+        <% if (footprint.verified) { %>
+                <span class="glyphicon glyphicon-certificate" aria-hidden="true"></span> Verified
+        <% } else if (footprint.is_flagged) { %>
+                Flagged <span class="glyphicon glyphicon-bookmark" aria-hidden="true"></span>
+        <% } else { %>
+                <span class="glyphicon glyphicon-bookmark" aria-hidden="true"></span> Ready to verify
+        <% } %>
+        </a>
+        <div class="clearfix"></div>
+        <div class="modal" id="integrity-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Footprint Verification</h4>
+                    </div>
+                    <div class="modal-body">
+                        <% if (footprint.verified) { %>
+                            <p>Data experts have verified this record's information is accurate.</p>
+                        <% } else if (footprint.is_flagged) { %>
+                            <p>This footprint's data has some issues, and has not been verified.</p>
+                        <% } else { %>
+                            <p>This footprint's data appears accurate, but needs to be verified.</p>
+                        <% } %>
+
+                        <form action="" method="post">
+                            <div class="radio">
+                            <label>
+                                <input type="radio" name="verified" value="1" <% if (footprint.verified) { %>checked<% } %>>
+                                    <strong>Verify</strong> confirm this record's data is accurate
+                            </label>
+                            </div>
+                            <div class="radio">
+                            <label>
+                                <input type="radio" name="verified" value="0" <% if (!footprint.verified) { %>checked<% } %>>
+                                    <strong>Unverify</strong> mark this record's data for review
+                            </label>
+                            </div>
+                            <div class="pull-right">
+                                <button type="button" class="btn btn-default btn-cancel" data-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-primary btn-confirm" data-dismiss="modal">Save</button>
+                            </div>
+                            <div class="clearfix"></div>
+                        </form>
                     </div>
                 </div>
-                <div class="progress-report pull-right"><%=footprint.percent_complete%>% complete</div>
             </div>
-            <div class="clearfix"></div>
-        </li>
-    </ul>
+        </div>
+    <% } %>
+
+    <h4>Record Checklist</h4>
+    <div>
+        <div class="progress pull-left">
+            <div class="progress-bar" role="progressbar"
+                aria-valuenow="<%=footprint.percent_complete%>" aria-valuemin="0"
+                aria-valuemax="100" style="width: <%=footprint.percent_complete%>%;">
+            </div>
+        </div>
+        <div class="progress-report pull-right"><%=footprint.percent_complete%>% complete</div>
+    </div>
+    <div class="clearfix"></div>
 </script>
