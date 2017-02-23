@@ -57,6 +57,9 @@ class BatchJobDetailView(LoggedInStaffMixin, DetailView):
 
 class BatchJobUpdateView(LoggedInStaffMixin, View):
 
+    INVALID_LOCATION = (
+        'Location [{}] lookup failed at the {} level [id={}]')
+
     def reverse_geocode(self, latitude, longitude):
         # reverse geocode the lat/long
         url = settings.GOOGLE_MAPS_REVERSE_GEOCODE
@@ -81,9 +84,14 @@ class BatchJobUpdateView(LoggedInStaffMixin, View):
         obj.save()
 
         if created:
-            obj.place.city, obj.place.country = self.reverse_geocode(
-                obj.place.latitude(), obj.place.longitude())
-            obj.place.save()
+            try:
+                obj.place.city, obj.place.country = self.reverse_geocode(
+                    obj.place.latitude(), obj.place.longitude())
+                obj.place.save()
+            except IndexError:
+                msg = self.INVALID_LOCATION.format(
+                    location, obj._meta.verbose_name, obj.id)
+                messages.add_message(self.request, messages.WARNING, msg)
 
     def add_author(self, record, work):
         role, created = Role.objects.get_or_create(name=Role.AUTHOR)
