@@ -1,5 +1,5 @@
 <script type="text/template" id="progress-sidebar-template">
-    <% if (editable) { %>
+    <% if (is_moderator) { %>
         <a href="#" class="pull-right integrity-flag <% if (footprint.is_flagged) { %> flagged <% } %>"
             data-toggle="modal" data-target="#integrity-modal">
         <% if (footprint.verified) { %>
@@ -26,7 +26,7 @@
                             <p>This footprint's data appears accurate, but needs to be verified.</p>
                         <% } %>
 
-                        <form action="" method="post">
+                        <form action="/footprint/verify/<%=footprint.id%>/" method="post">{% csrf_token %}
                             <div class="radio">
                             <label>
                                 <input type="radio" name="verified" value="1" <% if (footprint.verified) { %>checked<% } %>>
@@ -41,7 +41,7 @@
                             </div>
                             <div class="pull-right">
                                 <button type="button" class="btn btn-default btn-cancel" data-dismiss="modal">Cancel</button>
-                                <button type="button" class="btn btn-primary btn-confirm" data-dismiss="modal">Save</button>
+                                <button type="submit" class="btn btn-primary btn-confirm">Save</button>
                             </div>
                             <div class="clearfix"></div>
                         </form>

@@ -75,7 +75,8 @@
                     static_url: '{{STATIC_URL}}',
                     is_bare:  {% if footprint.is_bare %}true{% else %}false{% endif %},
                     work_id: '{{footprint.book_copy.imprint.work.id}}',
-                    work_title: '{{footprint.book_copy.imprint.work.title}}'
+                    work_title: '{{footprint.book_copy.imprint.work.title}}',
+                    is_moderator: {% if request.user.is_staff %}true{% else %}false{% endif %}
                 }
             });
 
