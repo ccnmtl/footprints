@@ -1260,3 +1260,29 @@ class ModerationViewTest(TestCase):
 
         self.client.login(username=staff.username, password='test')
         self.assertEquals(self.client.get(url).status_code, 200)
+
+
+class VerifyFootprintViewTest(TestCase):
+
+    def test_post(self):
+        fp = FootprintFactory()
+        user = UserFactory()
+        staff = UserFactory(is_staff=True)
+
+        url = reverse('verify-footprint-view', kwargs={'pk': fp.id})
+        self.assertEquals(self.client.get(url).status_code, 405)
+
+        self.client.login(username=user.username, password='test')
+        self.assertEquals(self.client.get(url).status_code, 405)
+
+        self.client.login(username=staff.username, password='test')
+
+        data = {'verified': 1}
+        self.assertEquals(self.client.post(url, data).status_code, 302)
+        fp.refresh_from_db()
+        self.assertTrue(fp.verified)
+
+        data = {'verified': 0}
+        self.assertEquals(self.client.post(url, data).status_code, 302)
+        fp.refresh_from_db()
+        self.assertFalse(fp.verified)

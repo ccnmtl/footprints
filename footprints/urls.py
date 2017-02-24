@@ -17,7 +17,7 @@ from footprints.main.views import (
     AddPlaceView, AddDateView, RemoveRelatedView, FootprintListView,
     AddIdentifierView, AddDigitalObjectView, ConnectFootprintView,
     ContactUsView, AddLanguageView, DisplayDateView, CopyFootprintView,
-    SignS3View, ExportFootprintListView, ModerationView)
+    SignS3View, ExportFootprintListView, ModerationView, VerifyFootprintView)
 from footprints.main.viewsets import (
     BookCopyViewSet, ImprintViewSet, ActorViewSet,
     ExtendedDateViewSet, FootprintViewSet, LanguageViewSet,
@@ -94,6 +94,8 @@ urlpatterns = [
         name='connect-footprint-view'),
     url(r'^footprint/copy/(?P<pk>\d+)/$', CopyFootprintView.as_view(),
         name='copy-footprint-view'),
+    url(r'^footprint/verify/(?P<pk>\d+)/$', VerifyFootprintView.as_view(),
+        name='verify-footprint-view'),
 
     url(r'^footprint/(?P<pk>\d+)/$',
         FootprintDetailView.as_view(), name='footprint-detail-view'),

@@ -75,7 +75,8 @@
                     static_url: '{{STATIC_URL}}',
                     is_bare:  {% if footprint.is_bare %}true{% else %}false{% endif %},
                     work_id: '{{footprint.book_copy.imprint.work.id}}',
-                    work_title: '{{footprint.book_copy.imprint.work.title}}'
+                    work_title: '{{footprint.book_copy.imprint.work.title}}',
+                    is_moderator: {% if request.user.is_staff %}true{% else %}false{% endif %}
                 }
             });
 
@@ -133,7 +134,7 @@
                             <h4>Related Footprints</h4>
                                 {% if footprints.exists %}
                                 <p class="info">
-                                    This physical copy of {{footprint.book_copy.imprint.display_title}}{% if imprint.publication_date or imprint.place %}, published
+                                    This physical copy of <strong>{{footprint.book_copy.imprint.display_title}}</strong>{% if imprint.publication_date or imprint.place %}, published
                                         {% if imprint.publication_date %}
                                             {{imprint.publication_date}}
                                         {% endif %}
@@ -184,8 +185,7 @@
                     {% if editable %}
                         <div class="sidebar-box related-footprint">
                             <h4>Create Footprint</h4>
-                            <p class="info">Create another footprint for {{footprint.book_copy.imprint.display_title}} based on this footprint.
-                            Evidence, imprint and book copy information can be copied.</p>
+                            <p class="info">Create a new footprint based on this literary work, imprint, book copy and evidence.</p>
                             <button class="btn btn-sm btn-primary pull-right" data-toggle="modal" data-target="#add-related-footprint" href="javascript:void(0);">
                                 <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Create
                             </button>

@@ -114,7 +114,8 @@ class FootprintAdmin(VersionAdmin):
             'fields': ('book_copy', 'medium', 'medium_description',
                        'provenance', 'title', 'language', 'place',
                        'associated_date', 'call_number', 'collection',
-                       'digital_object', 'actor', 'notes', 'narrative')
+                       'digital_object', 'actor', 'notes', 'narrative',
+                       'verified')
         }),
         ('Advanced options', {
             'classes': ('collapse',),

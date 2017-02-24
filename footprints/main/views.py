@@ -719,3 +719,16 @@ class ModerationView(LoggedInStaffMixin, TemplateView):
             'book_copy__imprint__standardized_identifier__identifier_type')
 
         return context
+
+
+class VerifyFootprintView(LoggedInStaffMixin, View):
+
+    def post(self, *args, **kwargs):
+        fp = get_object_or_404(Footprint, pk=kwargs.get('pk'))
+
+        verified = self.request.POST.get('verified')
+        fp.verified = verified == '1'
+        fp.save()
+
+        url = reverse('footprint-detail-view', kwargs={'pk': fp.pk})
+        return HttpResponseRedirect(url)
