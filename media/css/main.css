@@ -2028,21 +2028,23 @@ ul.additional-questions .editable-container {
     border-right: 1px solid #ddd;
 }
 
-.object-browse th.sortable {
+.object-browse th.selected {
+    background-color: #efeeee;
+}
+
+th.sortable {
     background-image: url(../img/bg.gif);
     background-repeat: no-repeat;
     background-position: center right;
     cursor: pointer;
 }
 
-.object-browse th.selected {
-    background-color: #efeeee;
-}
-
+th.sortable.tablesorter-headerAsc,
 .object-browse th.sortable.asc {
     background-image: url(../img/asc.gif);
 }
 
+th.sortable.tablesorter-headerDesc,
 .object-browse th.sortable.desc {
     background-image: url(../img/desc.gif);
 }

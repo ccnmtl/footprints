@@ -16,6 +16,8 @@
                         sorter: false
                     }
                 },
+                sortList: [[0,0]],
+                dateFormat : "mmddyyyy", // set the default date format
                 widgets: ['filter'],
                 widgetOptions: {
                     filter_searchDelay: 0,
@@ -60,23 +62,23 @@
         <table class="table table-striped table-moderation">
             <thead>
                 <tr>
-                    <th data-filter="false" data-sort-by="ftitle" class="sortable ftitle" style="width: 20%">
+                    <th data-filter="false" data-sort-by="title" class="sortable title" style="width: 20%">
                         Footprint
                     </th>
-                    <th data-filter="false" data-sort-by="added" class="sortable added">Created</th>
-                    <th data-filter="false" data-sort-by="owners" class="sortable owners">Created By</th>
-                    <th data-filter="false" data-sort-by="wtitle" class="sortable wtitle">Modified</th>
-                    <th data-filter="false" data-sort-by="complete" class="sortable complete">Modified By</th>
-                    <th data-placeholder="All Rows">Errors</th>
+                    <th data-filter="false" data-sort-by="created" class="sortable created">Created</th>
+                    <th data-filter="false" data-sort-by="createdby" class="sortable createdby">Created By</th>
+                    <th data-filter="false" data-sort-by="modified" class="sortable modified">Last Modified</th>
+                    <th data-filter="false" data-sort-by="modifiedby" class="sortable modifiedby">Last Modified By</th>
+                    <th data-sorter="false" data-placeholder="All Rows">Errors</th>
                 </tr>
             </thead>
             <tbody>
             {% for footprint in footprints %}
                 <tr>
                     <td><a href="{% url 'footprint-detail-view' footprint.id %}">{{footprint.title}}</a></td>
-                    <td>{{footprint.created_at|date:"m/d/y"}}</td>
+                    <td>{{footprint.created_at|date:"m/d/Y"}}</td>
                     <td>{{footprint.created_by.get_full_name}}</td>
-                    <td>{{footprint.modified_at|date:"m/d/y"}}</td>
+                    <td>{{footprint.modified_at|date:"m/d/Y"}}</td>
                     <td>{{footprint.last_modified_by.get_full_name}}</td>
                     <td class="col-errors">
                         {% include "main/moderation_errors.html" %}
