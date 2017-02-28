@@ -170,10 +170,9 @@ class EmptyFootprintFactory(factory.DjangoModelFactory):
         model = Footprint
 
     book_copy = factory.SubFactory(BookCopyFactory)
-    medium = 'Medium'
+    medium = 'Bookseller/auction catalog (1850-present)'
     provenance = 'Provenance'
     title = 'The Iliad'
-    narrative = 'Achilles is forced to fight'
 
 
 class FootprintFactory(factory.DjangoModelFactory):

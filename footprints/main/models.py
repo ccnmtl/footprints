@@ -3,12 +3,13 @@ from decimal import Decimal
 
 from audit_log.models.fields import LastUserField, CreatingUserField
 from django.db import models
-from django.db.models.query_utils import Q
 from django.template import loader
 from django.template.context import Context
 from edtf import EDTF, edtf_date
 from geoposition import Geoposition
 from geoposition.fields import GeopositionField
+
+from footprints.main.templatetags.moderation import has_moderation_flags
 
 
 FOOTPRINT_LEVEL = 'footprint'
@@ -896,20 +897,7 @@ class BookCopy(models.Model):
         return qs
 
 
-class FootprintManager(models.Manager):
-
-    def flagged(self):
-        return Footprint.objects.exclude(verified=True).filter(
-            Q(percent_complete__lt=50) |
-            Q(narrative__isnull=True) |
-            Q(medium='Bookseller/auction catalog (1850-present)',
-              call_number__isnull=True) |
-            ~Q(book_copy__imprint__standardized_identifier__identifier_type__slug=SLUG_BHB))  # noqa:251
-
-
 class Footprint(models.Model):
-    objects = FootprintManager()
-
     book_copy = models.ForeignKey(BookCopy)
     medium = models.CharField(
         "Evidence Type", max_length=256,
@@ -1022,16 +1010,23 @@ class Footprint(models.Model):
     def is_bare(self):
         return self.book_copy.imprint.work.percent_complete() == 0
 
-    def is_flagged(self):
-        return self in Footprint.objects.flagged()
-
     def description(self):
         template = loader.get_template('main/footprint_description.html')
         ctx = Context({'footprint': self})
         return template.render(ctx)
 
+    def save_verified(self, verified):
+        self.verified = verified
+        self.save(update_fields=['verified'])
+
     def save(self, *args, **kwargs):
         self.percent_complete = self.calculate_percent_complete()
+
+        if (not kwargs.get('force_insert', False) and
+                'verified' not in kwargs.get('update_fields', [])):
+            if self.verified and has_moderation_flags(self):
+                self.verified = False
+
         super(Footprint, self).save(*args, **kwargs)
 
     def sort_date(self):

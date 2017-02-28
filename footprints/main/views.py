@@ -1,4 +1,5 @@
 import csv
+
 from django.apps import apps
 from django.conf import settings
 from django.contrib.auth import login
@@ -33,6 +34,7 @@ from footprints.main.models import (
     Place, Imprint, BookCopy, StandardizedIdentification,
     StandardizedIdentificationType, ExtendedDate, MEDIUM_CHOICES)
 from footprints.main.serializers import NameSerializer
+from footprints.main.templatetags.moderation import moderation_footprints
 from footprints.mixins import (
     JSONResponseMixin, LoggedInMixin, EditableMixin, LoggedInStaffMixin)
 
@@ -712,23 +714,17 @@ class ModerationView(LoggedInStaffMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ModerationView, self).get_context_data(**kwargs)
-
-        context['footprints'] = Footprint.objects.flagged().select_related(
-            'created_by', 'last_modified_by',
-            'book_copy__imprint').prefetch_related(
-            'book_copy__imprint__standardized_identifier__identifier_type')
-
+        context['footprints'] = moderation_footprints()
         return context
 
 
 class VerifyFootprintView(LoggedInStaffMixin, View):
 
     def post(self, *args, **kwargs):
-        fp = get_object_or_404(Footprint, pk=kwargs.get('pk'))
-
         verified = self.request.POST.get('verified')
-        fp.verified = verified == '1'
-        fp.save()
+
+        fp = get_object_or_404(Footprint, pk=kwargs.get('pk'))
+        fp.save_verified(verified == '1')
 
         url = reverse('footprint-detail-view', kwargs={'pk': fp.pk})
         return HttpResponseRedirect(url)

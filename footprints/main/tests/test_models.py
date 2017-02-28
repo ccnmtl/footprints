@@ -7,6 +7,9 @@ from footprints.main.models import Language, DigitalFormat, \
     ExtendedDate, StandardizedIdentification, \
     Actor, Imprint, FOOTPRINT_LEVEL, IMPRINT_LEVEL, WRITTENWORK_LEVEL, Role, \
     Place, Footprint, WrittenWork, BookCopy, StandardizedIdentificationType
+from footprints.main.templatetags.moderation import \
+    flag_empty_narrative, flag_percent_complete, flag_empty_call_number,\
+    flag_empty_bhb_number, moderation_flags, moderation_footprints
 from footprints.main.tests.factories import RoleFactory, \
     ActorFactory, PlaceFactory, CollectionFactory, \
     WrittenWorkFactory, ImprintFactory, BookCopyFactory, FootprintFactory, \
@@ -380,26 +383,38 @@ class FootprintTest(TestCase):
                                              book_copy=book_copy)
         self.assertTrue(footprint.is_bare())
 
-    def test_flagged(self):
+    def test_individual_flags(self):
+        f1 = EmptyFootprintFactory()
+        self.assertTrue(flag_percent_complete(f1))
+        self.assertTrue(flag_empty_narrative(f1))
+        self.assertTrue(flag_empty_call_number(f1))
+        self.assertTrue(flag_empty_bhb_number(f1))
+
+        a = moderation_flags(f1)
+        self.assertEquals(len(a), 4)
+
+    def test_moderation_footprints(self):
         f1 = EmptyFootprintFactory()  # < 50% complete
+        self.assertTrue(moderation_flags(f1))
+
         f2 = FootprintFactory(narrative=None)  # empty narrative
+        self.assertTrue(moderation_flags(f2))
+
         f3 = FootprintFactory(
             medium='Bookseller/auction catalog (1850-present)',
             call_number=None)
+        self.assertTrue(moderation_flags(f3))
 
         # excluded footprints
-        f4 = FootprintFactory(verified=True)
+        f4 = FootprintFactory()
+        f4.save_verified(True)
+        self.assertTrue(moderation_flags(f4))
 
         # has a bhb identifier
         bhb_type = StandardizedIdentificationType.objects.bhb()
         idf = StandardizedIdentificationFactory(identifier_type=bhb_type)
         f5 = FootprintFactory()
         f5.book_copy.imprint.standardized_identifier.add(idf)
+        self.assertFalse(moderation_flags(f5))
 
-        self.assertEquals(Footprint.objects.flagged().count(), 3)
-
-        self.assertTrue(f1.is_flagged())
-        self.assertTrue(f2.is_flagged())
-        self.assertTrue(f3.is_flagged())
-        self.assertFalse(f4.is_flagged())
-        self.assertFalse(f5.is_flagged())
+        self.assertEquals(moderation_footprints().count(), 3)
