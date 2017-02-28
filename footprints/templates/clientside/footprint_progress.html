@@ -1,11 +1,11 @@
 <script type="text/template" id="progress-sidebar-template">
     <% if (is_moderator) { %>
-        <a href="#" class="pull-right integrity-flag <% if (footprint.is_flagged) { %> flagged <% } %>"
+        <a href="#" class="pull-right integrity-flag"
             data-toggle="modal" data-target="#integrity-modal">
         <% if (footprint.verified) { %>
                 <span class="glyphicon glyphicon-certificate" aria-hidden="true"></span> Verified
-        <% } else if (footprint.is_flagged) { %>
-                Flagged <span class="glyphicon glyphicon-bookmark" aria-hidden="true"></span>
+        <% } else if (has_flags) { %>
+                <span class="flagged">Flagged <span class="glyphicon glyphicon-bookmark" aria-hidden="true"></span></span>
         <% } else { %>
                 <span class="glyphicon glyphicon-bookmark" aria-hidden="true"></span> Ready to verify
         <% } %>
@@ -20,7 +20,7 @@
                     <div class="modal-body">
                         <% if (footprint.verified) { %>
                             <p>Data experts have verified this record's information is accurate.</p>
-                        <% } else if (footprint.is_flagged) { %>
+                        <% } else if (has_flags) { %>
                             <p>This footprint's data has some issues, and has not been verified.</p>
                         <% } else { %>
                             <p>This footprint's data appears accurate, but needs to be verified.</p>

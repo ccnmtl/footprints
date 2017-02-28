@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load moderation %}
 
 {% block title %}Moderation{% endblock %}
 
@@ -81,7 +82,12 @@
                     <td>{{footprint.modified_at|date:"m/d/Y"}}</td>
                     <td>{{footprint.last_modified_by.get_full_name}}</td>
                     <td class="col-errors">
-                        {% include "main/moderation_errors.html" %}
+                    {% moderation_flags footprint as the_errors %}
+                    {% for error in the_errors %}
+                        {% if forloop.first %}<ul>{% endif %}
+                        <li class="small err-call-number">{{error}}</li>
+                        {% if forloop.last %}<ul>{% endif %}
+                    {% endfor %}
                     </td>
                 </tr>
             {% endfor %}
