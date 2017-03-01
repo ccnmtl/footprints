@@ -1,10 +1,10 @@
 from audit_log.models.fields import CreatingUserField
+from django.core.exceptions import ValidationError
+from django.core.validators import URLValidator
 from django.db import models
 from django.db.models.query_utils import Q
 from geoposition import Geoposition
 
-from django.core.exceptions import ValidationError
-from django.core.validators import URLValidator
 from footprints.batch.validators import validate_date, validate_numeric, \
     validate_latlng
 from footprints.main.models import Footprint, Imprint, Role, MEDIUM_CHOICES, \
@@ -64,6 +64,8 @@ class BatchRow(models.Model):
     IMPRINT_INTEGRITY = (
         "A <a href='/writtenwork/{}/#imprint-{}'>matching imprint</a> "
         "has conflicting data: <b>{}</b>.")
+    BOOK_COPY_INTEGRITY = (
+        "Multiple book copies have the same call number: {}.")
     FOOTPRINT_ACTOR_HELP_TEXT = (
         "An actor name is required when a role is specified.")
 
@@ -199,6 +201,15 @@ class BatchRow(models.Model):
         if len(fields):
             msg = self.IMPRINT_INTEGRITY.format(
                 imprint.work.id, imprint.id, ', '.join(fields))
+
+        return msg
+
+    def check_book_copy_integrity(self):
+        msg = None
+        books = BookCopy.objects.filter(call_number=self.book_copy_call_number)
+
+        if books.count() > 1:
+            msg = self.BOOK_COPY_INTEGRITY.format(self.book_copy_call_number)
 
         return msg
 
