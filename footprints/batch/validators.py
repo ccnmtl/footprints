@@ -6,8 +6,11 @@ def validate_date(value):
     if not value:
         return True
 
-    s = unicode(EDTF.from_natural_text(value))
-    return s != '' and 'invalid' not in s
+    try:
+        s = unicode(EDTF.from_natural_text(value))
+        return s != '' and 'invalid' not in s
+    except OverflowError:
+        return False
 
 
 def validate_numeric(value):

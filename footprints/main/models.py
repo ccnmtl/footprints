@@ -1,5 +1,5 @@
 from datetime import date
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 
 from audit_log.models.fields import LastUserField, CreatingUserField
 from django.db import models
@@ -581,9 +581,12 @@ class Place(models.Model):
         return self.position.longitude
 
     def match_string(self, latlng):
-        a = latlng.split(',')
-        return (self.latitude() == Decimal(a[0]) and
-                self.longitude() == Decimal(a[1]))
+        try:
+            a = latlng.split(',')
+            return (self.latitude() == Decimal(a[0]) and
+                    self.longitude() == Decimal(a[1]))
+        except InvalidOperation:
+            return False
 
 
 class Collection(models.Model):

@@ -287,6 +287,8 @@ class BatchRow(models.Model):
 
             # make sure the imprint titles match
             return self.imprint_title == copy.imprint.title
+        except BookCopy.MultipleObjectsReturned:
+            return True
         except BookCopy.DoesNotExist:
             return True
 
