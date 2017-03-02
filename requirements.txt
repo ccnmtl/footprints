@@ -4,7 +4,7 @@ feedparser==5.2.1
 Markdown==2.6.8
 smartypants==2.0.0
 uuid==1.30
-psycopg2==2.6.2
+psycopg2==2.7
 
 olefile==0.44
 
