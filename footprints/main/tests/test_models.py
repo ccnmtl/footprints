@@ -100,7 +100,7 @@ class BasicModelTest(TestCase):
 
     def test_written_work(self):
         work = WrittenWorkFactory()
-        self.assertEquals(work.__unicode__(), 'The Odyssey')
+        self.assertEquals(work.__unicode__(), work.title)
 
         self.assertEquals(work.percent_complete(), 100)
 
@@ -230,7 +230,7 @@ class ImprintTest(TestCase):
 
     def test_basics(self):
         imprint = Imprint.objects.create(work=WrittenWorkFactory())
-        self.assertEquals(imprint.__unicode__(), 'The Odyssey')
+        self.assertEquals(imprint.__unicode__(), imprint.work.title)
 
         imprint = ImprintFactory()
         self.assertEquals(imprint.__unicode__(),
@@ -369,7 +369,7 @@ class FootprintTest(TestCase):
         footprint.digital_object.add(DigitalObjectFactory())
         self.assertEquals(footprint.calculate_percent_complete(), 100)
 
-        self.assertEquals(footprint.display_title(), "The Odyssey")
+        self.assertTrue(footprint.display_title().startswith('The Odyssey'))
 
         owner_role, created = Role.objects.get_or_create(name=Role.OWNER)
         footprint.actor.add(ActorFactory(role=owner_role))

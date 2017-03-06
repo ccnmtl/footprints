@@ -290,7 +290,14 @@
                 namedParams: true,
                 tpl: jQuery('#xeditable-work-title-form').html(),
                 onblur: 'ignore',
-                success: this.refresh
+                success: this.refresh,
+                error: function(msg) {
+                    if (msg.hasOwnProperty('responseJSON')) {
+                        return msg.responseJSON.title[0];
+                    } else {
+                        return msg;
+                    }
+                }
             });
             jQuery(this.el).find('.editable-imprint-title').editable({
                 namedParams: true,

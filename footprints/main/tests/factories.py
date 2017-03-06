@@ -176,7 +176,7 @@ class WrittenWorkFactory(factory.DjangoModelFactory):
     class Meta:
         model = WrittenWork
 
-    title = 'The Odyssey'
+    title = factory.Sequence(lambda n: "The Odyssey%03d" % n)
     notes = 'epic'
 
     @factory.post_generation

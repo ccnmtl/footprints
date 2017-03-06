@@ -390,9 +390,10 @@ class FootprintListExportTest(TestCase):
                 ',None,{},0\r\n').format(
             self.footprint1.created_at.strftime('%m/%d/%Y'))
         row2 = ('Odyssey,c. 1984,"Cracow, Poland",{},'
-                'The Odyssey,"The Odyssey, Edition 1",{},'
+                '{},"The Odyssey, Edition 1",{},'
                 'c. 1984,{},90\r\n').format(
-            o, p, self.footprint2.created_at.strftime('%m/%d/%Y'))
+            o, self.footprint2.book_copy.imprint.work.title,
+            p, self.footprint2.created_at.strftime('%m/%d/%Y'))
         self.assertEquals(response.streaming_content.next(), headers)
         self.assertEquals(response.streaming_content.next(), row1)
         self.assertEquals(response.streaming_content.next(), row2)

@@ -21,7 +21,7 @@ class CustomAdminViewTest(TestCase):
 
     def test_work_title(self):
         imprint = ImprintFactory()
-        self.assertEquals(work_title(imprint), 'The Odyssey')
+        self.assertEquals(work_title(imprint), imprint.work.title)
 
     def test_languages(self):
         footprint = FootprintFactory()
