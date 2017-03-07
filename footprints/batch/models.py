@@ -187,8 +187,8 @@ class BatchRow(models.Model):
         if imprint.title != self.imprint_title:
             fields.append('title')
 
-        if not imprint.publication_date.match_string(
-                self.publication_date):
+        if (not imprint.publication_date.match_string(
+                self.publication_date)):
             fields.append('publication date')
 
         if not imprint.place.match_string(self.publication_location):
