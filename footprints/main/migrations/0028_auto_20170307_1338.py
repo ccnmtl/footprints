@@ -12,7 +12,7 @@ batch_permissions = [
 main_create_edit_permissions = [
     'add_role', 'change_role',
     'add_language', 'change_language',
-    'add_digitalformat', 'change_digitalformat', 'delete_digitalformat',
+    'add_digitalformat', 'change_digitalformat',
     'add_digitalobject', 'change_digitalobject',
     'add_standardizedidentification', 'change_standardizedidentification',
     'add_person', 'change_person',
@@ -49,18 +49,19 @@ def create_group_roles(apps, schema_editor):
     Footprint = apps.get_model('main', 'Footprint')
     ContentType = apps.get_model('contenttypes', 'ContentType')
 
-    group = Group.objects.create(name='SuperModerator')
-    names = (batch_permissions + main_create_edit_permissions +
-             main_delete_permissions + ['change_user'])
-
-    add_permissions(Permission, group, names)
-
-    group = Group.objects.create(name='Moderator')
     content_type = ContentType.objects.get_for_model(Footprint)
     moderation_permission, created = \
         Permission.objects.get_or_create(codename='can_moderate',
                                          name='Can Moderate',
                                          content_type=content_type)
+
+    group = Group.objects.create(name='SuperModerator')
+    group.permissions.add(moderation_permission)
+    names = (batch_permissions + main_create_edit_permissions +
+             main_delete_permissions + ['change_user'])
+    add_permissions(Permission, group, names)
+
+    group = Group.objects.create(name='Moderator')
     group.permissions.add(moderation_permission)
     add_permissions(Permission, group, main_create_edit_permissions)
 

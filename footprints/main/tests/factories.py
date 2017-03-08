@@ -20,6 +20,34 @@ BATCH_PERMISSIONS = [
 
 MODERATION_PERMISSIONS = ['can_moderate']
 
+ADD_CHANGE_PERMISSIONS = [
+    'add_role', 'change_role',
+    'add_language', 'change_language',
+    'add_digitalformat', 'change_digitalformat',
+    'add_digitalobject', 'change_digitalobject',
+    'add_standardizedidentification', 'change_standardizedidentification',
+    'add_person', 'change_person',
+    'add_place', 'change_place',
+    'add_collection', 'change_collection',
+    'add_writtenwork', 'change_writtenwork',
+    'add_imprint', 'change_imprint',
+    'add_bookcopy', 'change_bookcopy',
+    'add_footprint', 'change_footprint',
+    'add_actor', 'change_actor',
+    'add_standardizedidentificationtype',
+    'change_standardizedidentificationtype',
+    'add_extendeddate', 'change_extendeddate'
+]
+
+DELETE_PERMISSIONS = [
+    'delete_role', 'delete_language', 'delete_digitalobject',
+    'delete_standardizedidentification', 'delete_person',
+    'delete_place', 'delete_collection', 'delete_writtenwork',
+    'delete_imprint', 'delete_bookcopy', 'delete_footprint',
+    'delete_actor', 'delete_standardizedidentificationtype',
+    'delete_extendeddate'
+]
+
 
 class UserFactory(factory.DjangoModelFactory):
     class Meta:

@@ -36,7 +36,8 @@ from footprints.main.models import (
 from footprints.main.serializers import NameSerializer
 from footprints.main.templatetags.moderation import moderation_footprints
 from footprints.mixins import (
-    JSONResponseMixin, LoggedInMixin, EditableMixin, ModerationAccessMixin)
+    JSONResponseMixin, LoggedInMixin, ModerationAccessMixin,
+    AddChangeAccessMixin)
 
 
 class IndexView(TemplateView):
@@ -72,7 +73,7 @@ class LogoutView(LoggedInMixin, View):
             return auth_logout_view(request, "/")
 
 
-class FootprintDetailView(EditableMixin, DetailView):
+class FootprintDetailView(DetailView):
 
     model = Footprint
 
@@ -80,7 +81,6 @@ class FootprintDetailView(EditableMixin, DetailView):
         context = super(FootprintDetailView, self).get_context_data(**kwargs)
 
         context['related'] = []
-        context['editable'] = self.has_edit_permission(self.request.user)
         context['languages'] = Language.objects.all().order_by('name')
         context['roles'] = Role.objects.all().order_by('name')
         context['identifier_types'] = \
@@ -291,7 +291,7 @@ class ExportFootprintListView(FootprintListView):
         return response
 
 
-class WrittenWorkDetailView(EditableMixin, DetailView):
+class WrittenWorkDetailView(DetailView):
 
     model = WrittenWork
 
@@ -299,7 +299,6 @@ class WrittenWorkDetailView(EditableMixin, DetailView):
         context = super(WrittenWorkDetailView, self).get_context_data(**kwargs)
 
         context['related'] = []
-        context['editable'] = self.has_edit_permission(self.request.user)
         context['imprints'] = self.object.imprints()
         context['state'] = {
             'imprint': self.kwargs.get('imprint', None),
@@ -309,7 +308,7 @@ class WrittenWorkDetailView(EditableMixin, DetailView):
         return context
 
 
-class CreateFootprintView(LoggedInMixin, TemplateView):
+class CreateFootprintView(LoggedInMixin, AddChangeAccessMixin, TemplateView):
     template_name = "record/create_footprint.html"
 
     def get_context_data(self, **kwargs):
@@ -337,7 +336,7 @@ class CreateFootprintView(LoggedInMixin, TemplateView):
         return HttpResponseRedirect(url)
 
 
-class ConnectFootprintView(LoggedInMixin, EditableMixin, View):
+class ConnectFootprintView(LoggedInMixin, AddChangeAccessMixin, View):
     CREATE_ID = '0'
 
     def get_or_create_work(self, pk):
@@ -413,7 +412,7 @@ class CopyFootprintView(ConnectFootprintView):
         return HttpResponseRedirect(url)
 
 
-class RemoveRelatedView(LoggedInMixin, EditableMixin,
+class RemoveRelatedView(LoggedInMixin, AddChangeAccessMixin,
                         JSONResponseMixin, View):
 
     def removeForeignKey(self, the_parent, the_child, attr):
@@ -461,7 +460,7 @@ class RemoveRelatedView(LoggedInMixin, EditableMixin,
             return self.render_to_json_response({'success': False})
 
 
-class AddRelatedRecordView(LoggedInMixin, EditableMixin,
+class AddRelatedRecordView(LoggedInMixin, AddChangeAccessMixin,
                            JSONResponseMixin, View):
 
     def get_parent(self):
