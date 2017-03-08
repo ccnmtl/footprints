@@ -563,10 +563,12 @@
                 jQuery(evt.currentTarget).children('a').first().attr('href');
             return false;
         },
-        connectRecords: function() {
+        connectRecords: function(evt) {
+            evt.preventDefault();
             var modal = jQuery(this.connectBookView.el).modal({
                 'backdrop': 'static', 'keyboard': false, 'show': true
             });
+            return false;
         },
         context: function() {
             var ctx = this.baseContext;
