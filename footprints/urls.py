@@ -12,8 +12,7 @@ from footprints.main import views
 from footprints.main.forms import FootprintSearchForm
 from footprints.main.views import (
     LoginView, LogoutView, AddActorView, CreateFootprintView,
-    FootprintDetailView, PersonDetailView, PlaceDetailView,
-    WrittenWorkDetailView, TitleListView, NameListView,
+    FootprintDetailView, WrittenWorkDetailView, TitleListView, NameListView,
     AddPlaceView, AddDateView, RemoveRelatedView, FootprintListView,
     AddIdentifierView, AddDigitalObjectView, ConnectFootprintView,
     ContactUsView, AddLanguageView, DisplayDateView, CopyFootprintView,
@@ -99,10 +98,6 @@ urlpatterns = [
 
     url(r'^footprint/(?P<pk>\d+)/$',
         FootprintDetailView.as_view(), name='footprint-detail-view'),
-    url(r'^person/(?P<pk>\d+)/$',
-        PersonDetailView.as_view(), name='person-detail-view'),
-    url(r'^place/(?P<pk>\d+)/$',
-        PlaceDetailView.as_view(), name='place-detail-view'),
 
     url(r'^writtenwork/(?P<pk>\d+)/(?P<imprint>\d+)/'
         '(?P<copy>\d+)/(?P<footprint>\d+)/$',
