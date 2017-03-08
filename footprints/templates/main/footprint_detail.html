@@ -79,7 +79,7 @@
                     has_flags: {% if flags %}true{% else %}false{% endif %},
                     work_id: '{{footprint.book_copy.imprint.work.id}}',
                     work_title: '{{footprint.book_copy.imprint.work.title}}',
-                    is_moderator: {% if request.user.is_staff %}true{% else %}false{% endif %}
+                    is_moderator: {% if can_moderate %}true{% else %}false{% endif %}
                 }
             });
 

@@ -14,7 +14,7 @@ from footprints.batch.views import BatchJobListView, BatchJobUpdateView
 from footprints.main.models import Footprint
 from footprints.main.tests.factories import UserFactory, WrittenWorkFactory, \
     ImprintFactory, FootprintFactory, RoleFactory, BookCopyFactory, \
-    PlaceFactory
+    PlaceFactory, GroupFactory, BATCH_PERMISSIONS
 
 
 class BatchJobListViewTest(TestCase):
@@ -24,7 +24,7 @@ class BatchJobListViewTest(TestCase):
 
         url = reverse('batchjob-list-view')
         request = RequestFactory().get(url, {})
-        request.user = UserFactory(is_staff=True)
+        request.user = UserFactory()
 
         self.view = BatchJobListView()
         self.view.request = request
@@ -68,9 +68,10 @@ class BatchJobDetailView(TestCase):
         url = reverse('batchjob-detail-view', kwargs={'pk': job.id})
 
         response = self.client.get(url)
-        self.assertEquals(response.status_code, 405)
+        self.assertEquals(response.status_code, 302)
 
-        staff = UserFactory(is_staff=True)
+        grp = GroupFactory(permissions=BATCH_PERMISSIONS)
+        staff = UserFactory(group=grp)
         self.client.login(username=staff.username, password='test')
         response = self.client.get(url)
         self.assertEquals(response.status_code, 200)
@@ -79,7 +80,9 @@ class BatchJobDetailView(TestCase):
 
 class BatchJobDeleteViewTest(TestCase):
     def setUp(self):
-        self.staff = UserFactory(is_staff=True)
+        grp = GroupFactory(permissions=BATCH_PERMISSIONS)
+        self.staff = UserFactory(group=grp)
+
         self.job = BatchJobFactory()
 
         self.url = reverse('batchjob-delete-view', kwargs={'pk': self.job.id})
@@ -96,7 +99,10 @@ class BatchJobUpdateViewTest(TestCase):
 
     def setUp(self):
         self.user = UserFactory()
-        self.staff = UserFactory(is_staff=True)
+
+        grp = GroupFactory(permissions=BATCH_PERMISSIONS)
+        self.staff = UserFactory(group=grp)
+
         self.job = BatchJobFactory()
         self.record1 = BatchRowFactory(job=self.job)
         self.record2 = BatchRowFactory(job=self.job,
@@ -108,14 +114,14 @@ class BatchJobUpdateViewTest(TestCase):
 
     def test_view_basics(self):
         response = self.client.get(self.url)
-        self.assertEquals(response.status_code, 405)
+        self.assertEquals(response.status_code, 302)
 
         response = self.client.post(self.url)
-        self.assertEquals(response.status_code, 405)
+        self.assertEquals(response.status_code, 302)
 
         self.client.login(username=self.user.username, password='test')
         response = self.client.post(self.url)
-        self.assertEquals(response.status_code, 405)
+        self.assertEquals(response.status_code, 403)
 
     def test_add_author(self):
         work = WrittenWorkFactory()
@@ -278,7 +284,9 @@ class BatchJobUpdateViewTest(TestCase):
 class BatchRowUpdateViewTest(TestCase):
 
     def setUp(self):
-        self.staff = UserFactory(is_staff=True)
+        grp = GroupFactory(permissions=BATCH_PERMISSIONS)
+        self.staff = UserFactory(group=grp)
+
         self.row = BatchRowFactory()
 
         self.url = reverse('batchrow-update-view',
@@ -286,7 +294,7 @@ class BatchRowUpdateViewTest(TestCase):
 
     def test_get(self):
         response = self.client.get(self.url)
-        self.assertEquals(response.status_code, 405)
+        self.assertEquals(response.status_code, 302)
 
     def test_post_noajax(self):
         self.client.login(username=self.staff.username, password='test')
@@ -317,7 +325,8 @@ class BatchRowUpdateViewTest(TestCase):
 
 class BatchRowDeleteViewTest(TestCase):
     def setUp(self):
-        self.staff = UserFactory(is_staff=True)
+        grp = GroupFactory(permissions=BATCH_PERMISSIONS)
+        self.staff = UserFactory(group=grp)
         self.row = BatchRowFactory()
 
         self.url = reverse('batchrow-delete-view',

@@ -32,7 +32,9 @@ PROJECT_APPS = [
 USE_TZ = True
 
 TEMPLATES[0]['OPTIONS']['context_processors'].append(  # noqa
-    'django.template.context_processors.csrf'
+    'django.template.context_processors.csrf')
+TEMPLATES[0]['OPTIONS']['context_processors'].append(  # noqa
+    'footprints.main.context_processors.permissions'
 )
 
 MIDDLEWARE_CLASSES += [  # noqa

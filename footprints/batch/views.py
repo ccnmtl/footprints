@@ -17,10 +17,11 @@ from footprints.batch.models import BatchJob, BatchRow
 from footprints.batch.templatetags.batchrowtags import validate_field_value
 from footprints.main.models import Imprint, BookCopy, Footprint, \
     Role, ExtendedDate, Actor, Place
-from footprints.mixins import LoggedInStaffMixin, JSONResponseMixin
+from footprints.mixins import (
+    JSONResponseMixin, LoggedInMixin, BatchAccessMixin)
 
 
-class BatchJobListView(LoggedInStaffMixin, FormView):
+class BatchJobListView(LoggedInMixin, BatchAccessMixin, FormView):
     template_name = 'batch/batchjob_list.html'
     form_class = CreateBatchJobForm
 
@@ -46,7 +47,7 @@ class BatchJobListView(LoggedInStaffMixin, FormView):
         return super(BatchJobListView, self).form_valid(form)
 
 
-class BatchJobDetailView(LoggedInStaffMixin, DetailView):
+class BatchJobDetailView(LoggedInMixin, BatchAccessMixin, DetailView):
     model = BatchJob
 
     def get_context_data(self, **kwargs):
@@ -55,7 +56,7 @@ class BatchJobDetailView(LoggedInStaffMixin, DetailView):
         return context
 
 
-class BatchJobUpdateView(LoggedInStaffMixin, View):
+class BatchJobUpdateView(LoggedInMixin, BatchAccessMixin, View):
 
     INVALID_LOCATION = (
         'Location [{}] lookup failed at the {} level [id={}]')
@@ -203,12 +204,13 @@ class BatchJobUpdateView(LoggedInStaffMixin, View):
             reverse('batchjob-detail-view', kwargs={'pk': pk}))
 
 
-class BatchJobDeleteView(LoggedInStaffMixin, DeleteView):
+class BatchJobDeleteView(LoggedInMixin, BatchAccessMixin, DeleteView):
     model = BatchJob
     success_url = reverse_lazy('batchjob-list-view')
 
 
-class BatchRowUpdateView(LoggedInStaffMixin, JSONResponseMixin, View):
+class BatchRowUpdateView(LoggedInMixin, BatchAccessMixin,
+                         JSONResponseMixin, View):
     def post(self, *args, **kwargs):
         pk = kwargs.get('pk', None)
         row = get_object_or_404(BatchRow, pk=pk)
@@ -229,7 +231,7 @@ class BatchRowUpdateView(LoggedInStaffMixin, JSONResponseMixin, View):
         })
 
 
-class BatchRowDeleteView(LoggedInStaffMixin, DeleteView):
+class BatchRowDeleteView(LoggedInMixin, BatchAccessMixin, DeleteView):
     model = BatchRow
 
     def get_success_url(self):

@@ -2,13 +2,13 @@ from json import loads
 import json
 
 from django.conf import settings
+from django.contrib.auth.models import AnonymousUser
 from django.core import mail
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.urlresolvers import reverse
+from django.test import TestCase
 from django.test.client import Client, RequestFactory, encode_multipart
 
-from django.contrib.auth.models import AnonymousUser
-from django.test import TestCase
 from footprints.main.forms import ContactUsForm
 from footprints.main.models import Footprint, Actor, Imprint, \
     StandardizedIdentificationType, ExtendedDate, Language, \
@@ -21,7 +21,8 @@ from footprints.main.serializers import \
 from footprints.main.tests.factories import (
     UserFactory, WrittenWorkFactory, ImprintFactory, FootprintFactory,
     PersonFactory, RoleFactory, PlaceFactory, ActorFactory, BookCopyFactory,
-    ExtendedDateFactory, LanguageFactory, StandardizedIdentificationFactory)
+    ExtendedDateFactory, LanguageFactory, StandardizedIdentificationFactory,
+    GroupFactory, MODERATION_PERMISSIONS)
 from footprints.main.views import (
     CreateFootprintView, AddActorView, ContactUsView)
 from footprints.main.viewsets import ImprintViewSet, BookCopyViewSet, \
@@ -56,8 +57,7 @@ class PasswordTest(TestCase):
 
     def setUp(self):
         super(TestCase, self).setUp()
-
-        self.user = UserFactory(is_staff=True)
+        self.user = UserFactory()
 
     def test_logged_out(self):
         response = self.client.get('/accounts/password_change/')
@@ -470,7 +470,7 @@ class ConnectFootprintViewTest(TestCase):
         self.work = WrittenWorkFactory()
         self.footprint = FootprintFactory()
 
-        self.staff = UserFactory(is_staff=True)
+        self.contributor = UserFactory()
 
         self.url = reverse('connect-footprint-view',
                            kwargs={'pk': self.footprint.pk})
@@ -480,7 +480,7 @@ class ConnectFootprintViewTest(TestCase):
         self.assertEquals(self.client.post(self.url).status_code, 302)
 
     def test_post_update_book(self):
-        self.client.login(username=self.staff.username, password="test")
+        self.client.login(username=self.contributor.username, password="test")
 
         data = {'work': self.work.id,
                 'imprint': self.imprint.id,
@@ -492,7 +492,7 @@ class ConnectFootprintViewTest(TestCase):
         self.assertEquals(fp.book_copy, self.book)
 
     def test_post_update_imprint(self):
-        self.client.login(username=self.staff.username, password="test")
+        self.client.login(username=self.contributor.username, password="test")
 
         data = {'work': self.work.id,
                 'imprint': self.imprint.id}
@@ -503,7 +503,7 @@ class ConnectFootprintViewTest(TestCase):
         self.assertEquals(fp.book_copy.imprint, self.imprint)
 
     def test_post_update_work(self):
-        self.client.login(username=self.staff.username, password="test")
+        self.client.login(username=self.contributor.username, password="test")
 
         data = {'work': self.work.id}
         response = self.client.post(self.url, data)
@@ -516,7 +516,7 @@ class ConnectFootprintViewTest(TestCase):
 class CopyFootprintViewTest(TestCase):
     def setUp(self):
         self.footprint = FootprintFactory()
-        self.staff = UserFactory(is_staff=True)
+        self.contributor = UserFactory()
         self.url = reverse('copy-footprint-view',
                            kwargs={'pk': self.footprint.pk})
 
@@ -525,7 +525,7 @@ class CopyFootprintViewTest(TestCase):
         self.assertEquals(self.client.post(self.url).status_code, 302)
 
     def test_post_new_evidence(self):
-        self.client.login(username=self.staff.username, password="test")
+        self.client.login(username=self.contributor.username, password="test")
 
         data = {
             'footprint-medium': 'New Medium',
@@ -580,7 +580,7 @@ class CreateFootprintViewTest(TestCase):
 class AddActorViewTest(TestCase):
     def setUp(self):
         self.user = UserFactory()
-        self.staff = UserFactory(is_staff=True)
+        self.contributor = UserFactory()
         self.footprint = FootprintFactory()
 
         self.add_url = reverse('add-actor-view')
@@ -626,7 +626,7 @@ class AddActorViewTest(TestCase):
 
     def test_post_invalid_role(self):
         # invalid role id
-        self.client.login(username=self.staff.username, password="test")
+        self.client.login(username=self.contributor.username, password="test")
         response = self.client.post(self.add_url,
                                     {'parent_id': self.footprint.id,
                                      'parent_model': 'footprint',
@@ -638,7 +638,7 @@ class AddActorViewTest(TestCase):
     def test_post_success(self):
         self.assertEquals(self.footprint.actor.count(), 1)
 
-        self.client.login(username=self.staff.username, password="test")
+        self.client.login(username=self.contributor.username, password="test")
         response = self.client.post(self.add_url,
                                     {'parent_id': self.footprint.id,
                                      'parent_model': 'footprint',
@@ -658,7 +658,7 @@ class AddActorViewTest(TestCase):
 class RemoveRelatedViewTest(TestCase):
     def setUp(self):
         self.user = UserFactory()
-        self.staff = UserFactory(is_staff=True)
+        self.contributor = UserFactory()
         self.footprint = FootprintFactory()
 
         self.actor = ActorFactory()
@@ -675,7 +675,7 @@ class RemoveRelatedViewTest(TestCase):
         self.assertEquals(self.client.post(self.remove_url).status_code, 405)
 
     def test_post_missing_params(self):
-        self.client.login(username=self.staff.username, password="test")
+        self.client.login(username=self.contributor.username, password="test")
 
         response = self.client.post(self.remove_url,
                                     {'parent_id': self.footprint.id,
@@ -687,7 +687,7 @@ class RemoveRelatedViewTest(TestCase):
     def test_post_remove_invalid_child_id(self):
         dt = ExtendedDateFactory()
 
-        self.client.login(username=self.staff.username, password="test")
+        self.client.login(username=self.contributor.username, password="test")
 
         response = self.client.post(self.remove_url, {
             'parent_id': self.footprint.id,
@@ -705,7 +705,7 @@ class RemoveRelatedViewTest(TestCase):
     def test_post_remove_success(self):
         dt = self.footprint.associated_date
 
-        self.client.login(username=self.staff.username, password="test")
+        self.client.login(username=self.contributor.username, password="test")
 
         response = self.client.post(self.remove_url, {
             'parent_id': self.footprint.id,
@@ -726,7 +726,7 @@ class RemoveRelatedViewTest(TestCase):
     def test_post_remove_actor(self):
         self.assertEquals(self.footprint.actor.count(), 2)
 
-        self.client.login(username=self.staff.username, password="test")
+        self.client.login(username=self.contributor.username, password="test")
         response = self.client.post(self.remove_url,
                                     {'parent_id': self.footprint.id,
                                      'parent_model': 'footprint',
@@ -741,7 +741,7 @@ class RemoveRelatedViewTest(TestCase):
         imprint = self.footprint.book_copy.imprint
         identifier = imprint.standardized_identifier.first()
 
-        self.client.login(username=self.staff.username, password="test")
+        self.client.login(username=self.contributor.username, password="test")
         response = self.client.post(self.remove_url,
                                     {'parent_id': imprint.id,
                                      'parent_model': 'imprint',
@@ -759,7 +759,7 @@ class AddDateViewTest(TestCase):
 
     def setUp(self):
         self.user = UserFactory()
-        self.staff = UserFactory(is_staff=True)
+        self.contributor = UserFactory()
         self.footprint = FootprintFactory(title="Custom", associated_date=None)
 
         self.url = reverse('add-date-view')
@@ -773,7 +773,7 @@ class AddDateViewTest(TestCase):
         self.assertEquals(self.client.post(self.url).status_code, 405)
 
     def test_post_no_data(self):
-        self.client.login(username=self.staff.username, password="test")
+        self.client.login(username=self.contributor.username, password="test")
         response = self.client.post(self.url,
                                     {'parent_id': self.footprint.id,
                                      'parent_model': 'footprint'},
@@ -783,7 +783,7 @@ class AddDateViewTest(TestCase):
         self.assertFalse(the_json['success'])
 
     def test_post_success(self):
-        self.client.login(username=self.staff.username, password="test")
+        self.client.login(username=self.contributor.username, password="test")
         response = self.client.post(self.url,
                                     {'parent_id': self.footprint.id,
                                      'parent_model': 'footprint',
@@ -807,7 +807,7 @@ class DisplayDateViewTest(TestCase):
 
     def setUp(self):
         self.user = UserFactory()
-        self.staff = UserFactory(is_staff=True)
+        self.contributor = UserFactory()
         self.footprint = FootprintFactory(title="Custom", associated_date=None)
 
         self.url = reverse('display-date-view')
@@ -818,7 +818,7 @@ class DisplayDateViewTest(TestCase):
         self.assertEquals(self.client.post(self.url).status_code, 405)
 
     def test_post_no_data(self):
-        self.client.login(username=self.staff.username, password="test")
+        self.client.login(username=self.contributor.username, password="test")
         response = self.client.post(self.url,
                                     {'parent_id': self.footprint.id,
                                      'parent_model': 'footprint'},
@@ -828,7 +828,7 @@ class DisplayDateViewTest(TestCase):
         self.assertFalse(the_json['success'])
 
     def test_post_success(self):
-        self.client.login(username=self.staff.username, password="test")
+        self.client.login(username=self.contributor.username, password="test")
         response = self.client.post(self.url,
                                     {'parent_id': self.footprint.id,
                                      'parent_model': 'footprint',
@@ -850,7 +850,7 @@ class AddPlaceViewTest(TestCase):
 
     def setUp(self):
         self.user = UserFactory()
-        self.staff = UserFactory(is_staff=True)
+        self.contributor = UserFactory()
         self.footprint = FootprintFactory(title="Custom", place=None)
 
         self.url = reverse('add-place-view')
@@ -864,7 +864,7 @@ class AddPlaceViewTest(TestCase):
         self.assertEquals(self.client.post(self.url).status_code, 405)
 
     def test_post_no_data(self):
-        self.client.login(username=self.staff.username, password="test")
+        self.client.login(username=self.contributor.username, password="test")
         response = self.client.post(self.url,
                                     {'parent_id': self.footprint.id,
                                      'parent_model': 'footprint'},
@@ -874,7 +874,7 @@ class AddPlaceViewTest(TestCase):
         self.assertFalse(the_json['success'])
 
     def test_post_success(self):
-        self.client.login(username=self.staff.username, password="test")
+        self.client.login(username=self.contributor.username, password="test")
         response = self.client.post(self.url,
                                     {'parent_id': self.footprint.id,
                                      'parent_model': 'footprint',
@@ -898,7 +898,7 @@ class AddIdentifierViewTest(TestCase):
 
     def setUp(self):
         self.user = UserFactory()
-        self.staff = UserFactory(is_staff=True)
+        self.contributor = UserFactory()
         self.imprint = ImprintFactory()
 
         self.url = reverse('add-identifier-view')
@@ -912,7 +912,7 @@ class AddIdentifierViewTest(TestCase):
         self.assertEquals(self.client.post(self.url).status_code, 405)
 
     def test_post_no_data(self):
-        self.client.login(username=self.staff.username, password="test")
+        self.client.login(username=self.contributor.username, password="test")
         response = self.client.post(self.url,
                                     {'parent_id': self.imprint.id,
                                      'parent_model': 'imprint'},
@@ -921,7 +921,7 @@ class AddIdentifierViewTest(TestCase):
 
     def test_post_success(self):
         self.assertEquals(self.imprint.standardized_identifier.count(), 1)
-        self.client.login(username=self.staff.username, password="test")
+        self.client.login(username=self.contributor.username, password="test")
         response = self.client.post(self.url,
                                     {'parent_id': self.imprint.id,
                                      'parent_model': 'imprint',
@@ -943,7 +943,7 @@ class AddDigitalObjectViewTest(TestCase):
 
     def setUp(self):
         self.user = UserFactory()
-        self.staff = UserFactory(is_staff=True)
+        self.contributor = UserFactory()
         self.footprint = FootprintFactory()
 
         self.url = reverse('add-digital-object-view')
@@ -957,7 +957,7 @@ class AddDigitalObjectViewTest(TestCase):
         self.assertEquals(self.client.post(self.url).status_code, 405)
 
     def test_post_no_data(self):
-        self.client.login(username=self.staff.username, password="test")
+        self.client.login(username=self.contributor.username, password="test")
         response = self.client.post(self.url,
                                     {'parent_id': self.footprint.id,
                                      'parent_model': 'footprint'},
@@ -969,7 +969,7 @@ class AddDigitalObjectViewTest(TestCase):
     def test_post_success(self):
         f = SimpleUploadedFile("file.txt", "file_content")
 
-        self.client.login(username=self.staff.username, password="test")
+        self.client.login(username=self.contributor.username, password="test")
         response = self.client.post(self.url,
                                     {'parent_id': self.footprint.id,
                                      'parent_model': 'footprint',
@@ -1129,8 +1129,8 @@ class ContactUsViewTest(TestCase):
 class AddLanguageViewTest(TestCase):
 
     def testAddRemove(self):
-        staff = UserFactory(is_staff=True)
-        self.client.login(username=staff.username, password='test')
+        contributor = UserFactory()
+        self.client.login(username=contributor.username, password='test')
         url = reverse('add-language-view')
 
         footprint = FootprintFactory(title='Alpha')
@@ -1250,15 +1250,17 @@ class ModerationViewTest(TestCase):
 
     def test_get(self):
         user = UserFactory()
-        staff = UserFactory(is_staff=True)
+
+        grp = GroupFactory(permissions=MODERATION_PERMISSIONS)
+        moderator = UserFactory(group=grp)
 
         url = reverse('moderation-view')
-        self.assertEquals(self.client.get(url).status_code, 405)
+        self.assertEquals(self.client.get(url).status_code, 302)
 
         self.client.login(username=user.username, password='test')
-        self.assertEquals(self.client.get(url).status_code, 405)
+        self.assertEquals(self.client.get(url).status_code, 403)
 
-        self.client.login(username=staff.username, password='test')
+        self.client.login(username=moderator.username, password='test')
         self.assertEquals(self.client.get(url).status_code, 200)
 
 
@@ -1267,15 +1269,17 @@ class VerifyFootprintViewTest(TestCase):
     def test_post(self):
         fp = FootprintFactory()
         user = UserFactory()
-        staff = UserFactory(is_staff=True)
+
+        grp = GroupFactory(permissions=MODERATION_PERMISSIONS)
+        moderator = UserFactory(group=grp)
 
         url = reverse('verify-footprint-view', kwargs={'pk': fp.id})
-        self.assertEquals(self.client.get(url).status_code, 405)
+        self.assertEquals(self.client.get(url).status_code, 302)
 
         self.client.login(username=user.username, password='test')
-        self.assertEquals(self.client.get(url).status_code, 405)
+        self.assertEquals(self.client.get(url).status_code, 403)
 
-        self.client.login(username=staff.username, password='test')
+        self.client.login(username=moderator.username, password='test')
 
         data = {'verified': 1}
         self.assertEquals(self.client.post(url, data).status_code, 302)
