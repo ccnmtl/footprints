@@ -31,16 +31,17 @@ def has_moderation_flags(fp):
 def moderation_flags(fp):
     errors = []
     if flag_empty_call_number(fp):
-        errors.append('Catalog\'s call number is empty')
+        errors.append(('err-call-number', 'Catalog\'s call number is empty'))
 
     if flag_empty_bhb_number(fp):
-        errors.append('Imprint has no BHB number')
+        errors.append(('err-bhb-number', 'Imprint has no BHB number'))
 
     if flag_empty_narrative(fp):
-        errors.append('Narrative is empty')
+        errors.append(('err-narrative', 'Narrative is empty'))
 
     if flag_percent_complete(fp):
-        errors.append('Percent complete is less than 50%')
+        errors.append(('err-percent-complete',
+                       'Percent complete is less than 50%'))
 
     return errors
 
