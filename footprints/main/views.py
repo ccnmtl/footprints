@@ -72,17 +72,6 @@ class LogoutView(LoggedInMixin, View):
             return auth_logout_view(request, "/")
 
 
-class PersonDetailView(EditableMixin, DetailView):
-
-    model = Person
-
-    def get_context_data(self, **kwargs):
-        context = super(PersonDetailView, self).get_context_data(**kwargs)
-
-        context['related'] = []
-        return context
-
-
 class FootprintDetailView(EditableMixin, DetailView):
 
     model = Footprint
@@ -300,18 +289,6 @@ class ExportFootprintListView(FootprintListView):
         )
         response['Content-Disposition'] = 'attachment; filename="' + fnm + '"'
         return response
-
-
-class PlaceDetailView(EditableMixin, DetailView):
-
-    model = Place
-
-    def get_context_data(self, **kwargs):
-        context = super(PlaceDetailView, self).get_context_data(**kwargs)
-
-        context['related'] = []
-        context['editable'] = self.has_edit_permission(self.request.user)
-        return context
 
 
 class WrittenWorkDetailView(EditableMixin, DetailView):

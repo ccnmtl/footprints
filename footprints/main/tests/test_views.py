@@ -154,12 +154,6 @@ class DetailViewTest(TestCase):
     def setUp(self):
         self.user = UserFactory()
 
-        self.person_detail = reverse('person-detail-view',
-                                     kwargs={'pk': PersonFactory().id})
-
-        self.place_detail = reverse('place-detail-view',
-                                    kwargs={'pk': PlaceFactory().id})
-
         self.work_detail = reverse('writtenwork-detail-view',
                                    kwargs={'pk': WrittenWorkFactory().id})
 
@@ -167,8 +161,6 @@ class DetailViewTest(TestCase):
                                         kwargs={'pk': FootprintFactory().id})
 
     def test_get_logged_out(self):
-        self.assertEquals(self.client.get(self.person_detail).status_code, 200)
-        self.assertEquals(self.client.get(self.place_detail).status_code, 200)
         self.assertEquals(self.client.get(self.work_detail).status_code, 200)
         self.assertEquals(self.client.get(self.footprint_detail).status_code,
                           200)
@@ -176,8 +168,6 @@ class DetailViewTest(TestCase):
     def test_get_logged_in(self):
         self.client.login(username=self.user.username, password="test")
 
-        self.assertEquals(self.client.get(self.person_detail).status_code, 200)
-        self.assertEquals(self.client.get(self.place_detail).status_code, 200)
         self.assertEquals(self.client.get(self.work_detail).status_code, 200)
         self.assertEquals(self.client.get(self.footprint_detail).status_code,
                           200)
