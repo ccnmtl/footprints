@@ -194,5 +194,5 @@ class FootprintSerializer(HyperlinkedModelSerializer):
                   'provenance', 'title', 'language', 'actor', 'call_number',
                   'notes', 'associated_date', 'place', 'narrative',
                   'percent_complete', 'digital_object',
-                  'verified', 'created_at', 'modified_at',
+                  'flags', 'verified', 'created_at', 'modified_at',
                   'created_by', 'last_modified_by')

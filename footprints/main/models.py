@@ -9,7 +9,8 @@ from edtf import EDTF, edtf_date
 from geoposition import Geoposition
 from geoposition.fields import GeopositionField
 
-from footprints.main.templatetags.moderation import has_moderation_flags
+from footprints.main.templatetags.moderation import has_moderation_flags,\
+    moderation_flags
 
 
 FOOTPRINT_LEVEL = 'footprint'
@@ -1021,6 +1022,9 @@ class Footprint(models.Model):
     def save_verified(self, verified):
         self.verified = verified
         self.save(update_fields=['verified'])
+
+    def flags(self):
+        return moderation_flags(self)
 
     def save(self, *args, **kwargs):
         self.percent_complete = self.calculate_percent_complete()
