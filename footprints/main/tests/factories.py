@@ -1,6 +1,6 @@
 import os
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group, Permission
 import factory
 
 from footprints.main.models import (
@@ -13,11 +13,41 @@ from footprints.main.models import (
 TEST_MEDIA_PATH = os.path.join(os.path.dirname(__file__), 'test.txt')
 
 
+BATCH_PERMISSIONS = [
+    'add_batchjob', 'change_batchjob', 'delete_batchjob',
+    'add_batchrow', 'change_batchrow', 'delete_batchrow']
+
+
+MODERATION_PERMISSIONS = ['can_moderate']
+
+
 class UserFactory(factory.DjangoModelFactory):
     class Meta:
         model = User
     username = factory.Sequence(lambda n: "user%03d" % n)
     password = factory.PostGenerationMethodCall('set_password', 'test')
+
+    @factory.post_generation
+    def group(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            self.groups.add(extracted)
+
+
+class GroupFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = Group
+
+    @factory.post_generation
+    def permissions(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            lst = list(Permission.objects.filter(codename__in=extracted))
+            self.permissions.add(*lst)
 
 
 class ExtendedDateFactory(factory.DjangoModelFactory):

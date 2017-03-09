@@ -36,7 +36,7 @@ from footprints.main.models import (
 from footprints.main.serializers import NameSerializer
 from footprints.main.templatetags.moderation import moderation_footprints
 from footprints.mixins import (
-    JSONResponseMixin, LoggedInMixin, EditableMixin, LoggedInStaffMixin)
+    JSONResponseMixin, LoggedInMixin, EditableMixin, ModerationAccessMixin)
 
 
 class IndexView(TemplateView):
@@ -709,7 +709,7 @@ class SignS3View(LoggedInMixin, BaseSignS3View):
         return settings.AWS_STORAGE_BUCKET_NAME
 
 
-class ModerationView(LoggedInStaffMixin, TemplateView):
+class ModerationView(LoggedInMixin, ModerationAccessMixin, TemplateView):
     template_name = 'main/moderation.html'
 
     def get_context_data(self, **kwargs):
@@ -718,7 +718,7 @@ class ModerationView(LoggedInStaffMixin, TemplateView):
         return context
 
 
-class VerifyFootprintView(LoggedInStaffMixin, View):
+class VerifyFootprintView(LoggedInMixin, ModerationAccessMixin, View):
 
     def post(self, *args, **kwargs):
         verified = self.request.POST.get('verified')

@@ -61,12 +61,16 @@
                             <li><a href="/search/">Search</a></li>
                         {% endflag %}
                 		<li><a href="http://edblogs.columbia.edu/footprints/" target="_blank">Blog</a></li>
-                        {% if request.user.is_staff %}
+                        {% if can_import or can_moderate %}
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Manage <span class="caret"></span></a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="/batch/">Batch Import</a></li>
-                                    <li><a href="/moderate/">Moderate</a></li>
+                                    {% if can_import %}
+                                        <li><a href="/batch/">Batch Import</a></li>
+                                    {% endif %}
+                                    {% if can_moderate %}
+                                        <li><a href="/moderate/">Moderate</a></li>
+                                    {% endif %}
                                 </ul>
                             </li>
                         {% endif %}

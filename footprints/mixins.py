@@ -1,7 +1,9 @@
-from django.contrib.auth.decorators import login_required, user_passes_test
+import json
+
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http.response import HttpResponseNotAllowed, HttpResponse
 from django.utils.decorators import method_decorator
-import json
 
 
 def ajax_required(func):
@@ -16,19 +18,6 @@ def ajax_required(func):
     """
     def wrap(request, *args, **kwargs):
         if not request.is_ajax():
-            return HttpResponseNotAllowed("")
-        return func(request, *args, **kwargs)
-
-    wrap.__doc__ = func.__doc__
-    wrap.__name__ = func.__name__
-    return wrap
-
-
-def is_staff(func):
-
-    def wrap(request, *args, **kwargs):
-        user = request.user
-        if user.is_anonymous() or not user.is_staff:
             return HttpResponseNotAllowed("")
         return func(request, *args, **kwargs)
 
@@ -64,14 +53,13 @@ class LoggedInMixin(object):
         return super(LoggedInMixin, self).dispatch(*args, **kwargs)
 
 
-class LoggedInStaffMixin(object):
-    @method_decorator(is_staff)
-    def dispatch(self, *args, **kwargs):
-        return super(LoggedInStaffMixin, self).dispatch(*args, **kwargs)
+class BatchAccessMixin(PermissionRequiredMixin):
+    raise_exception = True
+    permission_required = (
+        'batch.add_batchjob', 'batch.change_batchjob', 'batch.delete_batchjob',
+        'batch.add_batchrow', 'batch.change_batchrow', 'batch.delete_batchrow')
 
 
-class LoggedInMixinSuperuserMixin(object):
-    @method_decorator(user_passes_test(lambda u: u.is_superuser))
-    def dispatch(self, *args, **kwargs):
-        return super(LoggedInMixinSuperuserMixin,
-                     self).dispatch(*args, **kwargs)
+class ModerationAccessMixin(PermissionRequiredMixin):
+    raise_exception = True
+    permission_required = ('main.can_moderate',)
