@@ -85,7 +85,7 @@
                     {% moderation_flags footprint as the_errors %}
                     {% for error in the_errors %}
                         {% if forloop.first %}<ul>{% endif %}
-                        <li class="small err-call-number">{{error}}</li>
+                            <li class="small {{error.0}}">{{error.1}}</li>
                         {% if forloop.last %}<ul>{% endif %}
                     {% endfor %}
                     </td>
