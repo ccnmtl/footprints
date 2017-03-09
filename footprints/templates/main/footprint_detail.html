@@ -73,7 +73,7 @@
                     all_mediums:  [{% for medium in mediums %}
                                    {value: '{{medium}}', text: "{{medium}}"}{% if not forloop.last %},{% endif %}
                                    {% endfor %}],
-                    editable: {% if editable %}true{% else %}false{% endif %},
+                    editable: {% if can_edit %}true{% else %}false{% endif %},
                     static_url: '{{STATIC_URL}}',
                     is_bare:  {% if footprint.is_bare %}true{% else %}false{% endif %},
                     has_flags: {% if flags %}true{% else %}false{% endif %},
@@ -108,7 +108,7 @@
                 <div class="recordkeeping object-detail" style="display: none"></div>
             </div>
             <div class="col-md-4">
-                {% if footprint.is_bare and editable %}
+                {% if footprint.is_bare and can_edit %}
                     <div data-spy="affix" class="connect-record-prompt">
                         <ul class="list-group">
                             <li class="list-group-item">
@@ -185,7 +185,7 @@
                     {% endif %}
                     {% endwith %}
 
-                    {% if editable %}
+                    {% if can_edit %}
                         <div class="sidebar-box related-footprint">
                             <h4>Create Footprint</h4>
                             <p class="info">Create a new footprint based on this literary work, imprint, book copy and evidence.</p>

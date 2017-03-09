@@ -22,7 +22,7 @@ from footprints.main.tests.factories import (
     UserFactory, WrittenWorkFactory, ImprintFactory, FootprintFactory,
     PersonFactory, RoleFactory, PlaceFactory, ActorFactory, BookCopyFactory,
     ExtendedDateFactory, LanguageFactory, StandardizedIdentificationFactory,
-    GroupFactory, MODERATION_PERMISSIONS)
+    GroupFactory, MODERATION_PERMISSIONS, ADD_CHANGE_PERMISSIONS)
 from footprints.main.views import (
     CreateFootprintView, AddActorView, ContactUsView)
 from footprints.main.viewsets import ImprintViewSet, BookCopyViewSet, \
@@ -460,7 +460,8 @@ class ConnectFootprintViewTest(TestCase):
         self.work = WrittenWorkFactory()
         self.footprint = FootprintFactory()
 
-        self.contributor = UserFactory()
+        grp = GroupFactory(permissions=ADD_CHANGE_PERMISSIONS)
+        self.contributor = UserFactory(group=grp)
 
         self.url = reverse('connect-footprint-view',
                            kwargs={'pk': self.footprint.pk})
@@ -506,7 +507,10 @@ class ConnectFootprintViewTest(TestCase):
 class CopyFootprintViewTest(TestCase):
     def setUp(self):
         self.footprint = FootprintFactory()
-        self.contributor = UserFactory()
+
+        grp = GroupFactory(permissions=ADD_CHANGE_PERMISSIONS)
+        self.contributor = UserFactory(group=grp)
+
         self.url = reverse('copy-footprint-view',
                            kwargs={'pk': self.footprint.pk})
 
@@ -570,7 +574,10 @@ class CreateFootprintViewTest(TestCase):
 class AddActorViewTest(TestCase):
     def setUp(self):
         self.user = UserFactory()
-        self.contributor = UserFactory()
+
+        grp = GroupFactory(permissions=ADD_CHANGE_PERMISSIONS)
+        self.contributor = UserFactory(group=grp)
+
         self.footprint = FootprintFactory()
 
         self.add_url = reverse('add-actor-view')
@@ -612,7 +619,7 @@ class AddActorViewTest(TestCase):
 
         # no ajax
         self.client.login(username=self.user.username, password="test")
-        self.assertEquals(self.client.post(self.add_url).status_code, 405)
+        self.assertEquals(self.client.post(self.add_url).status_code, 403)
 
     def test_post_invalid_role(self):
         # invalid role id
@@ -648,7 +655,10 @@ class AddActorViewTest(TestCase):
 class RemoveRelatedViewTest(TestCase):
     def setUp(self):
         self.user = UserFactory()
-        self.contributor = UserFactory()
+
+        grp = GroupFactory(permissions=ADD_CHANGE_PERMISSIONS)
+        self.contributor = UserFactory(group=grp)
+
         self.footprint = FootprintFactory()
 
         self.actor = ActorFactory()
@@ -662,7 +672,7 @@ class RemoveRelatedViewTest(TestCase):
 
         # no ajax
         self.client.login(username=self.user.username, password="test")
-        self.assertEquals(self.client.post(self.remove_url).status_code, 405)
+        self.assertEquals(self.client.post(self.remove_url).status_code, 403)
 
     def test_post_missing_params(self):
         self.client.login(username=self.contributor.username, password="test")
@@ -749,7 +759,10 @@ class AddDateViewTest(TestCase):
 
     def setUp(self):
         self.user = UserFactory()
-        self.contributor = UserFactory()
+
+        grp = GroupFactory(permissions=ADD_CHANGE_PERMISSIONS)
+        self.contributor = UserFactory(group=grp)
+
         self.footprint = FootprintFactory(title="Custom", associated_date=None)
 
         self.url = reverse('add-date-view')
@@ -760,7 +773,7 @@ class AddDateViewTest(TestCase):
 
         # no ajax
         self.client.login(username=self.user.username, password="test")
-        self.assertEquals(self.client.post(self.url).status_code, 405)
+        self.assertEquals(self.client.post(self.url).status_code, 403)
 
     def test_post_no_data(self):
         self.client.login(username=self.contributor.username, password="test")
@@ -797,7 +810,10 @@ class DisplayDateViewTest(TestCase):
 
     def setUp(self):
         self.user = UserFactory()
-        self.contributor = UserFactory()
+
+        grp = GroupFactory(permissions=ADD_CHANGE_PERMISSIONS)
+        self.contributor = UserFactory(group=grp)
+
         self.footprint = FootprintFactory(title="Custom", associated_date=None)
 
         self.url = reverse('display-date-view')
@@ -840,7 +856,10 @@ class AddPlaceViewTest(TestCase):
 
     def setUp(self):
         self.user = UserFactory()
-        self.contributor = UserFactory()
+
+        grp = GroupFactory(permissions=ADD_CHANGE_PERMISSIONS)
+        self.contributor = UserFactory(group=grp)
+
         self.footprint = FootprintFactory(title="Custom", place=None)
 
         self.url = reverse('add-place-view')
@@ -851,7 +870,7 @@ class AddPlaceViewTest(TestCase):
 
         # no ajax
         self.client.login(username=self.user.username, password="test")
-        self.assertEquals(self.client.post(self.url).status_code, 405)
+        self.assertEquals(self.client.post(self.url).status_code, 403)
 
     def test_post_no_data(self):
         self.client.login(username=self.contributor.username, password="test")
@@ -888,7 +907,10 @@ class AddIdentifierViewTest(TestCase):
 
     def setUp(self):
         self.user = UserFactory()
-        self.contributor = UserFactory()
+
+        grp = GroupFactory(permissions=ADD_CHANGE_PERMISSIONS)
+        self.contributor = UserFactory(group=grp)
+
         self.imprint = ImprintFactory()
 
         self.url = reverse('add-identifier-view')
@@ -899,7 +921,7 @@ class AddIdentifierViewTest(TestCase):
 
         # no ajax
         self.client.login(username=self.user.username, password="test")
-        self.assertEquals(self.client.post(self.url).status_code, 405)
+        self.assertEquals(self.client.post(self.url).status_code, 403)
 
     def test_post_no_data(self):
         self.client.login(username=self.contributor.username, password="test")
@@ -933,7 +955,10 @@ class AddDigitalObjectViewTest(TestCase):
 
     def setUp(self):
         self.user = UserFactory()
-        self.contributor = UserFactory()
+
+        grp = GroupFactory(permissions=ADD_CHANGE_PERMISSIONS)
+        self.contributor = UserFactory(group=grp)
+
         self.footprint = FootprintFactory()
 
         self.url = reverse('add-digital-object-view')
@@ -944,7 +969,7 @@ class AddDigitalObjectViewTest(TestCase):
 
         # no ajax
         self.client.login(username=self.user.username, password="test")
-        self.assertEquals(self.client.post(self.url).status_code, 405)
+        self.assertEquals(self.client.post(self.url).status_code, 403)
 
     def test_post_no_data(self):
         self.client.login(username=self.contributor.username, password="test")
@@ -1037,8 +1062,10 @@ class ViewsetsTest(TestCase):
     def test_footprint_viewset(self):
         csrf_client = Client(enforce_csrf_checks=True)
 
-        self.user = UserFactory()
-        csrf_client.login(username=self.user.username, password="test")
+        grp = GroupFactory(permissions=ADD_CHANGE_PERMISSIONS)
+        contributor = UserFactory(group=grp)
+
+        csrf_client.login(username=contributor.username, password="test")
 
         # get a csrf token
         url = reverse('create-footprint-view')
@@ -1119,7 +1146,9 @@ class ContactUsViewTest(TestCase):
 class AddLanguageViewTest(TestCase):
 
     def testAddRemove(self):
-        contributor = UserFactory()
+        grp = GroupFactory(permissions=ADD_CHANGE_PERMISSIONS)
+        contributor = UserFactory(group=grp)
+
         self.client.login(username=contributor.username, password='test')
         url = reverse('add-language-view')
 

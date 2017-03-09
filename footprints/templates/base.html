@@ -53,7 +53,7 @@
                 <div class="collapse navbar-collapse" id="navbar-collapse-pl">
                     <ul class="nav navbar-nav navbar-right navbar-nav-pl">
                         <li><a href="/about/">About</a></li>
-                        {% if not request.user.is_anonymous %}
+                        {% if can_edit %}
                             <li><a href="/footprint/create/">Create</a></li>
                         {% endif %}
                         <li><a href="/browse/footprints/">Browse</a></li>

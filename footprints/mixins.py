@@ -41,12 +41,6 @@ class JSONResponseMixin(object):
                             **response_kwargs)
 
 
-class EditableMixin(object):
-
-    def has_edit_permission(self, user):
-        return user.is_authenticated()
-
-
 class LoggedInMixin(object):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -63,3 +57,40 @@ class BatchAccessMixin(PermissionRequiredMixin):
 class ModerationAccessMixin(PermissionRequiredMixin):
     raise_exception = True
     permission_required = ('main.can_moderate',)
+
+
+class DeleteAccessMixin(PermissionRequiredMixin):
+    raise_exception = True
+    permission_required = (
+        'main.delete_role', 'main.delete_language',
+        'main.delete_digitalobject',
+        'main.delete_standardizedidentification', 'main.delete_person',
+        'main.delete_place', 'main.delete_collection',
+        'main.delete_writtenwork',
+        'main.delete_imprint', 'main.delete_bookcopy', 'main.delete_footprint',
+        'main.delete_actor', 'main.delete_standardizedidentificationtype',
+        'main.delete_extendeddate'
+    )
+
+
+class AddChangeAccessMixin(PermissionRequiredMixin):
+    raise_exception = True
+    permission_required = (
+        'main.add_role', 'main.change_role',
+        'main.add_language', 'main.change_language',
+        'main.add_digitalformat', 'main.change_digitalformat',
+        'main.add_digitalobject', 'main.change_digitalobject',
+        'main.add_standardizedidentification',
+        'main.change_standardizedidentification',
+        'main.add_person', 'main.change_person',
+        'main.add_place', 'main.change_place',
+        'main.add_collection', 'main.change_collection',
+        'main.add_writtenwork', 'main.change_writtenwork',
+        'main.add_imprint', 'main.change_imprint',
+        'main.add_bookcopy', 'main.change_bookcopy',
+        'main.add_footprint', 'main.change_footprint',
+        'main.add_actor', 'main.change_actor',
+        'main.add_standardizedidentificationtype',
+        'main.change_standardizedidentificationtype',
+        'main.add_extendeddate', 'main.change_extendeddate'
+    )
