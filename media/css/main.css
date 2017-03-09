@@ -2376,6 +2376,12 @@ p.decoy {
     padding: 4px;
 }
 
+.batch-job-detail .batch-job-row-container table td.has-error p {
+    border: 1px solid #a94442;
+    border-radius: 4px;
+    padding: 4px;
+}
+
 .batch-job-detail .batch-job-row-container table td.field-name {
     width: 225px;
     min-width: 225px;
@@ -2420,9 +2426,7 @@ p.decoy {
 
 .batch-job-detail .batch-job-row-container td.has-error .error-block {
     display: block;
-    border-top-width: 1px;
-    border-bottom-width: 1px;
-    border-right-width: 1px;
+    border: 0;
 }
 
 .batch-job-detail .update-record {

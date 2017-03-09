@@ -84,7 +84,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="batch-job-row-container">
-                {% with rows=object.batchrow_set.all %}
+                {% with rows=object.rows %}
                 <h3>{{object.batchrow_set.count}} Records</h3>
                 <table>
                     {% if object.processed %}
@@ -129,7 +129,7 @@
                                 <td data-record-id="{{row.id}}" class="
                                     {% if msg1 %}
                                         invalid has-error">
-                                        <div class="small">{{msg1|safe}}</div>
+                                        <div class="small"><p>{{msg1|safe}}</p></div>
                                     {% else %}
                                         valid"><div class="small">No integrity issues.</div>
                                     {% endif %}
@@ -144,12 +144,18 @@
                                 <td data-record-id="{{row.id}}" class="
                                     {% if msg1 %}
                                         similar has-warning">
-                                        <div class="small">{{msg1|safe}}</div>
+                                        <div class="small"><p>{{msg1|safe}}</p></div>
                                     {% else %}
                                         valid"><div class="small">No integrity issues.</div>
                                     {% endif %}
                                 </td>
                             {% endwith %}
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td class="field-name">Row Id</td>
+                        {% for row in rows %}
+                            <td class="valid" data-record-id="{{row.id}}"><div>{{row.id}}</div></td>
                         {% endfor %}
                     </tr>
                     {% for field in fields %}
@@ -195,10 +201,12 @@
                                     The record has been saved, but the record data does not validate. Please correct the errors and try again.
                                 </div>
                                 <div>
-                                    <button type="button" class="pull-right btn btn-primary btn-sm has-spinner update-record"
-                                     data-loading-text="<span class='glyphicon-left glyphicon glyphicon-refresh spinning'></span>Updating...">
-                                        Update
-                                    </button>
+                                    <form class="pull-right" action="{% url 'batchrow-update-view' row.id %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="pull-right btn btn-primary btn-sm has-spinner update-record">
+                                            Update
+                                        </button>
+                                    </form>
                                     <form class="pull-right" action="{% url 'batchrow-delete-view' row.id %}" method="post">
                                         {% csrf_token %}
                                         <button type="submit" class="btn btn-default btn-white btn-sm delete-record">
@@ -216,28 +224,6 @@
         </div>
     </div>
 
-    <div class="modal fade" id="success-modal" tabindex="-1" role="dialog" aria-labelledby="Upload CSV">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content fp-section">
-                <h3>Success</h3>
-                <div class="modal-body">The record has been saved. The record data validates.</div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-labelledby="Upload CSV">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content fp-section">
-                <h3>Error</h3>
-                <div class="modal-body">The record has been saved, but the record data does not validate. Please correct the errors and try again.</div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="modal fade" id="confirm-delete-modal" tabindex="-1" role="dialog" aria-labelledby="Upload CSV">
         <div class="modal-dialog" role="document">
             <div class="modal-content fp-section">

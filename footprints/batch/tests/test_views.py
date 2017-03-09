@@ -1,5 +1,4 @@
 from decimal import Decimal
-from json import loads
 
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.urlresolvers import reverse
@@ -296,11 +295,6 @@ class BatchRowUpdateViewTest(TestCase):
         response = self.client.get(self.url)
         self.assertEquals(response.status_code, 302)
 
-    def test_post_noajax(self):
-        self.client.login(username=self.staff.username, password='test')
-        response = self.client.post(self.url, {})
-        self.assertEquals(response.status_code, 405)
-
     def test_post(self):
         self.client.login(username=self.staff.username, password='test')
         data = {
@@ -308,19 +302,12 @@ class BatchRowUpdateViewTest(TestCase):
             'bhb_number': 'abcdefg'
         }
 
-        response = self.client.post(self.url, data,
-                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-
-        self.assertEquals(response.status_code, 200)
-        the_json = loads(response.content)
+        response = self.client.post(self.url, data)
+        self.assertEquals(response.status_code, 302)
 
         self.row.refresh_from_db()
         self.assertEquals(self.row.imprint_title, 'Something different')
-        self.assertEquals(the_json['errors']['imprint_title'], 'valid')
-
         self.assertEquals(self.row.bhb_number, 'abcdefg')
-        self.assertEquals(the_json['errors']['bhb_number'],
-                          'invalid has-error')
 
 
 class BatchRowDeleteViewTest(TestCase):

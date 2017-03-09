@@ -16,6 +16,9 @@ class BatchJob(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = CreatingUserField()
 
+    def rows(self):
+        return self.batchrow_set.all().order_by('id')
+
 
 class BatchRow(models.Model):
 
@@ -147,9 +150,6 @@ class BatchRow(models.Model):
         Footprint, on_delete=models.SET_NULL, blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ['writtenwork_title', 'imprint_title', 'id']
 
     @classmethod
     def imported_fields(cls):
