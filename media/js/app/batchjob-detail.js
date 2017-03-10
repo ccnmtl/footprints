@@ -9,15 +9,17 @@
             'click #confirm-process-modal .btn-primary': 'processJob'
         },
         initialize: function(options) {
-            _.bindAll(this, 'clickRecord', 'updateRecord', 'refreshRecord',
+            _.bindAll(this, 'clickRecord', 'updateRecord',
                 'deleteRecord', 'confirmDeleteRecord', 'checkErrorState',
-                'showModal', 'showSuccessModal', 'showErrorModal',
                 'onKeydown', 'openRecord', 'closeRecord',
                 'confirmProcessJob', 'processJob');
 
             this.baseUpdateUrl = options.baseUpdateUrl;
 
             this.checkErrorState();
+
+            var rowId = window.location.search.split('selected=')[1];
+            this.openRecord(rowId);
 
             jQuery('body').click(this.closeRecord);
             jQuery('body').keydown(this.onKeydown);
@@ -73,61 +75,21 @@
             this.openRecord(dataId);
             return false;
         },
-        refreshRecord: function(json, textStatus, xhr) {
-            // remove all status classes
-            jQuery(this.el).find('td.selected').attr('class', 'selected');
-            jQuery(this.el).find('.error-message, .success-message').hide();
-
-            // update each record with its new status class(es)
-            for (var field in json.errors) {
-                var selector = 'td.selected input[type="text"][name="' +
-                    field + '"]';
-                var $elt = jQuery(this.el).find(selector).parents('td');
-                if (json.errors.hasOwnProperty(field)) {
-                    $elt.addClass(json.errors[field]);
-                }
-            }
-
-            if (jQuery(this.el).find('td.selected.has-error').length === 0) {
-                jQuery(this.el).find('td.selected .success-message').show();
-            } else {
-                jQuery(this.el).find('td.selected .error-message').show();
-            }
-
-            this.checkErrorState();
-        },
-        showModal: function(id) {
-            jQuery(id).modal({
-                'show': true,
-                'backdrop': 'static',
-                'keyboard': false
-            });
-        },
-        showErrorModal: function() {
-            this.showModal('#error-modal');
-        },
-        showSuccessModal: function() {
-            this.showModal('#success-modal');
-        },
         updateRecord: function(evt) {
+            evt.preventDefault();
             var self = this;
-            var $target = jQuery(evt.currentTarget);
-
-            var recordId = $target.parents('td').data('record-id');
-            var url = this.baseUpdateUrl.replace(/(\d+)/g, recordId);
+            var $form = jQuery(evt.currentTarget).parents('form');
 
             var data = {};
             jQuery(this.el).find('td.selected input').each(function() {
-                data[jQuery(this).attr('name')] = jQuery(this).val();
+                jQuery('<input />').attr('type', 'hidden')
+                    .attr('name', jQuery(this).attr('name'))
+                    .attr('value', jQuery(this).val())
+                    .appendTo($form);
             });
 
-            jQuery.ajax({
-                url: url,
-                type: 'post',
-                data: data,
-                success: self.refreshRecord,
-                error: self.showErrorModal
-            });
+            $form.submit();
+            return false;
         },
         confirmDeleteRecord: function(evt) {
             evt.preventDefault();

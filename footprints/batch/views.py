@@ -17,8 +17,7 @@ from footprints.batch.models import BatchJob, BatchRow
 from footprints.batch.templatetags.batchrowtags import validate_field_value
 from footprints.main.models import Imprint, BookCopy, Footprint, \
     Role, ExtendedDate, Actor, Place
-from footprints.mixins import (
-    JSONResponseMixin, LoggedInMixin, BatchAccessMixin)
+from footprints.mixins import (LoggedInMixin, BatchAccessMixin)
 
 
 class BatchJobListView(LoggedInMixin, BatchAccessMixin, FormView):
@@ -209,8 +208,7 @@ class BatchJobDeleteView(LoggedInMixin, BatchAccessMixin, DeleteView):
     success_url = reverse_lazy('batchjob-list-view')
 
 
-class BatchRowUpdateView(LoggedInMixin, BatchAccessMixin,
-                         JSONResponseMixin, View):
+class BatchRowUpdateView(LoggedInMixin, BatchAccessMixin, View):
     def post(self, *args, **kwargs):
         pk = kwargs.get('pk', None)
         row = get_object_or_404(BatchRow, pk=pk)
@@ -226,9 +224,12 @@ class BatchRowUpdateView(LoggedInMixin, BatchAccessMixin,
 
         row.save()
 
-        return self.render_to_json_response({
-            'errors': errors
-        })
+        msg = 'Record {} updated'.format(row.id)
+        messages.add_message(self.request, messages.INFO, msg)
+
+        url = reverse('batchjob-detail-view', kwargs={'pk': row.job.id})
+        url += '?selected={}'.format(row.id)
+        return HttpResponseRedirect(url)
 
 
 class BatchRowDeleteView(LoggedInMixin, BatchAccessMixin, DeleteView):
