@@ -611,7 +611,7 @@ class Collection(models.Model):
 
 
 class WrittenWork(models.Model):
-    title = models.TextField(null=True, blank=True)
+    title = models.TextField(null=True, unique=True)
     actor = models.ManyToManyField(
         Actor, blank=True,
         help_text="The author or creator of the work. ")
