@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% load compress %}
 {% load detailtags %}
-{% load moderation %}
 
 {% block title %}Detail{% endblock %}
 
@@ -53,7 +52,6 @@
     {% endcompress %}
 
     <script type="text/javascript">
-        {% moderation_flags footprint as flags %} 
         jQuery(document).ready(function() {
             var editView = new FootprintView({
                 el: jQuery('div.object-detail'),
@@ -76,7 +74,6 @@
                     editable: {% if can_edit %}true{% else %}false{% endif %},
                     static_url: '{{STATIC_URL}}',
                     is_bare:  {% if footprint.is_bare %}true{% else %}false{% endif %},
-                    has_flags: {% if flags %}true{% else %}false{% endif %},
                     work_id: '{{footprint.book_copy.imprint.work.id}}',
                     work_title: '{{footprint.book_copy.imprint.work.title}}',
                     is_moderator: {% if can_moderate %}true{% else %}false{% endif %}

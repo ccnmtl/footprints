@@ -4,7 +4,7 @@
             data-toggle="modal" data-target="#integrity-modal">
         <% if (footprint.verified) { %>
                 <span class="glyphicon glyphicon-certificate" aria-hidden="true"></span> Verified
-        <% } else if (has_flags) { %>
+        <% } else if (footprint.flags.length > 0) { %>
                 <span class="flagged">Flagged <span class="glyphicon glyphicon-bookmark" aria-hidden="true"></span></span>
         <% } else { %>
                 <span class="glyphicon glyphicon-bookmark" aria-hidden="true"></span> Ready to verify
@@ -15,16 +15,29 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Footprint Verification</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Data Integrity</h4>
                     </div>
                     <div class="modal-body">
+                        <div class="well">
+                        <p>
                         <% if (footprint.verified) { %>
-                            <p>Data experts have verified this record's information is accurate.</p>
-                        <% } else if (has_flags) { %>
-                            <p>This footprint's data has some issues, and has not been verified.</p>
+                            Data experts have verified this record's information is accurate.
+                        <% } else if (footprint.flags.length > 0) { %>
+                            This footprint's data has some issues, and has not been verified.
                         <% } else { %>
-                            <p>This footprint's data appears accurate, but needs to be verified.</p>
+                            This footprint's data appears accurate, but needs to be verified.
                         <% } %>
+                        </p>
+                        <% if (footprint.flags.length > 0) { %>
+                            <div>Issues</div>
+                            <ul>
+                            <% for (var i=0; i < footprint.flags.length; i++) { %>
+                                <li><%= footprint.flags[i][1] %></li>
+                            <% } %>
+                            </ul>
+                        <% } %>
+                        </div>
 
                         <form action="/footprint/verify/<%=footprint.id%>/" method="post">{% csrf_token %}
                             <div class="radio">
