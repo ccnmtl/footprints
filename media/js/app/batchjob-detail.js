@@ -80,7 +80,6 @@
             var self = this;
             var $form = jQuery(evt.currentTarget).parents('form');
 
-            var data = {};
             jQuery(this.el).find('td.selected input').each(function() {
                 jQuery('<input />').attr('type', 'hidden')
                     .attr('name', jQuery(this).attr('name'))
