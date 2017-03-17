@@ -5,6 +5,11 @@ module.exports = {
         "jquery": true
     },
     "extends": "eslint:recommended",
+    "globals": {
+        "_": true,
+        "Backbone": true,
+        "google": true,
+    },
     "rules": {
         "indent": [
             "error",

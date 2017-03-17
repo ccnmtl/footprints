@@ -15,8 +15,6 @@
            @method render()
         **/
         render: function() {
-            var self = this;
-
             this.$input = this.$tpl.find('input[name="title"]');
             var value = jQuery(this.options.scope).data('value');
             this.value2input(value);

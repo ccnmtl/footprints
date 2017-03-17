@@ -96,8 +96,8 @@ Place editable input.
                 });
                 google.maps.event
                     .addListener(self.marker, 'dragend', function() {
-                    self.geocodePosition();
-                });
+                        self.geocodePosition();
+                    });
 
                 bounds.extend(places[0].geometry.location);
                 self.mapInstance.fitBounds(bounds);
@@ -128,8 +128,8 @@ Place editable input.
             // drop a marker on click
             google.maps.event
                 .addListener(self.mapInstance, 'click', function(event) {
-                self.dropMarker(event.latLng);
-            });
+                    self.dropMarker(event.latLng);
+                });
 
             self.searchBox = new google.maps.places.SearchBox(
                 /** @type {HTMLInputElement} */(self.$address[0]));
@@ -138,8 +138,8 @@ Place editable input.
             // pick list. Retrieve the matching places for that item.
             google.maps.event
                 .addListener(self.searchBox, 'places_changed', function() {
-                self.mapSearchResult();
-            });
+                    self.mapSearchResult();
+                });
 
             setTimeout(function() {
                 google.maps.event.trigger(self.mapInstance, 'resize');

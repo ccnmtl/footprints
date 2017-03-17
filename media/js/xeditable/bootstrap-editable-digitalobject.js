@@ -1,4 +1,5 @@
-/* global csrftoken: true, S3Upload: true */
+/*eslint no-unused-vars: ["error", { "varsIgnorePattern": "s3upload" }]*/
+/* global S3Upload: true */
 (function($) {
     'use strict';
 
@@ -45,8 +46,6 @@
         @method render()
         **/
         render: function() {
-            var self = this;
-
             this.$url = this.$tpl.find('input[name="url"]').first();
             this.$description =
                 this.$tpl.find('input[name="description"]').first();
@@ -57,7 +56,7 @@
 
         @method value2html(value, element)
         **/
-        value2html: function(value, element) {
+        value2html: function() {
         },
 
         /**
@@ -65,7 +64,7 @@
 
         @method html2value(html)
         **/
-        html2value: function(html) {
+        html2value: function() {
             return null;
         },
 
@@ -104,7 +103,7 @@
            @method value2input(value)
            @param {mixed} value
         **/
-        value2input: function(value) {
+        value2input: function() {
         },
 
         /**
@@ -121,7 +120,7 @@
            @param {mixed} value
            @returns {mixed}
         **/
-        value2submit: function(value) {
+        value2submit: function() {
             return {
                 error: this.validate(),
                 url: this.$url.val(),

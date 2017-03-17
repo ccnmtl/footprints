@@ -14,8 +14,6 @@
                 'onClickWork', 'updateMarkerIcons', 'syncMap', 'onShareLink',
                 'clearState', 'setState', 'addHistory', 'popHistory');
 
-            var self = this;
-
             this.urlBase = options.urlBase;
 
             this.footprintIcon = this.iconWithColor('ffa881');
@@ -201,7 +199,6 @@
                     var lng = jQuery(markers[i]).data('longitude');
                     var latlng = new google.maps.LatLng(lat, lng);
 
-                    var title = jQuery(markers[i]).data('title');
                     var content = jQuery(markers[i]).html();
 
                     var marker = new google.maps.Marker({

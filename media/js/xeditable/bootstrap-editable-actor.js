@@ -10,9 +10,9 @@
 
     $.extend(Actor.prototype, {
         /**
-        Renders input from tpl
+           Renders input from tpl
 
-        @method render()
+           @method render()
         **/
         render: function() {
             var self = this;
@@ -21,65 +21,65 @@
             this.$roleselect = this.$tpl.find('select[name="role"]');
             this.$actorname =  this.$tpl.find('input[name="actor-name"]');
             this.$input.autocomplete({
-               select: function(event, ui) {
-                   self.$input.attr('data-instance', ui.item.object_id);
-                   self.$input.attr('data-label', ui.item.label);
-                   return true;
-               },
-               source: function(request, response) {
-                   jQuery.ajax({
-                       url: '/api/name/',
-                       dataType: 'jsonp',
-                       data: {
-                           q: request.term
-                       },
-                       success: function(data) {
-                           var names = [];
-                           for (var i = 0; i < data.length; i++) {
-                               names.push({
-                                   object_id: data[i].object_id,
-                                   label: data[i].name
-                               });
-                           }
-                           response(names);
-                       }
-                   });
-               },
-               minLength: 2,
-               open: function() {
-                   jQuery(this).removeClass('ui-corner-all')
-                       .addClass('ui-corner-top');
-               },
-               close: function() {
-                   jQuery(this).removeClass('ui-corner-top')
-                       .addClass('ui-corner-all');
-               }
-           });
+                select: function(event, ui) {
+                    self.$input.attr('data-instance', ui.item.object_id);
+                    self.$input.attr('data-label', ui.item.label);
+                    return true;
+                },
+                source: function(request, response) {
+                    jQuery.ajax({
+                        url: '/api/name/',
+                        dataType: 'jsonp',
+                        data: {
+                            q: request.term
+                        },
+                        success: function(data) {
+                            var names = [];
+                            for (var i = 0; i < data.length; i++) {
+                                names.push({
+                                    object_id: data[i].object_id,
+                                    label: data[i].name
+                                });
+                            }
+                            response(names);
+                        }
+                    });
+                },
+                minLength: 2,
+                open: function() {
+                    jQuery(this).removeClass('ui-corner-all')
+                        .addClass('ui-corner-top');
+                },
+                close: function() {
+                    jQuery(this).removeClass('ui-corner-top')
+                        .addClass('ui-corner-all');
+                }
+            });
         },
 
         /**
-        Default method to show value in element. Can be overwritten by display option.
+           Default method to show value in element. Can be overwritten by display option.
 
-        @method value2html(value, element)
+           @method value2html(value, element)
         **/
         value2html: function(value, element) {
         },
 
         /**
-        Gets value from element's html
+           Gets value from element's html
 
-        @method html2value(html)
+           @method html2value(html)
         **/
         html2value: function(html) {
             return null;
         },
 
         /**
-        Converts value to string.
-        It is used in internal comparing (not for sending to server).
+           Converts value to string.
+           It is used in internal comparing (not for sending to server).
 
-        @method value2str(value)
-       **/
+           @method value2str(value)
+        **/
         value2str: function(value) {
             var str = '';
             if (value) {
@@ -91,9 +91,9 @@
         },
 
         /*
-        Converts string to value. Used for reading value from 'data-value' attribute.
+          Converts string to value. Used for reading value from 'data-value' attribute.
 
-        @method str2value(str)
+          @method str2value(str)
         */
         str2value: function(str) {
             /*

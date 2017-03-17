@@ -10,9 +10,9 @@
         },
         initialize: function(options) {
             _.bindAll(this, 'clickRecord', 'updateRecord',
-                'deleteRecord', 'confirmDeleteRecord', 'checkErrorState',
-                'onKeydown', 'openRecord', 'closeRecord',
-                'confirmProcessJob', 'processJob');
+                      'deleteRecord', 'confirmDeleteRecord', 'checkErrorState',
+                      'onKeydown', 'openRecord', 'closeRecord',
+                      'confirmProcessJob', 'processJob');
 
             this.baseUpdateUrl = options.baseUpdateUrl;
 
@@ -27,7 +27,7 @@
         checkErrorState: function() {
             if (jQuery(this.el).find('.has-error').length > 0) {
                 jQuery(this.el).find('#process-job')
-                               .attr('disabled', 'disabled');
+                    .attr('disabled', 'disabled');
                 jQuery(this.el).find('.alert-danger').show();
             } else {
                 jQuery(this.el).find('#process-job').removeAttr('disabled');
@@ -47,17 +47,17 @@
         onKeydown: function(evt) {
             var dataId;
             switch (evt.which) {
-                case 37: // left
-                    dataId = jQuery(this.el).find('td.selected').first()
-                        .prev().data('record-id');
-                    break;
+            case 37: // left
+                dataId = jQuery(this.el).find('td.selected').first()
+                    .prev().data('record-id');
+                break;
 
-                case 39: // right
-                    dataId = jQuery(this.el).find('td.selected').first()
-                        .next().data('record-id');
-                    break;
-                default:
-                    return; // exit this handler for other keys
+            case 39: // right
+                dataId = jQuery(this.el).find('td.selected').first()
+                    .next().data('record-id');
+                break;
+            default:
+                return; // exit this handler for other keys
             }
             evt.preventDefault();
             if (dataId) {
@@ -77,10 +77,8 @@
         },
         updateRecord: function(evt) {
             evt.preventDefault();
-            var self = this;
             var $form = jQuery(evt.currentTarget).parents('form');
 
-            var data = {};
             jQuery(this.el).find('td.selected input').each(function() {
                 jQuery('<input />').attr('type', 'hidden')
                     .attr('name', jQuery(this).attr('name'))
