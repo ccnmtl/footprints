@@ -45,8 +45,6 @@
         @method render()
         **/
         render: function() {
-            var self = this;
-
             this.$url = this.$tpl.find('input[name="url"]').first();
             this.$description =
                 this.$tpl.find('input[name="description"]').first();
