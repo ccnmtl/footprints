@@ -5,6 +5,9 @@ module.exports = {
         "jquery": true
     },
     "extends": "eslint:recommended",
+    "globals": {
+        "google": true,
+    },
     "rules": {
         "indent": [
             "error",

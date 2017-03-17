@@ -35,81 +35,81 @@
 
     window.CreateFootprintWizard.Views.TitleView = window.CreateFootprintWizard
         .Views.BaseView.extend({
-        events: {
-            'click li.disabled a': 'onClickDisabled'
-        },
-        initialize: function(options) {
-            _.bindAll(this, 'isValid', 'show', 'clearError', 'showError');
-            this.identifier = '#title';
-            this.elTab = jQuery(this.el).find(this.identifier);
-        },
-        isValid: function() {
-            var elt = jQuery(this.elTab)
-                .find('input[name="footprint-title"]')[0];
-            return jQuery(elt).val().length > 0;
-        }
-    });
+            events: {
+                'click li.disabled a': 'onClickDisabled'
+            },
+            initialize: function(options) {
+                _.bindAll(this, 'isValid', 'show', 'clearError', 'showError');
+                this.identifier = '#title';
+                this.elTab = jQuery(this.el).find(this.identifier);
+            },
+            isValid: function() {
+                var elt = jQuery(this.elTab)
+                    .find('input[name="footprint-title"]')[0];
+                return jQuery(elt).val().length > 0;
+            }
+        });
 
     window.CreateFootprintWizard.Views.EvidenceTypeView = window
         .CreateFootprintWizard.Views.BaseView.extend({
-        events: {
-            'click li.disabled a': 'onClickDisabled',
-            'change select[name="footprint-medium"]': 'onMediumChange'
-        },
-        initialize: function(options) {
-            _.bindAll(this, 'isValid', 'show', 'showError', 'clearError',
-                'onMediumChange');
-            this.identifier = '#evidencetype';
-            this.elTab = jQuery(this.el).find(this.identifier);
-        },
-        onMediumChange: function(event) {
-            var eltInput = jQuery(this.el)
-                .find('input[name="footprint-medium-other"]')[0];
-            var medium = jQuery(this.el)
-                .find('select[name="footprint-medium"] option:selected').val();
-            if (medium === 'other') {
-                jQuery(eltInput).show();
-                jQuery(eltInput).addClass('required');
-                this.clearError();
-            } else {
-                jQuery(eltInput).val('');
-                jQuery(eltInput).hide();
-                jQuery(eltInput).removeClass('required');
-                this.clearError();
-            }
-        },
-        isValid: function() {
-            var medium = jQuery(this.el)
-                .find('select[name="footprint-medium"] option:selected').val();
+            events: {
+                'click li.disabled a': 'onClickDisabled',
+                'change select[name="footprint-medium"]': 'onMediumChange'
+            },
+            initialize: function(options) {
+                _.bindAll(this, 'isValid', 'show', 'showError', 'clearError',
+                          'onMediumChange');
+                this.identifier = '#evidencetype';
+                this.elTab = jQuery(this.el).find(this.identifier);
+            },
+            onMediumChange: function(event) {
+                var eltInput = jQuery(this.el)
+                    .find('input[name="footprint-medium-other"]')[0];
+                var medium = jQuery(this.el)
+                    .find('select[name="footprint-medium"] option:selected').val();
+                if (medium === 'other') {
+                    jQuery(eltInput).show();
+                    jQuery(eltInput).addClass('required');
+                    this.clearError();
+                } else {
+                    jQuery(eltInput).val('');
+                    jQuery(eltInput).hide();
+                    jQuery(eltInput).removeClass('required');
+                    this.clearError();
+                }
+            },
+            isValid: function() {
+                var medium = jQuery(this.el)
+                    .find('select[name="footprint-medium"] option:selected').val();
 
-            if (medium === '') {
-                return false;
-            } else if (medium === 'other') {
-                var val = jQuery(this.elTab)
-                    .find('input[name="footprint-medium-other"]').val();
-                return val.length > 0;
-            } else {
-                return true;
+                if (medium === '') {
+                    return false;
+                } else if (medium === 'other') {
+                    var val = jQuery(this.elTab)
+                        .find('input[name="footprint-medium-other"]').val();
+                    return val.length > 0;
+                } else {
+                    return true;
+                }
             }
-        }
-    });
+        });
 
     window.CreateFootprintWizard.Views.EvidenceLocationView = window
         .CreateFootprintWizard.Views.BaseView.extend({
-        events: {
-            'click li.disabled a': 'onClickDisabled'
-        },
-        initialize: function(options) {
-            _.bindAll(this, 'isValid', 'show', 'showError', 'clearError');
-            this.identifier = '#evidencelocation';
-            this.elTab = jQuery(this.el).find('#evidencelocation');
-        },
-        isValid: function() {
-            var elt = jQuery(this.elTab)
-                .find('textarea[name="footprint-provenance"]')[0];
-            return jQuery(elt).val().length > 0;
-        }
-    });
+            events: {
+                'click li.disabled a': 'onClickDisabled'
+            },
+            initialize: function(options) {
+                _.bindAll(this, 'isValid', 'show', 'showError', 'clearError');
+                this.identifier = '#evidencelocation';
+                this.elTab = jQuery(this.el).find('#evidencelocation');
+            },
+            isValid: function() {
+                var elt = jQuery(this.elTab)
+                    .find('textarea[name="footprint-provenance"]')[0];
+                return jQuery(elt).val().length > 0;
+            }
+        });
 
     var titleView = new window.CreateFootprintWizard.Views.TitleView({
         el: jQuery('#footprint-form')
@@ -117,13 +117,13 @@
 
     var evidenceTypeView = new window.CreateFootprintWizard
         .Views.EvidenceTypeView({
-        el: jQuery('#footprint-form')
-    });
+            el: jQuery('#footprint-form')
+        });
 
     var evidenceLocationView = new window
         .CreateFootprintWizard.Views.EvidenceLocationView({
-        el: jQuery('#footprint-form')
-    });
+            el: jQuery('#footprint-form')
+        });
 
     window.CreateFootprintWizard.Router = Backbone.Router.extend({
         routes: {
