@@ -77,7 +77,6 @@
         },
         updateRecord: function(evt) {
             evt.preventDefault();
-            var self = this;
             var $form = jQuery(evt.currentTarget).parents('form');
 
             jQuery(this.el).find('td.selected input').each(function() {
