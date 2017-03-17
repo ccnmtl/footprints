@@ -73,7 +73,7 @@
 
             jQuery('#confirm-modal').find('.modal-body').html(msg);
 
-            var modal = jQuery('#confirm-modal').modal({
+            jQuery('#confirm-modal').modal({
                 'show': true,
                 'backdrop': 'static',
                 'keyboard': false,
@@ -460,7 +460,7 @@
         },
         validateFields: function(parent) {
             this.removeErrors();
-            var elts = jQuery(parent).find('.required:visible')
+            jQuery(parent).find('.required:visible')
                 .not(this.hasValue)
                 .parents('.form-group')
                 .addClass('has-error');
@@ -572,7 +572,7 @@
         },
         connectRecords: function(evt) {
             evt.preventDefault();
-            var modal = jQuery(this.connectBookView.el).modal({
+            jQuery(this.connectBookView.el).modal({
                 'backdrop': 'static', 'keyboard': false, 'show': true
             });
             return false;
@@ -595,8 +595,6 @@
             jQuery(this.elRecordkeeping).show();
         },
         maximizeCarousel: function(evt) {
-            var self = this;
-
             var ctx = this.footprint.toJSON();
             ctx.active_id = jQuery(evt.currentTarget).data('id');
             var html = this.carouselTemplate(ctx);
