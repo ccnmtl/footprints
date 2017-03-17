@@ -602,7 +602,7 @@
             var html = this.carouselTemplate(ctx);
             jQuery('#carousel-modal').find('.modal-body').html(html);
 
-            var modal = jQuery('#carousel-modal').modal({
+            jQuery('#carousel-modal').modal({
                 'backdrop': 'static',
                 'keyboard': false,
                 'show': true
