@@ -66,7 +66,8 @@
                 var eltInput = jQuery(this.el)
                     .find('input[name="footprint-medium-other"]')[0];
                 var medium = jQuery(this.el)
-                    .find('select[name="footprint-medium"] option:selected').val();
+                    .find('select[name="footprint-medium"] option:selected')
+                    .val();
                 if (medium === 'other') {
                     jQuery(eltInput).show();
                     jQuery(eltInput).addClass('required');
@@ -80,7 +81,8 @@
             },
             isValid: function() {
                 var medium = jQuery(this.el)
-                    .find('select[name="footprint-medium"] option:selected').val();
+                    .find('select[name="footprint-medium"] option:selected')
+                    .val();
 
                 if (medium === '') {
                     return false;
