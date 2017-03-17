@@ -6,6 +6,8 @@ module.exports = {
     },
     "extends": "eslint:recommended",
     "globals": {
+        "_": true,
+        "Backbone": true,
         "google": true,
     },
     "rules": {
