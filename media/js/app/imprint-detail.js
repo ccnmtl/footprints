@@ -14,8 +14,6 @@
                 'onClickWork', 'updateMarkerIcons', 'syncMap', 'onShareLink',
                 'clearState', 'setState', 'addHistory', 'popHistory');
 
-            var self = this;
-
             this.urlBase = options.urlBase;
 
             this.footprintIcon = this.iconWithColor('ffa881');
