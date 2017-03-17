@@ -35,7 +35,10 @@ def person_name(obj):
 
 
 class ActorAdmin(admin.ModelAdmin):
+
     list_display = (person_name, 'alias', 'role')
+    person_name.admin_order_field = 'person__name'
+
 
 admin.site.register(Actor, ActorAdmin)
 
