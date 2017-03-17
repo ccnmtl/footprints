@@ -15,8 +15,6 @@
         @method render()
         **/
         render: function() {
-            var self = this;
-
             this.$input = this.$tpl.find('input[name="identifier"]');
             this.$type = this.$tpl
                 .find('select[name="standardized-identifier"]');
