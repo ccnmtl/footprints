@@ -16,6 +16,8 @@ def permissions(request):
 
 
 class BrowsableAPIRendererNoForms(BrowsableAPIRenderer):
+    '''https://bradmontgomery.net/blog/'''
+    '''disabling-forms-django-rest-frameworks-browsable-api/'''
 
     def get_context(self, *args, **kwargs):
         ctx = super(BrowsableAPIRendererNoForms, self).get_context(
@@ -28,7 +30,7 @@ class BrowsableAPIRendererNoForms(BrowsableAPIRenderer):
         return False
 
     def get_rendered_html_form(self, data, view, method, request):
-        """Why render _any_ forms at all. This method should return 
+        """Why render _any_ forms at all. This method should return
         rendered HTML, so let's simply return an empty string.
         """
         return ""
