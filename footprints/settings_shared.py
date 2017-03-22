@@ -34,7 +34,7 @@ USE_TZ = True
 TEMPLATES[0]['OPTIONS']['context_processors'].append(  # noqa
     'django.template.context_processors.csrf')
 TEMPLATES[0]['OPTIONS']['context_processors'].append(  # noqa
-    'footprints.main.context_processors.permissions'
+    'footprints.main.utils.permissions'
 )
 
 MIDDLEWARE_CLASSES += [  # noqa
@@ -76,6 +76,10 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ],
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        'footprints.main.utils.BrowsableAPIRendererNoForms'
+    ),
     'PAGINATE_BY': 15,
     'DATETIME_FORMAT': '%m/%d/%y %I:%M %p'
 }
