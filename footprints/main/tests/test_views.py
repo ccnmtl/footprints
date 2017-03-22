@@ -2,7 +2,7 @@ from json import loads
 import json
 
 from django.conf import settings
-from django.contrib.auth.models import AnonymousUser
+from django.contrib.auth.models import AnonymousUser, Group, Permission
 from django.core import mail
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.urlresolvers import reverse
@@ -24,7 +24,7 @@ from footprints.main.tests.factories import (
     ExtendedDateFactory, LanguageFactory, StandardizedIdentificationFactory,
     GroupFactory, MODERATION_PERMISSIONS, ADD_CHANGE_PERMISSIONS)
 from footprints.main.views import (
-    CreateFootprintView, AddActorView, ContactUsView)
+    CreateFootprintView, AddActorView, ContactUsView, FootprintDetailView)
 from footprints.main.viewsets import ImprintViewSet, BookCopyViewSet, \
     WrittenWorkViewSet
 
@@ -151,6 +151,7 @@ class LogoutTest(TestCase):
 
 
 class DetailViewTest(TestCase):
+
     def setUp(self):
         self.user = UserFactory()
 
@@ -159,6 +160,14 @@ class DetailViewTest(TestCase):
 
         self.footprint_detail = reverse('footprint-detail-view',
                                         kwargs={'pk': FootprintFactory().id})
+
+    def get_group(self):
+        grp = Group.objects.get(name='Creator')
+        lst = list(Permission.objects.filter(
+            codename__in=ADD_CHANGE_PERMISSIONS))
+        grp.permissions.add(*lst)
+
+        return grp
 
     def test_get_logged_out(self):
         self.assertEquals(self.client.get(self.work_detail).status_code, 200)
@@ -171,6 +180,50 @@ class DetailViewTest(TestCase):
         self.assertEquals(self.client.get(self.work_detail).status_code, 200)
         self.assertEquals(self.client.get(self.footprint_detail).status_code,
                           200)
+
+    def test_can_edit(self):
+        view = FootprintDetailView()
+
+        user = UserFactory()
+        self.assertFalse(view.can_edit(user))
+
+        contributor = UserFactory(group=self.get_group())
+        self.assertTrue(view.can_edit(contributor))
+
+    def test_is_creator(self):
+        view = FootprintDetailView()
+
+        user = UserFactory()
+        self.assertFalse(view.is_creator(user))
+
+        creator = UserFactory(group=self.get_group())
+
+        self.assertTrue(view.is_creator(creator))
+
+    def test_has_perm(self):
+        view = FootprintDetailView()
+        user = UserFactory()
+
+        fp1 = FootprintFactory()
+        self.assertFalse(view.has_perm(user, False, False, fp1))
+        self.assertTrue(view.has_perm(user, True, False, fp1))
+        self.assertFalse(view.has_perm(user, True, True, fp1))
+
+        creator = UserFactory(group=self.get_group())
+        fp2 = FootprintFactory(created_by=creator)
+        self.assertTrue(view.has_perm(creator, True, True, fp2))
+
+    def test_permissions(self):
+        view = FootprintDetailView()
+
+        creator = UserFactory(group=self.get_group())
+        fp2 = FootprintFactory(created_by=creator)
+        self.assertEquals(
+            view.permissions(creator, fp2),
+            {'can_edit_footprint': True,
+             'can_edit_copy': False,
+             'can_edit_imprint': False,
+             'can_edit_work': False})
 
 
 class FootprintListViewTest(TestCase):

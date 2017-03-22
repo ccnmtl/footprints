@@ -92,11 +92,9 @@ class FootprintDetailView(DetailView):
 
         return obj.created_by == user
 
-    def permissions(self):
-        can_edit = self.can_edit(self.request.user)
-        creator = self.is_creator(self.request.user)
-        obj = self.get_object()
-        user = self.request.user
+    def permissions(self, user, obj):
+        can_edit = self.can_edit(user)
+        creator = self.is_creator(user)
 
         return {
             'can_edit_footprint':
@@ -120,7 +118,7 @@ class FootprintDetailView(DetailView):
         context['identifier_types'] = \
             StandardizedIdentificationType.objects.all().order_by('name')
         context['mediums'] = MEDIUM_CHOICES
-        context.update(self.permissions())
+        context.update(self.permissions(self.request.user, self.get_object()))
         return context
 
 
