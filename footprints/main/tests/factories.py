@@ -231,6 +231,7 @@ class EmptyFootprintFactory(factory.DjangoModelFactory):
     medium = 'Bookseller/auction catalog (1850-present)'
     provenance = 'Provenance'
     title = 'The Iliad'
+    created_by = factory.SubFactory(UserFactory)
 
 
 class FootprintFactory(factory.DjangoModelFactory):
@@ -252,6 +253,8 @@ class FootprintFactory(factory.DjangoModelFactory):
     notes = 'lorem ipsum'
 
     narrative = 'Odysseus struggles to return home after the Trojan War.'
+
+    created_by = factory.SubFactory(UserFactory)
 
     @factory.post_generation
     def actors(self, create, extracted, **kwargs):
