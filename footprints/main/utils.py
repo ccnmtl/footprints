@@ -10,7 +10,7 @@ def permissions(request):
             request.user.has_perms(BatchAccessMixin.permission_required),
         'can_moderate':
             request.user.has_perms(ModerationAccessMixin.permission_required),
-        'can_edit':
+        'can_create':
             request.user.has_perms(AddChangeAccessMixin.permission_required)
     }
 

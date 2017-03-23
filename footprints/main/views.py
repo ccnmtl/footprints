@@ -77,6 +77,38 @@ class FootprintDetailView(DetailView):
 
     model = Footprint
 
+    def can_edit(self, user):
+        return user.has_perms(AddChangeAccessMixin.permission_required)
+
+    def is_creator(self, user):
+        return user.groups.filter(name='Creator').exists()
+
+    def has_perm(self, user, can_edit, is_creator, obj):
+        if not can_edit:
+            return False
+
+        if not is_creator:
+            return True
+
+        return obj.created_by == user
+
+    def permissions(self, user, obj):
+        can_edit = self.can_edit(user)
+        creator = self.is_creator(user)
+
+        return {
+            'can_edit_footprint':
+                self.has_perm(user, can_edit, creator, obj),
+            'can_edit_copy':
+                self.has_perm(user, can_edit, creator, obj.book_copy),
+            'can_edit_imprint':
+                self.has_perm(user, can_edit, creator,
+                              obj.book_copy.imprint),
+            'can_edit_work':
+                self.has_perm(user, can_edit, creator,
+                              obj.book_copy.imprint.work),
+        }
+
     def get_context_data(self, **kwargs):
         context = super(FootprintDetailView, self).get_context_data(**kwargs)
 
@@ -86,6 +118,7 @@ class FootprintDetailView(DetailView):
         context['identifier_types'] = \
             StandardizedIdentificationType.objects.all().order_by('name')
         context['mediums'] = MEDIUM_CHOICES
+        context.update(self.permissions(self.request.user, self.get_object()))
         return context
 
 
