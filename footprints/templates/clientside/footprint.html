@@ -4,7 +4,7 @@
     </div>
     <% if (narrative && narrative.length > 0) { %>
         <blockquote class="blockquote">
-        <% if (editable) { %>
+        <% if (can_edit_footprint) { %>
             <a href="javascript:void(0);" class="editable"
                 data-name="narrative" data-type="textarea" data-pk="<%=id%>"
                 data-url="/api/footprint/<%=id%>/"><%=narrative%></a>
