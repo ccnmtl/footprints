@@ -1,9 +1,9 @@
         <script type="text/template" id="book-detail-template">
-        
+
         <div class="physical-copy-detail">
             <div class="breadcrumb">
                 The Physical Copy
-                <% if (editable) { %> 
+                <% if (can_edit_copy) { %> 
                     <a href="javascript:void(0);" class="pull-right connect-records book">
                         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                         Connect
@@ -13,11 +13,11 @@
             <dl class="dl-horizontal">
                 <dt>Copy Identifier</dt>
                 <dd class="border-bottom"><%=imprint.work.id%>-<%=imprint.id%>-<%=id%></dd>
-                
+
                 <% if (call_number && call_number.length > 0) { %>
                     <dt>Call Number</dt>
                     <dd class="border-bottom">
-                        <% if (editable) { %>
+                        <% if (can_edit_copy) { %>
                             <a href="javascript:void(0);" class="editable"
                                 data-name="call_number"
                                 data-type="text" data-pk="<%=id%>"
@@ -47,7 +47,7 @@
                     <% } %>
                 <% } %>
             </dl>
-            <% if (editable && (!call_number || call_number.length < 1)) { %>
+            <% if (can_edit_copy && (!call_number || call_number.length < 1)) { %>
                 <dl class="dl-horizontal">
                     <dt>Do you know...</dt>
                     <dd>
@@ -63,11 +63,11 @@
                 </dl>
             <% } %>
         </div>
-        
+
         <div class="written-work-detail">
         <div class="breadcrumb">
         The Literary Work
-            <% if (editable) { %>
+            <% if (can_edit_work) { %>
                 <a href="javascript:void(0);" class="pull-right connect-records imprint">
                     <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                     Connect
@@ -78,7 +78,7 @@
             <% if (imprint.work.title && imprint.work.title.length > 0) { %>
                 <dt>Title</dt>
                 <dd class="border-bottom">
-                    <% if (editable) { %>
+                    <% if (can_edit_work) { %>
                         <a href="javascript:void(0);" class="editable-work-title"
                             data-value="<%=imprint.work.title%>"
                             data-name="title" data-model-type="WrittenWork"
@@ -105,7 +105,7 @@
                         <%=imprint.work.actor[i].person.name%><% if (imprint.work.actor[i].alias) { %>  as <%=imprint.work.actor[i].alias%> <% } %>
                     </span> 
                     <div class="pull-right">
-                        <% if (editable) { %>
+                        <% if (can_edit_work) { %>
                             <a href="javascript:void(0);" class="remove-related"
                              data-params="{attr:'actor',child_id:'<%=imprint.work.actor[i].id%>',parent_id:<%=imprint.work.id%>,parent_model:'writtenwork'}" 
                              data-url="/remove/related/"
@@ -124,7 +124,7 @@
                             <img src="<%=static_url%>img/loc.png" alt_text="Link to the Library of Congress" />
                         </a>
                     </div>
-                    <% if (editable) { %>
+                    <% if (can_edit_work) { %>
                         <a href="javascript:void(0);" class="editable-work-identifier"
                             data-type="identifier" data-pk="<%=imprint.work.standardized_identifier[i].id%>"
                             data-url="/api/identifier/<%=imprint.work.standardized_identifier[i].id%>/"
@@ -145,7 +145,7 @@
                 </dd>
             <% } %>
         </dl>
-        <% if (editable) { %>
+        <% if (can_edit_work) { %>
             <dl class="dl-horizontal">
                 <dt>Do you know...</dt>
                 <dd>  
@@ -180,7 +180,7 @@
         
         <div class="breadcrumb">
             The Imprint
-            <% if (editable) { %> 
+            <% if (can_edit_imprint) { %> 
                 <a href="javascript:void(0);" class="pull-right connect-records imprint">
                     <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                     Connect
@@ -191,7 +191,7 @@
             <% if (imprint.title && imprint.title.length > 0) { %>
                 <dt>Imprint Title</dt>
                 <dd class="border-bottom">
-                    <% if (editable) { %>
+                    <% if (can_edit_imprint) { %>
                         <a href="javascript:void(0);" class="editable-imprint-title"
                          data-value="<%=imprint.title%>"
                          data-name="title" data-model-type="Imprint"
@@ -207,7 +207,7 @@
             <% if (imprint.language.length > 0) { %>
                 <dt>Imprint Language</dt>
                 <dd class="border-bottom">
-                    <% if (editable) { %>
+                    <% if (can_edit_imprint) { %>
                         <a href="javascript:void(0);" class="editable-language"
                             data-name="language" data-method="post"
                             data-type="select2" data-pk="<%=imprint.id%>"
@@ -218,7 +218,7 @@
                     <% for (var i=0; i < imprint.language.length; i++) { %> 
                         <%= imprint.language[i].name %><% if (i < imprint.language.length-1) { %> , <% } %>
                     <% } %>
-                    <% if (editable) { %>
+                    <% if (can_edit_imprint) { %>
                         </a>
                     <% } %>
                 </dd>
@@ -227,7 +227,7 @@
                 <dt>Publication Date</dt>
                 <dd class="border-bottom">
                     <%=imprint.publication_date.display%>
-                    <% if (editable) { %>
+                    <% if (can_edit_imprint) { %>
                         <div class="pull-right">
                         <a href="javascript:void(0);" class="remove-related"
                             data-params="{attr:'publication_date',child_id:'<%=imprint.publication_date.id%>',parent_id:<%=imprint.id%>,parent_model:'imprint'}" 
@@ -244,7 +244,7 @@
                 <dd class="border-bottom footprint-place">
                     <span><%=imprint.place.display_title%></span>
                     <div class="pull-right">
-                        <% if (editable) { %>
+                        <% if (can_edit_imprint) { %>
                             <a href="javascript:void(0);" class="remove-related"
                                 data-params="{attr:'place',child_id:'<%=imprint.place.id%>',parent_id:<%=imprint.id%>,parent_model:'imprint'}" 
                                 data-url="/remove/related/"
@@ -275,7 +275,7 @@
                         <%=imprint.actor[i].person.name%><% if (imprint.actor[i].alias) { %>  as <%=imprint.actor[i].alias%> <% } %>
                     </span> 
                     <div class="pull-right">
-                        <% if (editable) { %>
+                        <% if (can_edit_imprint) { %>
                             <a href="javascript:void(0);" class="remove-related"
                              data-params="{attr:'actor',child_id:'<%=imprint.actor[i].id%>',parent_id:<%=imprint.id%>,parent_model:'imprint'}" 
                              data-url="/remove/related/"
@@ -303,7 +303,7 @@
                         </div>
                     <% } %>        
                 
-                    <% if (editable) { %>
+                    <% if (can_edit_imprint) { %>
                         <a href="javascript:void(0);" class="editable-imprint-identifier"
                             data-type="identifier" data-pk="<%=imprint.standardized_identifier[i].id%>"
                             data-url="/api/identifier/<%=imprint.standardized_identifier[i].id%>/"
@@ -326,7 +326,7 @@
             <% if (imprint.notes && imprint.notes.length > 0) { %>
                 <dt>Imprint Notes</dt>
                 <dd class="border-bottom">
-                    <% if (editable) { %>
+                    <% if (can_edit_imprint) { %>
                         <a href="javascript:void(0);" class="editable"
                             data-name="notes"
                             data-type="textarea" data-pk="<%=imprint.id%>"
@@ -339,7 +339,7 @@
             
         </dl>
         
-        <% if (editable) { %>
+        <% if (can_edit_imprint) { %>
             <dl class="dl-horizontal">
                 <dt>Do you know...</dt>
                 <dd>  

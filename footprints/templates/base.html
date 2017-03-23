@@ -46,14 +46,18 @@
                             class="icon-bar"></span> <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                      </button>
-                     <a class="navbar-brand" href="/"><img class="img-responsive" src="{{STATIC_URL}}img/fp_header_logo.png" alt="Footprints" /></a>
+                     <a class="navbar-brand" href="/">
+                        {% block branding %}
+                        <img class="img-responsive" src="{{STATIC_URL}}img/fp_header_logo.png" alt="Footprints" />
+                        {% endblock %}
+                     </a>
                 </div>
 
                 <!--/.navbar-header -->
                 <div class="collapse navbar-collapse" id="navbar-collapse-pl">
                     <ul class="nav navbar-nav navbar-right navbar-nav-pl">
                         <li><a href="/about/">About</a></li>
-                        {% if can_edit %}
+                        {% if can_create %}
                             <li><a href="/footprint/create/">Create</a></li>
                         {% endif %}
                         <li><a href="/browse/footprints/">Browse</a></li>
