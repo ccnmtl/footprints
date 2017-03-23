@@ -38,6 +38,10 @@
                             "Percent complete is less than 50%":
                                 function (e, n, f, i, $r, c, data) {
                                     return $r.find('.err-percent-complete').length > 0;
+                                },
+                            "Created by a new contributor":
+                                function (e, n, f, i, $r, c, data) {
+                                    return $r.find('.err-creator').length > 0;
                                 }
                         }
                     }

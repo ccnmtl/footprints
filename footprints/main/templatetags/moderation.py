@@ -22,6 +22,10 @@ def flag_empty_bhb_number(fp):
     return not fp.book_copy.imprint.has_bhb_number()
 
 
+def flag_creator(fp):
+    return fp.created_by.groups.filter(name='Creator').exists()
+
+
 @register.simple_tag
 def has_moderation_flags(fp):
     return len(moderation_flags(fp)) > 0
@@ -43,6 +47,10 @@ def moderation_flags(fp):
         errors.append(('err-percent-complete',
                        'Percent complete is less than 50%'))
 
+    if flag_creator(fp):
+        errors.append(('err-creator',
+                       'Created by a new contributor'))
+
     return errors
 
 
@@ -51,6 +59,7 @@ def moderation_footprints():
     qs = Footprint.objects.exclude(verified=True).filter(
         Q(percent_complete__lt=50) |
         Q(narrative__isnull=True) |
+        Q(created_by__groups__name='Creator') |
         Q(medium='Bookseller/auction catalog (1850-present)',
           call_number__isnull=True) |
         ~Q(book_copy__imprint__standardized_identifier__identifier_type__slug=SLUG_BHB))  # noqa:251

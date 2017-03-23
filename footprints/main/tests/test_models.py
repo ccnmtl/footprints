@@ -1,5 +1,6 @@
 from decimal import Decimal
 
+from django.contrib.auth.models import Group
 from django.db.utils import IntegrityError
 from django.test import TestCase
 
@@ -14,7 +15,7 @@ from footprints.main.tests.factories import RoleFactory, \
     ActorFactory, PlaceFactory, CollectionFactory, \
     WrittenWorkFactory, ImprintFactory, BookCopyFactory, FootprintFactory, \
     PersonFactory, DigitalObjectFactory, ExtendedDateFactory,\
-    EmptyFootprintFactory, StandardizedIdentificationFactory
+    EmptyFootprintFactory, StandardizedIdentificationFactory, UserFactory
 
 
 class BasicModelTest(TestCase):
@@ -417,4 +418,17 @@ class FootprintTest(TestCase):
         f5.book_copy.imprint.standardized_identifier.add(idf)
         self.assertFalse(moderation_flags(f5))
 
-        self.assertEquals(moderation_footprints().count(), 3)
+        # created by a new contributor
+        grp = Group.objects.get(name='Creator')
+        creator = UserFactory(group=grp)
+        f6 = FootprintFactory(created_by=creator)
+
+        qs = moderation_footprints()
+        self.assertEquals(qs.count(), 4)
+
+        self.assertTrue(f1 in qs)
+        self.assertTrue(f2 in qs)
+        self.assertTrue(f3 in qs)
+        self.assertFalse(f4 in qs)
+        self.assertFalse(f5 in qs)
+        self.assertTrue(f6 in qs)
