@@ -56,7 +56,8 @@ INSTALLED_APPS += [  # noqa
     'djcelery',
     'celery_haystack',
     'footprints.batch',
-    's3sign'
+    's3sign',
+    'registration'
 ]
 
 djcelery.setup_loader()
@@ -109,3 +110,5 @@ WIND_AFFIL_HANDLERS = [
     'djangowind.auth.SuperuserMapper',
 ]
 
+ACCOUNT_ACTIVATION_DAYS = 7  # One-week activation window
+REGISTRATION_AUTO_LOGIN = False  # Do not automatically log the user in.

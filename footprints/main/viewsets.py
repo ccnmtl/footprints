@@ -1,4 +1,3 @@
-from django.contrib.auth.models import User
 from rest_framework import viewsets
 
 from footprints.main.models import (
@@ -8,7 +7,7 @@ from footprints.main.models import (
 from footprints.main.serializers import (
     FootprintSerializer, LanguageSerializer, RoleSerializer,
     ExtendedDateSerializer, ActorSerializer, PersonSerializer,
-    PlaceSerializer, WrittenWorkSerializer, UserSerializer, ImprintSerializer,
+    PlaceSerializer, WrittenWorkSerializer, ImprintSerializer,
     BookCopySerializer, StandardizedIdentificationSerializer,
     DigitalFormatSerializer, DigitalObjectSerializer,
     StandardizedIdentificationTypeSerializer)
@@ -62,11 +61,6 @@ class WrittenWorkViewSet(viewsets.ModelViewSet):
         if title is not None and len(title) > 0:
             qs = qs.filter(title__istartswith=title)
         return qs
-
-
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
 
 
 class ImprintViewSet(viewsets.ModelViewSet):

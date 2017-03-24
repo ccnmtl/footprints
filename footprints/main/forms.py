@@ -1,10 +1,12 @@
-import urllib
 from datetime import date
+import urllib
+
 from django import forms
 from django.forms.models import ModelForm
 from django.utils.translation import ugettext_lazy as _
 from haystack.forms import ModelSearchForm
 from haystack.utils import get_model_ct
+from registration.forms import RegistrationForm
 
 from footprints.main.models import Footprint, DigitalObject, WrittenWork, \
     ExtendedDate
@@ -184,3 +186,22 @@ class ExtendedDateForm(forms.Form):
         edtf = self.get_extended_date()
         edtf.save()
         return edtf
+
+
+class CustomRegistrationForm(RegistrationForm):
+    first_name = forms.CharField(required=True)
+    last_name = forms.CharField(required=True)
+    username = forms.CharField(required=True)
+    email = forms.CharField(required=True)
+    password1 = forms.CharField(required=True)
+    password2 = forms.CharField(required=True)
+    decoy = forms.CharField(required=False)
+
+    def clean(self):
+        cleaned_data = super(CustomRegistrationForm, self).clean()
+
+        if 'decoy' in cleaned_data and len(cleaned_data['decoy']) > 0:
+            self._errors["decoy"] = self.error_class([
+                "Please leave this field blank"])
+
+        return cleaned_data
