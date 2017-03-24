@@ -72,8 +72,11 @@
                                     {% if can_import %}
                                         <li><a href="/batch/">Batch Import</a></li>
                                     {% endif %}
+                                    {% if request.user.is_staff and can_moderate %}
+                                        <li><a href="/admin/auth/user/">Manage Users</a></li>
+                                    {% endif %}
                                     {% if can_moderate %}
-                                        <li><a href="/moderate/">Moderate</a></li>
+                                        <li><a href="/moderate/">Moderate Footprints</a></li>
                                     {% endif %}
                                 </ul>
                             </li>
