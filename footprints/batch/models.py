@@ -155,6 +155,12 @@ class BatchRow(models.Model):
     def imported_fields(cls):
         return [BatchRow._meta.get_field(name) for name in cls.FIELD_MAPPING]
 
+    def save(self, *args, **kwargs):
+        if (self.writtenwork_title.endswith('.')):
+            self.writtenwork_title = self.writtenwork_title[:-1]
+
+        super(BatchRow, self).save(*args, **kwargs)
+
     def aggregate_notes(self):
         notes = ''
         if self.catalog_url and len(self.catalog_url) > 0:
