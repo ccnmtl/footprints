@@ -25,7 +25,15 @@
 
 {% block content %}
 <div class="page-header">
-  <h1>Browse Footprints</h1>
+    <div class="pull-right">
+        <strong>{{paginator.count}} footprints</strong>
+        {% flag "export_csv" %}
+        <button class="btn btn-white btn-sm btn-export" type="button">
+            <span class="glyphicon glyphicon-download-alt"></span> Export
+        </button>
+        {% endflag %}
+    </div>
+    <h1>Browse Footprints</h1>
 </div>
 
 <div class="object-browse">
@@ -216,9 +224,11 @@
     <div class="row tools">
         <div class="col-xs-12 results-navigation">
             {% include 'main/pagination.html' %}
+            {% flag "export_csv" %}
             <button class="btn btn-white btn-sm pull-right btn-export" type="button">
                 <span class="glyphicon glyphicon-download-alt"></span> Export
             </button>
+            {% endflag %}
         </div>
     </div>
     {% else %}
@@ -237,11 +247,6 @@
         </div>
         <div class="col-md-8">
             {% include 'main/pagination.html' %}
-            {% flag "export_csv" %}
-            <button class="btn btn-white btn-sm pull-right btn-export" type="button">
-                <span class="glyphicon glyphicon-download-alt"></span> Export
-            </button>
-            {% endflag %}
         </div>
     </div>
     {% endflag %}
