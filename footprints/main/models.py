@@ -811,13 +811,15 @@ class Imprint(models.Model):
     def has_standardized_identifier(self):
         return self.standardized_identifier is not None
 
-    def has_bhb_number(self):
+    def get_bhb_number(self):
         # iterating this short list vs. using .filter to
         # take advantage of pre-fetch related
         for si in self.standardized_identifier.all():
             if si.identifier_type.slug == SLUG_BHB:
-                return True
-        return False
+                return si
+
+    def has_bhb_number(self):
+        return self.get_bhb_number() is not None
 
     def has_at_least_one_digital_object(self):
         return self.digital_object.exists()
