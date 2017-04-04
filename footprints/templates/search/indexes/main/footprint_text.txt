@@ -1,6 +1,6 @@
 {{object.title}}
 {{object.notes}}
-{{object.book_copy.imprint.written_work.title}}
+{{object.book_copy.imprint.work.title}}
 {{object.place.city}} {{object.place.country}}
 {{object.book_copy.imprint.place.city}} {{object.book_copy.imprint.place.country}}
 {{object.book_copy.call_number}}
@@ -8,6 +8,6 @@
 {% for actor in object.actors %}
     {{actor.person.name}} {{actor.alias}}
 {% endfor %}
-{% for actor in object.book_copy.imprint.written_work.actors %}
+{% for actor in object.book_copy.imprint.work.actors %}
     {{actor.person.name}} {{actor.alias}}
 {% endfor %}
