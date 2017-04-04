@@ -268,7 +268,6 @@ class FootprintListViewTest(TestCase):
         self.assertTrue('paginator' in ctx)
         self.assertTrue('sort_options' in ctx)
         self.assertEquals(ctx['selected_sort'], 'ftitle')
-        self.assertEquals(ctx['selected_sort_label'], 'Footprint')
 
         self.assertEquals(ctx['object_list'][0], self.footprint1)
         self.assertEquals(ctx['object_list'][1], self.footprint2)
@@ -284,7 +283,6 @@ class FootprintListViewTest(TestCase):
         self.assertTrue('paginator' in ctx)
         self.assertTrue('sort_options' in ctx)
         self.assertEquals(ctx['selected_sort'], 'ftitle')
-        self.assertEquals(ctx['selected_sort_label'], 'Footprint')
 
         self.assertEquals(ctx['object_list'][0], self.footprint1)
         self.assertEquals(ctx['object_list'][1], self.footprint2)
@@ -311,7 +309,6 @@ class FootprintListViewTest(TestCase):
         self.assertTrue('paginator' in ctx)
         self.assertTrue('sort_options' in ctx)
         self.assertEquals(ctx['selected_sort'], 'flocation')
-        self.assertEquals(ctx['selected_sort_label'], 'Footprint Location')
 
         self.assertEquals(ctx['object_list'][0], self.footprint4)
         self.assertEquals(ctx['object_list'][1], self.footprint2)
@@ -339,7 +336,6 @@ class FootprintListViewTest(TestCase):
         self.assertTrue('paginator' in ctx)
         self.assertTrue('sort_options' in ctx)
         self.assertEquals(ctx['selected_sort'], 'fdate')
-        self.assertEquals(ctx['selected_sort_label'], 'Footprint Date')
 
         self.assertEquals(ctx['object_list'][0], self.footprint4)
         self.assertEquals(ctx['object_list'][1], self.footprint1)
@@ -367,7 +363,6 @@ class FootprintListViewTest(TestCase):
         self.assertTrue('paginator' in ctx)
         self.assertTrue('sort_options' in ctx)
         self.assertEquals(ctx['selected_sort'], 'owners')
-        self.assertEquals(ctx['selected_sort_label'], 'Owners')
 
         self.assertEquals(ctx['object_list'][0], self.footprint3)
         self.assertEquals(ctx['object_list'][1], self.footprint2)
