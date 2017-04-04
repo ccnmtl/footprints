@@ -44,6 +44,9 @@ MEDIUM_CHOICES = [
 
 SLUG_VIAF = 'VIAF'
 SLUG_BHB = 'BHB'
+SLUG_OCLC = 'WLD'
+SLUG_LOC = 'LOC'
+SLUG_VIAF = 'VIAF'
 
 
 class ExtendedDateManager(models.Manager):
@@ -343,6 +346,12 @@ class StandardizedIdentificationTypeQuerySet(models.query.QuerySet):
     def bhb(self):
         return self.get(slug=SLUG_BHB)
 
+    def loc(self):
+        return self.get(slug=SLUG_LOC)
+
+    def oclc(self):
+        return self.get(slug=SLUG_OCLC)
+
 
 class StandardizedIdentificationTypeManager(models.Manager):
     def __init__(self, fields=None, *args, **kwargs):
@@ -368,6 +377,16 @@ class StandardizedIdentificationTypeManager(models.Manager):
         if not hasattr(self, 'bhb_type'):
             self.bhb_type = self.get_queryset().bhb()
         return self.bhb_type
+
+    def loc(self):
+        if not hasattr(self, 'loc_type'):
+            self.loc_type = self.get_queryset().loc()
+        return self.loc_type
+
+    def oclc(self):
+        if not hasattr(self, 'oclc_type'):
+            self.oclc_type = self.get_queryset().oclc()
+        return self.oclc_type
 
 
 class StandardizedIdentificationType(models.Model):
@@ -664,6 +683,11 @@ class WrittenWork(models.Model):
         lst = list(self.imprint_set.all())
         lst.sort(key=lambda obj: obj.sort_date())
         return lst
+
+    def get_library_of_congress_identifier(self):
+        loc_type = StandardizedIdentificationType.objects.loc()
+        return self.standardized_identifier.filter(
+            identifier_type=loc_type).first()
 
 
 class ImprintManager(models.Manager):
