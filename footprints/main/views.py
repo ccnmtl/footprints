@@ -26,6 +26,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_jsonp.renderers import JSONPRenderer
 from s3sign.views import SignS3View as BaseSignS3View
+import waffle
 
 from footprints.main.forms import DigitalObjectForm, ContactUsForm, \
     SUBJECT_CHOICES, ExtendedDateForm
@@ -120,6 +121,35 @@ class FootprintDetailView(DetailView):
         context['mediums'] = MEDIUM_CHOICES
         context.update(self.permissions(self.request.user, self.get_object()))
         return context
+
+
+class SearchDispatchView(View):
+
+    def dispatch(self, request, *args, **kwargs):
+        if waffle.flag_is_active(request, 'advanced_search'):
+            # Use the brand new shiny search view
+            view = FootprintsSearchView.as_view()
+        else:
+            # Use existing browse view
+            view = FootprintListView.as_view()
+
+        return view(request, *args, **kwargs)
+
+
+class FootprintsSearchView(ListView):
+    model = Footprint
+    template_name = 'main/footprint_list.html'
+
+    paginate_by = 15
+
+    def get_queryset(self):
+        qs = super(FootprintsSearchView, self).get_queryset()
+        return qs.select_related(
+            'book_copy', 'associated_date', 'place').prefetch_related(
+            'digital_object',
+            'book_copy__imprint__publication_date',
+            'book_copy__imprint__actor__person',
+            'book_copy__imprint__place')
 
 
 class FootprintListView(ListView):

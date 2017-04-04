@@ -15,10 +15,11 @@ from footprints.main.forms import FootprintSearchForm, CustomRegistrationForm
 from footprints.main.views import (
     LoginView, LogoutView, AddActorView, CreateFootprintView,
     FootprintDetailView, WrittenWorkDetailView, TitleListView, NameListView,
-    AddPlaceView, AddDateView, RemoveRelatedView, FootprintListView,
+    AddPlaceView, AddDateView, RemoveRelatedView,
     AddIdentifierView, AddDigitalObjectView, ConnectFootprintView,
     ContactUsView, AddLanguageView, DisplayDateView, CopyFootprintView,
-    SignS3View, ExportFootprintListView, ModerationView, VerifyFootprintView)
+    SignS3View, ExportFootprintListView, ModerationView, VerifyFootprintView,
+    SearchDispatchView)
 from footprints.main.viewsets import (
     BookCopyViewSet, ImprintViewSet, ActorViewSet,
     ExtendedDateViewSet, FootprintViewSet, LanguageViewSet,
@@ -121,9 +122,9 @@ urlpatterns = [
     url(r'^writtenwork/(?P<pk>\d+)/$',
         WrittenWorkDetailView.as_view(), name='writtenwork-detail-view'),
 
-    url(r'^browse/footprints/$', FootprintListView.as_view(),
+    url(r'^browse/footprints/$', SearchDispatchView.as_view(),
         name='browse-footprint-list-default'),
-    url(r'^browse/footprints/(?P<sort_by>\w+)/$', FootprintListView.as_view(),
+    url(r'^browse/footprints/(?P<sort_by>\w+)/$', SearchDispatchView.as_view(),
         name='browse-footprint-list'),
     url(r'^export/footprints/(?P<sort_by>\w+)/$',
         ExportFootprintListView.as_view(),
