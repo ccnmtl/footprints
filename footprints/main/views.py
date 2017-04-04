@@ -20,6 +20,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
 from djangowind.views import logout as wind_logout_view
+from haystack.generic_views import SearchView
 from haystack.query import SearchQuerySet
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -29,7 +30,7 @@ from s3sign.views import SignS3View as BaseSignS3View
 import waffle
 
 from footprints.main.forms import DigitalObjectForm, ContactUsForm, \
-    SUBJECT_CHOICES, ExtendedDateForm
+    SUBJECT_CHOICES, ExtendedDateForm, FootprintAdvancedSearchForm
 from footprints.main.models import (
     Footprint, Actor, Person, Role, WrittenWork, Language,
     Place, Imprint, BookCopy, StandardizedIdentification,
@@ -123,6 +124,35 @@ class FootprintDetailView(DetailView):
         return context
 
 
+SORT_OPTIONS = {
+    'added': {
+        'label': 'Added',
+        'q': ['-created_at']
+    },
+    'complete': {
+        'label': 'Complete',
+        'q': ['percent_complete']
+    },
+    'fdate': {
+        'label': 'Footprint Date',
+    },
+    'flocation': {
+        'label': 'Footprint Location',
+    },
+    'ftitle': {
+        'label': 'Footprint',
+        'q': ['title']
+    },
+    'owners': {
+        'label': 'Owners'
+    },
+    'wtitle': {
+        'label': 'Literary Work',
+        'q': ['book_copy__imprint__work__title']
+    },
+}
+
+
 class SearchDispatchView(View):
 
     def dispatch(self, request, *args, **kwargs):
@@ -136,71 +166,64 @@ class SearchDispatchView(View):
         return view(request, *args, **kwargs)
 
 
-class FootprintsSearchView(ListView):
+class FootprintsSearchView(SearchView):
     model = Footprint
-    template_name = 'main/footprint_list.html'
-
+    form_class = FootprintAdvancedSearchForm
+    template_name = 'main/footprint_advanced_search.html'
     paginate_by = 15
 
     def get_queryset(self):
-        qs = super(FootprintsSearchView, self).get_queryset()
-        return qs.select_related(
-            'book_copy', 'associated_date', 'place').prefetch_related(
-            'digital_object',
-            'book_copy__imprint__publication_date',
-            'book_copy__imprint__actor__person',
-            'book_copy__imprint__place')
+        sqs = super(FootprintsSearchView, self).get_queryset()
+        sqs = sqs.exclude(django_ct__in=['main.imprint',
+                                         'main.place',
+                                         'main.person',
+                                         'main.writtenwork'])
+
+        return sqs
+
+    def get_context_data(self, **kwargs):
+        context = super(FootprintsSearchView, self).get_context_data(**kwargs)
+
+        sort_by = 'ftitle'
+        direction = self.request.GET.get('direction', 'asc')
+        query = self.request.GET.get('q', '')
+
+        context['selected_sort'] = sort_by
+        context['direction'] = direction
+        context['query'] = query
+
+        base = reverse('browse-footprint-list', args=[sort_by])
+        context['base_url'] = \
+            u'{}?direction={}&q={}&page='.format(base, direction, query)
+
+        export = reverse('export-footprint-list', args=[sort_by])
+        context['export_url'] = \
+            u'{}?direction={}&q={}&page='.format(export, direction, query)
+
+        return context
 
 
 class FootprintListView(ListView):
     model = Footprint
     template_name = 'main/footprint_list.html'
-    sort_options = {
-        'added': {
-            'label': 'Added',
-            'q': ['-created_at']
-        },
-        'complete': {
-            'label': 'Complete',
-            'q': ['percent_complete']
-        },
-        'fdate': {
-            'label': 'Footprint Date',
-        },
-        'flocation': {
-            'label': 'Footprint Location',
-        },
-        'ftitle': {
-            'label': 'Footprint',
-            'q': ['title']
-        },
-        'owners': {
-            'label': 'Owners'
-        },
-        'wtitle': {
-            'label': 'Literary Work',
-            'q': ['book_copy__imprint__work__title']
-        },
-    }
     paginate_by = 15
 
     def get_sort_by(self):
         sort_by = self.kwargs.get('sort_by')
-        if sort_by in self.sort_options.keys():
+        if sort_by in SORT_OPTIONS.keys():
             return sort_by
 
         return 'ftitle'
 
     def get_context_data(self, **kwargs):
         context = super(FootprintListView, self).get_context_data(**kwargs)
-        context['sort_options'] = self.sort_options
+        context['sort_options'] = SORT_OPTIONS
 
         sort_by = self.get_sort_by()
         direction = self.request.GET.get('direction', 'asc')
         query = self.request.GET.get('q', '')
 
         context['selected_sort'] = sort_by
-        context['selected_sort_label'] = self.sort_options[sort_by]['label']
         context['direction'] = direction
         context['query'] = query
 
@@ -242,7 +265,7 @@ class FootprintListView(ListView):
         return lst
 
     def default_sort(self, qs, sort_by, direction):
-        qs = qs.order_by(*self.sort_options[sort_by]['q'])
+        qs = qs.order_by(*SORT_OPTIONS[sort_by]['q'])
         if direction == 'asc':
             return qs
         else:

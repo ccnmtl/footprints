@@ -42,9 +42,9 @@ class FootprintSearchForm(ModelSearchForm):
         else:
             sqs = self.searchqueryset.auto_query(self.cleaned_data['q'])
 
-        sqs = sqs.exclude(django_ct__in=["main.imprint",
-                                         "main.place",
-                                         "main.person"])
+        sqs = sqs.exclude(django_ct__in=['main.imprint',
+                                         'main.place',
+                                         'main.person'])
 
         if self.load_all:
             sqs = sqs.load_all()
@@ -55,6 +55,27 @@ class FootprintSearchForm(ModelSearchForm):
 
     def get_query_params(self):
         return urllib.urlencode(self.cleaned_data, doseq=True)
+
+
+class FootprintAdvancedSearchForm(ModelSearchForm):
+
+    def search(self):
+        if not self.is_valid():
+            return self.no_query_found()
+
+        if not self.cleaned_data.get('q'):
+            sqs = self.searchqueryset.all()
+        else:
+            sqs = self.searchqueryset.auto_query(self.cleaned_data['q'])
+
+        if self.load_all:
+            sqs = sqs.load_all()
+
+        return sqs
+
+    def get_query_params(self):
+        return urllib.urlencode(self.cleaned_data, doseq=True)
+
 
 SUBJECT_CHOICES = (
     ('-----', '-----'),

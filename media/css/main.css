@@ -1974,6 +1974,7 @@ ul.additional-questions .editable-container {
     cursor: not-allowed;
 }
 
+.object-browse .tools input.advanced-page-number,
 .object-browse .tools input.page-number {
     width: 50px;
     display: inline;
