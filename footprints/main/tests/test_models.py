@@ -117,6 +117,12 @@ class BasicModelTest(TestCase):
         FootprintFactory()  # noise
         self.assertEquals(work.references(), 2)
 
+        loc_type = StandardizedIdentificationType.objects.loc()
+        idf = StandardizedIdentificationFactory(identifier_type=loc_type)
+        work.standardized_identifier.add(idf)
+
+        self.assertEquals(work.get_library_of_congress_identifier(), idf)
+
     def test_book_copy(self):
         copy = BookCopyFactory()
         self.assertTrue(
