@@ -29,9 +29,6 @@
 
 {% block content %}
 <div class="page-header">
-    <div class="pull-right">
-        <strong>{{paginator.count}} footprints</strong>
-    </div>
     <h1>Search Footprints</h1>
 </div>
 
@@ -229,15 +226,15 @@
         <div class="col-xs-12 results-navigation">
             {% include 'main/pagination.html' %}
             {% flag "export_csv" %}
-            {% if object_list|length < 1 %}
-           <button class="btn btn-white btn-sm pull-right btn-export" type="button">
-                <span class="glyphicon glyphicon-download-alt"></span> Export
-            </button>
-           {% endif %}
+				{% if object_list|length > 0 %}
+					<button class="btn btn-white btn-sm pull-right btn-export" type="button">
+					<span class="glyphicon glyphicon-download-alt"></span> Export
+					</button>
+				{% endif %}
             {% endflag %}
-    <div class="total-results-count pull-right">
-        <strong>{{paginator.count}} footprints</strong>
-    </div>
+            <div class="total-results-count pull-right">
+                {{paginator.count}} footprints
+            </div>
         </div>
     </div>
 

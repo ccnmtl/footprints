@@ -2268,6 +2268,7 @@ th.sortable.tablesorter-headerDesc,
 	vertical-align: middle;
 	display: inline-block;
 	line-height: 30px;
+	font-weight: bold;
 }
 
 .btn-export {
