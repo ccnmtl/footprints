@@ -25,213 +25,10 @@
 
 {% block content %}
 <div class="page-header">
-    <div class="pull-right">
-        <strong>{{paginator.count}} footprints</strong>
-        {% flag "export_csv" %}
-        <button class="btn btn-white btn-sm btn-export" type="button">
-            <span class="glyphicon glyphicon-download-alt"></span> Export
-        </button>
-        {% endflag %}
-    </div>
     <h1>Browse Footprints</h1>
 </div>
 
 <div class="object-browse">
-    {% flag "advanced_search" %}
-    <div class="row tools advanced-search-filter">
-        <div class="col-xs-12 search-level">
-            <form class="form-inline">
-                <div class="form-group field-cell">
-                    <label for="keyword-search" class="sr-only">Find:</label>
-                    <input class="form-control" id="keyword-search" placeholder="Find...">
-                </div>
-                <div class="editable-edtf field-cell">
-                    <div class="form-group">
-                        <label>Footprint year:</label>
-                        <div class="date-display-row">
-                            <input type="number" class="form-control edtf-entry jump" name="millenium1" min="1" max="2"
-                             maxlength="1" data-content="Millenium<br />Value between 1-2"
-                             data-toggle="popover" placeholder='-' />
-                            <input type="number" class="form-control numeric edtf-entry jump" name="century1" min="0" max="9"
-                             maxlength="1" data-content="Century<br />Value between 0-9"
-                             data-required="[name='millenium1']"
-                             data-toggle="popover" placeholder='-' />
-                            <input type="number" class="form-control numeric edtf-entry jump" name="decade1" min="0" max="9"
-                             maxlength="1" data-content="Decade<br />Value between 0-9"
-                             data-required="[name='century1'],[name='millenium1']"
-                             data-toggle="popover" placeholder='-' />
-                            <input type="number" class="form-control numeric edtf-entry" name="year1" min="0" max="9"
-                             data-required="[name='decade1'],[name='century1'],[name='millenium1']"
-                             maxlength="1" data-content="Year<br />Value between 0-9"
-                             data-toggle="popover" placeholder='-' />
-                        </div>
-                        <div class="toggle-next-row-container date2">
-                            <button class="btn-white btn btn-xs toggle-next-row form-control">
-                                to...
-                            </button>
-                        </div>
-                        <div class="date-display-row">
-                            <input type="number" class="form-control edtf-entry jump" name="millenium2" min="1" max="2"
-                             maxlength="1" data-content="Millenium<br />Value between 1-2"
-                             data-toggle="popover" placeholder='-' />
-                            <input type="number" class="form-control numeric edtf-entry jump" name="century2" min="0" max="9"
-                             maxlength="1" data-content="Century<br />Value between 0-9"
-                             data-required="[name='millenium2']"
-                             data-toggle="popover" placeholder='-' />
-                            <input type="number" class="form-control numeric edtf-entry jump" name="decade2" min="0" max="9"
-                             maxlength="1" data-content="Decade<br />Value between 0-9"
-                             data-required="[name='century2'],[name='millenium2']"
-                             data-toggle="popover" placeholder='-' />
-                            <input type="number" class="form-control numeric edtf-entry" name="year2" min="0" max="9"
-                             maxlength="1" data-content="Year<br />Value between 0-9"
-                             data-required="[name='decade2'],[name='century2'],[name='millenium2']"
-                             data-toggle="popover" placeholder='-' />
-                        </div>
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-default">
-                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search
-                </button>
-                <button type="clear" class="btn btn-default">
-                    <span class="glyphicon glyphicon-remove"></span> Clear
-                </button>
-                <div class="toggle-filters">
-                    <span class="glyphicon glyphicon-tasks"></span> Hide filters
-                </div>
-            </form>
-        </div>
-        <div class="col-xs-12 filter-level is-expanded">
-            <div class="row">
-            <form class="form-inline">
-                <div class="col-xs-2">
-                    <h3>Publication year:</h3>
-                    <div class="editable-edtf">
-                        <div class="form-group">
-                            <label class="sr-only">Publication year:</label>
-                            <div class="date-display-row">
-                                <input type="number" class="form-control edtf-entry jump" name="millenium1" min="1" max="2"
-                                 maxlength="1" data-content="Millenium<br />Value between 1-2"
-                                 data-toggle="popover" placeholder='-' />
-                                <input type="number" class="form-control numeric edtf-entry jump" name="century1" min="0" max="9"
-                                 maxlength="1" data-content="Century<br />Value between 0-9"
-                                 data-required="[name='millenium1']"
-                                 data-toggle="popover" placeholder='-' />
-                                <input type="number" class="form-control numeric edtf-entry jump" name="decade1" min="0" max="9"
-                                 maxlength="1" data-content="Decade<br />Value between 0-9"
-                                 data-required="[name='century1'],[name='millenium1']"
-                                 data-toggle="popover" placeholder='-' />
-                                <input type="number" class="form-control numeric edtf-entry" name="year1" min="0" max="9"
-                                 data-required="[name='decade1'],[name='century1'],[name='millenium1']"
-                                 maxlength="1" data-content="Year<br />Value between 0-9"
-                                 data-toggle="popover" placeholder='-' />
-                            </div>
-                            <div class="toggle-next-row-container date2">
-                                <button class="btn-white btn btn-xs toggle-next-row form-control">
-                                    to...
-                                </button>
-                            </div>
-                            <div class="date-display-row">
-                                <input type="number" class="form-control edtf-entry jump" name="millenium2" min="1" max="2"
-                                 maxlength="1" data-content="Millenium<br />Value between 1-2"
-                                 data-toggle="popover" placeholder='-' />
-                                <input type="number" class="form-control numeric edtf-entry jump" name="century2" min="0" max="9"
-                                 maxlength="1" data-content="Century<br />Value between 0-9"
-                                 data-required="[name='millenium2']"
-                                 data-toggle="popover" placeholder='-' />
-                                <input type="number" class="form-control numeric edtf-entry jump" name="decade2" min="0" max="9"
-                                 maxlength="1" data-content="Decade<br />Value between 0-9"
-                                 data-required="[name='century2'],[name='millenium2']"
-                                 data-toggle="popover" placeholder='-' />
-                                <input type="number" class="form-control numeric edtf-entry" name="year2" min="0" max="9"
-                                 maxlength="1" data-content="Year<br />Value between 0-9"
-                                 data-required="[name='decade2'],[name='century2'],[name='millenium2']"
-                                 data-toggle="popover" placeholder='-' />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xs-4">
-                    <h3>Location:</h3>
-                    <div class="row">
-                        <div class="col-xs-4 filter-col col-1">
-                            <div class="checkbox">
-                                <label><input type="checkbox"> Imprint</label>
-                            </div>
-                            <div class="checkbox">
-                                <label><input type="checkbox"> Footprint</label>
-                            </div>
-                        </div>
-                        <div class="col-xs-8 filter-col col-2">
-                            <div class="checkbox">
-                                <label><input type="checkbox"> Oppenheim, David b. Abraham</label>
-                            </div>
-                            <div class="checkbox">
-                                <label><input type="checkbox"> Oppenheim, David b. Abraham</label>
-                            </div>
-                            <div class="checkbox">
-                                <label><input type="checkbox"> Oppenheim, David b. Abraham</label>
-                            </div>
-                            <div class="checkbox">
-                                <label><input type="checkbox"> Oppenheim, David b. Abraham</label>
-                            </div>
-                            <div class="more-module-link">
-                                <a href="#">More locations...</a>
-                            </div>
-                        </div>
-                   </div>
-                </div>
-                <div class="col-xs-4">
-                    <h3>Person:</h3>
-                    <div class="row">
-                        <div class="col-xs-4 filter-col col-1">
-                            <div class="checkbox">
-                                <label><input type="checkbox"> Author</label>
-                            </div>
-                            <div class="checkbox">
-                                <label><input type="checkbox"> Owner</label>
-                            </div>
-                            <div class="checkbox">
-                                <label><input type="checkbox"> Whatever else</label>
-                            </div>
-                       </div>
-                        <div class="col-xs-8 filter-col col-2">
-                            <div class="checkbox">
-                                <label><input type="checkbox"> Oppenheim, David b. Abraham</label>
-                            </div>
-                            <div class="checkbox">
-                                <label><input type="checkbox"> Oppenheim, David b. Abraham</label>
-                            </div>
-                            <div class="checkbox">
-                                <label><input type="checkbox"> Oppenheim, David b. Abraham</label>
-                            </div>
-                            <div class="checkbox">
-                                <label><input type="checkbox"> Oppenheim, David b. Abraham</label>
-                            </div>
-                            <div class="more-module-link">
-                                <a href="#">More people...</a>
-                            </div>
-                        </div>
-                   </div>
-                </div>
-                <div class="col-xs-2">
-                <button type="submit" class="btn btn-default" aria-hidden="true"><span class="glyphicon glyphicon-ok"></span> Apply filter</button>
-                </div>
-            </form>
-            </div>
-        </div>
-    </div>
-    <!-- Results navigation  -->
-    <div class="row tools">
-        <div class="col-xs-12 results-navigation">
-            {% include 'main/pagination.html' %}
-            {% flag "export_csv" %}
-            <button class="btn btn-white btn-sm pull-right btn-export" type="button">
-                <span class="glyphicon glyphicon-download-alt"></span> Export
-            </button>
-            {% endflag %}
-        </div>
-    </div>
-    {% else %}
     <div class="row tools">
         <div class="col-md-4">
             <div class="input-group">
@@ -245,22 +42,22 @@
                 </span>
             </div>
         </div>
-    <!-- Results navigation  -->
+        <!-- Results navigation  -->
         <div class="col-md-8">
             {% include 'main/pagination.html' %}
             {% flag "export_csv" %}
-				{% if object_list|length > 0 %}
-					<button class="btn btn-white btn-sm pull-right btn-export" type="button">
-					<span class="glyphicon glyphicon-download-alt"></span> Export
-					</button>
-				{% endif %}
+                {% if object_list|length > 0 %}
+                    <button class="btn btn-white btn-sm pull-right btn-export" type="button">
+                    <span class="glyphicon glyphicon-download-alt"></span> Export
+                    </button>
+                {% endif %}
             {% endflag %}
             <div class="total-results-count pull-right">
-                {{paginator.count}} footprints
+                    {{paginator.count}} footprints
             </div>
         </div>
     </div>
-    {% endflag %}
+
     {% if object_list|length < 1 %}
         <h4 class="well">No matching Footprints</h4>
     {% else %}

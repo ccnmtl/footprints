@@ -6,12 +6,11 @@ from django.contrib.auth.views import password_change, password_change_done, \
     password_reset_done, password_reset_confirm, password_reset_complete,\
     password_reset
 from django.views.generic import TemplateView
-from haystack.views import SearchView
 from registration.backends.default.views import RegistrationView
 from rest_framework import routers
 
 from footprints.main import views
-from footprints.main.forms import FootprintSearchForm, CustomRegistrationForm
+from footprints.main.forms import CustomRegistrationForm
 from footprints.main.views import (
     LoginView, LogoutView, AddActorView, CreateFootprintView,
     FootprintDetailView, WrittenWorkDetailView, TitleListView, NameListView,
@@ -19,7 +18,7 @@ from footprints.main.views import (
     AddIdentifierView, AddDigitalObjectView, ConnectFootprintView,
     ContactUsView, AddLanguageView, DisplayDateView, CopyFootprintView,
     SignS3View, ExportFootprintListView, ModerationView, VerifyFootprintView,
-    SearchDispatchView)
+    FootprintSearchView, FootprintListView)
 from footprints.main.viewsets import (
     BookCopyViewSet, ImprintViewSet, ActorViewSet,
     ExtendedDateViewSet, FootprintViewSet, LanguageViewSet,
@@ -122,9 +121,9 @@ urlpatterns = [
     url(r'^writtenwork/(?P<pk>\d+)/$',
         WrittenWorkDetailView.as_view(), name='writtenwork-detail-view'),
 
-    url(r'^browse/footprints/$', SearchDispatchView.as_view(),
+    url(r'^browse/footprints/$', FootprintListView.as_view(),
         name='browse-footprint-list-default'),
-    url(r'^browse/footprints/(?P<sort_by>\w+)/$', SearchDispatchView.as_view(),
+    url(r'^browse/footprints/(?P<sort_by>\w+)/$', FootprintListView.as_view(),
         name='browse-footprint-list'),
     url(r'^export/footprints/(?P<sort_by>\w+)/$',
         ExportFootprintListView.as_view(),
@@ -133,10 +132,9 @@ urlpatterns = [
     url(r'^date/display/$',
         DisplayDateView.as_view(), name='display-date-view'),
 
-    url(r'^search/',
-        SearchView(template="search/search.html",
-                   form_class=FootprintSearchForm),
-        name='search'),
+    url(r'^search/(?P<sort_by>\w+)/$', FootprintSearchView.as_view(),
+        name='search-and-sort'),
+    url(r'^search/', FootprintSearchView.as_view(), name='search'),
 
     url(r'^api-auth/', include('rest_framework.urls',
                                namespace='rest_framework')),

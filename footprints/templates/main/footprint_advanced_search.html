@@ -14,14 +14,14 @@
         jQuery(document).ready(function() {
             var view = new FootprintListView({
                 el: jQuery(".page"),
-                baseUrl: "{% url 'browse-footprint-list-default' %}",
+                baseUrl: "{% url 'search' %}",
                 selectedDirection: "{{direction}}",
                 selectedSort: "{{selected_sort}}",
                 query: "{{query}}"
             });
 
 			jQuery('#clear_primary_search').click(function(evt) {
-				window.location = '/browse/footprints/';
+				window.location = '/search/';
 			});
         });
     </script>
@@ -35,7 +35,7 @@
 <div class="object-browse">
     <div class="row tools advanced-search-filter">
         <div class="col-xs-12 search-level">
-            <form class="form-inline" action="{% url 'browse-footprint-list-default' %}">
+            <form class="form-inline" action="{% url 'search' %}">
                 <div class="form-group field-cell">
                     <label for="keyword-search" class="sr-only">Find:</label>
                     <input class="form-control" id="keyword-search" name="q" placeholder="Find..." value="{{query}}">
