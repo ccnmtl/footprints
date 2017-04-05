@@ -1,5 +1,5 @@
 --index-url https://pypi.ccnmtl.columbia.edu/
-Django==1.9.12
+Django==1.9.13
 feedparser==5.2.1
 Markdown==2.6.8
 smartypants==2.0.0
