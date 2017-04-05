@@ -48,14 +48,6 @@
     <fieldType name="location" class="solr.LatLonType" subFieldSuffix="_coordinate"/>
     <fieldtype name="geohash" class="solr.GeoHashField"/>
 
-    <fieldType name="text_sortable" class="solr.TextField" positionIncrementGap="100">
-      <analyzer>
-        <tokenizer class="solr.KeywordTokenizerFactory"/>
-        <filter class="solr.LowerCaseFilterFactory" />
-        <filter class="solr.TrimFilterFactory" />
-      </analyzer>
-    </fieldType>
-
     <fieldType name="text_general" class="solr.TextField" positionIncrementGap="100">
       <analyzer type="index">
         <tokenizer class="solr.StandardTokenizerFactory"/>
