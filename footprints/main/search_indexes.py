@@ -1,9 +1,10 @@
 import re
 
-from haystack import indexes
+from celery_haystack.indexes import CelerySearchIndex
+from haystack.constants import Indexable
+from haystack.fields import CharField, NgramField, DateTimeField, IntegerField
 from unidecode import unidecode
 
-from celery_haystack.indexes import CelerySearchIndex
 from footprints.main.models import WrittenWork, Footprint, Person, Place, \
     Imprint
 
@@ -21,12 +22,12 @@ def format_sort_by(sort_term, remove_articles=False):
     return sort_term
 
 
-class WrittenWorkIndex(CelerySearchIndex, indexes.Indexable):
-    object_id = indexes.CharField(model_attr='id')
-    object_type = indexes.CharField()
-    text = indexes.NgramField(document=True, use_template=True)
-    title = indexes.NgramField(model_attr='title', null=True)
-    sort_by = indexes.CharField()
+class WrittenWorkIndex(CelerySearchIndex, Indexable):
+    object_id = CharField(model_attr='id')
+    object_type = CharField()
+    text = NgramField(document=True, use_template=True)
+    title = NgramField(model_attr='title', null=True)
+    sort_by = CharField()
 
     def get_model(self):
         return WrittenWork
@@ -38,11 +39,11 @@ class WrittenWorkIndex(CelerySearchIndex, indexes.Indexable):
         return format_sort_by(obj.__unicode__(), remove_articles=True)
 
 
-class ImprintIndex(CelerySearchIndex, indexes.Indexable):
-    object_id = indexes.CharField(model_attr='id')
-    object_type = indexes.CharField()
-    text = indexes.NgramField(document=True, use_template=True)
-    title = indexes.NgramField(model_attr='title', null=True)
+class ImprintIndex(CelerySearchIndex, Indexable):
+    object_id = CharField(model_attr='id')
+    object_type = CharField()
+    text = NgramField(document=True, use_template=True)
+    title = NgramField(model_attr='title', null=True)
 
     def get_model(self):
         return Imprint
@@ -51,21 +52,21 @@ class ImprintIndex(CelerySearchIndex, indexes.Indexable):
         return type(obj).__name__
 
 
-class FootprintIndex(CelerySearchIndex, indexes.Indexable):
-    object_id = indexes.CharField(model_attr='id')
-    object_type = indexes.CharField()
-    text = indexes.NgramField(document=True, use_template=True)
-    title = indexes.NgramField(model_attr='title')
-    sort_by = indexes.CharField()
+class FootprintIndex(CelerySearchIndex, Indexable):
+    object_id = CharField(model_attr='id')
+    object_type = CharField()
+    text = NgramField(document=True, use_template=True)
+    title = NgramField(model_attr='title')
+    sort_by = CharField()
 
     # custom sort fields
-    added = indexes.DateTimeField(model_attr='created_at')
-    complete = indexes.IntegerField(model_attr='percent_complete')
-    ftitle = indexes.CharField()
-    fdate = indexes.DateTimeField()
-    flocation = indexes.NgramField()
-    owners = indexes.CharField()
-    wtitle = indexes.CharField()
+    added = DateTimeField(model_attr='created_at')
+    complete = IntegerField(model_attr='percent_complete')
+    ftitle = CharField()
+    fdate = DateTimeField()
+    flocation = CharField()
+    owners = CharField()
+    wtitle = CharField()
 
     def get_model(self):
         return Footprint
@@ -103,12 +104,12 @@ class FootprintIndex(CelerySearchIndex, indexes.Indexable):
         return format_sort_by(', '.join(a), remove_articles=True)
 
 
-class PersonIndex(CelerySearchIndex, indexes.Indexable):
-    object_id = indexes.CharField(model_attr='id')
-    object_type = indexes.CharField()
-    text = indexes.NgramField(document=True, use_template=True)
-    name = indexes.NgramField(model_attr='name')
-    sort_by = indexes.CharField()
+class PersonIndex(CelerySearchIndex, Indexable):
+    object_id = CharField(model_attr='id')
+    object_type = CharField()
+    text = NgramField(document=True, use_template=True)
+    name = NgramField(model_attr='name')
+    sort_by = CharField()
 
     def get_model(self):
         return Person
@@ -120,11 +121,11 @@ class PersonIndex(CelerySearchIndex, indexes.Indexable):
         return format_sort_by(obj.name, remove_articles=True)
 
 
-class PlaceIndex(CelerySearchIndex, indexes.Indexable):
-    object_id = indexes.CharField(model_attr='id')
-    object_type = indexes.CharField()
-    text = indexes.NgramField(document=True, use_template=True)
-    sort_by = indexes.CharField()
+class PlaceIndex(CelerySearchIndex, Indexable):
+    object_id = CharField(model_attr='id')
+    object_type = CharField()
+    text = NgramField(document=True, use_template=True)
+    sort_by = CharField()
 
     def get_model(self):
         return Place
