@@ -1,7 +1,6 @@
 import re
 
 from haystack import indexes
-from haystack.fields import CharField
 from unidecode import unidecode
 
 from celery_haystack.indexes import CelerySearchIndex
@@ -23,11 +22,11 @@ def format_sort_by(sort_term, remove_articles=False):
 
 
 class WrittenWorkIndex(CelerySearchIndex, indexes.Indexable):
-    object_id = CharField(model_attr='id')
-    object_type = CharField()
+    object_id = indexes.CharField(model_attr='id')
+    object_type = indexes.CharField()
     text = indexes.NgramField(document=True, use_template=True)
     title = indexes.NgramField(model_attr='title', null=True)
-    sort_by = CharField()
+    sort_by = indexes.CharField()
 
     def get_model(self):
         return WrittenWork
@@ -40,8 +39,8 @@ class WrittenWorkIndex(CelerySearchIndex, indexes.Indexable):
 
 
 class ImprintIndex(CelerySearchIndex, indexes.Indexable):
-    object_id = CharField(model_attr='id')
-    object_type = CharField()
+    object_id = indexes.CharField(model_attr='id')
+    object_type = indexes.CharField()
     text = indexes.NgramField(document=True, use_template=True)
     title = indexes.NgramField(model_attr='title', null=True)
 
@@ -53,11 +52,20 @@ class ImprintIndex(CelerySearchIndex, indexes.Indexable):
 
 
 class FootprintIndex(CelerySearchIndex, indexes.Indexable):
-    object_id = CharField(model_attr='id')
-    object_type = CharField()
+    object_id = indexes.CharField(model_attr='id')
+    object_type = indexes.CharField()
     text = indexes.NgramField(document=True, use_template=True)
     title = indexes.NgramField(model_attr='title')
-    sort_by = CharField()
+    sort_by = indexes.CharField()
+
+    # custom sort fields
+    added = indexes.DateTimeField(model_attr='created_at')
+    complete = indexes.IntegerField(model_attr='percent_complete')
+    ftitle = indexes.CharField()
+    fdate = indexes.DateTimeField()
+    flocation = indexes.NgramField()
+    owners = indexes.CharField()
+    wtitle = indexes.CharField()
 
     def get_model(self):
         return Footprint
@@ -68,13 +76,39 @@ class FootprintIndex(CelerySearchIndex, indexes.Indexable):
     def prepare_sort_by(self, obj):
         return format_sort_by(obj.title, remove_articles=True)
 
+    def prepare_ftitle(self, obj):
+        try:
+            return format_sort_by(obj.title, remove_articles=True)
+        except AttributeError:
+            return ''
+
+    def prepare_flocation(self, obj):
+        if obj.place:
+            return obj.place.__unicode__()
+
+        return ''
+
+    def prepare_fdate(self, obj):
+        return obj.sort_date()
+
+    def prepare_wtitle(self, obj):
+        try:
+            return format_sort_by(obj.book_copy.imprint.work.title,
+                                  remove_articles=True)
+        except AttributeError:
+            return ''
+
+    def prepare_owners(self, obj):
+        a = [o.display_name() for o in obj.owners()]
+        return format_sort_by(', '.join(a), remove_articles=True)
+
 
 class PersonIndex(CelerySearchIndex, indexes.Indexable):
-    object_id = CharField(model_attr='id')
-    object_type = CharField()
+    object_id = indexes.CharField(model_attr='id')
+    object_type = indexes.CharField()
     text = indexes.NgramField(document=True, use_template=True)
     name = indexes.NgramField(model_attr='name')
-    sort_by = CharField()
+    sort_by = indexes.CharField()
 
     def get_model(self):
         return Person
@@ -87,10 +121,10 @@ class PersonIndex(CelerySearchIndex, indexes.Indexable):
 
 
 class PlaceIndex(CelerySearchIndex, indexes.Indexable):
-    object_id = CharField(model_attr='id')
-    object_type = CharField()
+    object_id = indexes.CharField(model_attr='id')
+    object_type = indexes.CharField()
     text = indexes.NgramField(document=True, use_template=True)
-    sort_by = CharField()
+    sort_by = indexes.CharField()
 
     def get_model(self):
         return Place

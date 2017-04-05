@@ -67,19 +67,9 @@
 
     <fieldType name="text_en" class="solr.TextField" positionIncrementGap="100">
       <analyzer type="index">
-        <tokenizer class="solr.StandardTokenizerFactory"/>
-        <filter class="solr.StopFilterFactory"
-                ignoreCase="true"
-                words="lang/stopwords_en.txt"
-                enablePositionIncrements="true"
-                />
-        <filter class="solr.LowerCaseFilterFactory"/>
-        <filter class="solr.EnglishPossessiveFilterFactory"/>
-        <filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt"/>
-        <!-- Optionally you may want to use this less aggressive stemmer instead of PorterStemFilterFactory:
-          <filter class="solr.EnglishMinimalStemFilterFactory"/>
-        -->
-        <filter class="solr.PorterStemFilterFactory"/>
+        <tokenizer class="solr.KeywordTokenizerFactory"/>
+        <filter class="solr.LowerCaseFilterFactory" />
+        <filter class="solr.TrimFilterFactory" />
       </analyzer>
       <analyzer type="query">
         <tokenizer class="solr.StandardTokenizerFactory"/>
@@ -151,15 +141,29 @@
     <dynamicField name="*_coordinate"  type="tdouble" indexed="true"  stored="false"/>
 
 
-    <field name="text" type="ngram" indexed="true" stored="true" multiValued="false" />
+    <field name="flocation" type="text_en" indexed="true" stored="true" multiValued="false" />
 
-    <field name="object_type" type="text_en" indexed="true" stored="true" multiValued="false" />
+    <field name="added" type="date" indexed="true" stored="true" multiValued="false" />
+
+    <field name="complete" type="long" indexed="true" stored="true" multiValued="false" />
 
     <field name="title" type="ngram" indexed="true" stored="true" multiValued="false" />
 
+    <field name="text" type="ngram" indexed="true" stored="true" multiValued="false" />
+
+    <field name="ftitle" type="text_en" indexed="true" stored="true" multiValued="false" />
+
+    <field name="object_type" type="text_en" indexed="true" stored="true" multiValued="false" />
+
+    <field name="owners" type="text_en" indexed="true" stored="true" multiValued="false" />
+
     <field name="object_id" type="text_en" indexed="true" stored="true" multiValued="false" />
 
-    <field name="sort_by" type="string" indexed="true" stored="true" multiValued="false" />
+    <field name="sort_by" type="text_en" indexed="true" stored="true" multiValued="false" />
+
+    <field name="fdate" type="date" indexed="true" stored="true" multiValued="false" />
+
+    <field name="wtitle" type="text_en" indexed="true" stored="true" multiValued="false" />
 
     <field name="name" type="ngram" indexed="true" stored="true" multiValued="false" />
 
@@ -174,4 +178,3 @@
   <!-- SolrQueryParser configuration: defaultOperator="AND|OR" -->
   <solrQueryParser defaultOperator="AND"/>
 </schema>
-
