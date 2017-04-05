@@ -2153,7 +2153,7 @@ th.sortable.tablesorter-headerDesc,
 /* Advanced Search and Fileter Page & Browse Pages */
 
 .advanced-search-filter {
-    background-color: #f0f0f0;
+    background: #f0f0f0 url("../img/fp_section_bg.png") repeat;
     padding-top: 10px;
     padding-bottom: 10px;
     margin-bottom: 20px;
@@ -2263,8 +2263,15 @@ th.sortable.tablesorter-headerDesc,
     margin-top: 10px;
 }
 
+.total-results-count {
+    margin-right: 10px;
+	vertical-align: middle;
+	display: inline-block;
+	line-height: 30px;
+}
+
 .btn-export {
-    margin-left: 10px;
+    margin-right: 30px;
     font-weight: 700;
 }
 
