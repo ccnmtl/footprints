@@ -27,7 +27,6 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_jsonp.renderers import JSONPRenderer
 from s3sign.views import SignS3View as BaseSignS3View
-import waffle
 
 from footprints.main.forms import DigitalObjectForm, ContactUsForm, \
     SUBJECT_CHOICES, ExtendedDateForm, FootprintAdvancedSearchForm
@@ -153,20 +152,7 @@ SORT_OPTIONS = {
 }
 
 
-class SearchDispatchView(View):
-
-    def dispatch(self, request, *args, **kwargs):
-        if waffle.flag_is_active(request, 'advanced_search'):
-            # Use the brand new shiny search view
-            view = FootprintsSearchView.as_view()
-        else:
-            # Use existing browse view
-            view = FootprintListView.as_view()
-
-        return view(request, *args, **kwargs)
-
-
-class FootprintsSearchView(SearchView):
+class FootprintSearchView(SearchView):
     model = Footprint
     form_class = FootprintAdvancedSearchForm
     template_name = 'main/footprint_advanced_search.html'
@@ -183,7 +169,7 @@ class FootprintsSearchView(SearchView):
         return self.request.GET.get('direction', 'asc')
 
     def get_queryset(self):
-        sqs = super(FootprintsSearchView, self).get_queryset()
+        sqs = super(FootprintSearchView, self).get_queryset()
         sqs = sqs.exclude(django_ct__in=['main.imprint',
                                          'main.place',
                                          'main.person',
@@ -193,11 +179,11 @@ class FootprintsSearchView(SearchView):
         direction = self.get_direction()
         if direction == 'desc':
             sort_by = '-{}'.format(sort_by)
-        print 'sorting by {}'.format(sort_by)
+
         return sqs.order_by(sort_by)
 
     def get_context_data(self, **kwargs):
-        context = super(FootprintsSearchView, self).get_context_data(**kwargs)
+        context = super(FootprintSearchView, self).get_context_data(**kwargs)
 
         sort_by = self.get_sort_by()
         direction = self.get_direction()
@@ -207,7 +193,7 @@ class FootprintsSearchView(SearchView):
         context['direction'] = direction
         context['query'] = query
 
-        base = reverse('browse-footprint-list', args=[sort_by])
+        base = reverse('search-and-sort', args=[sort_by])
         context['base_url'] = \
             u'{}?direction={}&q={}&page='.format(base, direction, query)
 

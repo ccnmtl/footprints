@@ -1259,7 +1259,7 @@ class SearchViewTest(TestCase):
 
         response = self.client.get(url)
         self.assertEquals(response.status_code, 200)
-        self.assertEquals(len(response.context['page'].object_list), 0)
+        self.assertEquals(len(response.context['page_obj'].object_list), 0)
 
 
 class SearchIndexTest(TestCase):
