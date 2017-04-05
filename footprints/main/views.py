@@ -172,19 +172,35 @@ class FootprintsSearchView(SearchView):
     template_name = 'main/footprint_advanced_search.html'
     paginate_by = 15
 
+    def get_sort_by(self):
+        sort_by = self.kwargs.get('sort_by', 'ftitle')
+        if sort_by in SORT_OPTIONS.keys():
+            return sort_by
+
+        return 'ftitle'
+
+    def get_direction(self):
+        return self.request.GET.get('direction', 'asc')
+
     def get_queryset(self):
         sqs = super(FootprintsSearchView, self).get_queryset()
         sqs = sqs.exclude(django_ct__in=['main.imprint',
                                          'main.place',
                                          'main.person',
                                          'main.writtenwork'])
-        return sqs.order_by('sort_by')
+
+        sort_by = self.get_sort_by()
+        direction = self.get_direction()
+        if direction == 'desc':
+            sort_by = '-{}'.format(sort_by)
+        print 'sorting by {}'.format(sort_by)
+        return sqs.order_by(sort_by)
 
     def get_context_data(self, **kwargs):
         context = super(FootprintsSearchView, self).get_context_data(**kwargs)
 
-        sort_by = 'ftitle'
-        direction = self.request.GET.get('direction', 'asc')
+        sort_by = self.get_sort_by()
+        direction = self.get_direction()
         query = self.request.GET.get('q', '')
 
         context['selected_sort'] = sort_by
