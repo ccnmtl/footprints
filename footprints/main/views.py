@@ -178,8 +178,7 @@ class FootprintsSearchView(SearchView):
                                          'main.place',
                                          'main.person',
                                          'main.writtenwork'])
-
-        return sqs
+        return sqs.order_by('sort_by')
 
     def get_context_data(self, **kwargs):
         context = super(FootprintsSearchView, self).get_context_data(**kwargs)
