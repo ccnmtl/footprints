@@ -68,8 +68,8 @@
     <fieldType name="text_en" class="solr.TextField" positionIncrementGap="100">
       <analyzer type="index">
         <tokenizer class="solr.KeywordTokenizerFactory"/>
-        <filter class="solr.LowerCaseFilterFactory" />
-        <filter class="solr.TrimFilterFactory" />
+        <filter class="solr.LowerCaseFilterFactory"/>
+        <filter class="solr.TrimFilterFactory"/>
       </analyzer>
       <analyzer type="query">
         <tokenizer class="solr.StandardTokenizerFactory"/>
@@ -161,7 +161,11 @@
 
     <field name="sort_by" type="text_en" indexed="true" stored="true" multiValued="false" />
 
+    <field name="footprint_end_date" type="date" indexed="true" stored="true" multiValued="false" />
+
     <field name="fdate" type="date" indexed="true" stored="true" multiValued="false" />
+
+    <field name="footprint_start_date" type="date" indexed="true" stored="true" multiValued="false" />
 
     <field name="wtitle" type="text_en" indexed="true" stored="true" multiValued="false" />
 
