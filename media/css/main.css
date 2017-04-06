@@ -2168,28 +2168,35 @@ th.sortable.tablesorter-headerDesc,
     margin: 0;
 }
 
-.advanced-search-filter .editable-edtf {
+.advanced-search-filter .date-search {
     display: inline-block;
 }
 
-.advanced-search-filter .search-level .editable-edtf .form-group input[name=year1],
-.advanced-search-filter .editable-edtf .form-group input[name=year2] {
-    margin-right: 10px;
-}
-
-.advanced-search-filter .search-level .editable-edtf .date-display-row,
-.advanced-search-filter .search-level .editable-edtf .date2.toggle-next-row-container {
+.advanced-search-filter .search-level .date-search .start-year,
+.advanced-search-filter .search-level .date-search .end-year,
+.advanced-search-filter .date-search .toggle-range {
     display: inline-block;
     vertical-align: middle;
 }
 
-.advanced-search-filter .search-level .editable-edtf .date2.toggle-next-row-container {
+.advanced-search-filter .date-search .toggle-range {
     margin: 0;
     margin-right: 10px;
 }
 
-.advanced-search-filter .filter-level .editable-edtf .date2.toggle-next-row-container {
+.advanced-search-filter .date-search .toggle-range {
     margin: 5px 0;
+}
+
+.advanced-search-filter .date-search .toggle-range:before {
+    content: "\e081";
+    font-family: "Glyphicons Halflings";
+    font-size: 14px;
+    margin: 2px;    
+} 
+
+.advanced-search-filter .date-search .toggle-range.remove:before { 
+    content: "\e083";
 }
 
 .advanced-search-filter .toggle-filters {

@@ -4,12 +4,13 @@
             'click th.sortable': 'clickSortable',
             'click .btn-search-text': 'clickSearch',
             'click .btn-export': 'clickExport',
+            'click .toggle-range': 'clickToggleRange',
             'keypress input[name="q"]': 'enterSearch',
             'keypress .tools input.page-number': 'specifyPage',
         },
         initialize: function(options) {
             _.bindAll(this, 'clickSortable', 'clickSearch', 'clickExport',
-                      'enterSearch', 'specifyPage');
+                      'clickToggleRange', 'enterSearch', 'specifyPage');
             var self = this;
             this.baseUrl = options.baseUrl;
             this.selectedDirection = options.selectedDirection;
@@ -61,6 +62,18 @@
             var url = '/export/footprints/ftitle' +
             '/?direction=' + this.selectedDirection + '&q=' + query;
             window.location = url;
+        },
+        clickToggleRange: function(evt) {
+            evt.preventDefault();
+            if (jQuery(evt.currentTarget).hasClass('remove')) {
+                jQuery(evt.currentTarget).removeClass('remove');
+                jQuery(evt.currentTarget).next().hide().val('');
+                jQuery(evt.currentTarget).html('add range');
+            } else {
+                jQuery(evt.currentTarget).addClass('remove');
+                jQuery(evt.currentTarget).next().show();
+                jQuery(evt.currentTarget).html('to');
+            }
         },
         enterSearch: function(evt) {
             var charCode = (evt.which) ? evt.which : event.keyCode;
