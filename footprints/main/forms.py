@@ -2,7 +2,6 @@ from datetime import date
 import urllib
 
 from django import forms
-from django.db.models.query_utils import Q
 from django.forms.models import ModelForm
 from haystack.forms import ModelSearchForm
 from registration.forms import RegistrationForm
