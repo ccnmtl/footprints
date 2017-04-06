@@ -40,52 +40,22 @@
                     <label for="keyword-search" class="sr-only">Find:</label>
                     <input class="form-control" id="keyword-search" name="q" placeholder="Find..." value="{{query}}">
                 </div>
-                <!-- FOOTPRINT DATE RANGE HIDDEN
-                <div class="editable-edtf field-cell">
+                {% flag "advanced_search" %}
+                <div class="date-search field-cell">
                     <div class="form-group">
                         <label>Footprint year:</label>
-                        <div class="date-display-row">
-                            <input type="number" class="form-control edtf-entry jump" name="millenium1" min="1" max="2"
-                             maxlength="1" data-content="Millenium<br />Value between 1-2"
-                             data-toggle="popover" placeholder='-' />
-                            <input type="number" class="form-control numeric edtf-entry jump" name="century1" min="0" max="9"
-                             maxlength="1" data-content="Century<br />Value between 0-9"
-                             data-required="[name='millenium1']"
-                             data-toggle="popover" placeholder='-' />
-                            <input type="number" class="form-control numeric edtf-entry jump" name="decade1" min="0" max="9"
-                             maxlength="1" data-content="Decade<br />Value between 0-9"
-                             data-required="[name='century1'],[name='millenium1']"
-                             data-toggle="popover" placeholder='-' />
-                            <input type="number" class="form-control numeric edtf-entry" name="year1" min="0" max="9"
-                             data-required="[name='decade1'],[name='century1'],[name='millenium1']"
-                             maxlength="1" data-content="Year<br />Value between 0-9"
-                             data-toggle="popover" placeholder='-' />
-                        </div>
-                        <div class="toggle-next-row-container date2">
-                            <button class="btn-white btn btn-xs toggle-next-row form-control">
-                                to...
+                            <input type="number" class="form-control start-year"
+                             name="start-year" min="1000" max="{% now 'Y' %}"
+                             maxlength="4" />
+                            <button class="btn-white btn btn-xs toggle-range form-control">
+                                add range
                             </button>
-                        </div>
-                        <div class="date-display-row">
-                            <input type="number" class="form-control edtf-entry jump" name="millenium2" min="1" max="2"
-                             maxlength="1" data-content="Millenium<br />Value between 1-2"
-                             data-toggle="popover" placeholder='-' />
-                            <input type="number" class="form-control numeric edtf-entry jump" name="century2" min="0" max="9"
-                             maxlength="1" data-content="Century<br />Value between 0-9"
-                             data-required="[name='millenium2']"
-                             data-toggle="popover" placeholder='-' />
-                            <input type="number" class="form-control numeric edtf-entry jump" name="decade2" min="0" max="9"
-                             maxlength="1" data-content="Decade<br />Value between 0-9"
-                             data-required="[name='century2'],[name='millenium2']"
-                             data-toggle="popover" placeholder='-' />
-                            <input type="number" class="form-control numeric edtf-entry" name="year2" min="0" max="9"
-                             maxlength="1" data-content="Year<br />Value between 0-9"
-                             data-required="[name='decade2'],[name='century2'],[name='millenium2']"
-                             data-toggle="popover" placeholder='-' />
-                        </div>
+                            <input type="number" class="form-control end-year"
+                             name="end-year" min="1000" max="{% now 'Y' %}"
+                             maxlength="4" style="display: none;" />
                     </div>
                 </div>
-                -->
+                {% endflag %}
                 <button type="submit" class="btn btn-default">
                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search
                 </button>
