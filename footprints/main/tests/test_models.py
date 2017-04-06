@@ -304,7 +304,7 @@ class ImprintTest(TestCase):
         self.assertEqual(imprint.get_bhb_number().identifier, si.identifier)
         self.assertEqual(imprint2.get_bhb_number(), None)
 
-    def test_has_OCLC_number(self):
+    def test_has_oclc_number(self):
         imprint, created = Imprint.objects.get_or_create_by_attributes(
             '94677047', 'The Odyssey', 'The Odyssey, Edition 1',
             'approximately 1984')
@@ -314,10 +314,10 @@ class ImprintTest(TestCase):
         idf = StandardizedIdentificationFactory(identifier_type=oclc_type)
         imprint.standardized_identifier.add(idf)
 
-        self.assertTrue(imprint.has_OCLC_number())
-        self.assertFalse(imprint2.has_OCLC_number())
+        self.assertTrue(imprint.has_oclc_number())
+        self.assertFalse(imprint2.has_oclc_number())
 
-    def test_get_OCLC_number(self):
+    def test_get_oclc_number(self):
         imprint, created = Imprint.objects.get_or_create_by_attributes(
             '94677047', 'The Odyssey', 'The Odyssey, Edition 1',
             'approximately 1984')
@@ -327,8 +327,8 @@ class ImprintTest(TestCase):
         idf = StandardizedIdentificationFactory(identifier_type=oclc_type)
         imprint.standardized_identifier.add(idf)
 
-        self.assertEquals(imprint.get_OCLC_number(), idf)
-        self.assertEquals(imprint2.get_OCLC_number(), None)
+        self.assertEquals(imprint.get_oclc_number(), idf)
+        self.assertEquals(imprint2.get_oclc_number(), None)
 
 
 class ActorTest(TestCase):
