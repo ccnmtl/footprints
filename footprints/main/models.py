@@ -484,6 +484,7 @@ class Person(models.Model):
                 identifier_type=viaf_type).first()
         return None
 
+
 class ActorManager(models.Manager):
 
     def __init__(self, fields=None, *args, **kwargs):
@@ -827,25 +828,14 @@ class Imprint(models.Model):
     def has_bhb_number(self):
         return self.get_bhb_number() is not None
 
-    def get_bhb_number(self):
-        for si in self.standardized_identifier.all():
-            if si.identifier_type.slug == SLUG_BHB:
-                return si
-        return None
-
-    def has_OCLC_number(self):
-        # iterating this short list vs. using .filter to
-        # take advantage of pre-fetch related
-        for si in self.standardized_identifier.all():
-            if si.identifier_type.slug == SLUG_OCLC:
-                return True
-        return False
-
-    def get_OCLC_number(self):
+    def get_oclc_number(self):
         for si in self.standardized_identifier.all():
             if si.identifier_type.slug == SLUG_OCLC:
                 return si
         return None
+
+    def has_oclc_number(self):
+        return self.get_oclc_number() is not None
 
     def has_at_least_one_digital_object(self):
         return self.digital_object.exists()
