@@ -29,7 +29,7 @@ from rest_framework_jsonp.renderers import JSONPRenderer
 from s3sign.views import SignS3View as BaseSignS3View
 
 from footprints.main.forms import DigitalObjectForm, ContactUsForm, \
-    SUBJECT_CHOICES, ExtendedDateForm, FootprintAdvancedSearchForm
+    SUBJECT_CHOICES, ExtendedDateForm, FootprintSearchForm
 from footprints.main.models import (
     Footprint, Actor, Person, Role, WrittenWork, Language,
     Place, Imprint, BookCopy, StandardizedIdentification,
@@ -154,7 +154,7 @@ SORT_OPTIONS = {
 
 class FootprintSearchView(SearchView):
     model = Footprint
-    form_class = FootprintAdvancedSearchForm
+    form_class = FootprintSearchForm
     template_name = 'main/footprint_advanced_search.html'
     paginate_by = 15
 
@@ -170,10 +170,7 @@ class FootprintSearchView(SearchView):
 
     def get_queryset(self):
         sqs = super(FootprintSearchView, self).get_queryset()
-        sqs = sqs.exclude(django_ct__in=['main.imprint',
-                                         'main.place',
-                                         'main.person',
-                                         'main.writtenwork'])
+        sqs = sqs.filter(django_ct='main.footprint')
 
         sort_by = self.get_sort_by()
         direction = self.get_direction()
