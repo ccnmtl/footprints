@@ -58,6 +58,8 @@ class FootprintIndex(CelerySearchIndex, Indexable):
     text = NgramField(document=True, use_template=True)
     title = NgramField(model_attr='title')
     sort_by = CharField()
+    footprint_start_date = DateTimeField()
+    footprint_end_date = DateTimeField()
 
     # custom sort fields
     added = DateTimeField(model_attr='created_at')
@@ -91,6 +93,12 @@ class FootprintIndex(CelerySearchIndex, Indexable):
 
     def prepare_fdate(self, obj):
         return obj.sort_date()
+
+    def prepare_footprint_end_date(self, obj):
+        return obj.end_date()
+
+    def prepare_footprint_start_date(self, obj):
+        return obj.start_date()
 
     def prepare_wtitle(self, obj):
         try:

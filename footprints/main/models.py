@@ -1062,8 +1062,17 @@ class Footprint(models.Model):
 
         super(Footprint, self).save(*args, **kwargs)
 
-    def sort_date(self):
+    def end_date(self):
+        if self.associated_date:
+            return self.associated_date.end()
+
+        return date.max
+
+    def start_date(self):
         if self.associated_date:
             return self.associated_date.start()
 
         return date.min
+
+    def sort_date(self):
+        return self.start_date()
