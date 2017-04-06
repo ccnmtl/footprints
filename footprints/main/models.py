@@ -831,7 +831,7 @@ class Imprint(models.Model):
                 return si
         return None
 
-    def has_OCLC_number(self):
+    def has_oclc_number(self):
         # iterating this short list vs. using .filter to
         # take advantage of pre-fetch related
         for si in self.standardized_identifier.all():
@@ -839,7 +839,7 @@ class Imprint(models.Model):
                 return True
         return False
 
-    def get_OCLC_number(self):
+    def get_oclc_number(self):
         for si in self.standardized_identifier.all():
             if si.identifier_type.slug == SLUG_OCLC:
                 return si

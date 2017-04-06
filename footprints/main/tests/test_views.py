@@ -443,12 +443,12 @@ class FootprintListExportTest(TestCase):
                    'Evidence Type,Evidence Location,'
                    'Evidence Call Number,Evidence Details\r\n')
         row1 = ('Empty Footprint,None,None,,None,None,'
-                ',None,{},0,None,,OCLC!,,,None,None\r\n').format(
+                ',None,{},0,None,,,,,None,None\r\n').format(
             self.footprint1.created_at.strftime('%m/%d/%Y'))
         row2 = ('Odyssey,c. 1984,"Cracow, Poland",{},'
                 '{},"The Odyssey, Edition 1",{},'
                 'c. 1984,{},90,None,Name319 as Name314 (Author335); '
-                'Hank2 as Name317 (Printer),OCLC!,Medium,Provenance,'
+                'Hank2 as Name317 (Printer),,Medium,Provenance,'
                 'call number,lorem ipsum\r\n').format(
             o, self.footprint2.book_copy.imprint.work.title,
             p, self.footprint2.created_at.strftime('%m/%d/%Y'))
