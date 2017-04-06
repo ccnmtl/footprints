@@ -3,13 +3,10 @@ import urllib
 
 from django import forms
 from django.forms.models import ModelForm
-from django.utils.translation import ugettext_lazy as _
 from haystack.forms import ModelSearchForm
-from haystack.utils import get_model_ct
 from registration.forms import RegistrationForm
 
-from footprints.main.models import Footprint, DigitalObject, WrittenWork, \
-    ExtendedDate
+from footprints.main.models import DigitalObject, ExtendedDate
 
 
 class DigitalObjectForm(ModelForm):
@@ -19,54 +16,18 @@ class DigitalObjectForm(ModelForm):
 
 
 class FootprintSearchForm(ModelSearchForm):
-    def __init__(self, *args, **kwargs):
-        super(FootprintSearchForm, self).__init__(*args, **kwargs)
-
-        choices = [
-            (get_model_ct(Footprint), 'Footprint'),
-            (get_model_ct(WrittenWork), 'Literary Work'),
-        ]
-        self.fields['models'] = forms.MultipleChoiceField(
-            choices=choices, required=False, label=_('Search By Record Type'),
-            widget=forms.CheckboxSelectMultiple(
-                attrs={'class': 'regDropDown'}))
-        self.fields['q'].widget.attrs['class'] = 'form-control'
-        self.fields['q'].widget.attrs['placeholder'] = 'Titles, People, Places'
 
     def search(self):
         if not self.is_valid():
             return self.no_query_found()
 
-        if not self.cleaned_data.get('q'):
-            sqs = self.searchqueryset.all()
-        else:
-            sqs = self.searchqueryset.auto_query(self.cleaned_data['q'])
+        kwargs = {
+            'django_ct': 'main.footprint',
+            'content': self.cleaned_data.get('q', '*'),
+        }
+        args = []
 
-        sqs = sqs.exclude(django_ct__in=['main.imprint',
-                                         'main.place',
-                                         'main.person'])
-
-        if self.load_all:
-            sqs = sqs.load_all()
-
-        sqs = sqs.models(*self.get_models())
-        sqs = sqs.order_by('sort_by')
-        return sqs
-
-    def get_query_params(self):
-        return urllib.urlencode(self.cleaned_data, doseq=True)
-
-
-class FootprintAdvancedSearchForm(ModelSearchForm):
-
-    def search(self):
-        if not self.is_valid():
-            return self.no_query_found()
-
-        if not self.cleaned_data.get('q'):
-            sqs = self.searchqueryset.all()
-        else:
-            sqs = self.searchqueryset.auto_query(self.cleaned_data['q'])
+        sqs = self.searchqueryset.filter(*args, **kwargs)
 
         if self.load_all:
             sqs = sqs.load_all()
