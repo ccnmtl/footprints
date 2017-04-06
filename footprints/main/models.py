@@ -477,6 +477,12 @@ class Person(models.Model):
             complete += 1
         return int(complete/required * 100)
 
+    def get_viaf_number(self):
+        if self.standardized_identifier:
+            viaf_type = StandardizedIdentificationType.objects.viaf()
+            return self.standardized_identifier.filter(
+                identifier_type=viaf_type).first()
+        return None
 
 class ActorManager(models.Manager):
 
@@ -818,6 +824,26 @@ class Imprint(models.Model):
             if si.identifier_type.slug == SLUG_BHB:
                 return True
         return False
+
+    def get_bhb_number(self):
+        for si in self.standardized_identifier.all():
+            if si.identifier_type.slug == SLUG_BHB:
+                return si
+        return None
+
+    def has_OCLC_number(self):
+        # iterating this short list vs. using .filter to
+        # take advantage of pre-fetch related
+        for si in self.standardized_identifier.all():
+            if si.identifier_type.slug == SLUG_OCLC:
+                return True
+        return False
+
+    def get_OCLC_number(self):
+        for si in self.standardized_identifier.all():
+            if si.identifier_type.slug == SLUG_OCLC:
+                return si
+        return None
 
     def has_at_least_one_digital_object(self):
         return self.digital_object.exists()
