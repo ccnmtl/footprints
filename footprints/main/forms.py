@@ -26,10 +26,7 @@ class FootprintSearchForm(ModelSearchForm):
             'django_ct': 'main.footprint',
             'content': self.cleaned_data.get('q', '*'),
         }
-
-        args = [
-            Q(footprint_start_date__gte=date(1740, 1, 1))
-        ]
+        args = []
 
         sqs = self.searchqueryset.filter(*args, **kwargs)
 
