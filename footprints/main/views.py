@@ -189,6 +189,8 @@ class FootprintSearchView(SearchView):
         context['selected_sort'] = sort_by
         context['direction'] = direction
         context['query'] = query
+        context['footprint_start_year'] = self.request.GET.get(
+            'footprint_start_year', '')
 
         base = reverse('search-and-sort', args=[sort_by])
         context['base_url'] = \

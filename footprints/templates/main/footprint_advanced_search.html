@@ -45,13 +45,13 @@
                     <div class="form-group">
                         <label>Footprint year:</label>
                             <input type="number" class="form-control start-year"
-                             name="start-year" min="1000" max="{% now 'Y' %}"
-                             maxlength="4" />
+                             name="footprint_start_year" min="1000" max="{% now 'Y' %}"
+                             maxlength="4" value="{{footprint_start_year}}" />
                             <button class="btn-white btn btn-xs toggle-range form-control">
                                 add range
                             </button>
                             <input type="number" class="form-control end-year"
-                             name="end-year" min="1000" max="{% now 'Y' %}"
+                             name="footprint_end_year" min="1000" max="{% now 'Y' %}"
                              maxlength="4" style="display: none;" />
                     </div>
                 </div>
