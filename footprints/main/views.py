@@ -325,8 +325,11 @@ class ExportFootprintListView(FootprintListView):
         headers = ['Footprint Title', 'Footprint Date', 'Footprint Location',
                    'Footprint Owners', 'Written Work Title',
                    'Imprint Display Title', 'Imprint Printers',
-                   'Imprint Publicaton Date', 'Imprint Creation Date',
-                   'Footprint Percent Complete']
+                   'Imprint Publication Date', 'Imprint Creation Date',
+                   'Footprint Percent Complete', 'Literary Work LOC',
+                   'Imprint Actor and Role', 'Imprint OCLC Number',
+                   'Evidence Type', 'Evidence Location',
+                   'Evidence Call Number', 'Evidence Details']
 
         yield headers
 
@@ -365,6 +368,42 @@ class ExportFootprintListView(FootprintListView):
             # Footprint percent complete
             row.append(o.percent_complete)
 
+            # Literary work LOC
+            loc_id = o.book_copy.imprint.work\
+                .get_library_of_congress_identifier()
+            unicode(loc_id).encode('utf-8')
+            row.append(loc_id)
+
+            # Imprint actor
+            actors = [unicode(p).encode('utf-8')
+                      for p in o.book_copy.imprint.actor.all()]
+            row.append('; '.join(actors))
+
+            # Imprint BHB
+            if o.book_copy.imprint.has_bhb_number():
+                row.append(unicode(o.book_copy
+                                   .imprint.get_bhb_number().identifier))
+            else:
+                row.append('')
+
+            # Imprint OCLC #
+            if o.book_copy.imprint.has_oclc_number():
+                row.append(unicode(o.book_copy
+                                   .imprint.get_oclc_number().identifier))
+            else:
+                row.append('')
+
+            # Evidence type
+            row.append(unicode(o.medium).encode('utf-8'))
+
+            # Evidence location
+            row.append(unicode(o.provenance).encode('utf-8'))
+
+            # Evidence source
+            row.append(unicode(o.call_number).encode('utf-8'))
+
+            # Evidence details
+            row.append(unicode(o.notes).encode('utf-8'))
             yield row
 
     def get(self, request, *args, **kwargs):

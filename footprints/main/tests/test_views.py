@@ -429,19 +429,44 @@ class FootprintListExportTest(TestCase):
              for p in self.footprint2.book_copy.imprint.printers()]
         p = '; '.join(p)
 
+        # Imprint Actors
+        actors = [unicode(a).encode('utf-8')
+                  for a in self.footprint2.book_copy.imprint.actor.all()]
+        actors = '; '.join(actors)
+
         headers = ('Footprint Title,Footprint Date,Footprint Location,'
                    'Footprint Owners,Written Work Title,'
                    'Imprint Display Title,Imprint Printers,'
-                   'Imprint Publicaton Date,Imprint Creation Date,'
-                   'Footprint Percent Complete\r\n')
+                   'Imprint Publication Date,Imprint Creation Date,'
+                   'Footprint Percent Complete,Literary Work LOC,'
+                   'Imprint Actor and Role,Imprint OCLC Number,'
+                   'Evidence Type,Evidence Location,'
+                   'Evidence Call Number,Evidence Details\r\n')
         row1 = ('Empty Footprint,None,None,,None,None,'
-                ',None,{},0\r\n').format(
+                ',None,{},0,,,,,,,None,None\r\n').format(
             self.footprint1.created_at.strftime('%m/%d/%Y'))
-        row2 = ('Odyssey,c. 1984,"Cracow, Poland",{},'
-                '{},"The Odyssey, Edition 1",{},'
-                'c. 1984,{},90\r\n').format(
+        row2 = ('Odyssey,'  # Footprint Title
+                'c. 1984,'  # Footprint Date
+                '"Cracow, Poland",'  # Footprint Location
+                '{},'  # Footprint Owners
+                '{},'  # Written Work Title
+                '"The Odyssey, Edition 1",'  # Imprint Display Title
+                '{},'  # Imprint Printers
+                'c. 1984,'  # Imprint Creation Date
+                '{},'  # Footprint Creation Date
+                '90,'  # Footprint Percent Complete
+                ','  # Literary Work LOC
+                '{},'  # Imprint Actor and Role
+                ','  # Imprint BHB
+                ','  # Imprint OCLC Number
+                'Medium,'  # Evidence Type
+                'Provenance,'  # Evidence Location
+                'call number,'  # Evidence Call Number
+                'lorem ipsum\r\n'  # Evidence Details
+                ).format(
             o, self.footprint2.book_copy.imprint.work.title,
-            p, self.footprint2.created_at.strftime('%m/%d/%Y'))
+            p, self.footprint2.created_at.strftime('%m/%d/%Y'),
+            actors)
         self.assertEquals(response.streaming_content.next(), headers)
         self.assertEquals(response.streaming_content.next(), row1)
         self.assertEquals(response.streaming_content.next(), row2)

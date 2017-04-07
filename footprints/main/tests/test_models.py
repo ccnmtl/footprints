@@ -292,6 +292,44 @@ class ImprintTest(TestCase):
         self.assertTrue(imprint.has_bhb_number())
         self.assertFalse(imprint2.has_bhb_number())
 
+    def test_get_bhb_number(self):
+        imprint, created = Imprint.objects.get_or_create_by_attributes(
+            '94677047', 'The Odyssey', 'The Odyssey, Edition 1',
+            'approximately 1984')
+        bhb_type = StandardizedIdentificationType.objects.bhb()
+        si = StandardizedIdentification.objects.create(
+            identifier='94677047', identifier_type=bhb_type)
+        imprint2 = ImprintFactory()
+
+        self.assertEqual(imprint.get_bhb_number().identifier, si.identifier)
+        self.assertEqual(imprint2.get_bhb_number(), None)
+
+    def test_has_oclc_number(self):
+        imprint, created = Imprint.objects.get_or_create_by_attributes(
+            '94677047', 'The Odyssey', 'The Odyssey, Edition 1',
+            'approximately 1984')
+        imprint2 = ImprintFactory()
+
+        oclc_type = StandardizedIdentificationType.objects.oclc()
+        idf = StandardizedIdentificationFactory(identifier_type=oclc_type)
+        imprint.standardized_identifier.add(idf)
+
+        self.assertTrue(imprint.has_oclc_number())
+        self.assertFalse(imprint2.has_oclc_number())
+
+    def test_get_oclc_number(self):
+        imprint, created = Imprint.objects.get_or_create_by_attributes(
+            '94677047', 'The Odyssey', 'The Odyssey, Edition 1',
+            'approximately 1984')
+        imprint2 = ImprintFactory()
+
+        oclc_type = StandardizedIdentificationType.objects.oclc()
+        idf = StandardizedIdentificationFactory(identifier_type=oclc_type)
+        imprint.standardized_identifier.add(idf)
+
+        self.assertEquals(imprint.get_oclc_number(), idf)
+        self.assertEquals(imprint2.get_oclc_number(), None)
+
 
 class ActorTest(TestCase):
 
