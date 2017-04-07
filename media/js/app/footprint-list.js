@@ -65,12 +65,16 @@
         },
         clickToggleRange: function(evt) {
             evt.preventDefault();
-            if (jQuery(evt.currentTarget).hasClass('remove')) {
-                jQuery(evt.currentTarget).removeClass('remove');
+            if (jQuery(evt.currentTarget).hasClass('range-on')) {
+                // turn off range
+                jQuery(evt.currentTarget).removeClass('range-on');
+                jQuery(evt.currentTarget).prev().val('0');
                 jQuery(evt.currentTarget).next().hide().val('');
                 jQuery(evt.currentTarget).html('add range');
             } else {
-                jQuery(evt.currentTarget).addClass('remove');
+                // turn on range
+                jQuery(evt.currentTarget).addClass('range-on');
+                jQuery(evt.currentTarget).prev().val('1');
                 jQuery(evt.currentTarget).next().show();
                 jQuery(evt.currentTarget).html('to');
             }

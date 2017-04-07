@@ -19,18 +19,33 @@ class DigitalObjectForm(ModelForm):
 class FootprintSearchForm(ModelSearchForm):
     footprint_start_year = forms.IntegerField(required=False, min_value=1000)
     footprint_end_year = forms.IntegerField(required=False, min_value=1000)
+    footprint_range = forms.BooleanField(
+        required=False, widget=forms.HiddenInput())
+
+    def clean_year(self, fieldname):
+        now = datetime.now()
+        if self.cleaned_data[fieldname] > now.year:
+            self._errors[fieldname] = self.error_class([
+                "No future year"])
+        if self.cleaned_data[fieldname] < 1000:
+            self._errors[fieldname] = self.error_class([
+                "No past 1000 year"])
 
     def clean(self):
         cleaned_data = super(FootprintSearchForm, self).clean()
 
         if cleaned_data['footprint_start_year']:
-            now = datetime.now()
-            if cleaned_data['footprint_start_year'] > now.year:
-                self._errors["footprint_start_year"] = self.error_class([
-                    "No future year"])
-            if cleaned_data['footprint_start_year'] < 1000:
-                self._errors["footprint_start_year"] = self.error_class([
-                    "No past 1000 year"])
+            self.clean_year('footprint_start_year')
+
+        if cleaned_data['footprint_end_year']:
+            self.clean_year('footprint_end_year')
+
+        if (cleaned_data['footprint_start_year'] and
+            cleaned_data['footprint_end_year'] and
+            cleaned_data['footprint_start_year'] >
+                cleaned_data['footprint_end_year']):
+            self._errors['footprint_start_year'] = self.error_class([
+                "Start year must be less than end year"])
 
         return cleaned_data
 
@@ -38,6 +53,7 @@ class FootprintSearchForm(ModelSearchForm):
         if not self.is_valid():
             return self.no_query_found()
 
+        args = []
         kwargs = {
             'django_ct': 'main.footprint',
         }
@@ -49,9 +65,13 @@ class FootprintSearchForm(ModelSearchForm):
 
         footprint_start_year = self.cleaned_data.get(
             'footprint_start_year')
+        # footprint_end_year = self.cleaned_data.get(
+        #    'footprint_end_year')
 
-        args = []
-        if footprint_start_year:
+        if self.cleaned_data.get('footprint_range'):
+            # handle range
+            pass
+        elif footprint_start_year:
             args.append(Q(footprint_start_date__gte=date(
                 footprint_start_year, 1, 1)))
             args.append(Q(footprint_start_date__lte=date(

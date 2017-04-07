@@ -2191,11 +2191,11 @@ th.sortable.tablesorter-headerDesc,
 .advanced-search-filter .date-search .toggle-range:before {
     content: "\e081";
     font-family: "Glyphicons Halflings";
-    font-size: 14px;
+    font-size: 16px;
     margin: 2px;    
 } 
 
-.advanced-search-filter .date-search .toggle-range.remove:before { 
+.advanced-search-filter .date-search .toggle-range.range-on:before { 
     content: "\e083";
 }
 
