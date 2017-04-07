@@ -42,18 +42,37 @@
                 </div>
                 {% flag "advanced_search" %}
                 <div class="date-search field-cell">
-                    <div class="form-group">
+                    <div class="form-group {% if form.footprint_start_year.errors or form.footprint_end_year.errors %}has-error{% endif %}">
                         <label>Footprint year:</label>
                             <input type="number" class="form-control start-year"
                              name="footprint_start_year" min="1000" max="{% now 'Y' %}"
                              maxlength="4" value="{{footprint_start_year}}" />
-                            <button class="btn-white btn btn-xs toggle-range form-control">
-                                add range
+                            <input type="hidden" name="footprint_range" value="{{footprint_range}}" />
+                            <button class="btn-white btn btn-xs toggle-range form-control
+                            {% if footprint_range == '1' %}
+                            range-on
+                            {% endif %}
+                            ">
+                            {% if footprint_range == '1' %}
+                            to
+                            {% else %}
+                            add range
+                            {% endif %}
                             </button>
                             <input type="number" class="form-control end-year"
                              name="footprint_end_year" min="1000" max="{% now 'Y' %}"
-                             maxlength="4" style="display: none;" />
+                             maxlength="4" value="{{footprint_end_year}}" 
+                            {% if footprint_range == '0' %}
+                            style='display: none;'
+                            {% endif %}
+                              />
                     </div>
+                    {% if form.footprint_start_year.errors or form.footprint_end_year.errors %}
+                    <div class="has-error">
+                        {{form.footprint_start_year.errors}}
+                        {{form.footprint_end_year.errors}}
+                    </div>
+                    {% endif %}
                 </div>
                 {% endflag %}
                 <button type="submit" class="btn btn-default">

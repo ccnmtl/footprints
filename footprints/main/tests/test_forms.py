@@ -16,7 +16,8 @@ class FootprintSearchFormTest(TestCase):
         form = FootprintSearchForm()
         form._errors = {}
         form.cleaned_data = {
-            'footprint_start_year': 1740
+            'footprint_start_year': 1740,
+            'footprint_end_year': 2016
         }
 
         form.clean()
@@ -26,23 +27,52 @@ class FootprintSearchFormTest(TestCase):
         form = FootprintSearchForm()
         form._errors = {}
         form.cleaned_data = {
-            'footprint_start_year': 2080
+            'footprint_start_year': 2080,
+            'footprint_end_year': 2080
         }
 
         form.clean()
-        self.assertEquals(len(form._errors.keys()), 1)
+        self.assertEquals(len(form._errors.keys()), 2)
         self.assertTrue('footprint_start_year' in form._errors)
+        self.assertTrue('footprint_end_year' in form._errors)
 
     def test_form_clean_errors_past_date(self):
         form = FootprintSearchForm()
         form._errors = {}
         form.cleaned_data = {
-            'footprint_start_year': 999
+            'footprint_start_year': 999,
+            'footprint_end_year': 999
+        }
+
+        form.clean()
+        self.assertEquals(len(form._errors.keys()), 2)
+        self.assertTrue('footprint_start_year' in form._errors)
+        self.assertTrue('footprint_end_year' in form._errors)
+
+    def test_form_clean_range(self):
+        form = FootprintSearchForm()
+        form._errors = {}
+        form.cleaned_data = {
+            'footprint_range': '1',
+            'footprint_start_year': 2016,
+            'footprint_end_year': 1740
         }
 
         form.clean()
         self.assertEquals(len(form._errors.keys()), 1)
         self.assertTrue('footprint_start_year' in form._errors)
+
+    def test_form_clean_range_valid(self):
+        form = FootprintSearchForm()
+        form._errors = {}
+        form.cleaned_data = {
+            'footprint_range': '1',
+            'footprint_start_year': '',
+            'footprint_end_year': 1740
+        }
+
+        form.clean()
+        self.assertEquals(len(form._errors.keys()), 0)
 
 
 class ContactUsFormTest(TestCase):
