@@ -1,7 +1,8 @@
-from datetime import date
+from datetime import date, datetime
 import urllib
 
 from django import forms
+from django.db.models.query_utils import Q
 from django.forms.models import ModelForm
 from haystack.forms import ModelSearchForm
 from registration.forms import RegistrationForm
@@ -16,6 +17,22 @@ class DigitalObjectForm(ModelForm):
 
 
 class FootprintSearchForm(ModelSearchForm):
+    footprint_start_year = forms.IntegerField(required=False, min_value=1000)
+    footprint_end_year = forms.IntegerField(required=False, min_value=1000)
+
+    def clean(self):
+        cleaned_data = super(FootprintSearchForm, self).clean()
+
+        if cleaned_data['footprint_start_year']:
+            now = datetime.now()
+            if cleaned_data['footprint_start_year'] > now.year:
+                self._errors["footprint_start_year"] = self.error_class([
+                    "No future year"])
+            if cleaned_data['footprint_start_year'] < 1000:
+                self._errors["footprint_start_year"] = self.error_class([
+                    "No past 1000 year"])
+
+        return cleaned_data
 
     def search(self):
         if not self.is_valid():
@@ -23,9 +40,22 @@ class FootprintSearchForm(ModelSearchForm):
 
         kwargs = {
             'django_ct': 'main.footprint',
-            'content': self.cleaned_data.get('q', '*'),
         }
+
+        q = self.cleaned_data.get('q')
+
+        if q:
+            kwargs['content'] = q
+
+        footprint_start_year = self.cleaned_data.get(
+            'footprint_start_year')
+
         args = []
+        if footprint_start_year:
+            args.append(Q(footprint_start_date__gte=date(
+                footprint_start_year, 1, 1)))
+            args.append(Q(footprint_start_date__lte=date(
+                footprint_start_year, 12, 31)))
 
         sqs = self.searchqueryset.filter(*args, **kwargs)
 

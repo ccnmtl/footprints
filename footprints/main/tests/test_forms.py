@@ -5,12 +5,44 @@ from footprints.main.forms import FootprintSearchForm, ContactUsForm, \
 from footprints.main.models import ExtendedDate
 
 
-class SearchFormTest(TestCase):
+class FootprintSearchFormTest(TestCase):
 
     def test_empty_search(self):
         form = FootprintSearchForm()
         sqs = form.search()
         self.assertEquals(sqs.count(), 0)
+
+    def test_form_clean(self):
+        form = FootprintSearchForm()
+        form._errors = {}
+        form.cleaned_data = {
+            'footprint_start_year': 1740
+        }
+
+        form.clean()
+        self.assertEquals(len(form._errors.keys()), 0)
+
+    def test_form_clean_errors_future_date(self):
+        form = FootprintSearchForm()
+        form._errors = {}
+        form.cleaned_data = {
+            'footprint_start_year': 2080
+        }
+
+        form.clean()
+        self.assertEquals(len(form._errors.keys()), 1)
+        self.assertTrue('footprint_start_year' in form._errors)
+
+    def test_form_clean_errors_past_date(self):
+        form = FootprintSearchForm()
+        form._errors = {}
+        form.cleaned_data = {
+            'footprint_start_year': 999
+        }
+
+        form.clean()
+        self.assertEquals(len(form._errors.keys()), 1)
+        self.assertTrue('footprint_start_year' in form._errors)
 
 
 class ContactUsFormTest(TestCase):
