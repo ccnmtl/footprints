@@ -61,6 +61,9 @@ class FootprintIndex(CelerySearchIndex, Indexable):
     footprint_start_date = DateTimeField()
     footprint_end_date = DateTimeField()
 
+    pub_start_date = DateTimeField()
+    pub_end_date = DateTimeField()
+
     # custom sort fields
     added = DateTimeField(model_attr='created_at')
     complete = IntegerField(model_attr='percent_complete')
@@ -95,10 +98,18 @@ class FootprintIndex(CelerySearchIndex, Indexable):
         return obj.sort_date()
 
     def prepare_footprint_end_date(self, obj):
-        return obj.end_date() or obj.sort_date()
+        return obj.end_date() or obj.start_date()
 
     def prepare_footprint_start_date(self, obj):
         return obj.start_date()
+
+    def prepare_pub_end_date(self, obj):
+        imprint = obj.book_copy.imprint
+        return imprint.end_date() or imprint.start_date()
+
+    def prepare_pub_start_date(self, obj):
+        imprint = obj.book_copy.imprint
+        return imprint.start_date()
 
     def prepare_wtitle(self, obj):
         try:

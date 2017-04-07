@@ -857,11 +857,20 @@ class Imprint(models.Model):
         # how many footprints reference this imprint?
         return Footprint.objects.filter(book_copy__imprint=self).count()
 
-    def sort_date(self):
+    def start_date(self):
         if self.publication_date:
             return self.publication_date.start()
 
         return date.min
+
+    def end_date(self):
+        if self.publication_date:
+            return self.publication_date.end()
+
+        return date.max
+
+    def sort_date(self):
+        return self.start_date()
 
 
 class BookCopy(models.Model):
