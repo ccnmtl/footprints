@@ -95,7 +95,7 @@ class FootprintIndex(CelerySearchIndex, Indexable):
         return obj.sort_date()
 
     def prepare_footprint_end_date(self, obj):
-        return obj.end_date()
+        return obj.end_date() or obj.sort_date()
 
     def prepare_footprint_start_date(self, obj):
         return obj.start_date()
