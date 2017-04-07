@@ -65,17 +65,15 @@ class FootprintSearchForm(ModelSearchForm):
 
         footprint_start_year = self.cleaned_data.get(
             'footprint_start_year')
-        # footprint_end_year = self.cleaned_data.get(
-        #    'footprint_end_year')
+        footprint_end_year = self.cleaned_data.get(
+            'footprint_end_year')
 
         if self.cleaned_data.get('footprint_range'):
             # handle range
-            pass
+            args += self.handle_range(
+                footprint_start_year, footprint_end_year)
         elif footprint_start_year:
-            args.append(Q(footprint_start_date__gte=date(
-                footprint_start_year, 1, 1)))
-            args.append(Q(footprint_start_date__lte=date(
-                footprint_start_year, 12, 31)))
+            args += self.handle_single_year(footprint_start_year)
 
         sqs = self.searchqueryset.filter(*args, **kwargs)
 
@@ -83,6 +81,24 @@ class FootprintSearchForm(ModelSearchForm):
             sqs = sqs.load_all()
 
         return sqs
+
+    def handle_range(self, footprint_start_year, footprint_end_year):
+        args = []
+        if footprint_start_year:
+            args.append(Q(footprint_start_date__gte=date(
+                footprint_start_year, 1, 1)))
+        if footprint_end_year:
+            args.append(Q(footprint_end_date__lte=date(
+                footprint_end_year, 12, 31)))
+        return args
+
+    def handle_single_year(self, footprint_start_year):
+        args = []
+        args.append(Q(footprint_start_date__gte=date(
+            footprint_start_year, 1, 1)))
+        args.append(Q(footprint_start_date__lte=date(
+            footprint_start_year, 12, 31)))
+        return args
 
     def get_query_params(self):
         return urllib.urlencode(self.cleaned_data, doseq=True)
