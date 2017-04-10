@@ -477,6 +477,13 @@ class Person(models.Model):
             complete += 1
         return int(complete/required * 100)
 
+    def get_viaf_number(self):
+        if self.standardized_identifier:
+            viaf_type = StandardizedIdentificationType.objects.viaf()
+            return self.standardized_identifier.filter(
+                identifier_type=viaf_type).first()
+        return None
+
 
 class ActorManager(models.Manager):
 
@@ -820,6 +827,15 @@ class Imprint(models.Model):
 
     def has_bhb_number(self):
         return self.get_bhb_number() is not None
+
+    def get_oclc_number(self):
+        for si in self.standardized_identifier.all():
+            if si.identifier_type.slug == SLUG_OCLC:
+                return si
+        return None
+
+    def has_oclc_number(self):
+        return self.get_oclc_number() is not None
 
     def has_at_least_one_digital_object(self):
         return self.digital_object.exists()
