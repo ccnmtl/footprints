@@ -48,19 +48,19 @@
             }
 
             var url = this.baseUrl + sortBy +
-                '/?direction=' + direction + '&q=' + this.query;
+                '/?d=' + direction + '&q=' + this.query;
             window.location = url;
         },
         clickSearch: function(evt) {
             var query = jQuery(this.el).find('input[name="q"]').val();
             var url = this.baseUrl + this.selectedSort +
-            '/?direction=' + this.selectedDirection + '&q=' + query;
+            '/?d=' + this.selectedDirection + '&q=' + query;
             window.location = url;
         },
         clickExport: function(evt) {
             var query = jQuery(this.el).find('input[name="q"]').val();
             var url = '/export/footprints/ftitle' +
-            '/?direction=' + this.selectedDirection + '&q=' + query;
+            '/?d=' + this.selectedDirection + '&q=' + query;
             window.location = url;
         },
         clickToggleRange: function(evt) {
