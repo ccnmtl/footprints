@@ -35,14 +35,25 @@
 <div class="object-browse">
     <form class="form-inline" action="{% url 'search' %}">
     <div class="row tools advanced-search-filter">
+        {% if form.q.errors %}
+        <div class="col-xs-12 has-q-error">
+            {{form.q.errors}}
+        </div>
+        {% endif %}
+        {% if form.footprint_start_year.errors or form.footprint_end_year.errors %}
+        <div class="col-xs-12 has-year-error">
+            {{form.footprint_start_year.errors}}
+            {{form.footprint_end_year.errors}}
+        </div>
+        {% endif %}
         <div class="col-xs-12 search-level">
-                <div class="form-group field-cell">
+                <div class="form-group field-cell{% if form.q.errors %} has-error{% endif %}">
                     <label for="keyword-search" class="sr-only">Find:</label>
                     <input class="form-control" id="keyword-search" name="q" placeholder="Find..." value="{{form.data.q}}">
                 </div>
                 {% flag "advanced_search" %}
                 <div class="date-search field-cell">
-                    <div class="form-group {% if form.footprint_start_year.errors or form.footprint_end_year.errors %}has-error{% endif %}">
+                    <div class="form-group {% if form.footprint_start_year.errors or form.footprint_end_year.errors or form.q.errors %}has-error{% endif %}">
                         <label>Footprint year:</label>
                             <input type="number" class="form-control start-year"
                              name="footprint_start_year" min="1000" max="{% now 'Y' %}"
@@ -67,17 +78,6 @@
                             {% endif %}
                               />
                     </div>
-                    {% if form.q.errors %}
-                    <div class="has-error">
-                        {{form.q.errors}}
-                    </div>
-                    {% endif %}
-                    {% if form.footprint_start_year.errors or form.footprint_end_year.errors %}
-                    <div class="has-error">
-                        {{form.footprint_start_year.errors}}
-                        {{form.footprint_end_year.errors}}
-                    </div>
-                    {% endif %}
                 </div>
                 {% endflag %}
                 <button type="submit" class="btn btn-default">
@@ -86,13 +86,13 @@
                 <button type="reset" class="btn btn-default" id="clear_primary_search">
                     <span class="glyphicon glyphicon-remove"></span> Clear
                 </button>
-                {% if form.is_bound %}
+                {% if form.is_bound and form.errors|length < 1 %}
                 <div class="toggle-filters">
                     <span class="glyphicon glyphicon-tasks"></span> Hide filters
                 </div>
                 {% endif %}
         </div>
-        {% if form.is_bound %}
+        {% if form.is_bound and form.errors|length < 1 %}
         <div class="col-xs-12 filter-level is-expanded">
             <div class="row">
             <form class="form-inline">

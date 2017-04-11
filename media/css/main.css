@@ -2290,6 +2290,23 @@ th.sortable.tablesorter-headerDesc,
     font-weight: 700;
 }
 
+.advanced-search-filter .has-error .form-control {
+    background-color: #f2dede;
+}
+
+.advanced-search-filter .errorlist {
+    margin: 0;
+    padding: 0;
+    color: #a94442;
+    font-weight: bold;
+    list-style: none;
+}
+
+.advanced-search-filter .has-year-error .errorlist {
+    padding-left: 280px;
+}
+
+
 /* Admin area record entry styles */
 .mce-container, .mce-container *, .mce-widget, .mce-widget *, .mce-reset, mce-content-body {
     font-size: 12px !important;
