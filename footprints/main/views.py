@@ -166,7 +166,7 @@ class FootprintSearchView(SearchView):
         return 'ftitle'
 
     def get_direction(self):
-        return self.request.GET.get('direction', 'asc')
+        return self.request.GET.get('d', 'asc')
 
     def get_queryset(self):
         sqs = super(FootprintSearchView, self).get_queryset()
@@ -198,11 +198,11 @@ class FootprintSearchView(SearchView):
 
         base = reverse('search-and-sort', args=[sort_by])
         context['base_url'] = \
-            u'{}?direction={}&q={}&page='.format(base, direction, query)
+            u'{}?d={}&q={}&page='.format(base, direction, query)
 
         export = reverse('export-footprint-list', args=[sort_by])
         context['export_url'] = \
-            u'{}?direction={}&q={}&page='.format(export, direction, query)
+            u'{}?d={}&q={}&page='.format(export, direction, query)
 
         return context
 
