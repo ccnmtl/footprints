@@ -59,8 +59,7 @@
         },
         clickExport: function(evt) {
             var query = jQuery(this.el).find('input[name="q"]').val();
-            var url = '/export/footprints/ftitle' +
-            '/?d=' + this.selectedDirection + '&q=' + query;
+            var url = '/export/footprints/?q=' + query;
             window.location = url;
         },
         clickToggleRange: function(evt) {

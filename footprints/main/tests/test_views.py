@@ -413,7 +413,7 @@ class FootprintListExportTest(TestCase):
         self.footprint2.actor.add(self.owner)
 
     def test_export_list(self):
-        url = reverse('export-footprint-list', args=['ftitle'])
+        url = reverse('export-footprint-list')
         response = self.client.get(url)
 
         self.assertEquals(response.status_code, 200)

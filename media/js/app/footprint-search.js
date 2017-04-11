@@ -2,15 +2,16 @@
     window.FootprintListView = Backbone.View.extend({
         events: {
             'click th.sortable': 'clickSortable',
-            'click .btn-search-text': 'clickSearch',
             'click .btn-export': 'clickExport',
             'click .toggle-range': 'clickToggleRange',
-            'keypress input[name="q"]': 'enterSearch',
+            'click a.btn-paginate': 'nextOrPreviousPage',
             'keypress .tools input.page-number': 'specifyPage',
+            'click #clear_primary_search': 'clickClear'
         },
         initialize: function(options) {
-            _.bindAll(this, 'clickSortable', 'clickSearch', 'clickExport',
-                      'clickToggleRange', 'enterSearch', 'specifyPage');
+            _.bindAll(this, 'clickSortable', 'clickExport', 'clickToggleRange',
+                      'nextOrPreviousPage', 'specifyPage');
+
             var self = this;
             this.baseUrl = options.baseUrl;
             this.selectedDirection = options.selectedDirection;
@@ -46,21 +47,17 @@
             if (sortBy === this.selectedSort) {
                 direction = this.selectedDirection === 'asc' ? 'desc' : 'asc';
             }
-
-            var url = this.baseUrl + sortBy +
-                '/?d=' + direction + '&q=' + this.query;
-            window.location = url;
+            jQuery(this.el).find('[name="page"]').val(1);
+            jQuery(this.el).find('[name="direction"]').val(direction);
+            jQuery(this.el).find('[name="sort_by"]').val(sortBy);
+            jQuery(this.el).find('form').submit();
         },
-        clickSearch: function(evt) {
-            var query = jQuery(this.el).find('input[name="q"]').val();
-            var url = this.baseUrl + this.selectedSort +
-            '/?d=' + this.selectedDirection + '&q=' + query;
-            window.location = url;
+        clickClear: function(evt) {
+            window.location = this.baseUrl;
         },
         clickExport: function(evt) {
             var query = jQuery(this.el).find('input[name="q"]').val();
-            var url = '/export/footprints/ftitle' +
-            '/?d=' + this.selectedDirection + '&q=' + query;
+            var url = '/export/footprints/?&q=' + query;
             window.location = url;
         },
         clickToggleRange: function(evt) {
@@ -79,12 +76,11 @@
                 jQuery(evt.currentTarget).html('to');
             }
         },
-        enterSearch: function(evt) {
-            var charCode = (evt.which) ? evt.which : event.keyCode;
-            if (charCode === 13) {
-                evt.preventDefault();
-                this.clickSearch();
-            }
+        nextOrPreviousPage: function(evt) {
+            evt.preventDefault();
+            var pageNo = jQuery(evt.currentTarget).data('page-number');
+            jQuery(this.el).find('[name="page"]').val(pageNo);
+            jQuery(this.el).find('form').submit();
         },
         specifyPage: function(evt) {
             var $elt = jQuery(evt.currentTarget);
@@ -98,8 +94,8 @@
                 if (isNaN(page) || page < 1 || page > maxPage) {
                     $elt.parents('.page-count').addClass('has-error');
                 } else {
-                    var url = jQuery(evt.currentTarget).data('base-url');
-                    window.location = url + page;
+                    jQuery(this.el).find('[name="page"]').val(page);
+                    jQuery(this.el).find('form').submit();
                 }
                 return false;
             }

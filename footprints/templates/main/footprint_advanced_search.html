@@ -15,14 +15,10 @@
             var view = new FootprintListView({
                 el: jQuery(".page"),
                 baseUrl: "{% url 'search' %}",
-                selectedDirection: "{{direction}}",
-                selectedSort: "{{selected_sort}}",
+                selectedDirection: "{{form.data.direction}}",
+                selectedSort: "{{form.data.sort_by}}",
                 query: "{{form.data.q}}"
             });
-
-			jQuery('#clear_primary_search').click(function(evt) {
-				window.location = '/search/';
-			});
         });
     </script>
 {% endblock %}
@@ -47,6 +43,9 @@
         </div>
         {% endif %}
         <div class="col-xs-12 search-level">
+            {{form.sort_by}}
+            {{form.direction}}
+            {{form.page}}
                 <div class="form-group field-cell{% if form.q.errors %} has-error{% endif %}">
                     <label for="keyword-search" class="sr-only">Find:</label>
                     <input class="form-control" id="keyword-search" name="q" placeholder="Find..." value="{{form.data.q}}">
@@ -95,7 +94,6 @@
         {% if form.is_bound and form.errors|length < 1 %}
         <div class="col-xs-12 filter-level is-expanded">
             <div class="row">
-            <form class="form-inline">
                 <div class="col-xs-2">
                     <h3>Publication year:</h3>
                     <div class="date-search">
@@ -180,12 +178,10 @@
                 <div class="col-xs-2">
                 <button type="submit" class="btn btn-default" aria-hidden="true"><span class="glyphicon glyphicon-ok"></span> Apply filter</button>
                 </div>
-            </form>
             </div>
         </div>
         {% endif %}
     </div>
-    </form>
 
     <!-- Results navigation  -->
     <div class="row tools">
@@ -300,6 +296,7 @@
             </div>
         </div>
     {% endif %}
+    </form>
 </div>
 {% endblock %}
 

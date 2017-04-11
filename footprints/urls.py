@@ -125,15 +125,13 @@ urlpatterns = [
         name='browse-footprint-list-default'),
     url(r'^browse/footprints/(?P<sort_by>\w+)/$', FootprintListView.as_view(),
         name='browse-footprint-list'),
-    url(r'^export/footprints/(?P<sort_by>\w+)/$',
+    url(r'^export/footprints/$',
         ExportFootprintListView.as_view(),
         name='export-footprint-list'),
 
     url(r'^date/display/$',
         DisplayDateView.as_view(), name='display-date-view'),
 
-    url(r'^search/(?P<sort_by>\w+)/$', FootprintSearchView.as_view(),
-        name='search-and-sort'),
     url(r'^search/', FootprintSearchView.as_view(), name='search'),
 
     url(r'^api-auth/', include('rest_framework.urls',
