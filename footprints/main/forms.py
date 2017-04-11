@@ -47,6 +47,12 @@ class FootprintSearchForm(ModelSearchForm):
             self._errors['footprint_start_year'] = self.error_class([
                 "Start year must be less than end year"])
 
+        if (not cleaned_data['q'] and
+            not (cleaned_data['footprint_start_year'] or
+                 cleaned_data['footprint_end_year'])):
+            self._errors['q'] = self.error_class([
+                "You need either a search term or year."])
+
         return cleaned_data
 
     def search(self):

@@ -12,12 +12,26 @@ class FootprintSearchFormTest(TestCase):
         sqs = form.search()
         self.assertEquals(sqs.count(), 0)
 
-    def test_form_clean(self):
+    def test_form_clean_empty(self):
         form = FootprintSearchForm()
         form._errors = {}
         form.cleaned_data = {
-            'footprint_start_year': 1740,
-            'footprint_end_year': 2016
+            'q': '',
+            'footprint_start_year': None,
+            'footprint_end_year': None
+        }
+
+        form.clean()
+        self.assertEquals(len(form._errors.keys()), 1)
+        self.assertTrue('q' in form._errors)
+
+    def test_form_clean_q(self):
+        form = FootprintSearchForm()
+        form._errors = {}
+        form.cleaned_data = {
+            'q': 'oppenheim',
+            'footprint_start_year': None,
+            'footprint_end_year': None
         }
 
         form.clean()
@@ -27,6 +41,7 @@ class FootprintSearchFormTest(TestCase):
         form = FootprintSearchForm()
         form._errors = {}
         form.cleaned_data = {
+            'q': '',
             'footprint_start_year': 2080,
             'footprint_end_year': 2080
         }
@@ -40,6 +55,7 @@ class FootprintSearchFormTest(TestCase):
         form = FootprintSearchForm()
         form._errors = {}
         form.cleaned_data = {
+            'q': '',
             'footprint_start_year': 999,
             'footprint_end_year': 999
         }
@@ -53,6 +69,7 @@ class FootprintSearchFormTest(TestCase):
         form = FootprintSearchForm()
         form._errors = {}
         form.cleaned_data = {
+            'q': '',
             'footprint_range': '1',
             'footprint_start_year': 2016,
             'footprint_end_year': 1740
@@ -62,12 +79,26 @@ class FootprintSearchFormTest(TestCase):
         self.assertEquals(len(form._errors.keys()), 1)
         self.assertTrue('footprint_start_year' in form._errors)
 
+    def test_form_clean_single_year_valid(self):
+        form = FootprintSearchForm()
+        form._errors = {}
+        form.cleaned_data = {
+            'q': '',
+            'footprint_range': '0',
+            'footprint_start_year': 1740,
+            'footprint_end_year': None
+        }
+
+        form.clean()
+        self.assertEquals(len(form._errors.keys()), 0)
+
     def test_form_clean_range_valid(self):
         form = FootprintSearchForm()
         form._errors = {}
         form.cleaned_data = {
+            'q': '',
             'footprint_range': '1',
-            'footprint_start_year': '',
+            'footprint_start_year': None,
             'footprint_end_year': 1740
         }
 

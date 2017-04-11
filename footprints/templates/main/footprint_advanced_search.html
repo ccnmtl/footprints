@@ -67,6 +67,11 @@
                             {% endif %}
                               />
                     </div>
+                    {% if form.q.errors %}
+                    <div class="has-error">
+                        {{form.q.errors}}
+                    </div>
+                    {% endif %}
                     {% if form.footprint_start_year.errors or form.footprint_end_year.errors %}
                     <div class="has-error">
                         {{form.footprint_start_year.errors}}
