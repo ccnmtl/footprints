@@ -98,48 +98,19 @@
             <form class="form-inline">
                 <div class="col-xs-2">
                     <h3>Publication year:</h3>
-                    <div class="editable-edtf">
+                    <div class="date-search">
                         <div class="form-group">
                             <label class="sr-only">Publication year:</label>
-                            <div class="date-display-row">
-                                <input type="number" class="form-control edtf-entry jump" name="millenium1" min="1" max="2"
-                                 maxlength="1" data-content="Millenium<br />Value between 1-2"
-                                 data-toggle="popover" placeholder='-' />
-                                <input type="number" class="form-control numeric edtf-entry jump" name="century1" min="0" max="9"
-                                 maxlength="1" data-content="Century<br />Value between 0-9"
-                                 data-required="[name='millenium1']"
-                                 data-toggle="popover" placeholder='-' />
-                                <input type="number" class="form-control numeric edtf-entry jump" name="decade1" min="0" max="9"
-                                 maxlength="1" data-content="Decade<br />Value between 0-9"
-                                 data-required="[name='century1'],[name='millenium1']"
-                                 data-toggle="popover" placeholder='-' />
-                                <input type="number" class="form-control numeric edtf-entry" name="year1" min="0" max="9"
-                                 data-required="[name='decade1'],[name='century1'],[name='millenium1']"
-                                 maxlength="1" data-content="Year<br />Value between 0-9"
-                                 data-toggle="popover" placeholder='-' />
-                            </div>
-                            <div class="toggle-next-row-container date2">
-                                <button class="btn-white btn btn-xs toggle-next-row form-control">
-                                    to...
+                                <input type="number" class="form-control start-year"
+                                 name="publication_start_year" min="1000" max="2017"
+                                 maxlength="4" value="" />
+                                <input type="hidden" name="publication_range" value="" />
+                                <button class="btn-white btn btn-xs toggle-range form-control">
+                                add range
                                 </button>
-                            </div>
-                            <div class="date-display-row">
-                                <input type="number" class="form-control edtf-entry jump" name="millenium2" min="1" max="2"
-                                 maxlength="1" data-content="Millenium<br />Value between 1-2"
-                                 data-toggle="popover" placeholder='-' />
-                                <input type="number" class="form-control numeric edtf-entry jump" name="century2" min="0" max="9"
-                                 maxlength="1" data-content="Century<br />Value between 0-9"
-                                 data-required="[name='millenium2']"
-                                 data-toggle="popover" placeholder='-' />
-                                <input type="number" class="form-control numeric edtf-entry jump" name="decade2" min="0" max="9"
-                                 maxlength="1" data-content="Decade<br />Value between 0-9"
-                                 data-required="[name='century2'],[name='millenium2']"
-                                 data-toggle="popover" placeholder='-' />
-                                <input type="number" class="form-control numeric edtf-entry" name="year2" min="0" max="9"
-                                 maxlength="1" data-content="Year<br />Value between 0-9"
-                                 data-required="[name='decade2'],[name='century2'],[name='millenium2']"
-                                 data-toggle="popover" placeholder='-' />
-                            </div>
+                                <input type="number" class="form-control end-year"
+                                 name="publication_end_year" min="1000" max="2017"
+                                 maxlength="4" value="" />
                         </div>
                     </div>
                 </div>

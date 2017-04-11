@@ -2179,6 +2179,13 @@ th.sortable.tablesorter-headerDesc,
     vertical-align: middle;
 }
 
+.advanced-search-filter .filter-level .date-search .start-year,
+.advanced-search-filter .filter-level .date-search .end-year,
+.advanced-search-filter .filter-search .toggle-range {
+    display: block;
+    vertical-align: middle;
+}
+
 .advanced-search-filter .date-search .toggle-range {
     margin: 0;
     margin-right: 10px;
