@@ -17,7 +17,7 @@
                 baseUrl: "{% url 'search' %}",
                 selectedDirection: "{{direction}}",
                 selectedSort: "{{selected_sort}}",
-                query: "{{query}}"
+                query: "{{form.data.q}}"
             });
 
 			jQuery('#clear_primary_search').click(function(evt) {
@@ -38,7 +38,7 @@
         <div class="col-xs-12 search-level">
                 <div class="form-group field-cell">
                     <label for="keyword-search" class="sr-only">Find:</label>
-                    <input class="form-control" id="keyword-search" name="q" placeholder="Find..." value="{{query}}">
+                    <input class="form-control" id="keyword-search" name="q" placeholder="Find..." value="{{form.data.q}}">
                 </div>
                 {% flag "advanced_search" %}
                 <div class="date-search field-cell">
@@ -46,14 +46,14 @@
                         <label>Footprint year:</label>
                             <input type="number" class="form-control start-year"
                              name="footprint_start_year" min="1000" max="{% now 'Y' %}"
-                             maxlength="4" value="{{footprint_start_year}}" />
-                            <input type="hidden" name="footprint_range" value="{{footprint_range}}" />
+                             maxlength="4" value="{{form.data.footprint_start_year}}" />
+                            <input type="hidden" name="footprint_range" value="{{form.data.footprint_range}}" />
                             <button class="btn-white btn btn-xs toggle-range form-control
-                            {% if footprint_range == '1' %}
+                            {% if form.data.footprint_range == '1' %}
                             range-on
                             {% endif %}
                             ">
-                            {% if footprint_range == '1' %}
+                            {% if form.data.footprint_range == '1' %}
                             to
                             {% else %}
                             add range
@@ -61,7 +61,7 @@
                             </button>
                             <input type="number" class="form-control end-year"
                              name="footprint_end_year" min="1000" max="{% now 'Y' %}"
-                             maxlength="4" value="{{footprint_end_year}}" 
+                             maxlength="4" value="{{form.data.footprint_end_year}}" 
                             {% if footprint_range == '0' %}
                             style='display: none;'
                             {% endif %}

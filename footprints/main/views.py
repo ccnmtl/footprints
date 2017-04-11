@@ -188,13 +188,6 @@ class FootprintSearchView(SearchView):
 
         context['selected_sort'] = sort_by
         context['direction'] = direction
-        context['query'] = query
-        context['footprint_start_year'] = self.request.GET.get(
-            'footprint_start_year', '')
-        context['footprint_end_year'] = self.request.GET.get(
-            'footprint_end_year', '')
-        context['footprint_range'] = self.request.GET.get(
-            'footprint_range', '0')
 
         base = reverse('search-and-sort', args=[sort_by])
         context['base_url'] = \
@@ -224,20 +217,19 @@ class FootprintListView(ListView):
         context['sort_options'] = SORT_OPTIONS
 
         sort_by = self.get_sort_by()
-        direction = self.request.GET.get('direction', 'asc')
+        direction = self.request.GET.get('d', 'asc')
         query = self.request.GET.get('q', '')
 
         context['selected_sort'] = sort_by
         context['direction'] = direction
-        context['query'] = query
 
         base = reverse('browse-footprint-list', args=[sort_by])
         context['base_url'] = \
-            u'{}?direction={}&q={}&page='.format(base, direction, query)
+            u'{}?d={}&q={}&page='.format(base, direction, query)
 
         export = reverse('export-footprint-list', args=[sort_by])
         context['export_url'] = \
-            u'{}?direction={}&q={}&page='.format(export, direction, query)
+            u'{}?d={}&q={}&page='.format(export, direction, query)
 
         return context
 
