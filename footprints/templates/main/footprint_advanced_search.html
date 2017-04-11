@@ -62,7 +62,7 @@
                             <input type="number" class="form-control end-year"
                              name="footprint_end_year" min="1000" max="{% now 'Y' %}"
                              maxlength="4" value="{{form.data.footprint_end_year}}" 
-                            {% if footprint_range == '0' %}
+                            {% if form.data.footprint_range != '1' %}
                             style='display: none;'
                             {% endif %}
                               />
