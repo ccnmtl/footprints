@@ -33,9 +33,9 @@
 </div>
 
 <div class="object-browse">
+    <form class="form-inline" action="{% url 'search' %}">
     <div class="row tools advanced-search-filter">
         <div class="col-xs-12 search-level">
-            <form class="form-inline" action="{% url 'search' %}">
                 <div class="form-group field-cell">
                     <label for="keyword-search" class="sr-only">Find:</label>
                     <input class="form-control" id="keyword-search" name="q" placeholder="Find..." value="{{query}}">
@@ -81,14 +81,13 @@
                 <button type="reset" class="btn btn-default" id="clear_primary_search">
                     <span class="glyphicon glyphicon-remove"></span> Clear
                 </button>
-                <!-- SHOW/HIDE FILTERS HIDDEN
+                {% if form.is_bound %}
                 <div class="toggle-filters">
                     <span class="glyphicon glyphicon-tasks"></span> Hide filters
                 </div>
-                -->
-            </form>
+                {% endif %}
         </div>
-        <!-- ALL FILTERS HIDDEN
+        {% if form.is_bound %}
         <div class="col-xs-12 filter-level is-expanded">
             <div class="row">
             <form class="form-inline">
@@ -152,16 +151,16 @@
                         </div>
                         <div class="col-xs-8 filter-col col-2">
                             <div class="checkbox">
-                                <label><input type="checkbox"> Oppenheim, David b. Abraham</label>
+                                <label><input type="checkbox"> Hannover, Germany</label>
                             </div>
                             <div class="checkbox">
-                                <label><input type="checkbox"> Oppenheim, David b. Abraham</label>
+                                <label><input type="checkbox"> Worms, Germany</label>
                             </div>
                             <div class="checkbox">
-                                <label><input type="checkbox"> Oppenheim, David b. Abraham</label>
+                                <label><input type="checkbox"> Oxford, United Kingdom</label>
                             </div>
                             <div class="checkbox">
-                                <label><input type="checkbox"> Oppenheim, David b. Abraham</label>
+                                <label><input type="checkbox"> Prague, Czech Republic</label>
                             </div>
                             <div class="more-module-link">
                                 <a href="#">More locations...</a>
@@ -180,7 +179,7 @@
                                 <label><input type="checkbox"> Owner</label>
                             </div>
                             <div class="checkbox">
-                                <label><input type="checkbox"> Whatever else</label>
+                                <label><input type="checkbox"> Other</label>
                             </div>
                        </div>
                         <div class="col-xs-8 filter-col col-2">
@@ -188,13 +187,13 @@
                                 <label><input type="checkbox"> Oppenheim, David b. Abraham</label>
                             </div>
                             <div class="checkbox">
-                                <label><input type="checkbox"> Oppenheim, David b. Abraham</label>
+                                <label><input type="checkbox"> Bodleian Library, Oxford</label>
                             </div>
                             <div class="checkbox">
-                                <label><input type="checkbox"> Oppenheim, David b. Abraham</label>
+                                <label><input type="checkbox"> Heilprin, Lippman</label>
                             </div>
                             <div class="checkbox">
-                                <label><input type="checkbox"> Oppenheim, David b. Abraham</label>
+                                <label><input type="checkbox"> Shabbethai ben Joseph Bass</label>
                             </div>
                             <div class="more-module-link">
                                 <a href="#">More people...</a>
@@ -208,8 +207,10 @@
             </form>
             </div>
         </div>
-        -->
+        {% endif %}
     </div>
+    </form>
+
     <!-- Results navigation  -->
     <div class="row tools">
         <div class="col-xs-12 results-navigation">
