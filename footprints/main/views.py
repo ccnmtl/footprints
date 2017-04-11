@@ -222,6 +222,7 @@ class FootprintListView(ListView):
 
         context['selected_sort'] = sort_by
         context['direction'] = direction
+        context['query'] = query
 
         base = reverse('browse-footprint-list', args=[sort_by])
         context['base_url'] = \
