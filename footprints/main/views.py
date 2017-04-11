@@ -158,22 +158,12 @@ class FootprintSearchView(SearchView):
     template_name = 'main/footprint_advanced_search.html'
     paginate_by = 15
 
-    def get_sort_by(self):
-        sort_by = self.kwargs.get('sort_by', 'ftitle')
-        if sort_by in SORT_OPTIONS.keys():
-            return sort_by
-
-        return 'ftitle'
-
-    def get_direction(self):
-        return self.request.GET.get('d', 'asc')
-
     def get_queryset(self):
         sqs = super(FootprintSearchView, self).get_queryset()
         sqs = sqs.filter(django_ct='main.footprint')
 
-        sort_by = self.get_sort_by()
-        direction = self.get_direction()
+        sort_by = self.request.GET.get('sort_by', 'ftitle')
+        direction = self.request.GET.get('direction', 'asc')
         if direction == 'desc':
             sort_by = '-{}'.format(sort_by)
 
@@ -182,20 +172,12 @@ class FootprintSearchView(SearchView):
     def get_context_data(self, **kwargs):
         context = super(FootprintSearchView, self).get_context_data(**kwargs)
 
-        sort_by = self.get_sort_by()
-        direction = self.get_direction()
+        base = reverse('search')
+        context['base_url'] = u'{}?page='.format(base)
+
         query = self.request.GET.get('q', '')
-
-        context['selected_sort'] = sort_by
-        context['direction'] = direction
-
-        base = reverse('search-and-sort', args=[sort_by])
-        context['base_url'] = \
-            u'{}?d={}&q={}&page='.format(base, direction, query)
-
-        export = reverse('export-footprint-list', args=[sort_by])
-        context['export_url'] = \
-            u'{}?d={}&q={}&page='.format(export, direction, query)
+        export = reverse('export-footprint-list')
+        context['export_url'] = u'{}?q={}'.format(export, query)
 
         return context
 
@@ -228,9 +210,8 @@ class FootprintListView(ListView):
         context['base_url'] = \
             u'{}?d={}&q={}&page='.format(base, direction, query)
 
-        export = reverse('export-footprint-list', args=[sort_by])
-        context['export_url'] = \
-            u'{}?d={}&q={}&page='.format(export, direction, query)
+        export = reverse('export-footprint-list')
+        context['export_url'] = u'{}?q={}'.format(export, query)
 
         return context
 

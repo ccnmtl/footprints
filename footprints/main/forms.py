@@ -16,11 +16,38 @@ class DigitalObjectForm(ModelForm):
         fields = ['name', 'url', 'description']
 
 
+DIRECTION_CHOICES = (
+    ('asc', 'Ascending'),
+    ('desc', 'Descending'),
+)
+
+SORT_CHOICES = (
+    ('added', 'Added'),
+    ('complete', 'Complete'),
+    ('fdate', 'Footprint Date'),
+    ('flocation', 'Footprint Location'),
+    ('ftitle', 'Footprint Title'),
+    ('owners', 'Owners'),
+    ('wtitle', 'Literary Work')
+)
+
+
 class FootprintSearchForm(ModelSearchForm):
     footprint_start_year = forms.IntegerField(required=False, min_value=1000)
     footprint_end_year = forms.IntegerField(required=False, min_value=1000)
     footprint_range = forms.BooleanField(
         required=False, widget=forms.HiddenInput())
+
+    direction = forms.ChoiceField(
+        choices=DIRECTION_CHOICES, initial='asc',
+        required=True, widget=forms.HiddenInput())
+
+    sort_by = forms.ChoiceField(
+        choices=SORT_CHOICES, initial='ftitle',
+        required=True, widget=forms.HiddenInput())
+
+    page = forms.IntegerField(
+        required=True, initial=1, widget=forms.HiddenInput())
 
     def clean_year(self, fieldname):
         now = datetime.now()
