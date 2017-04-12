@@ -58,11 +58,15 @@ class FootprintIndex(CelerySearchIndex, Indexable):
     text = NgramField(document=True, use_template=True)
     title = NgramField(model_attr='title')
     sort_by = CharField()
+
     footprint_start_date = DateTimeField()
     footprint_end_date = DateTimeField()
 
     pub_start_date = DateTimeField()
     pub_end_date = DateTimeField()
+
+    footprint_location = CharField(faceted=True)
+    imprint_location = CharField(faceted=True)
 
     # custom sort fields
     added = DateTimeField(model_attr='created_at')
@@ -121,6 +125,18 @@ class FootprintIndex(CelerySearchIndex, Indexable):
     def prepare_owners(self, obj):
         a = [o.display_name() for o in obj.owners()]
         return format_sort_by(', '.join(a), remove_articles=True)
+
+    def prepare_footprint_location(self, obj):
+        if obj.place:
+            return obj.place.__unicode__()
+
+        return ''
+
+    def prepare_imprint_location(self, obj):
+        if obj.book_copy.imprint.place:
+            return obj.book_copy.imprint.place.__unicode__()
+
+        return ''
 
 
 class PersonIndex(CelerySearchIndex, Indexable):
