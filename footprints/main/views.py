@@ -199,7 +199,7 @@ class FootprintListView(ListView):
         context['sort_options'] = SORT_OPTIONS
 
         sort_by = self.get_sort_by()
-        direction = self.request.GET.get('d', 'asc')
+        direction = self.request.GET.get('direction', 'asc')
         query = self.request.GET.get('q', '')
 
         context['selected_sort'] = sort_by
@@ -208,7 +208,7 @@ class FootprintListView(ListView):
 
         base = reverse('browse-footprint-list', args=[sort_by])
         context['base_url'] = \
-            u'{}?d={}&q={}&page='.format(base, direction, query)
+            u'{}?direction={}&q={}&page='.format(base, direction, query)
 
         export = reverse('export-footprint-list')
         context['export_url'] = u'{}?q={}'.format(export, query)
