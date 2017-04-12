@@ -49,6 +49,9 @@ class FootprintSearchForm(ModelSearchForm):
     page = forms.IntegerField(
         required=True, initial=1, widget=forms.HiddenInput())
 
+    search_level = forms.BooleanField(required=False)
+    filter_level = forms.BooleanField(required=False)
+
     def clean_year(self, fieldname):
         now = datetime.now()
         if self.cleaned_data[fieldname] > now.year:
@@ -74,7 +77,9 @@ class FootprintSearchForm(ModelSearchForm):
             self._errors['footprint_start_year'] = self.error_class([
                 "Start year must be less than end year"])
 
-        if (not cleaned_data['q'] and
+        if ((cleaned_data.get('search_level', False) or
+             cleaned_data.get('filter_level', False)) and
+            not cleaned_data['q'] and
             not (cleaned_data['footprint_start_year'] or
                  cleaned_data['footprint_end_year'])):
             self._errors['q'] = self.error_class([

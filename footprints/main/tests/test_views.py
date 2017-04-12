@@ -1286,6 +1286,17 @@ class SearchViewTest(TestCase):
         self.assertEquals(response.status_code, 200)
         self.assertEquals(len(response.context['page_obj'].object_list), 0)
 
+        self.assertTrue(response.context['search_criteria'])
+
+    def test_empty_search(self):
+        url = reverse('search')
+
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(len(response.context['page_obj'].object_list), 0)
+
+        self.assertFalse(response.context['search_criteria'])
+
 
 class SearchIndexTest(TestCase):
 
