@@ -30,88 +30,109 @@
 
 <div class="object-browse">
     <form class="form-inline" action="{% url 'search' %}">
-    <div class="row tools advanced-search-filter">
-        {% if form.q.errors %}
-        <div class="col-xs-12 has-q-error">
-            {{form.q.errors}}
-        </div>
-        {% endif %}
-        {% if form.footprint_start_year.errors or form.footprint_end_year.errors %}
-        <div class="col-xs-12 has-year-error">
-            {{form.footprint_start_year.errors}}
-            {{form.footprint_end_year.errors}}
-        </div>
-        {% endif %}
-        <div class="col-xs-12 search-level">
+    <div class="advanced-search-filter">
+        {% if form.errors|length > 0 %}
+        <div class="row tools error-level">
+            <div class="col-q-error">
+            &nbsp;
+            </div>
+            <div class="col-fyear-error">
+            {% if form.footprint_start_year.errors or form.footprint_end_year.errors %}
+                {{form.footprint_start_year.errors}}
+                {{form.footprint_end_year.errors}}
+                {% else %}
+                    &nbsp;
+            {% endif %}
+            </div>
+            <div class="col-submit-error">
+                {% if form.q.errors %}
+                    {{form.q.errors}}
+                {% else %}
+                    &nbsp;
+                {% endif %}
+            </div>
+        </div><!-- /.error-level -->
+        {% endif%}
+
+        <div class="row tools search-level">
             {{form.sort_by}}
             {{form.direction}}
             {{form.page}}
-                <div class="form-group field-cell{% if form.q.errors %} has-error{% endif %}">
+            <div class="col-q-field">
+                <div class="form-group{% if form.q.errors %} has-error{% endif %}">
                     <label for="keyword-search" class="sr-only">Find:</label>
                     <input class="form-control" id="keyword-search" name="q" placeholder="Find..." value="{{form.data.q}}">
                 </div>
-                {% flag "advanced_search" %}
-                <div class="date-search field-cell">
-                    <div class="form-group {% if form.footprint_start_year.errors or form.footprint_end_year.errors or form.q.errors %}has-error{% endif %}">
-                        <label>Footprint year:</label>
-                            <input type="number" class="form-control start-year"
-                             name="footprint_start_year" min="1000" max="{% now 'Y' %}"
-                             maxlength="4" value="{{form.data.footprint_start_year}}" />
-                            <input type="hidden" name="footprint_range" value="{{form.data.footprint_range}}" />
-                            <button class="btn-white btn btn-xs toggle-range form-control
-                            {% if form.data.footprint_range == '1' %}
-                            range-on
-                            {% endif %}
-                            ">
-                            {% if form.data.footprint_range == '1' %}
-                            to
-                            {% else %}
-                            add range
-                            {% endif %}
-                            </button>
-                            <input type="number" class="form-control end-year"
-                             name="footprint_end_year" min="1000" max="{% now 'Y' %}"
-                             maxlength="4" value="{{form.data.footprint_end_year}}" 
-                            {% if form.data.footprint_range != '1' %}
-                            style='display: none;'
-                            {% endif %}
-                              />
-                    </div>
+            </div>
+            {% flag "advanced_search" %}
+            <div class="col-fyear-field">
+                <div class="form-group {% if form.footprint_start_year.errors or form.footprint_end_year.errors or form.q.errors %}has-error{% endif %}">
+                    <label>Footprint year:</label>
+                        <input type="number" class="form-control start-year"
+                         name="footprint_start_year" min="1000" max="{% now 'Y' %}"
+                         maxlength="4" value="{{form.data.footprint_start_year}}" />
+                        <input type="hidden" name="footprint_range" value="{{form.data.footprint_range}}" />
+                        <button class="btn-white btn btn-xs toggle-range form-control
+                        {% if form.data.footprint_range == '1' %}
+                        range-on
+                        {% endif %}
+                        ">
+                        {% if form.data.footprint_range == '1' %}
+                        to
+                        {% else %}
+                        add range
+                        {% endif %}
+                        </button>
+                        <input type="number" class="form-control end-year"
+                         name="footprint_end_year" min="1000" max="{% now 'Y' %}"
+                         maxlength="4" value="{{form.data.footprint_end_year}}" 
+                        {% if form.data.footprint_range != '1' %}
+                        style='display: none;'
+                        {% endif %}
+                          />
                 </div>
-                {% endflag %}
+            </div>
+            {% endflag %}
+            <div class="col-submit-field">
                 <button type="submit" class="btn btn-default">
                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search
                 </button>
                 <button type="reset" class="btn btn-default" id="clear_primary_search">
                     <span class="glyphicon glyphicon-remove"></span> Clear
                 </button>
+                {% flag "advanced_search" %}
                 {% if form.is_bound and form.errors|length < 1 %}
                 <div class="toggle-filters">
                     <span class="glyphicon glyphicon-tasks"></span> Hide filters
                 </div>
                 {% endif %}
+                {% endflag %}
+            </div>
         </div>
-        {% if form.is_bound and form.errors|length < 1 %}
-        <div class="col-xs-12 filter-level is-expanded">
+
+    </div><!-- /.advanced-search-filter -->
+    
+    {% flag "advanced_search" %}
+    {% if form.is_bound and form.errors|length < 1 %}
+    <div class="advanced-search-filter" style="padding-top: 0;">
+        <div class="filter-level">
             <div class="row">
                 <div class="col-xs-2">
                     <h3>Publication year:</h3>
-                    <div class="date-search">
-                        <div class="form-group">
-                            <label class="sr-only">Publication year:</label>
-                                <input type="number" class="form-control start-year"
-                                 name="publication_start_year" min="1000" max="2017"
-                                 maxlength="4" value="" />
-                                <input type="hidden" name="publication_range" value="" />
-                                <button class="btn-white btn btn-xs toggle-range form-control">
-                                add range
-                                </button>
-                                <input type="number" class="form-control end-year"
-                                 name="publication_end_year" min="1000" max="2017"
-                                 maxlength="4" value="" />
-                        </div>
+                    <div class="form-group">
+                        <label class="sr-only">Publication year:</label>
+                            <input type="number" class="form-control start-year"
+                             name="publication_start_year" min="1000" max="2017"
+                             maxlength="4" value="" />
+                            <input type="hidden" name="publication_range" value="" />
+                            <button class="btn-white btn btn-xs toggle-range form-control">
+                            add range
+                            </button>
+                            <input type="number" class="form-control end-year"
+                             name="publication_end_year" min="1000" max="2017"
+                             maxlength="4" value="" />
                     </div>
-                </div>
+                 </div>
                 <div class="col-xs-4">
                     <h3>Location:</h3>
                     <div class="row">
@@ -180,12 +201,13 @@
                 </div>
             </div>
         </div>
-        {% endif %}
-    </div>
+    </div><!-- /.advanced-search-filter -->
+    {% endif %}
+    {% endflag %}
 
     <!-- Results navigation  -->
-    <div class="row tools">
-        <div class="col-xs-12 results-navigation">
+    <div class="row tools results-navigation">
+        <div class="col-xs-12">
             {% include 'main/pagination.html' %}
             {% flag "export_csv" %}
 				{% if object_list|length > 0 %}
@@ -297,6 +319,6 @@
         </div>
     {% endif %}
     </form>
-</div>
+</div><!-- /.object-browse -->
 {% endblock %}
 

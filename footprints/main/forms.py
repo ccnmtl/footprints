@@ -78,7 +78,7 @@ class FootprintSearchForm(ModelSearchForm):
             not (cleaned_data['footprint_start_year'] or
                  cleaned_data['footprint_end_year'])):
             self._errors['q'] = self.error_class([
-                "You need either a search term or year."])
+                "Either a search term or year required"])
 
         return cleaned_data
 

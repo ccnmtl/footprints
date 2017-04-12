@@ -2154,75 +2154,24 @@ th.sortable.tablesorter-headerDesc,
 
 .advanced-search-filter {
     background: #f0f0f0 url("../img/fp_section_bg.png") repeat;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
+    padding: 10px 15px;
+    margin: 0 -15px;
 }
 
-.advanced-search-filter .field-cell {
-    padding-right: 10px;
-}
-
-.advanced-search-filter .search-level {
+.advanced-search-filter .search-level,
+.advanced-search-filter .error-level,
+{
     position: relative;
     margin: 0;
 }
 
-.advanced-search-filter .date-search {
-    display: inline-block;
-}
-
-.advanced-search-filter .search-level .date-search .start-year,
-.advanced-search-filter .search-level .date-search .end-year,
-.advanced-search-filter .date-search .toggle-range {
-    display: inline-block;
-    vertical-align: middle;
-}
-
-.advanced-search-filter .filter-level .date-search .start-year,
-.advanced-search-filter .filter-level .date-search .end-year,
-.advanced-search-filter .filter-search .toggle-range {
-    display: block;
-    vertical-align: middle;
-}
-
-.advanced-search-filter .date-search .toggle-range {
-    margin: 0;
-    margin-right: 10px;
-}
-
-.advanced-search-filter .date-search .toggle-range {
-    margin: 5px 0;
-}
-
-.advanced-search-filter .date-search .toggle-range:before {
-    content: "\e081";
-    font-family: "Glyphicons Halflings";
-    font-size: 16px;
-    margin: 2px;    
-} 
-
-.advanced-search-filter .date-search .toggle-range.range-on:before { 
-    content: "\e083";
-}
-
-.advanced-search-filter .toggle-filters {
-    margin-top: 7px;
-    display: inline-block;
-    float: right;
-    width: 100px;
-    vertical-align: bottom;
-    text-align: center;
-    font-size: 14px;
-    font-weight: 700;
-}
-
 .advanced-search-filter .filter-level {
-    margin-top: 10px;
+    margin-top: 0;
     padding-top: 10px;
     border-top: 1px solid #999;
 	position: relative;
 }
+
 .advanced-search-filter .filter-level:after, .advanced-search-filter .filter-level:before {
 	bottom: 100%;
 	right: 55px;
@@ -2245,6 +2194,75 @@ th.sortable.tablesorter-headerDesc,
 	border-bottom-color: #999;
 	border-width: 11px;
 	margin-left: -11px;
+}
+
+.advanced-search-filter .col-q-field,
+.advanced-search-filter .col-q-error {
+    float: left;
+    width: 150px;
+}
+
+.advanced-search-filter .col-fyear-field,
+.advanced-search-filter .col-fyear-error {
+    float: left;
+    width: 300px;
+}
+
+.advanced-search-filter .col-submit-field,
+.advanced-search-filter .col-submit-error {
+    float: left;
+    width: 300px;
+}
+
+.advanced-search-filter #keyword-search,
+.advanced-search-filter .col-q-field .form-group {
+    width: 100%;
+}
+
+.advanced-search-filter .search-level .col-fyear-field .start-year,
+.advanced-search-filter .search-level .col-fyear-field .end-year,
+.advanced-search-filter .col-fyear-field .toggle-range {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.advanced-search-filter .col-fyear-field .toggle-range {
+    margin: 0 2px;
+}
+
+.advanced-search-filter .filter-level .start-year,
+.advanced-search-filter .filter-level .end-year,
+.advanced-search-filter .filter-level .toggle-range {
+    display: block;
+    vertical-align: middle;
+    margin: auto;
+}
+
+.advanced-search-filter .filter-level .toggle-range {
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+.advanced-search-filter .toggle-range:before {
+    content: "\e081";
+    font-family: "Glyphicons Halflings";
+    font-size: 16px;
+    margin: 2px;    
+} 
+
+.advanced-search-filter .toggle-range.range-on:before { 
+    content: "\e083";
+}
+
+.advanced-search-filter .toggle-filters {
+    margin-top: 7px;
+    display: inline-block;
+    float: right;
+    width: 100px;
+    vertical-align: bottom;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 700;
 }
 
 .advanced-search-filter .filter-level h3 {
@@ -2273,7 +2291,7 @@ th.sortable.tablesorter-headerDesc,
     text-align: right;
 }
 
-.advanced-search-filter .results-navigation {
+.results-navigation {
     margin-top: 10px;
 }
 
@@ -2301,11 +2319,6 @@ th.sortable.tablesorter-headerDesc,
     font-weight: bold;
     list-style: none;
 }
-
-.advanced-search-filter .has-year-error .errorlist {
-    padding-left: 280px;
-}
-
 
 /* Admin area record entry styles */
 .mce-container, .mce-container *, .mce-widget, .mce-widget *, .mce-reset, mce-content-body {
@@ -2789,4 +2802,46 @@ p.decoy {
 
 .tablesorter tr.filtered {
     display: none;
+}
+
+@media (min-width: 992px) {
+    .advanced-search-filter .col-q-field,
+    .advanced-search-filter .col-q-error {
+        padding-left: 15px;
+        padding-right: 15px;
+        width: 200px;
+    }
+    .advanced-search-filter .col-fyear-field,
+    .advanced-search-filter .col-fyear-error {
+        padding-left: 0;
+        padding-right: 0px;
+        width: 300px;
+    }
+    .advanced-search-filter .col-submit-field,
+    .advanced-search-filter .col-submit-error {
+        padding-left: 0px;
+        padding-right: 15px;
+        width: 469px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .advanced-search-filter .col-q-field,
+    .advanced-search-filter .col-q-error {
+        padding-left: 15px;
+        padding-right: 15px;
+        width: 300px;
+    }
+    .advanced-search-filter .col-fyear-field,
+    .advanced-search-filter .col-fyear-error {
+        padding-left: 0;
+        padding-right: 0px;
+        width: 300px;
+    }
+    .advanced-search-filter .col-submit-field,
+    .advanced-search-filter .col-submit-error {
+        padding-left: 0px;
+        padding-right: 15px;
+        width: 569px;
+    }
 }
