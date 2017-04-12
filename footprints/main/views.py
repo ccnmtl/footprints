@@ -320,7 +320,7 @@ class Echo(object):
 
 
 class ExportFootprintListView(FootprintListView):
-    def get_rows(self):
+    def get_header_string(self):
         headers = ['Footprint Title', 'Footprint Date', 'Footprint Location',
                    'Footprint Owners', 'Written Work Title',
                    'Imprint Display Title', 'Imprint Printers',
@@ -329,8 +329,45 @@ class ExportFootprintListView(FootprintListView):
                    'Imprint Actor and Role', 'Imprint BHB Number',
                    'Imprint OCLC Number', 'Evidence Type', 'Evidence Location',
                    'Evidence Call Number', 'Evidence Details']
+        for r in Role.objects.for_footprint():
+            role = 'Footprint Role ' + unicode(r.name)\
+                .encode('utf-8') + ' Actor'
+            headers.append(role)
+            headers.append(role + ' VIAF Number')
 
-        yield headers
+        for r in Role.objects.for_imprint():
+            role = 'Imprint Role: ' + unicode(r.name)\
+                .encode('utf-8') + ' Actor'
+            headers.append(role)
+            headers.append(role + ' VIAF Number')
+        return headers
+
+    def get_footprint_actors_string(self, footprint):
+        fp_actors = []
+        for r in Role.objects.all().for_footprint():
+            for a in footprint.actors():
+                if r.pk == a.role.id:
+                    fp_actors.append(unicode(a).encode('utf-8'))
+                    fp_actors.append(a.person.get_viaf_number())
+                else:
+                    fp_actors.append('')
+                    fp_actors.append('')
+        return fp_actors
+
+    def get_imprint_actors_string(self, footprint):
+        imprint_actors = []
+        for r in Role.objects.all().for_imprint():
+            for a in footprint.book_copy.imprint.actor.all():
+                if r.pk == a.role.id:
+                    imprint_actors.append(unicode(a).encode('utf-8'))
+                    imprint_actors.append(a.person.get_viaf_number())
+                else:
+                    imprint_actors.append('')
+                    imprint_actors.append('')
+        return imprint_actors
+
+    def get_rows(self):
+        yield self.get_header_string()
 
         for o in self.object_list:
             row = []
@@ -405,6 +442,13 @@ class ExportFootprintListView(FootprintListView):
 
             # Evidence details
             row.append(unicode(o.notes).encode('utf-8'))
+
+            # Footprint Actors
+            row.extend(self.get_footprint_actors_string(o))
+
+            # Imprint Actors
+            row.extend(self.get_imprint_actors_string(o))
+
             yield row
 
     def get(self, request, *args, **kwargs):
