@@ -17,6 +17,7 @@ class FootprintSearchFormTest(TestCase):
         form._errors = {}
         form.cleaned_data = {
             'q': '',
+            'search_level': True,
             'footprint_start_year': None,
             'footprint_end_year': None
         }

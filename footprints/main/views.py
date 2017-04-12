@@ -192,6 +192,11 @@ class FootprintSearchView(SearchView):
                 if 'fields' in counts:
                     context[field] = counts['fields'][field]
 
+        context['search_criteria'] = (
+            self.request.GET.get('q') or
+            self.request.GET.get('footprint_start_year') or
+            self.request.GET.get('footprint_end_year'))
+
         return context
 
 
