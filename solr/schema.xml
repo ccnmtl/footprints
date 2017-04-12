@@ -145,9 +145,9 @@
 
     <field name="added" type="date" indexed="true" stored="true" multiValued="false" />
 
-    <field name="complete" type="long" indexed="true" stored="true" multiValued="false" />
+    <field name="footprint_location_exact" type="string" indexed="true" stored="true" multiValued="false" />
 
-    <field name="title" type="ngram" indexed="true" stored="true" multiValued="false" />
+    <field name="footprint_start_date" type="date" indexed="true" stored="true" multiValued="false" />
 
     <field name="text" type="ngram" indexed="true" stored="true" multiValued="false" />
 
@@ -155,19 +155,31 @@
 
     <field name="object_type" type="text_en" indexed="true" stored="true" multiValued="false" />
 
+    <field name="footprint_end_date" type="date" indexed="true" stored="true" multiValued="false" />
+
+    <field name="imprint_location_exact" type="string" indexed="true" stored="true" multiValued="false" />
+
+    <field name="imprint_location" type="text_en" indexed="true" stored="true" multiValued="false" />
+
+    <field name="complete" type="long" indexed="true" stored="true" multiValued="false" />
+
     <field name="owners" type="text_en" indexed="true" stored="true" multiValued="false" />
+
+    <field name="wtitle" type="text_en" indexed="true" stored="true" multiValued="false" />
+
+    <field name="title" type="ngram" indexed="true" stored="true" multiValued="false" />
+
+    <field name="pub_end_date" type="date" indexed="true" stored="true" multiValued="false" />
 
     <field name="object_id" type="text_en" indexed="true" stored="true" multiValued="false" />
 
     <field name="sort_by" type="text_en" indexed="true" stored="true" multiValued="false" />
 
-    <field name="footprint_end_date" type="date" indexed="true" stored="true" multiValued="false" />
+    <field name="pub_start_date" type="date" indexed="true" stored="true" multiValued="false" />
+
+    <field name="footprint_location" type="text_en" indexed="true" stored="true" multiValued="false" />
 
     <field name="fdate" type="date" indexed="true" stored="true" multiValued="false" />
-
-    <field name="footprint_start_date" type="date" indexed="true" stored="true" multiValued="false" />
-
-    <field name="wtitle" type="text_en" indexed="true" stored="true" multiValued="false" />
 
     <field name="name" type="ngram" indexed="true" stored="true" multiValued="false" />
 

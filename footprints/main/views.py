@@ -157,11 +157,18 @@ class FootprintSearchView(SearchView):
     form_class = FootprintSearchForm
     template_name = 'main/footprint_advanced_search.html'
     paginate_by = 15
+    facet_fields = ['footprint_location', 'imprint_location']
 
     def get_queryset(self):
         sqs = super(FootprintSearchView, self).get_queryset()
+
+        # @todo - this is only required when the form is unbound
+        # work through the flow to see if this can be removed
         sqs = sqs.filter(django_ct='main.footprint')
 
+        # Sort logic is located here rather than in the SearchForm
+        # The first view is "unbound" and retrieves all Footprints
+        # as such, the sort needs to happen here rather than in the form
         sort_by = self.request.GET.get('sort_by', 'ftitle')
         direction = self.request.GET.get('direction', 'asc')
         if direction == 'desc':
@@ -178,6 +185,12 @@ class FootprintSearchView(SearchView):
         query = self.request.GET.get('q', '')
         export = reverse('export-footprint-list')
         context['export_url'] = u'{}?q={}'.format(export, query)
+
+        if context['form'].is_bound:
+            for field in self.facet_fields:
+                counts = self.queryset.facet(field).facet_counts()
+                if 'fields' in counts:
+                    context[field] = counts['fields'][field]
 
         return context
 
