@@ -48,13 +48,13 @@
             }
 
             var url = this.baseUrl + sortBy +
-                '/?d=' + direction + '&q=' + this.query;
+                '/?direction=' + direction + '&q=' + this.query;
             window.location = url;
         },
         clickSearch: function(evt) {
             var query = jQuery(this.el).find('input[name="q"]').val();
             var url = this.baseUrl + this.selectedSort +
-            '/?d=' + this.selectedDirection + '&q=' + query;
+            '/?direction=' + this.selectedDirection + '&q=' + query;
             window.location = url;
         },
         clickExport: function(evt) {
