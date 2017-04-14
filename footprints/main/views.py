@@ -157,7 +157,8 @@ class FootprintSearchView(SearchView):
     form_class = FootprintSearchForm
     template_name = 'main/footprint_advanced_search.html'
     paginate_by = 15
-    facet_fields = ['footprint_location', 'imprint_location']
+    facet_fields = [
+        'footprint_location', 'imprint_location', 'actor']
 
     def get_queryset(self):
         sqs = super(FootprintSearchView, self).get_queryset()

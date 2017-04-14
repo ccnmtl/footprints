@@ -1,12 +1,15 @@
 import re
 
 from celery_haystack.indexes import CelerySearchIndex
+from django.db.models.query_utils import Q
+from django.utils.encoding import smart_text
 from haystack.constants import Indexable
-from haystack.fields import CharField, NgramField, DateTimeField, IntegerField
+from haystack.fields import CharField, NgramField, DateTimeField, \
+    IntegerField, MultiValueField
 from unidecode import unidecode
 
 from footprints.main.models import WrittenWork, Footprint, Person, Place, \
-    Imprint
+    Imprint, Actor
 
 
 def format_sort_by(sort_term, remove_articles=False):
@@ -67,6 +70,8 @@ class FootprintIndex(CelerySearchIndex, Indexable):
 
     footprint_location = CharField(faceted=True)
     imprint_location = CharField(faceted=True)
+
+    actor = MultiValueField(faceted=True)
 
     # custom sort fields
     added = DateTimeField(model_attr='created_at')
@@ -137,6 +142,14 @@ class FootprintIndex(CelerySearchIndex, Indexable):
             return obj.book_copy.imprint.place.__unicode__()
 
         return ''
+
+    def prepare_actor(self, obj):
+        qs = Actor.objects.filter(
+            Q(writtenwork=obj.book_copy.imprint.work) |
+            Q(imprint=obj.book_copy.imprint) |
+            Q(footprint=obj)).distinct()
+
+        return [smart_text(actor) for actor in qs]
 
 
 class PersonIndex(CelerySearchIndex, Indexable):
