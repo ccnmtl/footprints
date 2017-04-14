@@ -8,6 +8,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.test.client import Client, RequestFactory, encode_multipart
+from django.utils.encoding import smart_text
 
 from footprints.main.forms import ContactUsForm
 from footprints.main.models import Footprint, Actor, Imprint, \
@@ -423,14 +424,14 @@ class FootprintListExportTest(TestCase):
                    'Evidence Call Number,Evidence Details,')
 
         for r in Role.objects.for_footprint():
-            role = 'Footprint Role ' + unicode(r.name)\
-                    .encode('utf-8') + ' Actor'
+            role = 'Footprint Role ' + smart_text(r.name)\
+                     + ' Actor'
             headers += role + ','
             headers += (role + ' VIAF Number,')
 
         for r in Role.objects.for_imprint():
-            role = 'Imprint Role: ' + unicode(r.name)\
-                    .encode('utf-8') + ' Actor'
+            role = 'Imprint Role: ' + smart_text(r.name)\
+                     + ' Actor'
             headers += role + ','
             headers += (role + ' VIAF Number,')
 
@@ -446,17 +447,17 @@ class FootprintListExportTest(TestCase):
         self.assertEquals(Footprint.objects.all().count(), 2)
 
         # owners
-        o = [owner.display_name().encode('utf-8')
+        o = [owner.display_name()
              for owner in self.footprint2.owners()]
         o = '; '.join(o)
 
         # Imprint Printers
-        p = [p.display_name().encode('utf-8')
+        p = [p.display_name()
              for p in self.footprint2.book_copy.imprint.printers()]
         p = '; '.join(p)
 
         # Imprint Actors
-        actors = [unicode(a).encode('utf-8')
+        actors = [smart_text(a)
                   for a in self.footprint2.book_copy.imprint.actor.all()]
         actors = '; '.join(actors)
 
@@ -490,7 +491,7 @@ class FootprintListExportTest(TestCase):
         for r in Role.objects.all().for_footprint():
             for a in self.footprint2.actors():
                 if r.pk == a.role.id:
-                    row2 += unicode(a).encode('utf-8') + ','
+                    row2 += smart_text(a) + ','
                     row2 += a.person.get_viaf_number() + ','
                 else:
                     row2 += ','
@@ -500,7 +501,7 @@ class FootprintListExportTest(TestCase):
         for r in Role.objects.all().for_imprint():
             for a in self.footprint2.book_copy.imprint.actor.all():
                 if r.pk == a.role.id:
-                    row2 += unicode(a).encode('utf-8') + ','
+                    row2 += smart_text(a) + ','
                     row2 += a.person.get_viaf_number() + ','
                 else:
                     row2 += ','
