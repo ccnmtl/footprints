@@ -56,7 +56,7 @@ logilab-astng==0.24.3
 lazy-object-proxy==1.2.2
 wrapt==1.10.10
 astroid==1.4.9
-pylint==1.6.5
+pylint==1.7.0
 six==1.10.0
 ipaddress==1.0.18
 Faker==0.7.11
