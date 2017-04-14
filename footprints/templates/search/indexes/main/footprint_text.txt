@@ -6,8 +6,8 @@
 {{object.book_copy.call_number}}
 {{object.book_copy.imprint.get_bhb_number}}
 {% for actor in object.actors %}
-    {{actor.person.name}} {{actor.alias}}
+    {{actor}}
 {% endfor %}
 {% for actor in object.book_copy.imprint.work.actors %}
-    {{actor.person.name}} {{actor.alias}}
+    {{actor}}
 {% endfor %}
