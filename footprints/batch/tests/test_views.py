@@ -48,6 +48,7 @@ class BatchJobListViewTest(TestCase):
 
         form = CreateBatchJobForm()
         form.cleaned_data = {'csvfile': csvfile}
+        form._errors = {}
         form.clean()
 
         self.view.form_valid(form)
