@@ -7,11 +7,17 @@
             'click a.btn-paginate': 'nextOrPreviousPage',
             'keypress .tools input.page-number': 'specifyPage',
             'click #clear_primary_search': 'clickClear',
-            'keypress input[name="q"]': 'enterSearch'
+            'keypress input[name="q"]': 'enterSearch',
+            'click input[name="actor"]': 'submitForm',
+            'click input[name="imprint_location"]': 'submitForm',
+            'click input[name="footprint_location"]': 'submitForm',
+            'click [type="submit"]': 'submitForm',
+            'click [type="reset"]': 'resetForm'
         },
         initialize: function(options) {
             _.bindAll(this, 'clickSortable', 'clickExport', 'clickToggleRange',
-                      'nextOrPreviousPage', 'specifyPage');
+                      'nextOrPreviousPage', 'specifyPage', 'enterSearch',
+                      'submitForm');
 
             var self = this;
             this.baseUrl = options.baseUrl;
@@ -54,6 +60,9 @@
             jQuery(this.el).find('form').submit();
         },
         clickClear: function(evt) {
+            jQuery('body').css('cursor', 'progress');
+            jQuery(this.el).find('.loading-overlay h3').html('Clearing');
+            jQuery(this.el).find('.loading-overlay').show();
             window.location = this.baseUrl;
         },
         clickExport: function(evt) {
@@ -109,6 +118,12 @@
             }
 
             return charCode >= 48 && charCode <= 57;
+        },
+        submitForm: function(evt) {
+            evt.preventDefault();
+            jQuery('body').css('cursor', 'progress');
+            jQuery(this.el).find('.loading-overlay').show();
+            jQuery(this.el).find('form').submit();
         }
     });
 })();
