@@ -5,9 +5,9 @@
 {{object.book_copy.imprint.place.city}} {{object.book_copy.imprint.place.country}}
 {{object.book_copy.call_number}}
 {{object.book_copy.imprint.get_bhb_number}}
-{% for actor in object.actors %}
+{% for actor in object.actor.all %}
     {{actor}}
 {% endfor %}
-{% for actor in object.book_copy.imprint.work.actors %}
+{% for actor in object.book_copy.imprint.work.actor.all %}
     {{actor}}
 {% endfor %}
