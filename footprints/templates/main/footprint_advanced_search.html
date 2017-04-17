@@ -38,41 +38,18 @@
     </div>
     <form class="form-inline" action="{% url 'search' %}">
     <div class="advanced-search-filter">
-        {% if form.errors|length > 0 %}
-        <div class="row tools error-level">
-            <div class="col-q-error">
-            &nbsp;
-            </div>
-            <div class="col-fyear-error">
-            {% if form.footprint_start_year.errors or form.footprint_end_year.errors %}
-                {{form.footprint_start_year.errors}}
-                {{form.footprint_end_year.errors}}
-                {% else %}
-                    &nbsp;
-            {% endif %}
-            </div>
-            <div class="col-submit-error">
-                {% if form.q.errors %}
-                    {{form.q.errors}}
-                {% else %}
-                    &nbsp;
-                {% endif %}
-            </div>
-        </div><!-- /.error-level -->
-        {% endif%}
-
         <div class="row tools search-level">
             {{form.sort_by}}
             {{form.direction}}
             {{form.page}}
-            <div class="col-q-field">
+            <div class="col-q">
                 <div class="form-group{% if form.q.errors %} has-error{% endif %}">
-                    <label for="keyword-search" class="sr-only">Find:</label>
+                    <label for="keyword-search">Keyword:</span></label>
                     <input class="form-control" id="keyword-search" name="q" placeholder="Find..." value="{{form.data.q}}">
                 </div>
             </div>
             {% flag "advanced_search" %}
-            <div class="col-fyear-field">
+            <div class="col-footprint-year">
                 <div class="form-group {% if form.footprint_start_year.errors or form.footprint_end_year.errors or form.q.errors %}has-error{% endif %}">
                     <label>Footprint year:</label>
                         <input type="number" class="form-control start-year"
@@ -98,9 +75,35 @@
                         {% endif %}
                           />
                 </div>
+                {% if form.footprint_start_year.errors or form.footprint_end_year.errors %}
+                <div class="error-message">
+                {{form.footprint_start_year.errors}}
+                {{form.footprint_end_year.errors}}
+                </div>
+                {% endif %}
+            </div>
+            <div class="col-pub-year">
+                <div class="form-group">
+                    <label>Publication year:</label>
+                        <input type="number" class="form-control start-year"
+                         name="pub_start_year" min="1000" max="2017"
+                         maxlength="4" value="" />
+                        <input type="hidden" name="pub_range" value="1" />
+                        <button class="btn-white btn btn-xs toggle-range form-control">
+                        add range
+                        </button>
+                        <input type="number" class="form-control end-year"
+                         name="pub_end_year" min="1000" max="2017" maxlength="4" value="" style='display: none;' />
+                </div>
+                {% if form.footprint_start_year.errors or form.footprint_end_year.errors %}
+                <div class="error-message">
+                {{form.footprint_start_year.errors}}
+                {{form.footprint_end_year.errors}}
+                </div>
+                {% endif %}
             </div>
             {% endflag %}
-            <div class="col-submit-field">
+            <div class="col-submit">
                 <button name="search_level" value="1" type="submit" class="btn btn-default">
                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search
                 </button>
@@ -109,14 +112,20 @@
                 </button>
                 {% flag "advanced_search" %}
                 {% if form.is_bound and form.errors|length < 1 and search_criteria %}
-                <div class="toggle-filters">
-                    <span class="glyphicon glyphicon-tasks"></span> Hide filters
+                <div class="filter-marker">
+                    Filters
                 </div>
                 {% endif %}
                 {% endflag %}
+
+                {% if form.q.errors %}
+                <br />
+                <div class="error-message">
+                    {{form.q.errors}}
+                </div>
+                {% endif %}
             </div>
         </div>
-
     </div><!-- /.advanced-search-filter -->
 
     {% flag "advanced_search" %}
@@ -124,23 +133,7 @@
     <div class="advanced-search-filter" style="padding-top: 0;">
         <div class="filter-level">
             <div class="row">
-                <div class="col-xs-2">
-                    <h3>Publication year:</h3>
-                    <div class="form-group">
-                        <label class="sr-only">Publication year:</label>
-                            <input type="number" class="form-control start-year"
-                             name="publication_start_year" min="1000" max="2017"
-                             maxlength="4" value="" />
-                            <input type="hidden" name="publication_range" value="" />
-                            <button class="btn-white btn btn-xs toggle-range form-control">
-                            add range
-                            </button>
-                            <input type="number" class="form-control end-year"
-                             name="publication_end_year" min="1000" max="2017"
-                             maxlength="4" value="" />
-                    </div>
-                 </div>
-                <div class="col-xs-3">
+                <div class="col-xs-4">
                     <h3>Imprint Location:</h3>
                     <div class="row">
                         <div class="col-xs-12 filter-col">
@@ -186,7 +179,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-xs-3">
+                <div class="col-xs-4">
                     <h3>Footprint Location:</h3>
                     <div class="row">
                         <div class="col-xs-12 filter-col">

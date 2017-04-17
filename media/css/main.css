@@ -2202,50 +2202,56 @@ th.sortable.tablesorter-headerDesc,
 }
 
 .advanced-search-filter .col-q-field,
-.advanced-search-filter .col-q-error {
+.advanced-search-filter .col-q-error,
+.advanced-search-filter .col-q {
     float: left;
     width: 150px;
 }
 
 .advanced-search-filter .col-fyear-field,
-.advanced-search-filter .col-fyear-error {
+.advanced-search-filter .error-message,
+.advanced-search-filter .col-footprint-year,
+.advanced-search-filter .col-pub-year
+{
     float: left;
-    width: 300px;
+    width: 200px;
+}
+
+.advanced-search-filter .col-submit
+{
+    float: left;
+    width: 190px;
 }
 
 .advanced-search-filter .col-submit-field,
 .advanced-search-filter .col-submit-error {
     float: left;
-    width: 300px;
+    width: 190px;
 }
 
 .advanced-search-filter #keyword-search,
-.advanced-search-filter .col-q-field .form-group {
+.advanced-search-filter .col-q .form-group {
     width: 100%;
 }
 
-.advanced-search-filter .search-level .col-fyear-field .start-year,
-.advanced-search-filter .search-level .col-fyear-field .end-year,
-.advanced-search-filter .col-fyear-field .toggle-range {
+.advanced-search-filter .search-level label {
+    display: block;
+    height: 20px;
+}
+
+.advanced-search-filter .search-level button {
+    margin-top: 25px;
+}
+
+.advanced-search-filter .search-level .start-year,
+.advanced-search-filter .search-level .end-year,
+.advanced-search-filter .col-footprint-year .toggle-range {
     display: inline-block;
     vertical-align: middle;
 }
 
-.advanced-search-filter .col-fyear-field .toggle-range {
+.advanced-search-filter .search-level .toggle-range {
     margin: 0 2px;
-}
-
-.advanced-search-filter .filter-level .start-year,
-.advanced-search-filter .filter-level .end-year,
-.advanced-search-filter .filter-level .toggle-range {
-    display: block;
-    vertical-align: middle;
-    margin: auto;
-}
-
-.advanced-search-filter .filter-level .toggle-range {
-    margin-top: 4px;
-    margin-bottom: 4px;
 }
 
 .advanced-search-filter .toggle-range:before {
@@ -2259,15 +2265,27 @@ th.sortable.tablesorter-headerDesc,
     content: "\e083";
 }
 
-.advanced-search-filter .toggle-filters {
-    margin-top: 7px;
-    display: inline-block;
+.advanced-search-filter .filter-marker {
+    margin-top: 30px;
     float: right;
-    width: 100px;
+    width: 130px;
     vertical-align: bottom;
     text-align: center;
     font-size: 14px;
     font-weight: 700;
+}
+
+.advanced-search-filter .filter-level .start-year,
+.advanced-search-filter .filter-level .end-year,
+.advanced-search-filter .filter-level .toggle-range {
+    display: block;
+    vertical-align: middle;
+    margin: auto;
+}
+
+.advanced-search-filter .filter-level .toggle-range {
+    margin-top: 4px;
+    margin-bottom: 4px;
 }
 
 .advanced-search-filter .filter-level h3 {
@@ -2811,43 +2829,51 @@ p.decoy {
 
 @media (min-width: 992px) {
     .advanced-search-filter .col-q-field,
-    .advanced-search-filter .col-q-error {
+    .advanced-search-filter .col-q-error,
+    .advanced-search-filter .col-q {
         padding-left: 15px;
         padding-right: 15px;
         width: 200px;
     }
     .advanced-search-filter .col-fyear-field,
-    .advanced-search-filter .col-fyear-error {
+    .advanced-search-filter .error-message,
+    .advanced-search-filter .col-footprint-year,
+    .advanced-search-filter .col-pub-year {
         padding-left: 0;
         padding-right: 0px;
-        width: 300px;
+        width: 200px;
     }
     .advanced-search-filter .col-submit-field,
-    .advanced-search-filter .col-submit-error {
+    .advanced-search-filter .col-submit-error,
+    .advanced-search-filter .col-submit {
         padding-left: 0px;
         padding-right: 15px;
-        width: 469px;
+        width: 369px;
     }
 }
 
 @media (min-width: 1200px) {
     .advanced-search-filter .col-q-field,
-    .advanced-search-filter .col-q-error {
+    .advanced-search-filter .col-q-error,
+    .advanced-search-filter .col-q {
         padding-left: 15px;
         padding-right: 15px;
         width: 300px;
     }
     .advanced-search-filter .col-fyear-field,
-    .advanced-search-filter .col-fyear-error {
+    .advanced-search-filter .error-message,
+    .advanced-search-filter .col-footprint-year,
+    .advanced-search-filter .col-pub-year {
         padding-left: 0;
         padding-right: 0px;
-        width: 300px;
+        width: 200px;
     }
     .advanced-search-filter .col-submit-field,
-    .advanced-search-filter .col-submit-error {
+    .advanced-search-filter .col-submit-error,
+    .advanced-search-filter .col-submit {
         padding-left: 0px;
         padding-right: 15px;
-        width: 569px;
+        width: 469px;
     }
 }
 
