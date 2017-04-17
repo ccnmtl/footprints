@@ -6,7 +6,8 @@
             'click .toggle-range': 'clickToggleRange',
             'click a.btn-paginate': 'nextOrPreviousPage',
             'keypress .tools input.page-number': 'specifyPage',
-            'click #clear_primary_search': 'clickClear'
+            'click #clear_primary_search': 'clickClear',
+            'keypress input[name="q"]': 'enterSearch'
         },
         initialize: function(options) {
             _.bindAll(this, 'clickSortable', 'clickExport', 'clickToggleRange',
@@ -74,6 +75,13 @@
                 jQuery(evt.currentTarget).prev().val('1');
                 jQuery(evt.currentTarget).next().show();
                 jQuery(evt.currentTarget).html('to');
+            }
+        },
+        enterSearch: function(evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode;
+            if (charCode === 13) {
+                evt.preventDefault();
+                jQuery(this.el).find('form').submit();
             }
         },
         nextOrPreviousPage: function(evt) {
