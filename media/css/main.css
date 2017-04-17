@@ -2873,3 +2873,13 @@ p.decoy {
     z-index: 10001;
     text-align: center;
 }
+
+.column-count-3 {
+    -webkit-column-count: 3; /* Chrome, Safari, Opera */
+    -moz-column-count: 3; /* Firefox */
+    column-count: 3;
+}
+
+label.disabled {
+   color: #999999;
+}

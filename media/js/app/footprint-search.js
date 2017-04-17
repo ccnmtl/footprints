@@ -8,16 +8,17 @@
             'keypress .tools input.page-number': 'specifyPage',
             'click #clear_primary_search': 'clickClear',
             'keypress input[name="q"]': 'enterSearch',
-            'click input[name="actor"]': 'submitForm',
-            'click input[name="imprint_location"]': 'submitForm',
-            'click input[name="footprint_location"]': 'submitForm',
+            'click .highlighted input:checkbox': 'applySingleFilter',
+            'click .modal input:checkbox': 'matchHighlightedValue',
+            'click .btn-apply-filters': 'submitForm',
             'click [type="submit"]': 'submitForm',
-            'click [type="reset"]': 'resetForm'
+            'click [type="reset"]': 'resetForm',
         },
         initialize: function(options) {
             _.bindAll(this, 'clickSortable', 'clickExport', 'clickToggleRange',
                       'nextOrPreviousPage', 'specifyPage', 'enterSearch',
-                      'submitForm');
+                      'matchHighlightedValue',
+                      'applySingleFilter', 'submitForm');
 
             var self = this;
             this.baseUrl = options.baseUrl;
@@ -119,8 +120,25 @@
 
             return charCode >= 48 && charCode <= 57;
         },
-        submitForm: function(evt) {
+        matchHighlightedValue: function(evt) {
+            // match field values
+            var checked = jQuery(evt.currentTarget).is(':checked');
+            var q = '.highlighted [name="' + evt.currentTarget.name + '"]' +
+                '[value="' + evt.currentTarget.value + '"]';
+            jQuery(this.el).find(q).prop('checked', checked);
+        },
+        applySingleFilter: function(evt) {
             evt.preventDefault();
+
+            // uncheck matching fields
+            if (!jQuery(evt.currentTarget).is(':checked')) {
+                var q = '.modal [name="' + evt.currentTarget.name + '"]' +
+                    '[value="' + evt.currentTarget.value + '"]';
+                jQuery(this.el).find(q).prop('checked', false);
+            }
+            this.submitForm();
+        },
+        submitForm: function(evt) {
             jQuery('body').css('cursor', 'progress');
             jQuery(this.el).find('.loading-overlay').show();
             jQuery(this.el).find('form').submit();
