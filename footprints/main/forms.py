@@ -122,7 +122,8 @@ class FootprintSearchForm(ModelSearchForm):
             args += self.handle_single_year(footprint_start_year)
 
         if self.cleaned_data['actor']:
-            args.append(Q(actor_exact__in=self.cleaned_data['actor']))
+            for a in self.cleaned_data['actor']:
+                args.append(Q(actor_exact__in=[a]))
 
         args += self.handle_footprint_location()
         args += self.handle_imprint_location()
