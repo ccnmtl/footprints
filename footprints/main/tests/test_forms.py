@@ -9,6 +9,15 @@ class FootprintSearchFormTest(TestCase):
 
     def test_empty_search(self):
         form = FootprintSearchForm()
+        form.cleaned_data = {
+            'q': '',
+            'search_level': True,
+            'footprint_start_year': None,
+            'footprint_end_year': None,
+            'actor': [],
+            'footprint_location': [],
+            'imprint_location': [],
+        }
         sqs = form.search()
         self.assertEquals(sqs.count(), 0)
 

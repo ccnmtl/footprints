@@ -1950,6 +1950,11 @@ ul.additional-questions .editable-container {
 }
 
 /* Browse */
+
+.object-browse {
+    position: relative;
+}
+
 .object-browse .panel-body {
     padding: 0;
 }
@@ -2150,7 +2155,7 @@ th.sortable.tablesorter-headerDesc,
     display: none;
 }
 
-/* Advanced Search and Fileter Page & Browse Pages */
+/* Advanced Search and Filter Page & Browse Pages */
 
 .advanced-search-filter {
     background: #f0f0f0 url("../img/fp_section_bg.png") repeat;
@@ -2844,4 +2849,27 @@ p.decoy {
         padding-right: 15px;
         width: 569px;
     }
+}
+
+
+.loading-overlay {
+    z-index: 10001;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.85 !important;
+    background: #f0f0f0;
+    font-weight: bold;
+}
+
+.loading-overlay div {
+    position: absolute;
+    display: block;
+    margin-top: 5%;
+    height: 100%;
+    width: 100%;
+    z-index: 10001;
+    text-align: center;
 }
