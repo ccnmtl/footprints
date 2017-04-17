@@ -249,7 +249,7 @@ class FootprintListView(ListView):
         return lst
 
     def format_owner(self, obj):
-        actors = [actor.display_name() for actor in obj.owners]
+        actors = [actor.display_name() for actor in obj.owners()]
         return ', '.join(actors)
 
     def sort_by_owner(self, qs, direction):
@@ -568,15 +568,15 @@ class RemoveRelatedView(LoggedInMixin, AddChangeAccessMixin,
                 the_model, pk=self.request.POST.get('parent_id', None))
 
             attr = self.request.POST.get('attr', None)
-            field = the_model._meta.get_field_by_name(attr)
+            field = the_model._meta.get_field(attr)
 
-            model_name = field[0].rel.to._meta.model_name
+            model_name = field.rel.to._meta.model_name
             the_model = apps.get_model(app_label='main', model_name=model_name)
             the_child = get_object_or_404(
                 the_model, pk=self.request.POST.get('child_id', None))
 
             # m2m?
-            if isinstance(field[0], ManyToManyField):
+            if isinstance(field, ManyToManyField):
                 return self.removeManyToMany(the_parent, the_child, attr)
             else:
                 return self.removeForeignKey(the_parent, the_child, attr)

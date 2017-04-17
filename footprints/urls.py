@@ -1,3 +1,4 @@
+from django.views.static import serve
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
@@ -6,9 +7,6 @@ from django.contrib.auth.views import password_change, password_change_done, \
     password_reset_done, password_reset_confirm, password_reset_complete,\
     password_reset
 from django.views.generic import TemplateView
-from registration.backends.default.views import RegistrationView
-from rest_framework import routers
-
 from footprints.main import views
 from footprints.main.forms import CustomRegistrationForm
 from footprints.main.views import (
@@ -25,6 +23,8 @@ from footprints.main.viewsets import (
     PersonViewSet, PlaceViewSet, RoleViewSet, WrittenWorkViewSet,
     StandardizedIdentificationViewSet, DigitalFormatViewSet,
     DigitalObjectViewSet, StandardizedIdentificationTypeViewSet)
+from registration.backends.default.views import RegistrationView
+from rest_framework import routers
 
 
 admin.autodiscover()
@@ -157,7 +157,7 @@ urlpatterns = [
     url(r'smoketest/', include('smoketest.urls')),
     url(r'infranil/', include('infranil.urls')),
     url(r'^uploads/(?P<path>.*)$',
-        'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
+        serve, {'document_root': settings.MEDIA_ROOT}),
     url(r'^sign_s3/$', SignS3View.as_view()),
 
     # Visualizations for grant application
