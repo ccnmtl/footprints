@@ -7,11 +7,18 @@
             'click a.btn-paginate': 'nextOrPreviousPage',
             'keypress .tools input.page-number': 'specifyPage',
             'click #clear_primary_search': 'clickClear',
-            'keypress input[name="q"]': 'enterSearch'
+            'keypress input[name="q"]': 'enterSearch',
+            'click .highlighted input:checkbox': 'applySingleFilter',
+            'click .modal input:checkbox': 'matchHighlightedValue',
+            'click .btn-apply-filters': 'submitForm',
+            'click [type="submit"]': 'submitForm',
+            'click [type="reset"]': 'resetForm',
         },
         initialize: function(options) {
             _.bindAll(this, 'clickSortable', 'clickExport', 'clickToggleRange',
-                      'nextOrPreviousPage', 'specifyPage');
+                      'nextOrPreviousPage', 'specifyPage', 'enterSearch',
+                      'matchHighlightedValue',
+                      'applySingleFilter', 'submitForm');
 
             var self = this;
             this.baseUrl = options.baseUrl;
@@ -54,6 +61,9 @@
             jQuery(this.el).find('form').submit();
         },
         clickClear: function(evt) {
+            jQuery('body').css('cursor', 'progress');
+            jQuery(this.el).find('.loading-overlay h3').html('Clearing');
+            jQuery(this.el).find('.loading-overlay').show();
             window.location = this.baseUrl;
         },
         clickExport: function(evt) {
@@ -109,6 +119,29 @@
             }
 
             return charCode >= 48 && charCode <= 57;
+        },
+        matchHighlightedValue: function(evt) {
+            // match field values
+            var checked = jQuery(evt.currentTarget).is(':checked');
+            var q = '.highlighted [name="' + evt.currentTarget.name + '"]' +
+                '[value="' + evt.currentTarget.value + '"]';
+            jQuery(this.el).find(q).prop('checked', checked);
+        },
+        applySingleFilter: function(evt) {
+            evt.preventDefault();
+
+            // uncheck matching fields
+            if (!jQuery(evt.currentTarget).is(':checked')) {
+                var q = '.modal [name="' + evt.currentTarget.name + '"]' +
+                    '[value="' + evt.currentTarget.value + '"]';
+                jQuery(this.el).find(q).prop('checked', false);
+            }
+            this.submitForm();
+        },
+        submitForm: function(evt) {
+            jQuery('body').css('cursor', 'progress');
+            jQuery(this.el).find('.loading-overlay').show();
+            jQuery(this.el).find('form').submit();
         }
     });
 })();

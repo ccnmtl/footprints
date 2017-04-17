@@ -29,6 +29,13 @@
 </div>
 
 <div class="object-browse">
+    <div class="loading-overlay" style="display: none">
+        <div>
+            <img alt="Searching" src="{{STATIC_URL}}img/ajax-loader.gif">
+            <br><br>
+            <h3>Searching</h3>
+        </div>
+    </div>
     <form class="form-inline" action="{% url 'search' %}">
     <div class="advanced-search-filter">
         {% if form.errors|length > 0 %}
@@ -133,71 +140,145 @@
                              maxlength="4" value="" />
                     </div>
                  </div>
-                <div class="col-xs-4">
-                    <h3>Location:</h3>
+                <div class="col-xs-3">
+                    <h3>Imprint Location:</h3>
                     <div class="row">
-                        <div class="col-xs-4 filter-col col-1">
-                            <div class="checkbox">
-                                <label><input type="checkbox"> Imprint</label>
-                            </div>
-                            <div class="checkbox">
-                                <label><input type="checkbox"> Footprint</label>
-                            </div>
-                        </div>
-                        <div class="col-xs-8 filter-col col-2">
-                            <div class="checkbox">
-                                <label><input type="checkbox"> Hannover, Germany</label>
-                            </div>
-                            <div class="checkbox">
-                                <label><input type="checkbox"> Worms, Germany</label>
-                            </div>
-                            <div class="checkbox">
-                                <label><input type="checkbox"> Oxford, United Kingdom</label>
-                            </div>
-                            <div class="checkbox">
-                                <label><input type="checkbox"> Prague, Czech Republic</label>
-                            </div>
+                        <div class="col-xs-12 filter-col">
+                            {% for loc in imprint_location|slice:"4" %}
+                                <div class="checkbox highlighted">
+                                    <label {% if loc.1 == 0 %}class="disabled"{% endif %}>
+                                        <input name="imprint_location" type="checkbox" value="{{loc.0}}"
+                                            {% if loc.1 == 0 %}disabled="disabled"{% endif %}
+                                            {% if loc.0 in form.cleaned_data.imprint_location %} checked="checked" {% endif %}>
+                                            {{loc.0}} ({{loc.1}})
+                                    </label>
+                                </div>
+                            {% endfor %}
                             <div class="more-module-link">
-                                <a href="#">More locations...</a>
+                                <a id="more-imprint-locations" href="#" data-toggle="modal" data-target="#imprint-locations-dlg">More locations...</a>
                             </div>
+                            <div id="imprint-locations-dlg" class="modal fade " tabindex="-1" role="dialog">
+                              <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">Imprint Locations</h4>
+                                  </div>
+                                  <div class="modal-body column-count-3">
+                                    {% for loc in imprint_location %}
+                                    <div class="checkbox">
+                                        <label {% if loc.1 == 0 %}class="disabled"{% endif %}>
+                                            <input name="imprint_location" type="checkbox" value="{{loc.0}}"
+                                                {% if loc.1 == 0 %}disabled="disabled"{% endif %}
+                                                {% if loc.0 in form.cleaned_data.imprint_location %} checked="checked" {% endif %}>
+                                                {{loc.0}} ({{loc.1}})
+                                        </label>
+                                    </div>
+                                    {% endfor %}
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-default btn-apply-filters" data-dismiss="modal">Apply Filters</button>
+                                  </div>
+                                </div><!-- /.modal-content -->
+                              </div><!-- /.modal-dialog -->
+                            </div><!-- /.modal -->
                         </div>
-                   </div>
+                    </div>
+                </div>
+                <div class="col-xs-3">
+                    <h3>Footprint Location:</h3>
+                    <div class="row">
+                        <div class="col-xs-12 filter-col">
+                            {% for loc in footprint_location|slice:"4" %}
+                                <div class="checkbox highlighted">
+                                    <label {% if loc.1 == 0 %}class="disabled"{% endif %}>
+                                        <input name="footprint_location" type="checkbox" value="{{loc.0}}"
+                                            {% if loc.1 == 0 %}disabled="disabled"{% endif %}
+                                            {% if loc.0 in form.cleaned_data.footprint_location %} checked="checked" {% endif %}>
+                                            {{loc.0}} ({{loc.1}})
+                                    </label>
+                                </div>
+                            {% endfor %}
+                            <div class="more-module-link">
+                                <a id="more-footprint-locations" href="#" data-toggle="modal" data-target="#footprint-locations-dlg">More locations...</a>
+                            </div>
+                            <div id="footprint-locations-dlg" class="modal fade " tabindex="-1" role="dialog">
+                              <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">Footprint Locations</h4>
+                                  </div>
+                                  <div class="modal-body column-count-3">
+                                    {% for loc in footprint_location %}
+                                    <div class="checkbox">
+                                        <label {% if loc.1 == 0 %}class="disabled"{% endif %}>
+                                            <input name="footprint_location" type="checkbox" value="{{loc.0}}"
+                                                {% if loc.1 == 0 %}disabled="disabled"{% endif %}
+                                                {% if loc.0 in form.cleaned_data.imprint_location %} checked="checked" {% endif %}>
+                                                {{loc.0}} ({{loc.1}})
+                                        </label>
+                                    </div>
+                                    {% endfor %}
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-default btn-apply-filters" data-dismiss="modal">Apply Filters</button>
+                                  </div>
+                                </div><!-- /.modal-content -->
+                              </div><!-- /.modal-dialog -->
+                            </div><!-- /.modal -->
+                        </div>
+                    </div>
                 </div>
                 <div class="col-xs-4">
                     <h3>Person:</h3>
                     <div class="row">
-                        <div class="col-xs-4 filter-col col-1">
-                            <div class="checkbox">
-                                <label><input type="checkbox"> Author</label>
-                            </div>
-                            <div class="checkbox">
-                                <label><input type="checkbox"> Owner</label>
-                            </div>
-                            <div class="checkbox">
-                                <label><input type="checkbox"> Other</label>
-                            </div>
-                       </div>
-                        <div class="col-xs-8 filter-col col-2">
-                            <div class="checkbox">
-                                <label><input type="checkbox"> Oppenheim, David b. Abraham</label>
-                            </div>
-                            <div class="checkbox">
-                                <label><input type="checkbox"> Bodleian Library, Oxford</label>
-                            </div>
-                            <div class="checkbox">
-                                <label><input type="checkbox"> Heilprin, Lippman</label>
-                            </div>
-                            <div class="checkbox">
-                                <label><input type="checkbox"> Shabbethai ben Joseph Bass</label>
-                            </div>
-                            <div class="more-module-link">
-                                <a href="#">More people...</a>
-                            </div>
+                        <div class="col-xs-12 filter-col">
+                            {% for a in actor|slice:"4" %}
+                                <div class="checkbox highlighted">
+                                    <label {% if a.1 == 0 %}class="disabled"{% endif %}>
+                                        <input name="actor" value="{{a.0}}" type="checkbox"
+                                            {% if a.1 == 0 %}disabled="disabled"{% endif %}
+                                            {% if a.0 in form.cleaned_data.actor %} checked="checked" {% endif %}>
+                                        {{a.0}} ({{a.1}})
+                                    </label>
+                                </div>
+                            {% endfor %}
+                            {% if actor|length > 4 %}
+                                <div class="more-module-link">
+                                    <a id="more-actors" href="#" data-toggle="modal" data-target="#actors-dlg">More people...</a>
+                                </div>
+                                <div id="actors-dlg" class="modal fade " tabindex="-1" role="dialog">
+                                  <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title">People</h4>
+                                      </div>
+                                      <div class="modal-body column-count-3">
+                                        {% for a in actor %}
+                                        <div class="checkbox">
+                                            <label {% if a.1 == 0 %}class="disabled"{% endif %}>
+                                                <input name="actor" type="checkbox" value="{{a.0}}"
+                                                    {% if a.1 == 0 %}disabled="disabled"{% endif %}
+                                                    {% if a.0 in form.cleaned_data.imprint_location %} checked="checked" {% endif %}>
+                                                    {{a.0}} ({{a.1}})
+                                            </label>
+                                        </div>
+                                        {% endfor %}
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-default btn-apply-filters" data-dismiss="modal">Apply Filters</button>
+                                      </div>
+                                    </div><!-- /.modal-content -->
+                                  </div><!-- /.modal-dialog -->
+                                </div><!-- /.modal -->
+                            {% endif %}
                         </div>
                    </div>
-                </div>
-                <div class="col-xs-2">
-                <button name="filter_level" value="1" type="submit" class="btn btn-default" aria-hidden="true"><span class="glyphicon glyphicon-ok"></span> Apply filter</button>
                 </div>
             </div>
         </div>

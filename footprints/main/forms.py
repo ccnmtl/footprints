@@ -3,6 +3,7 @@ import urllib
 
 from django import forms
 from django.db.models.query_utils import Q
+from django.forms.fields import MultipleChoiceField
 from django.forms.models import ModelForm
 from haystack.forms import ModelSearchForm
 from registration.forms import RegistrationForm
@@ -32,6 +33,11 @@ SORT_CHOICES = (
 )
 
 
+class MultipleChoiceFieldNoValidation(MultipleChoiceField):
+    def validate(self, value):
+        pass
+
+
 class FootprintSearchForm(ModelSearchForm):
     footprint_start_year = forms.IntegerField(required=False, min_value=1000)
     footprint_end_year = forms.IntegerField(required=False, min_value=1000)
@@ -51,6 +57,13 @@ class FootprintSearchForm(ModelSearchForm):
 
     search_level = forms.BooleanField(required=False)
     filter_level = forms.BooleanField(required=False)
+
+    actor = MultipleChoiceFieldNoValidation(
+        choices=[], required=False)
+    footprint_location = MultipleChoiceFieldNoValidation(
+        choices=[], required=False)
+    imprint_location = MultipleChoiceFieldNoValidation(
+        choices=[], required=False)
 
     def clean_year(self, fieldname):
         now = datetime.now()
@@ -88,16 +101,12 @@ class FootprintSearchForm(ModelSearchForm):
         return cleaned_data
 
     def search(self):
-        if not self.is_valid():
-            return self.no_query_found()
-
         args = []
         kwargs = {
             'django_ct': 'main.footprint',
         }
 
         q = self.cleaned_data.get('q')
-
         if q:
             kwargs['content'] = q
 
@@ -107,11 +116,16 @@ class FootprintSearchForm(ModelSearchForm):
             'footprint_end_year')
 
         if self.cleaned_data.get('footprint_range'):
-            # handle range
             args += self.handle_range(
                 footprint_start_year, footprint_end_year)
         elif footprint_start_year:
             args += self.handle_single_year(footprint_start_year)
+
+        if self.cleaned_data['actor']:
+            args.append(Q(actor_exact__in=self.cleaned_data['actor']))
+
+        args += self.handle_footprint_location()
+        args += self.handle_imprint_location()
 
         sqs = self.searchqueryset.filter(*args, **kwargs)
 
@@ -136,6 +150,20 @@ class FootprintSearchForm(ModelSearchForm):
             footprint_start_year, 1, 1)))
         args.append(Q(footprint_start_date__lte=date(
             footprint_start_year, 12, 31)))
+        return args
+
+    def handle_footprint_location(self):
+        args = []
+        if self.cleaned_data['footprint_location']:
+            lst = self.cleaned_data['footprint_location']
+            args.append(Q(footprint_location_exact__in=lst))
+        return args
+
+    def handle_imprint_location(self):
+        args = []
+        if self.cleaned_data['imprint_location']:
+            lst = self.cleaned_data['imprint_location']
+            args.append(Q(imprint_location_exact__in=lst))
         return args
 
     def get_query_params(self):
