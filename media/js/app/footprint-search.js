@@ -17,7 +17,7 @@
         initialize: function(options) {
             _.bindAll(this, 'clickSortable', 'clickExport', 'clickToggleRange',
                       'nextOrPreviousPage', 'specifyPage', 'enterSearch',
-                      'matchHighlightedValue',
+                      'busy', 'matchHighlightedValue',
                       'applySingleFilter', 'submitForm');
 
             var self = this;
@@ -25,6 +25,8 @@
             this.selectedDirection = options.selectedDirection;
             this.selectedSort = options.selectedSort;
             this.query = options.query;
+
+            jQuery('body').css('cursor', 'default');
 
             jQuery(this.el).find('.progress-circle').each(function() {
                 var pct = parseInt(jQuery(this).data('value'), 10) / 100;
@@ -49,7 +51,13 @@
                 }
             });
         },
+        busy: function(msg) {
+            jQuery('body').css('cursor', 'progress');
+            jQuery(this.el).find('.loading-overlay h3').html(msg);
+            jQuery(this.el).find('.loading-overlay').show();
+        },
         clickSortable: function(evt) {
+            this.busy('Sorting');
             var direction = 'asc';
             var sortBy = jQuery(evt.currentTarget).data('sort-by');
             if (sortBy === this.selectedSort) {
@@ -61,9 +69,7 @@
             jQuery(this.el).find('form').submit();
         },
         clickClear: function(evt) {
-            jQuery('body').css('cursor', 'progress');
-            jQuery(this.el).find('.loading-overlay h3').html('Clearing');
-            jQuery(this.el).find('.loading-overlay').show();
+            this.busy('Clearing');
             window.location = this.baseUrl;
         },
         clickExport: function(evt) {
@@ -91,11 +97,12 @@
             var charCode = (evt.which) ? evt.which : event.keyCode;
             if (charCode === 13) {
                 evt.preventDefault();
-                jQuery(this.el).find('form').submit();
+                this.submitForm();
             }
         },
         nextOrPreviousPage: function(evt) {
             evt.preventDefault();
+            this.busy('Loading');
             var pageNo = jQuery(evt.currentTarget).data('page-number');
             jQuery(this.el).find('[name="page"]').val(pageNo);
             jQuery(this.el).find('form').submit();
@@ -112,6 +119,7 @@
                 if (isNaN(page) || page < 1 || page > maxPage) {
                     $elt.parents('.page-count').addClass('has-error');
                 } else {
+                    this.busy('Loading');
                     jQuery(this.el).find('[name="page"]').val(page);
                     jQuery(this.el).find('form').submit();
                 }
@@ -139,8 +147,8 @@
             this.submitForm();
         },
         submitForm: function(evt) {
-            jQuery('body').css('cursor', 'progress');
-            jQuery(this.el).find('.loading-overlay').show();
+            this.busy('Searching');
+            jQuery(this.el).find('[name="page"]').val(1);
             jQuery(this.el).find('form').submit();
         }
     });
