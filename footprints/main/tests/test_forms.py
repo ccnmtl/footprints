@@ -14,9 +14,11 @@ class FootprintSearchFormTest(TestCase):
             'search_level': True,
             'footprint_start_year': None,
             'footprint_end_year': None,
+            'pub_start_year': None,
+            'pub_end_year': None,
             'actor': [],
             'footprint_location': [],
-            'imprint_location': [],
+            'imprint_location': []
         }
         sqs = form.search()
         self.assertEquals(sqs.count(), 0)
@@ -28,7 +30,9 @@ class FootprintSearchFormTest(TestCase):
             'q': '',
             'search_level': True,
             'footprint_start_year': None,
-            'footprint_end_year': None
+            'footprint_end_year': None,
+            'pub_start_year': None,
+            'pub_end_year': None
         }
 
         form.clean()
@@ -41,7 +45,9 @@ class FootprintSearchFormTest(TestCase):
         form.cleaned_data = {
             'q': 'oppenheim',
             'footprint_start_year': None,
-            'footprint_end_year': None
+            'footprint_end_year': None,
+            'pub_start_year': None,
+            'pub_end_year': None
         }
 
         form.clean()
@@ -53,7 +59,9 @@ class FootprintSearchFormTest(TestCase):
         form.cleaned_data = {
             'q': '',
             'footprint_start_year': 2080,
-            'footprint_end_year': 2080
+            'footprint_end_year': 2080,
+            'pub_start_year': None,
+            'pub_end_year': None
         }
 
         form.clean()
@@ -67,13 +75,17 @@ class FootprintSearchFormTest(TestCase):
         form.cleaned_data = {
             'q': '',
             'footprint_start_year': 999,
-            'footprint_end_year': 999
+            'footprint_end_year': 999,
+            'pub_start_year': 999,
+            'pub_end_year': 999
         }
 
         form.clean()
-        self.assertEquals(len(form._errors.keys()), 2)
+        self.assertEquals(len(form._errors.keys()), 4)
         self.assertTrue('footprint_start_year' in form._errors)
         self.assertTrue('footprint_end_year' in form._errors)
+        self.assertTrue('pub_start_year' in form._errors)
+        self.assertTrue('pub_end_year' in form._errors)
 
     def test_form_clean_range(self):
         form = FootprintSearchForm()
@@ -82,7 +94,9 @@ class FootprintSearchFormTest(TestCase):
             'q': '',
             'footprint_range': '1',
             'footprint_start_year': 2016,
-            'footprint_end_year': 1740
+            'footprint_end_year': 1740,
+            'pub_start_year': None,
+            'pub_end_year': None
         }
 
         form.clean()
@@ -96,7 +110,9 @@ class FootprintSearchFormTest(TestCase):
             'q': '',
             'footprint_range': '0',
             'footprint_start_year': 1740,
-            'footprint_end_year': None
+            'footprint_end_year': None,
+            'pub_start_year': 1740,
+            'pub_end_year': None
         }
 
         form.clean()
@@ -109,7 +125,9 @@ class FootprintSearchFormTest(TestCase):
             'q': '',
             'footprint_range': '1',
             'footprint_start_year': None,
-            'footprint_end_year': 1740
+            'footprint_end_year': 1740,
+            'pub_start_year': None,
+            'pub_end_year': 1740
         }
 
         form.clean()

@@ -83,22 +83,35 @@
                 {% endif %}
             </div>
             <div class="col-pub-year">
-                <div class="form-group">
+                <div class="form-group {% if form.pub_start_year.errors or form.pub_end_year.errors or form.q.errors %}has-error{% endif %}">
                     <label>Publication year:</label>
                         <input type="number" class="form-control start-year"
-                         name="pub_start_year" min="1000" max="2017"
-                         maxlength="4" value="" />
-                        <input type="hidden" name="pub_range" value="1" />
-                        <button class="btn-white btn btn-xs toggle-range form-control">
+                         name="pub_start_year" min="1000" max="{% now 'Y' %}"
+                         maxlength="4" value="{{form.data.pub_start_year}}" />
+                        <input type="hidden" name="pub_range" value="{{form.data.pub_range}}" />
+                        <button class="btn-white btn btn-xs toggle-range form-control
+                        {% if form.data.pub_range == '1' %}
+                        range-on
+                        {% endif %}
+                        ">
+                        {% if form.data.pub_range == '1' %}
+                        to
+                        {% else %}
                         add range
+                        {% endif %}
                         </button>
                         <input type="number" class="form-control end-year"
-                         name="pub_end_year" min="1000" max="2017" maxlength="4" value="" style='display: none;' />
+                         name="pub_end_year" min="1000" max="{% now 'Y' %}"
+                         maxlength="4" value="{{form.data.pub_end_year}}" 
+                        {% if form.data.pub_range != '1' %}
+                        style='display: none;'
+                        {% endif %}
+                          />
                 </div>
-                {% if form.footprint_start_year.errors or form.footprint_end_year.errors %}
+                {% if form.pub_start_year.errors or form.pub_end_year.errors %}
                 <div class="error-message">
-                {{form.footprint_start_year.errors}}
-                {{form.footprint_end_year.errors}}
+                {{form.pub_start_year.errors}}
+                {{form.pub_end_year.errors}}
                 </div>
                 {% endif %}
             </div>
