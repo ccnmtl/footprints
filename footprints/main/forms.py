@@ -43,6 +43,10 @@ class FootprintSearchForm(ModelSearchForm):
     footprint_end_year = forms.IntegerField(required=False, min_value=1000)
     footprint_range = forms.BooleanField(
         required=False, widget=forms.HiddenInput())
+    pub_start_year = forms.IntegerField(required=False, min_value=1000)
+    pub_end_year = forms.IntegerField(required=False, min_value=1000)
+    pub_range = forms.BooleanField(
+        required=False, widget=forms.HiddenInput())
 
     direction = forms.ChoiceField(
         choices=DIRECTION_CHOICES, initial='asc',
@@ -56,7 +60,6 @@ class FootprintSearchForm(ModelSearchForm):
         required=True, initial=1, widget=forms.HiddenInput())
 
     search_level = forms.BooleanField(required=False)
-    filter_level = forms.BooleanField(required=False)
 
     actor = MultipleChoiceFieldNoValidation(
         choices=[], required=False)
@@ -66,6 +69,8 @@ class FootprintSearchForm(ModelSearchForm):
         choices=[], required=False)
 
     def clean_year(self, fieldname):
+        if not self.cleaned_data[fieldname]:
+            return
         now = datetime.now()
         if self.cleaned_data[fieldname] > now.year:
             self._errors[fieldname] = self.error_class([
@@ -77,11 +82,8 @@ class FootprintSearchForm(ModelSearchForm):
     def clean(self):
         cleaned_data = super(FootprintSearchForm, self).clean()
 
-        if cleaned_data['footprint_start_year']:
-            self.clean_year('footprint_start_year')
-
-        if cleaned_data['footprint_end_year']:
-            self.clean_year('footprint_end_year')
+        self.clean_year('footprint_start_year')
+        self.clean_year('footprint_end_year')
 
         if (cleaned_data['footprint_start_year'] and
             cleaned_data['footprint_end_year'] and
@@ -90,11 +92,22 @@ class FootprintSearchForm(ModelSearchForm):
             self._errors['footprint_start_year'] = self.error_class([
                 "Start year must be less than end year"])
 
-        if ((cleaned_data.get('search_level', False) or
-             cleaned_data.get('filter_level', False)) and
+        self.clean_year('pub_start_year')
+        self.clean_year('pub_end_year')
+
+        if (cleaned_data['pub_start_year'] and
+            cleaned_data['pub_end_year'] and
+            cleaned_data['pub_start_year'] >
+                cleaned_data['pub_end_year']):
+            self._errors['pub_start_year'] = self.error_class([
+                "Start year must be less than end year"])
+
+        if (cleaned_data.get('search_level', False) and
             not cleaned_data['q'] and
             not (cleaned_data['footprint_start_year'] or
-                 cleaned_data['footprint_end_year'])):
+                 cleaned_data['footprint_end_year']) and
+            not (cleaned_data['pub_start_year'] or
+                 cleaned_data['pub_end_year'])):
             self._errors['q'] = self.error_class([
                 "Either a search term or year required"])
 
@@ -110,21 +123,12 @@ class FootprintSearchForm(ModelSearchForm):
         if q:
             kwargs['content'] = q
 
-        footprint_start_year = self.cleaned_data.get(
-            'footprint_start_year')
-        footprint_end_year = self.cleaned_data.get(
-            'footprint_end_year')
-
-        if self.cleaned_data.get('footprint_range'):
-            args += self.handle_range(
-                footprint_start_year, footprint_end_year)
-        elif footprint_start_year:
-            args += self.handle_single_year(footprint_start_year)
-
         if self.cleaned_data['actor']:
             for a in self.cleaned_data['actor']:
                 args.append(Q(actor_exact__in=[a]))
 
+        kwargs.update(self.handle_footprint_year())
+        kwargs.update(self.handle_pub_year())
         args += self.handle_footprint_location()
         args += self.handle_imprint_location()
 
@@ -135,23 +139,55 @@ class FootprintSearchForm(ModelSearchForm):
 
         return sqs
 
-    def handle_range(self, footprint_start_year, footprint_end_year):
-        args = []
-        if footprint_start_year:
-            args.append(Q(footprint_start_date__gte=date(
-                footprint_start_year, 1, 1)))
-        if footprint_end_year:
-            args.append(Q(footprint_end_date__lte=date(
-                footprint_end_year, 12, 31)))
-        return args
+    def handle_range(self, field_name1, field_name2, start_year, end_year):
+        kwargs = {}
+        if start_year:
+            kwargs['{}__gte'.format(field_name1)] = date(
+                start_year, 1, 1)
+        if end_year:
+            kwargs['{}__lte'.format(field_name2)] = date(
+                end_year, 12, 31)
+        return kwargs
 
-    def handle_single_year(self, footprint_start_year):
-        args = []
-        args.append(Q(footprint_start_date__gte=date(
-            footprint_start_year, 1, 1)))
-        args.append(Q(footprint_start_date__lte=date(
-            footprint_start_year, 12, 31)))
-        return args
+    def handle_single_year(self, field_name, start_year):
+        kwargs = {}
+        kwargs['{}__gte'.format(field_name)] = date(
+            start_year, 1, 1)
+        kwargs['{}__lte'.format(field_name)] = date(
+            start_year, 12, 31)
+        return kwargs
+
+    def handle_footprint_year(self):
+        kwargs = {}
+        footprint_start_year = self.cleaned_data.get(
+            'footprint_start_year')
+        footprint_end_year = self.cleaned_data.get(
+            'footprint_end_year')
+
+        if self.cleaned_data.get('footprint_range'):
+            kwargs.update(self.handle_range(
+                'footprint_start_date', 'footprint_end_date',
+                footprint_start_year, footprint_end_year))
+        elif footprint_start_year:
+            kwargs.update(self.handle_single_year(
+                'footprint_start_date', footprint_start_year))
+        return kwargs
+
+    def handle_pub_year(self):
+        kwargs = {}
+        pub_start_year = self.cleaned_data.get(
+            'pub_start_year')
+        pub_end_year = self.cleaned_data.get(
+            'pub_end_year')
+
+        if self.cleaned_data.get('pub_range'):
+            kwargs.update(self.handle_range(
+                'pub_start_date', 'pub_end_date',
+                pub_start_year, pub_end_year))
+        elif pub_start_year:
+            kwargs.update(self.handle_single_year(
+                'pub_start_date', pub_start_year))
+        return kwargs
 
     def handle_footprint_location(self):
         args = []
