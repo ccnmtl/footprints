@@ -75,6 +75,9 @@
                         {% endif %}
                           />
                 </div>
+                <div class="search-status-message" id="footprint-year-status">
+                    All years
+                </div>
                 {% if form.footprint_start_year.errors or form.footprint_end_year.errors %}
                 <div class="error-message">
                 {{form.footprint_start_year.errors}}
@@ -107,6 +110,9 @@
                         style='display: none;'
                         {% endif %}
                           />
+                </div>
+                <div class="search-status-message" id="pub-year-status">
+                    All years
                 </div>
                 {% if form.pub_start_year.errors or form.pub_end_year.errors %}
                 <div class="error-message">
