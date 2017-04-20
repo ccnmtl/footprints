@@ -7,22 +7,27 @@
             'click a.btn-paginate': 'nextOrPreviousPage',
             'keypress .tools input.page-number': 'specifyPage',
             'click #clear_primary_search': 'clickClear',
-            'keypress input[name="q"]': 'onEnter',
-            'keypress input[name="footprint_start_year"]': 'onEnter',
-            'keypress input[name="footprint_end_year"]': 'onEnter',
-            'keypress input[name="pub_start_year"]': 'onEnter',
-            'keypress input[name="pub_end_year"]': 'onEnter',
+            'keydown input[name="q"]': 'onKeydown',
+            'keydown input[name="footprint_start_year"]': 'onKeydown',
+            'keydown input[name="footprint_end_year"]': 'onKeydown',
+            'keydown input[name="pub_start_year"]': 'onKeydown',
+            'keydown input[name="pub_end_year"]': 'onKeydown',
             'click .highlighted input:checkbox': 'applySingleFilter',
             'click .modal input:checkbox': 'matchHighlightedValue',
             'click .btn-apply-filters': 'submitForm',
             'click [type="submit"]': 'submitForm',
-            'click [type="reset"]': 'resetForm'
+            'click [type="reset"]': 'resetForm',
+            'keyup input[name="footprint_start_year"]': 'updateStatus',
+            'keyup input[name="footprint_end_year"]': 'updateStatus',
+            'keyup input[name="pub_start_year"]': 'updateStatus',
+            'keyup input[name="pub_end_year"]': 'updateStatus'
         },
         initialize: function(options) {
             _.bindAll(this, 'clickSortable', 'clickExport', 'clickToggleRange',
-                      'nextOrPreviousPage', 'specifyPage', 'onEnter',
+                      'nextOrPreviousPage', 'specifyPage', 'onKeydown',
                       'busy', 'matchHighlightedValue',
-                      'applySingleFilter', 'submitForm', 'clearErrors');
+                      'applySingleFilter', 'submitForm', 'clearErrors',
+                      'updateStatus');
 
             var self = this;
             this.baseUrl = options.baseUrl;
@@ -54,6 +59,8 @@
                         .addClass(self.selectedDirection);
                 }
             });
+
+            this.updateStatus();
         },
         busy: function(msg) {
             jQuery('body').css('cursor', 'progress');
@@ -96,12 +103,21 @@
                 jQuery(evt.currentTarget).next().show();
                 jQuery(evt.currentTarget).html('to');
             }
+            this.updateStatus(evt);
         },
-        onEnter: function(evt) {
+        isCharacter: function(charCode) {
+            return charCode === 8 ||
+                (charCode >= 46 && charCode <= 90) ||
+                (charCode >= 96 && charCode <= 111) ||
+                charCode >= 186;
+        },
+        onKeydown: function(evt) {
             var charCode = (evt.which) ? evt.which : event.keyCode;
             if (charCode === 13) {
                 evt.preventDefault();
                 this.submitForm();
+            } else if (this.isCharacter(charCode)) {
+                this.clearErrors();
             }
         },
         nextOrPreviousPage: function(evt) {
@@ -151,13 +167,51 @@
             this.submitForm();
         },
         submitForm: function(evt) {
+            var $form = jQuery(this.el).find('form');
+            if (!$form.get(0).reportValidity()) {
+                return;
+            }
+
             this.busy('Searching');
             jQuery(this.el).find('[name="page"]').val(1);
             jQuery(this.el).find('form').submit();
         },
         clearErrors: function() {
-            jQuery(this.el).findAll().removeClass('.has-error');
+            jQuery(this.el).find('*').removeClass('has-error');
             jQuery(this.el).find('.error-message').hide();
+        },
+        composeStatus: function(lbl) {
+            var start = jQuery(this.el).find(
+                '[name="' + lbl + '_start_year"]').val();
+            var end = jQuery(this.el).find(
+                '[name="' + lbl + '_end_year"]').val();
+            var range = jQuery(this.el).find(
+                '[name="' + lbl + '_range"]').val() === '1';
+
+            if (range) {
+                if (start && !end) {
+                    return start + ' to present';
+                }
+
+                if (start && end) {
+                    return start + ' to ' + end;
+                }
+
+                if (!start && end) {
+                    return 'Up to ' + end;
+                }
+            } else if (start) {
+                return start;
+            }
+
+            return 'All years';
+        },
+        updateStatus: function(evt) {
+            var status = this.composeStatus('footprint');
+            jQuery('#footprint-year-status').html(status);
+
+            status = this.composeStatus('pub');
+            jQuery('#pub-year-status').html(status);
         }
     });
 })();
