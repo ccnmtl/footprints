@@ -7,18 +7,22 @@
             'click a.btn-paginate': 'nextOrPreviousPage',
             'keypress .tools input.page-number': 'specifyPage',
             'click #clear_primary_search': 'clickClear',
-            'keypress input[name="q"]': 'enterSearch',
+            'keypress input[name="q"]': 'onEnter',
+            'keypress input[name="footprint_start_year"]': 'onEnter',
+            'keypress input[name="footprint_end_year"]': 'onEnter',
+            'keypress input[name="pub_start_year"]': 'onEnter',
+            'keypress input[name="pub_end_year"]': 'onEnter',
             'click .highlighted input:checkbox': 'applySingleFilter',
             'click .modal input:checkbox': 'matchHighlightedValue',
             'click .btn-apply-filters': 'submitForm',
             'click [type="submit"]': 'submitForm',
-            'click [type="reset"]': 'resetForm',
+            'click [type="reset"]': 'resetForm'
         },
         initialize: function(options) {
             _.bindAll(this, 'clickSortable', 'clickExport', 'clickToggleRange',
-                      'nextOrPreviousPage', 'specifyPage', 'enterSearch',
+                      'nextOrPreviousPage', 'specifyPage', 'onEnter',
                       'busy', 'matchHighlightedValue',
-                      'applySingleFilter', 'submitForm');
+                      'applySingleFilter', 'submitForm', 'clearErrors');
 
             var self = this;
             this.baseUrl = options.baseUrl;
@@ -93,7 +97,7 @@
                 jQuery(evt.currentTarget).html('to');
             }
         },
-        enterSearch: function(evt) {
+        onEnter: function(evt) {
             var charCode = (evt.which) ? evt.which : event.keyCode;
             if (charCode === 13) {
                 evt.preventDefault();
@@ -150,6 +154,10 @@
             this.busy('Searching');
             jQuery(this.el).find('[name="page"]').val(1);
             jQuery(this.el).find('form').submit();
+        },
+        clearErrors: function() {
+            jQuery(this.el).findAll().removeClass('.has-error');
+            jQuery(this.el).find('.error-message').hide();
         }
     });
 })();
