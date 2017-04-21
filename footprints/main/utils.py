@@ -1,6 +1,6 @@
 from django.contrib.gis.geos.point import Point
 from rest_framework.renderers import BrowsableAPIRenderer
-
+from django.utils.encoding import smart_text
 from footprints.mixins import BatchAccessMixin, ModerationAccessMixin,\
     AddChangeAccessMixin
 
@@ -14,6 +14,28 @@ def permissions(request):
         'can_create':
             request.user.has_perms(AddChangeAccessMixin.permission_required)
     }
+
+
+def stringify_role_actors(roles, actors):
+    string = ''
+    for r in roles:
+        actor_string = ''
+        viaf_string = ''
+        for a in actors:
+            # import pdb
+            # pdb.set_trace()
+            if r.pk == a.role.id:
+                actor_string = smart_text(a) if not actor_string else\
+                    '; '.join([actor_string, smart_text(a)])
+                viaf_string = a.person.get_viaf_number() if not viaf_string\
+                    else '; '.join([viaf_string, a.person.get_viaf_number()])
+        if (string == ''):
+            string = actor_string
+        else:
+            string = ','.join([string, actor_string])
+        string = ','.join([string, viaf_string])
+
+    return string
 
 
 class BrowsableAPIRendererNoForms(BrowsableAPIRenderer):

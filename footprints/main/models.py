@@ -480,7 +480,7 @@ class Person(models.Model):
         if self.standardized_identifier:
             viaf_type = StandardizedIdentificationType.objects.viaf()
             if self.standardized_identifier.identifier_type == viaf_type:
-                return self.standardized_identifier.identifier
+                return str(self.standardized_identifier.identifier)
         return ''
 
 
