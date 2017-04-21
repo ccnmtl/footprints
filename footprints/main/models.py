@@ -36,6 +36,7 @@ MEDIUM_CHOICES = [
     'Censor signature in extant copy',
     'Dedication in imprint',
     'Library catalog/union catalog',
+    'Material evidence in extant copy',
     'Owner signature/bookplate in extant copy',
     'Reference in another text',
     'Subscription list in imprint'
