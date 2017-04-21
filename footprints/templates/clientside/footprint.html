@@ -211,14 +211,12 @@
                 <%=medium%>
             <% } %>
         </dd>
-        
         <% if (medium_description && medium_description.length > 0) { %>
             <dt>
                 <a href="javascript:void(0);" data-toggle="tooltip" data-placement="left"
-                    title="The evidence description contains additional information about the evidence, e.g. an auction catalog title or the text of an owner's inscription.">
+                    title="This field contains specific details about the evidence itself, e.g. an auction catalog title or the text of an owner’s marginalia. Discussion on how you established the footprint through deductions, extrapolation, as a researcher should be in the general "Notes" field.">
                     <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
                 </a>
-            
                 Evidence Description
             </dt>
             <dd class="border-bottom">
@@ -232,11 +230,11 @@
                 <% } %>
              </dd>
         <% } %>
-        
         <dt>
             <a href="javascript:void(0);" data-toggle="tooltip" data-placement="left"
-                title="The evidence location describes where one can find the evidence now. Options include a particular library, archive, a printed book, a journal article, a collection, e.g. Jewish Theological Seminary, New York, New York.">
-                <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                title='This field describes the physical location for the evidence. Examples might include a library or archive for unpublished or rare material or extant copies. For printed material available widely, specify "Multiple Locations."'>
+                <span class="glyphicon glyphicon-question-sign"
+                aria-hidden="true"></span>
             </a>
             Evidence Location
         </dt>
@@ -252,7 +250,14 @@
         </dd>
 
         <% if (call_number && call_number.length > 0) { %>
-            <dt>Evidence Source</dt>
+            <dt>
+                <a href="javascript:void(0);" data-toggle="tooltip" data-placement="left"
+                    title='This field is the bibliographic citation for the evidence. Printed material should be cited as usual. Rare material, such as archival/manuscript evidence or an extent copy should just list the call number.'>
+                    <span class="glyphicon glyphicon-question-sign"
+                    aria-hidden="true"></span>
+                </a>
+                Evidence Source
+            </dt>
             <dd class="border-bottom">
                 <% if (can_edit_footprint) { %>
                     <a href="javascript:void(0);" class="editable"
