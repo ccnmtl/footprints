@@ -43,7 +43,7 @@ scandir==1.5
 pathlib2==2.2.1
 pygments==2.2.0
 ipython==5.3.0
-ipdb==0.10.2
+ipdb==0.10.3
 
 rdflib==4.2.2
 coverage==4.3.4
