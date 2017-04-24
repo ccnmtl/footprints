@@ -1,0 +1,1 @@
+./manage.py graph_models main -g -v 0 -X User,Collection,DigitalFormat,StandardizedIdentificationType,Language,Place,DigitalObject -x created_by,last_modified_by,created_at,modified_at,identifier_type,digital_format,collection -o footprints.png
