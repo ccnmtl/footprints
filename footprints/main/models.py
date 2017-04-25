@@ -2,6 +2,7 @@ from datetime import date
 from decimal import Decimal, InvalidOperation
 
 from audit_log.models.fields import LastUserField, CreatingUserField
+from django.contrib.gis.db.models.fields import PointField
 from django.db import models
 from django.template import loader
 from django.template.context import Context
@@ -573,6 +574,7 @@ class Place(models.Model):
     country = models.CharField(max_length=256, null=True, blank=True)
     city = models.CharField(max_length=256, null=True, blank=True)
 
+    latlng = PointField(null=True)
     position = GeopositionField()
 
     digital_object = models.ManyToManyField(
