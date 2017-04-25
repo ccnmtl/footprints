@@ -11,6 +11,7 @@ from geoposition.fields import GeopositionField
 
 from footprints.main.templatetags.moderation import has_moderation_flags,\
     moderation_flags
+from django.contrib.gis.db.models.fields import PointField
 
 
 FOOTPRINT_LEVEL = 'footprint'
@@ -574,6 +575,7 @@ class Place(models.Model):
     city = models.CharField(max_length=256, null=True, blank=True)
 
     position = GeopositionField()
+    latlng = PointField(null=True)
 
     digital_object = models.ManyToManyField(
         DigitalObject, blank=True)
