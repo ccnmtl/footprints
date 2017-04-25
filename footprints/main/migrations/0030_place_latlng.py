@@ -16,6 +16,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='place',
             name='latlng',
-            field=django.contrib.gis.db.models.fields.PointField(null=True, srid=4326),
+            field=django.contrib.gis.db.models.fields.PointField(
+                null=True, srid=4326),
         ),
     ]
