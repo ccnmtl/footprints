@@ -1,4 +1,7 @@
 --index-url https://pypi.ccnmtl.columbia.edu/
+# local pysqlite that is configured to load C extensions
+# see: https://docs.djangoproject.com/en/dev/ref/contrib/gis/install/spatialite/#pysqlite2
+requirements/src/pysqlite-2.6.3.tar.gz
 Django==1.9.13
 feedparser==5.2.1
 Markdown==2.6.8

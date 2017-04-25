@@ -1,5 +1,6 @@
 # flake8: noqa
 # Django settings for footprints project.
+import platform
 import os.path
 import sys
 import djcelery
@@ -9,6 +10,41 @@ project = 'footprints'
 base = os.path.dirname(__file__)
 
 locals().update(common(project=project, base=base))
+
+if platform.linux_distribution()[1] == '16.04':
+    # 15.04 and later need this set, but it breaks
+    # on trusty.
+    # yeah, it's not really going to work on non-Ubuntu
+    # systems either, but I don't know a good way to
+    # check for the specific issue. Anyone not running
+    # ubuntu will just need to set this to the
+    # appropriate value in their local_settings.py
+    SPATIALITE_LIBRARY_PATH = 'mod_spatialite'
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'footprints',
+        'HOST': '',
+        'PORT': 5432,
+        'USER': '',
+        'PASSWORD': '',
+        'ATOMIC_REQUESTS': True,
+    }
+}
+
+if 'test' in sys.argv or 'jenkins' in sys.argv or 'validate' in sys.argv:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.contrib.gis.db.backends.spatialite',
+            'NAME': ':memory:',
+            'HOST': '',
+            'PORT': '',
+            'USER': '',
+            'PASSWORD': '',
+            'ATOMIC_REQUESTS': True,
+        }
+    }
 
 HAYSTACK_CONNECTIONS = {
     'default': {
