@@ -205,7 +205,7 @@ class ExtendedDateTest(TestCase):
             'millenium2': 2, 'century2': 0, 'decade2': None, 'year2': None,
             'month2': None, 'day2': None,
             'approximate2': False, 'uncertain2': False}
-
+        self.assertTrue(values['is_range'])
         dt = ExtendedDate.objects.from_dict(values)
         self.assertEquals(dt.edtf_format, '2001-01-01?~/20xx')
 
