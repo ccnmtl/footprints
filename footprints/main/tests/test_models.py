@@ -18,7 +18,7 @@ from footprints.main.tests.factories import RoleFactory, \
     EmptyFootprintFactory, StandardizedIdentificationFactory, UserFactory
 
 
-class BasicModelTest(TestCase):
+class LanguageTest(TestCase):
 
     def test_language(self):
         language = Language.objects.create(name='English')
@@ -26,6 +26,9 @@ class BasicModelTest(TestCase):
 
         with self.assertRaises(IntegrityError):
             Language.objects.create(name='English')
+
+
+class RoleTest(TestCase):
 
     def test_role(self):
         owner = RoleFactory(name="Owner", level=FOOTPRINT_LEVEL)
@@ -46,14 +49,8 @@ class BasicModelTest(TestCase):
         self.assertEquals(qs.count(), 1)
         self.assertEquals(qs.first(), author)
 
-    def for_footprint(self):
-        return self.filter(level=FOOTPRINT_LEVEL)
 
-    def for_imprint(self):
-        return self.filter(level=IMPRINT_LEVEL)
-
-    def for_work(self):
-        return self.filter(level=WRITTENWORK_LEVEL)
+class DigitalFormatTest(TestCase):
 
     def test_digital_format(self):
         digital_format = DigitalFormat.objects.create(name='png')
@@ -61,6 +58,9 @@ class BasicModelTest(TestCase):
 
         with self.assertRaises(IntegrityError):
             DigitalFormat.objects.create(name='png')
+
+
+class StandardizedIdentificationTest(TestCase):
 
     def test_standardized_identification(self):
         stt = StandardizedIdentificationType.objects.create(
@@ -76,6 +76,9 @@ class BasicModelTest(TestCase):
         self.assertEquals(si.__unicode__(), 'foo')
         self.assertIsNone(si.authority())
 
+
+class PersonTest(TestCase):
+
     def test_person(self):
         person = PersonFactory(name='Cicero')
         self.assertEquals(person.__unicode__(), "Cicero")
@@ -83,6 +86,8 @@ class BasicModelTest(TestCase):
         person.digital_object.add(DigitalObjectFactory())
         self.assertEquals(person.percent_complete(), 100)
 
+
+class PlaceTest(TestCase):
     def test_place(self):
         latlng = '50.064650,19.944979'
         place = Place.objects.create(position=latlng)
@@ -95,21 +100,26 @@ class BasicModelTest(TestCase):
         self.assertEquals(place.latitude(), Decimal('50.064650'))
         self.assertEquals(place.longitude(), Decimal('19.944979'))
 
+
+class CollectionTest(TestCase):
     def test_collection(self):
         collection = CollectionFactory(name='The Morgan Collection')
         self.assertEquals(collection.__unicode__(), 'The Morgan Collection')
 
+
+class WrittenWorkTest(TestCase):
+
     def test_written_work(self):
         work = WrittenWorkFactory()
         self.assertEquals(work.__unicode__(), work.title)
-
         self.assertEquals(work.percent_complete(), 100)
 
         author_role, created = Role.objects.get_or_create(name=Role.AUTHOR)
         work.actor.add(ActorFactory(role=author_role))
         self.assertEquals(work.authors().count(), 1)
 
-        # references
+    def test_references(self):
+        work = WrittenWorkFactory()
         self.assertEquals(work.references(), 0)
         copy = BookCopyFactory(imprint=ImprintFactory(work=work))
         FootprintFactory(book_copy=copy)
@@ -117,11 +127,15 @@ class BasicModelTest(TestCase):
         FootprintFactory()  # noise
         self.assertEquals(work.references(), 2)
 
+    def test_identifiers(self):
+        work = WrittenWorkFactory()
         loc_type = StandardizedIdentificationType.objects.loc()
         idf = StandardizedIdentificationFactory(identifier_type=loc_type)
         work.standardized_identifier.add(idf)
-
         self.assertEquals(work.get_library_of_congress_identifier(), idf)
+
+
+class BookCopyTest(TestCase):
 
     def test_book_copy(self):
         copy = BookCopyFactory()
@@ -437,6 +451,9 @@ class FootprintTest(TestCase):
 
         a = moderation_flags(f1)
         self.assertEquals(len(a), 4)
+
+
+class FootprintModerationTest(TestCase):
 
     def test_moderation_footprints(self):
         f1 = EmptyFootprintFactory()  # < 50% complete
