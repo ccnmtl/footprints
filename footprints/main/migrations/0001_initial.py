@@ -3,7 +3,6 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-import geoposition.fields
 import audit_log.models.fields
 from django.conf import settings
 
@@ -207,7 +206,7 @@ class Migration(migrations.Migration):
                 ('region', models.CharField(max_length=256, null=True, blank=True)),
                 ('country', models.CharField(max_length=256, null=True, blank=True)),
                 ('city', models.CharField(max_length=256, null=True, blank=True)),
-                ('position', geoposition.fields.GeopositionField(max_length=42, null=True, blank=True)),
+                ('position', models.CharField(max_length=42, null=True, blank=True)),
                 ('notes', models.TextField(null=True, blank=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('modified_at', models.DateTimeField(auto_now=True)),
