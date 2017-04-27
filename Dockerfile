@@ -1,8 +1,13 @@
 FROM ccnmtl/django.base
 RUN apt-get update && apt-get install -y \
     build-essential \
+		gdal-bin \
+		libspatialite-dev \
+		libsqlite3-dev \
 		libxml2-dev \
 		libxslt1-dev \
+		python-dev \
+		python-pysqlite2 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
