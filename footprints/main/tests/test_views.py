@@ -540,11 +540,11 @@ class ConnectFootprintViewTest(TestCase):
         self.url = reverse('connect-footprint-view',
                            kwargs={'pk': self.footprint.pk})
 
-    def test_post_expected_errors(self):
+    def test_post(self):
         # not logged in
         self.assertEquals(self.client.post(self.url).status_code, 302)
 
-    def test_post_update_book(self):
+        # update book
         self.client.login(username=self.contributor.username, password="test")
 
         data = {'work': self.work.id,
@@ -556,7 +556,7 @@ class ConnectFootprintViewTest(TestCase):
         fp = Footprint.objects.get(id=self.footprint.id)
         self.assertEquals(fp.book_copy, self.book)
 
-    def test_post_update_imprint(self):
+        # update imprint
         self.client.login(username=self.contributor.username, password="test")
 
         data = {'work': self.work.id,
@@ -567,7 +567,7 @@ class ConnectFootprintViewTest(TestCase):
         fp = Footprint.objects.get(id=self.footprint.id)
         self.assertEquals(fp.book_copy.imprint, self.imprint)
 
-    def test_post_update_work(self):
+        # update work
         self.client.login(username=self.contributor.username, password="test")
 
         data = {'work': self.work.id}
@@ -588,11 +588,11 @@ class CopyFootprintViewTest(TestCase):
         self.url = reverse('copy-footprint-view',
                            kwargs={'pk': self.footprint.pk})
 
-    def test_post_expected_errors(self):
+    def test_post(self):
         # not logged in
         self.assertEquals(self.client.post(self.url).status_code, 302)
 
-    def test_post_new_evidence(self):
+        # post new evidence
         self.client.login(username=self.contributor.username, password="test")
 
         data = {
@@ -727,6 +727,7 @@ class AddActorViewTest(TestCase):
 
 
 class RemoveRelatedViewTest(TestCase):
+
     def setUp(self):
         self.user = UserFactory()
 
@@ -734,13 +735,9 @@ class RemoveRelatedViewTest(TestCase):
         self.contributor = UserFactory(group=grp)
 
         self.footprint = FootprintFactory()
-
-        self.actor = ActorFactory()
-        self.footprint.actor.add(self.actor)
-
         self.remove_url = reverse('remove-related')
 
-    def test_post_expected_errors(self):
+    def test_post(self):
         # not logged in
         self.assertEquals(self.client.post(self.remove_url).status_code, 302)
 
@@ -748,7 +745,7 @@ class RemoveRelatedViewTest(TestCase):
         self.client.login(username=self.user.username, password="test")
         self.assertEquals(self.client.post(self.remove_url).status_code, 403)
 
-    def test_post_missing_params(self):
+        # missing params
         self.client.login(username=self.contributor.username, password="test")
 
         response = self.client.post(self.remove_url,
@@ -758,25 +755,7 @@ class RemoveRelatedViewTest(TestCase):
         self.assertEquals(response.status_code, 200)
         self.assertFalse(loads(response.content)['success'])
 
-    def test_post_remove_invalid_child_id(self):
-        dt = ExtendedDateFactory()
-
-        self.client.login(username=self.contributor.username, password="test")
-
-        response = self.client.post(self.remove_url, {
-            'parent_id': self.footprint.id,
-            'parent_model': 'footprint',
-            'child_id': dt.id,
-            'attr': 'associated_date'},
-            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-
-        self.assertEquals(response.status_code, 200)
-        self.assertFalse(loads(response.content)['success'])
-
-        footprint = Footprint.objects.get(id=self.footprint.id)  # refresh
-        self.assertIsNotNone(footprint.associated_date)
-
-    def test_post_remove_success(self):
+        # success
         dt = self.footprint.associated_date
 
         self.client.login(username=self.contributor.username, password="test")
@@ -797,6 +776,40 @@ class RemoveRelatedViewTest(TestCase):
         with self.assertRaises(ExtendedDate.DoesNotExist):
             ExtendedDate.objects.get(id=dt.id)
 
+    def test_post_remove_invalid_child_id(self):
+        dt = ExtendedDateFactory()
+
+        self.client.login(username=self.contributor.username, password="test")
+
+        response = self.client.post(self.remove_url, {
+            'parent_id': self.footprint.id,
+            'parent_model': 'footprint',
+            'child_id': dt.id,
+            'attr': 'associated_date'},
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+
+        self.assertEquals(response.status_code, 200)
+        self.assertFalse(loads(response.content)['success'])
+
+        footprint = Footprint.objects.get(id=self.footprint.id)  # refresh
+        self.assertIsNotNone(footprint.associated_date)
+
+
+class RemoveRelatedActorViewTest(TestCase):
+
+    def setUp(self):
+        self.user = UserFactory()
+
+        grp = GroupFactory(permissions=ADD_CHANGE_PERMISSIONS)
+        self.contributor = UserFactory(group=grp)
+
+        self.footprint = FootprintFactory()
+
+        self.actor = ActorFactory()
+        self.footprint.actor.add(self.actor)
+
+        self.remove_url = reverse('remove-related')
+
     def test_post_remove_actor(self):
         self.assertEquals(self.footprint.actor.count(), 2)
 
@@ -810,6 +823,19 @@ class RemoveRelatedViewTest(TestCase):
         self.assertEquals(response.status_code, 200)
         self.assertTrue(loads(response.content)['success'])
         self.assertEquals(self.footprint.actor.count(), 1)
+
+
+class RemoveRelatedIdentifierViewTest(TestCase):
+
+    def setUp(self):
+        self.user = UserFactory()
+
+        grp = GroupFactory(permissions=ADD_CHANGE_PERMISSIONS)
+        self.contributor = UserFactory(group=grp)
+
+        self.footprint = FootprintFactory()
+
+        self.remove_url = reverse('remove-related')
 
     def test_post_remove_identifier(self):
         imprint = self.footprint.book_copy.imprint
@@ -833,15 +859,9 @@ class AddDateViewTest(TestCase):
 
     def setUp(self):
         self.user = UserFactory()
-
-        grp = GroupFactory(permissions=ADD_CHANGE_PERMISSIONS)
-        self.contributor = UserFactory(group=grp)
-
-        self.footprint = FootprintFactory(title="Custom", associated_date=None)
-
         self.url = reverse('add-date-view')
 
-    def test_post_expected_errors(self):
+    def test_post(self):
         # not logged in
         self.assertEquals(self.client.post(self.url).status_code, 302)
 
@@ -849,7 +869,13 @@ class AddDateViewTest(TestCase):
         self.client.login(username=self.user.username, password="test")
         self.assertEquals(self.client.post(self.url).status_code, 403)
 
-    def test_post_no_data(self):
+        # success
+        grp = GroupFactory(permissions=ADD_CHANGE_PERMISSIONS)
+        self.contributor = UserFactory(group=grp)
+
+        self.footprint = FootprintFactory(title="Custom", associated_date=None)
+
+        # no data
         self.client.login(username=self.contributor.username, password="test")
         response = self.client.post(self.url,
                                     {'parent_id': self.footprint.id,
@@ -859,7 +885,6 @@ class AddDateViewTest(TestCase):
         the_json = loads(response.content)
         self.assertFalse(the_json['success'])
 
-    def test_post_success(self):
         self.client.login(username=self.contributor.username, password="test")
         response = self.client.post(self.url,
                                     {'parent_id': self.footprint.id,
@@ -892,12 +917,12 @@ class DisplayDateViewTest(TestCase):
 
         self.url = reverse('display-date-view')
 
-    def test_post_expected_errors(self):
+    def test_post(self):
         # no ajax
         self.client.login(username=self.user.username, password="test")
         self.assertEquals(self.client.post(self.url).status_code, 405)
 
-    def test_post_no_data(self):
+        # no_data(self):
         self.client.login(username=self.contributor.username, password="test")
         response = self.client.post(self.url,
                                     {'parent_id': self.footprint.id,
@@ -907,7 +932,7 @@ class DisplayDateViewTest(TestCase):
         the_json = loads(response.content)
         self.assertFalse(the_json['success'])
 
-    def test_post_success(self):
+        # success
         self.client.login(username=self.contributor.username, password="test")
         response = self.client.post(self.url,
                                     {'parent_id': self.footprint.id,
@@ -938,7 +963,7 @@ class AddPlaceViewTest(TestCase):
 
         self.url = reverse('add-place-view')
 
-    def test_post_expected_errors(self):
+    def test_post(self):
         # not logged in
         self.assertEquals(self.client.post(self.url).status_code, 302)
 
@@ -946,7 +971,7 @@ class AddPlaceViewTest(TestCase):
         self.client.login(username=self.user.username, password="test")
         self.assertEquals(self.client.post(self.url).status_code, 403)
 
-    def test_post_no_data(self):
+        # no data
         self.client.login(username=self.contributor.username, password="test")
         response = self.client.post(self.url,
                                     {'parent_id': self.footprint.id,
@@ -956,7 +981,7 @@ class AddPlaceViewTest(TestCase):
         the_json = loads(response.content)
         self.assertFalse(the_json['success'])
 
-    def test_post_success(self):
+        # success
         self.client.login(username=self.contributor.username, password="test")
         response = self.client.post(self.url,
                                     {'parent_id': self.footprint.id,
@@ -989,7 +1014,7 @@ class AddIdentifierViewTest(TestCase):
 
         self.url = reverse('add-identifier-view')
 
-    def test_post_expected_errors(self):
+    def test_post(self):
         # not logged in
         self.assertEquals(self.client.post(self.url).status_code, 302)
 
@@ -997,7 +1022,7 @@ class AddIdentifierViewTest(TestCase):
         self.client.login(username=self.user.username, password="test")
         self.assertEquals(self.client.post(self.url).status_code, 403)
 
-    def test_post_no_data(self):
+        # no data
         self.client.login(username=self.contributor.username, password="test")
         response = self.client.post(self.url,
                                     {'parent_id': self.imprint.id,
@@ -1005,7 +1030,7 @@ class AddIdentifierViewTest(TestCase):
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 404)
 
-    def test_post_success(self):
+        # success
         self.assertEquals(self.imprint.standardized_identifier.count(), 1)
         self.client.login(username=self.contributor.username, password="test")
         response = self.client.post(self.url,
@@ -1037,7 +1062,7 @@ class AddDigitalObjectViewTest(TestCase):
 
         self.url = reverse('add-digital-object-view')
 
-    def test_post_expected_errors(self):
+    def test_post(self):
         # not logged in
         self.assertEquals(self.client.post(self.url).status_code, 302)
 
@@ -1045,7 +1070,7 @@ class AddDigitalObjectViewTest(TestCase):
         self.client.login(username=self.user.username, password="test")
         self.assertEquals(self.client.post(self.url).status_code, 403)
 
-    def test_post_no_data(self):
+        # no data
         self.client.login(username=self.contributor.username, password="test")
         response = self.client.post(self.url,
                                     {'parent_id': self.footprint.id,
@@ -1055,7 +1080,7 @@ class AddDigitalObjectViewTest(TestCase):
         the_json = loads(response.content)
         self.assertFalse(the_json['success'])
 
-    def test_post_success(self):
+        # success
         f = SimpleUploadedFile("file.txt", "file_content")
 
         self.client.login(username=self.contributor.username, password="test")
