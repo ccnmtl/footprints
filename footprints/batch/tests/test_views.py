@@ -1,5 +1,3 @@
-from decimal import Decimal
-
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.urlresolvers import reverse
 from django.test.client import RequestFactory
@@ -183,8 +181,8 @@ class BatchJobUpdateViewTest(TestCase):
         view.add_place(footprint, '51.064650,20.944979')
 
         footprint.refresh_from_db()
-        self.assertEquals(Decimal('51.064650'), footprint.place.latitude())
-        self.assertEquals(Decimal('20.944979'), footprint.place.longitude())
+        self.assertEquals(51.064650, footprint.place.latitude())
+        self.assertEquals(20.944979, footprint.place.longitude())
         self.assertEquals('Osgiliath', footprint.place.city)
         self.assertEquals('Gondor', footprint.place.country)
 
@@ -197,7 +195,9 @@ class BatchJobUpdateViewTest(TestCase):
         view.add_place(footprint, position)
 
         footprint.refresh_from_db()
-        self.assertEquals(place, footprint.place)
+        self.assertEquals(place.latitude(), footprint.place.latitude())
+        self.assertEquals(place.longitude(), footprint.place.longitude())
+        self.assertEquals(place.country, footprint.place.country)
 
     def test_get_or_create_imprint(self):
         view = BatchJobUpdateView()
