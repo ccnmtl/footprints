@@ -42,7 +42,7 @@ TEMPLATE_DIRS = (
 
 DATABASES = {
     'default' : {
-        'ENGINE' : 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME' : DB_NAME,
         'HOST' : DB_HOST,
         'PORT' : DB_PORT,
