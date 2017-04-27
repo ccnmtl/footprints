@@ -102,7 +102,7 @@ class PlaceSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = Place
         fields = ('id', 'display_title', 'country', 'city',
-                  'position', 'latitude', 'longitude')
+                  'latitude', 'longitude')
 
 
 class DigitalObjectSerializer(HyperlinkedModelSerializer):

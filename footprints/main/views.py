@@ -36,6 +36,7 @@ from footprints.main.models import (
     StandardizedIdentificationType, ExtendedDate, MEDIUM_CHOICES)
 from footprints.main.serializers import NameSerializer
 from footprints.main.templatetags.moderation import moderation_footprints
+from footprints.main.utils import string_to_point
 from footprints.mixins import (
     JSONResponseMixin, LoggedInMixin, ModerationAccessMixin,
     AddChangeAccessMixin)
@@ -718,7 +719,7 @@ class AddPlaceView(AddRelatedRecordView):
         place, created = Place.objects.get_or_create(
             city=self.request.POST.get('city', ''),
             country=self.request.POST.get('country', ''),
-            position=position)
+            latlng=string_to_point(position))
 
         the_parent.place = place
         the_parent.save()

@@ -997,9 +997,8 @@ class AddPlaceViewTest(TestCase):
         self.assertTrue(the_json['success'])
         self.assertEquals(footprint.place.city, 'New York')
         self.assertEquals(footprint.place.country, 'United States')
-        self.assertEquals(str(footprint.place.position.latitude), '40.752946')
-        self.assertEquals(str(footprint.place.position.longitude),
-                          '-73.983435')
+        self.assertEquals(str(footprint.place.latitude()), '40.752946')
+        self.assertEquals(str(footprint.place.longitude()), '-73.983435')
 
 
 class AddIdentifierViewTest(TestCase):

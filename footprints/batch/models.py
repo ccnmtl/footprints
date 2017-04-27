@@ -3,12 +3,12 @@ from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
 from django.db import models
 from django.db.models.query_utils import Q
-from geoposition import Geoposition
 
 from footprints.batch.validators import validate_date, validate_numeric, \
     validate_latlng
 from footprints.main.models import Footprint, Imprint, Role, MEDIUM_CHOICES, \
     BookCopy
+from footprints.main.utils import string_to_point
 
 
 class BatchJob(models.Model):
@@ -249,9 +249,8 @@ class BatchRow(models.Model):
 
         if (self.publication_location and
                 self.validate_publication_location()):
-            latlong = self.publication_location.split(',')
-            gp = Geoposition(latlong[0].strip(), latlong[1].strip())
-            kwargs['book_copy__imprint__place__position'] = gp
+            kwargs['book_copy__imprint__place__latlng'] = \
+                string_to_point(self.publication_location)
 
         if self.footprint_actor:
             args.append(
@@ -260,8 +259,8 @@ class BatchRow(models.Model):
 
         if (self.footprint_location and
                 self.validate_footprint_location()):
-            latlong = self.footprint_location.split(',')
-            kwargs['place__position'] = Geoposition(latlong[0], latlong[1])
+            kwargs['place__latlng'] = \
+                string_to_point(self.footprint_location)
 
         qs = Footprint.objects.filter(*args, **kwargs)
         return qs.values_list('id', flat=True)

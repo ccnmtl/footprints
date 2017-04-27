@@ -86,7 +86,6 @@ INSTALLED_APPS += [  # noqa
     'django_extensions',
     'haystack',
     'footprints.main',
-    'geoposition',
     'rest_framework',
     'reversion',
     'djcelery',

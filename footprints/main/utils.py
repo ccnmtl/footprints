@@ -1,3 +1,4 @@
+from django.contrib.gis.geos.point import Point
 from rest_framework.renderers import BrowsableAPIRenderer
 
 from footprints.mixins import BatchAccessMixin, ModerationAccessMixin,\
@@ -34,3 +35,8 @@ class BrowsableAPIRendererNoForms(BrowsableAPIRenderer):
         rendered HTML, so let's simply return an empty string.
         """
         return ""
+
+
+def string_to_point(str):
+    a = str.split(',')
+    return Point(float(a[1].strip()), float(a[0].strip()))

@@ -1,5 +1,3 @@
-from decimal import Decimal
-
 from django.contrib.auth.models import Group
 from django.db.utils import IntegrityError
 from django.test import TestCase
@@ -16,6 +14,7 @@ from footprints.main.tests.factories import RoleFactory, \
     WrittenWorkFactory, ImprintFactory, BookCopyFactory, FootprintFactory, \
     PersonFactory, DigitalObjectFactory, ExtendedDateFactory,\
     EmptyFootprintFactory, StandardizedIdentificationFactory, UserFactory
+from footprints.main.utils import string_to_point
 
 
 class LanguageTest(TestCase):
@@ -89,16 +88,18 @@ class PersonTest(TestCase):
 
 class PlaceTest(TestCase):
     def test_place(self):
-        latlng = '50.064650,19.944979'
-        place = Place.objects.create(position=latlng)
+        latlng = '50.06465,19.944979'
+        pt = string_to_point(latlng)
+        place = Place.objects.create(latlng=pt)
+
         self.assertEquals(place.__unicode__(), '')
         self.assertTrue(place.match_string(latlng))
         self.assertFalse(place.match_string('12.34,56.789'))
 
         place = PlaceFactory()
         self.assertEquals(place.__unicode__(), 'Cracow, Poland')
-        self.assertEquals(place.latitude(), Decimal('50.064650'))
-        self.assertEquals(place.longitude(), Decimal('19.944979'))
+        self.assertEquals(place.latitude(), 50.064650)
+        self.assertEquals(place.longitude(), 19.944979)
 
 
 class CollectionTest(TestCase):

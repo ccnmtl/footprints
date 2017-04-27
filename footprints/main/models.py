@@ -1,5 +1,4 @@
 from datetime import date
-from decimal import Decimal, InvalidOperation
 
 from audit_log.models.fields import LastUserField, CreatingUserField
 from django.contrib.gis.db.models.fields import PointField
@@ -7,11 +6,10 @@ from django.db import models
 from django.template import loader
 from django.template.context import Context
 from edtf import EDTF, edtf_date
-from geoposition import Geoposition
-from geoposition.fields import GeopositionField
 
 from footprints.main.templatetags.moderation import has_moderation_flags,\
     moderation_flags
+from footprints.main.utils import string_to_point
 
 
 FOOTPRINT_LEVEL = 'footprint'
@@ -563,9 +561,8 @@ class PlaceManager(models.Manager):
         self._fields = fields
 
     def get_or_create_from_string(self, latlng):
-        a = latlng.split(',')
-        gp = Geoposition(a[0], a[1])
-        return Place.objects.get_or_create(position=gp)
+        point = string_to_point(latlng)
+        return Place.objects.get_or_create(latlng=point)
 
 
 class Place(models.Model):
@@ -575,7 +572,6 @@ class Place(models.Model):
     city = models.CharField(max_length=256, null=True, blank=True)
 
     latlng = PointField(null=True)
-    position = GeopositionField()
 
     digital_object = models.ManyToManyField(
         DigitalObject, blank=True)
@@ -605,18 +601,14 @@ class Place(models.Model):
         return ', '.join(parts)
 
     def latitude(self):
-        return self.position.latitude
+        return self.latlng.coords[1]
 
     def longitude(self):
-        return self.position.longitude
+        return self.latlng.coords[0]
 
     def match_string(self, latlng):
-        try:
-            a = latlng.split(',')
-            return (self.latitude() == Decimal(a[0]) and
-                    self.longitude() == Decimal(a[1]))
-        except InvalidOperation:
-            return False
+        s = '{},{}'.format(self.latitude(), self.longitude())
+        return s == latlng
 
 
 class Collection(models.Model):

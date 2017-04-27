@@ -8,6 +8,7 @@ from footprints.main.models import (
     StandardizedIdentification, Person, Actor, Place, Collection, WrittenWork,
     Imprint, BookCopy, Footprint, DigitalObject, IMPRINT_LEVEL,
     StandardizedIdentificationType)
+from footprints.main.utils import string_to_point
 
 
 TEST_MEDIA_PATH = os.path.join(os.path.dirname(__file__), 'test.txt')
@@ -157,7 +158,14 @@ class PlaceFactory(factory.DjangoModelFactory):
 
     country = 'Poland'
     city = 'Cracow'
-    position = '50.064650,19.944979'
+
+    @factory.post_generation
+    def position(self, create, extracted, **kwargs):
+        if create:
+            if not extracted:
+                extracted = '50.064650,19.944979'
+            self.latlng = string_to_point(extracted)
+            self.save()
 
 
 class CollectionFactory(factory.DjangoModelFactory):
