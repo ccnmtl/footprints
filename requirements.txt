@@ -109,7 +109,6 @@ boto==2.46.1
 django-infranil==1.1.0
 pysolr==3.6.0
 django-haystack==2.6.0
-django-geoposition==0.2.2
 django-audit-log==0.7.0
 djangorestframework==3.6.2
 djangorestframework-jsonp==1.0.2
