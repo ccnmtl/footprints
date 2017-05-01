@@ -11,7 +11,7 @@ psycopg2==2.7.1
 
 olefile==0.44
 
-Pillow==4.1.0
+Pillow==4.1.1
 
 versiontools==1.9.1
 statsd==3.2.1
