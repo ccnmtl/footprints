@@ -24,3 +24,4 @@ uploads/
 wheelhouse/
 .idea/
 .ropeproject
+test*.txt
