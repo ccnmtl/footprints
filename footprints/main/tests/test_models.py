@@ -119,6 +119,8 @@ class WrittenWorkTest(TestCase):
         work.actor.add(ActorFactory(role=author_role))
         self.assertEquals(work.authors().count(), 1)
 
+        self.assertTrue(work.title in work.description())
+
     def test_references(self):
         work = WrittenWorkFactory()
         self.assertEquals(work.references(), 0)
@@ -142,6 +144,8 @@ class BookCopyTest(TestCase):
         copy = BookCopyFactory()
         self.assertTrue(
             copy.__unicode__().endswith('The Odyssey, Edition 1 (c. 1984)'))
+
+        self.assertTrue(copy.identifier() in copy.description())
 
     def test_book_copy_owners(self):
         copy = BookCopyFactory()
@@ -281,6 +285,8 @@ class ImprintTest(TestCase):
         FootprintFactory(book_copy=copy)
         FootprintFactory()  # noise
         self.assertEquals(imprint.references(), 2)
+
+        self.assertTrue(imprint.title in imprint.description())
 
     def test_get_or_create_by_attributes(self):
         bhb_number = '94677047'
@@ -442,6 +448,8 @@ class FootprintTest(TestCase):
                                              provenance="Provenance",
                                              book_copy=book_copy)
         self.assertTrue(footprint.is_bare())
+
+        self.assertTrue('Footprint Place' in footprint.description())
 
     def test_individual_flags(self):
         f1 = EmptyFootprintFactory()
