@@ -142,6 +142,7 @@ admin.site.register(LogEntry, LogEntryAdmin)
 class LatLongWidget(MultiWidget):
     """
     A Widget that splits Point input into latitude/longitude text inputs.
+    http://stackoverflow.com/a/33339847
     """
 
     def __init__(self, attrs=None, date_format=None, time_format=None):
