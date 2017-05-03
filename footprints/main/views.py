@@ -14,7 +14,6 @@ from django.db.models.query_utils import Q
 from django.http.response import HttpResponseRedirect, StreamingHttpResponse
 from django.shortcuts import get_object_or_404
 from django.template import loader
-from django.template.context import Context
 from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
@@ -798,7 +797,7 @@ class ContactUsView(FormView):
         recipients = (getattr(settings, 'CONTACT_US_EMAIL'),)
 
         tmpl = loader.get_template('main/contact_notification_email.txt')
-        send_mail(subject, tmpl.render(Context(form_data)), sender, recipients)
+        send_mail(subject, tmpl.render(form_data), sender, recipients)
 
         return super(ContactUsView, self).form_valid(form)
 

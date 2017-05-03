@@ -4,7 +4,6 @@ from audit_log.models.fields import LastUserField, CreatingUserField
 from django.contrib.gis.db.models.fields import PointField
 from django.db import models
 from django.template import loader
-from django.template.context import Context
 from edtf import EDTF, edtf_date
 
 from footprints.main.templatetags.moderation import has_moderation_flags,\
@@ -674,8 +673,7 @@ class WrittenWork(models.Model):
 
     def description(self):
         template = loader.get_template('main/writtenwork_description.html')
-        ctx = Context({'work': self})
-        return template.render(ctx)
+        return template.render({'work': self})
 
     def references(self):
         # how many footprints reference this work?
@@ -778,8 +776,7 @@ class Imprint(models.Model):
 
     def description(self):
         template = loader.get_template('main/imprint_description.html')
-        ctx = Context({'imprint': self})
-        return template.render(ctx)
+        return template.render({'imprint': self})
 
     def footprints(self):
         lst = list(Footprint.objects.filter(book_copy__imprint=self))
@@ -922,8 +919,7 @@ class BookCopy(models.Model):
 
     def description(self):
         template = loader.get_template('main/book_description.html')
-        ctx = Context({'book': self})
-        return template.render(ctx)
+        return template.render({'book': self})
 
     def owners(self):
         footprints = Footprint.objects.filter(book_copy=self)
@@ -1062,8 +1058,7 @@ class Footprint(models.Model):
 
     def description(self):
         template = loader.get_template('main/footprint_description.html')
-        ctx = Context({'footprint': self})
-        return template.render(ctx)
+        return template.render({'footprint': self})
 
     def save_verified(self, verified):
         self.verified = verified
