@@ -93,7 +93,8 @@ INSTALLED_APPS += [  # noqa
     'celery_haystack',
     'footprints.batch',
     's3sign',
-    'registration'
+    'registration',
+    'django.contrib.gis'
 ]
 
 djcelery.setup_loader()
