@@ -65,7 +65,7 @@ astroid==1.5.2
 
 six==1.10.0
 ipaddress==1.0.18
-Faker==0.7.11
+Faker==0.7.12
 factory_boy==2.8.1
 ldap3==2.2.4
 sqlparse==0.2.3
