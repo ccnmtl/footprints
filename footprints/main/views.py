@@ -41,6 +41,12 @@ from footprints.mixins import (
     AddChangeAccessMixin)
 
 
+# returns important setting information for all web pages.
+def django_settings(request):
+    return {'settings':
+            {'GOOGLE_MAP_API': getattr(settings, 'GOOGLE_MAP_API', '')}}
+
+
 class IndexView(TemplateView):
     template_name = "main/index.html"
 

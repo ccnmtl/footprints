@@ -71,8 +71,9 @@ USE_TZ = True
 TEMPLATES[0]['OPTIONS']['context_processors'].append(  # noqa
     'django.template.context_processors.csrf')
 TEMPLATES[0]['OPTIONS']['context_processors'].append(  # noqa
-    'footprints.main.utils.permissions'
-)
+    'footprints.main.utils.permissions')
+TEMPLATES[0]['OPTIONS']['context_processors'].append(  # noqa
+    'footprints.main.views.django_settings')
 
 MIDDLEWARE_CLASSES += [  # noqa
     'django.middleware.csrf.CsrfViewMiddleware',
