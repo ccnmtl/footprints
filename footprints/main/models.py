@@ -587,7 +587,7 @@ class Place(models.Model):
     last_modified_by = LastUserField(related_name='place_last_modified_by')
 
     class Meta:
-        ordering = ['country', 'city']
+        ordering = ['country', 'city', 'id']
         verbose_name = "Place"
 
     def __unicode__(self):

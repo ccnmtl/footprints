@@ -993,12 +993,40 @@ class AddPlaceViewTest(TestCase):
         self.assertEquals(response.status_code, 200)
         the_json = loads(response.content)
 
-        footprint = Footprint.objects.get(title='Custom')  # refresh from db
+        # place is created
+        self.footprint.refresh_from_db()
         self.assertTrue(the_json['success'])
-        self.assertEquals(footprint.place.city, 'New York')
-        self.assertEquals(footprint.place.country, 'United States')
-        self.assertEquals(str(footprint.place.latitude()), '40.752946')
-        self.assertEquals(str(footprint.place.longitude()), '-73.983435')
+        self.assertEquals(self.footprint.place.city, 'New York')
+        self.assertEquals(self.footprint.place.country, 'United States')
+        self.assertEquals(str(self.footprint.place.latitude()), '40.752946')
+        self.assertEquals(str(self.footprint.place.longitude()), '-73.983435')
+
+        # existing place
+        place = self.footprint.place
+        response = self.client.post(self.url,
+                                    {'parent_id': self.footprint.id,
+                                     'parent_model': 'footprint',
+                                     'city': 'New York',
+                                     'country': 'United States',
+                                     'position': '40.752946,-73.983435'},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        self.footprint.refresh_from_db()
+        self.assertEquals(place.id, self.footprint.place.id)
+
+        # duplicate place exists
+        PlaceFactory(city='New York', country='United States',
+                     position='40.752946,-73.983435')
+        response = self.client.post(self.url,
+                                    {'parent_id': self.footprint.id,
+                                     'parent_model': 'footprint',
+                                     'city': 'New York',
+                                     'country': 'United States',
+                                     'position': '40.752946,-73.983435'},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        self.footprint.refresh_from_db()
+        self.assertEquals(place.id, self.footprint.place.id)
 
 
 class AddIdentifierViewTest(TestCase):
