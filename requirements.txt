@@ -105,7 +105,7 @@ django-impersonate==1.1
 django-registration-redux==1.6
 django-markwhat==1.5.1
 gunicorn==19.7.1
-boto==2.46.1
+boto==2.47.0
 django-infranil==1.1.0
 pysolr==3.6.0
 django-haystack==2.6.0
