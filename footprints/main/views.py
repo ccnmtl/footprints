@@ -296,7 +296,7 @@ class FootprintListView(ListView):
             'digital_object',
             'book_copy__imprint__publication_date',
             'book_copy__imprint__actor__person',
-            'book_copy__imprint__place')
+            'book_copy__imprint__place').distinct()
 
         if sort_by == 'fdate':
             return self.sort_by_date(qs, direction)
