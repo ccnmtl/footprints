@@ -24,11 +24,13 @@ class PersonAdmin(admin.ModelAdmin):
                     'standardized_identifier', 'notes')
     search_fields = ('name',)
 
+
 admin.site.register(Person, PersonAdmin)
 
 
 class ExtendedDateAdmin(admin.ModelAdmin):
     list_display = ('edtf_format', '__unicode__')
+
 
 admin.site.register(ExtendedDate, ExtendedDateAdmin)
 
@@ -57,11 +59,13 @@ class BookCopyAdmin(admin.ModelAdmin):
     fields = ('id', 'imprint', 'digital_object', 'notes')
     readonly_fields = ('id',)
 
+
 admin.site.register(BookCopy, BookCopyAdmin)
 
 
 def work_title(obj):
     return obj.work.title if obj.work else ''
+
 
 work_title.short_description = 'Written Work Title'
 
@@ -73,6 +77,7 @@ def language(obj):
 class ImprintAdmin(admin.ModelAdmin):
     list_display = (work_title, 'title', 'publication_date', language)
 
+
 admin.site.register(Imprint, ImprintAdmin)
 
 
@@ -81,6 +86,7 @@ def imprint_title(obj):
         return obj.book_copy.imprint.title
     else:
         return ''
+
 
 imprint_title.short_description = 'Imprint Title'
 
@@ -91,6 +97,7 @@ def imprint_date(obj):
     else:
         return ''
 
+
 imprint_date.short_description = 'Imprint Publication Date'
 
 
@@ -98,6 +105,7 @@ def owner(obj):
     role, created = Role.objects.get_or_create(name=Role.OWNER)
     owners = obj.actor.filter(role=role)
     return ", ".join(owners.values_list('person__name', flat=True))
+
 
 owner.short_description = 'Owner'
 
@@ -127,6 +135,7 @@ class FootprintAdmin(VersionAdmin):
                        'created_by', 'last_modified_by')
         }),
     )
+
 
 admin.site.register(Footprint, FootprintAdmin)
 
