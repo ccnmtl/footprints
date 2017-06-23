@@ -36,7 +36,7 @@ from footprints.main.models import (
     StandardizedIdentificationType, ExtendedDate, MEDIUM_CHOICES)
 from footprints.main.serializers import NameSerializer
 from footprints.main.templatetags.moderation import moderation_footprints
-from footprints.main.utils import string_to_point
+from footprints.main.utils import string_to_point, stringify_roles_actors
 from footprints.mixins import (
     JSONResponseMixin, LoggedInMixin, ModerationAccessMixin,
     AddChangeAccessMixin)
@@ -343,16 +343,8 @@ class ExportFootprintListView(FootprintListView):
         return headers
 
     def get_footprint_actors_string(self, footprint):
-        fp_actors = []
-        for r in Role.objects.all().for_footprint():
-            for a in footprint.actors():
-                if r.pk == a.role.id:
-                    fp_actors.append(smart_text(a))
-                    fp_actors.append(a.person.get_viaf_number())
-                else:
-                    fp_actors.append('')
-                    fp_actors.append('')
-        return fp_actors
+        return stringify_roles_actors(Role.objects.all().for_footprint(),
+                                      footprint.actors())
 
     def get_imprint_actors_string(self, footprint):
         imprint_actors = []

@@ -17,13 +17,12 @@ def permissions(request):
 
 
 def stringify_role_actors(roles, actors):
+    ''' What does this function do?'''
     string = ''
     for r in roles:
         actor_string = ''
         viaf_string = ''
         for a in actors:
-            # import pdb
-            # pdb.set_trace()
             if r.pk == a.role.id:
                 actor_string = smart_text(a) if not actor_string else\
                     '; '.join([actor_string, smart_text(a)])
@@ -35,6 +34,8 @@ def stringify_role_actors(roles, actors):
             string = ','.join([string, actor_string])
         string = ','.join([string, viaf_string])
 
+    import pdb
+    pdb.set_trace()
     return string
 
 

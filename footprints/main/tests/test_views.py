@@ -412,6 +412,8 @@ class FootprintListExportTest(TestCase):
         role = RoleFactory(name='Owner')
         self.owner = ActorFactory(role=role, person=PersonFactory(name='Tim'))
         self.footprint2.actor.add(self.owner)
+        # import pdb
+        # pdb.set_trace()
 
     def get_headers(self):
         headers = ('Footprint Title,Footprint Date,Footprint Location,'
@@ -488,6 +490,10 @@ class FootprintListExportTest(TestCase):
             p, self.footprint2.created_at.strftime('%m/%d/%Y'),
             actors)
         # Footprint Actors
+        # Consider writing a stringifyFootprintActors?
+# it could be tested seperately in a smaller test
+# or a stringifyActors method inwhich footprints.actors and imprint.actors could
+# be passed
         for r in Role.objects.all().for_footprint():
             for a in self.footprint2.actors():
                 if r.pk == a.role.id:
@@ -509,7 +515,7 @@ class FootprintListExportTest(TestCase):
 
         row2 = row2[:-1]
         row2 += '\r\n'
-
+        print(row2)
         self.assertEquals(response.streaming_content.next(),
                           self.get_headers())
         self.assertEquals(response.streaming_content.next(), row1)
