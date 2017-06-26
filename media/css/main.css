@@ -2252,13 +2252,15 @@ th.sortable.tablesorter-headerDesc,
 
 .advanced-search-filter .search-level .toggle-range {
     margin: 0 2px;
+    padding-top: 2px;
 }
 
 .advanced-search-filter .toggle-range:before {
     content: "\e081";
     font-family: "Glyphicons Halflings";
     font-size: 16px;
-    margin: 2px;    
+    margin: 2px;
+    vertical-align: -4px;
 } 
 
 .advanced-search-filter .toggle-range.range-on:before { 
