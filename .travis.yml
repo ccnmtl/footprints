@@ -3,6 +3,8 @@ dist: trusty
 sudo: false
 python:
   - "2.7"
+before_install:
+    - sudo apt-get install -y libgdal-dev
 install:
   - pip install -U pip wheel
   - pip install -U setuptools
