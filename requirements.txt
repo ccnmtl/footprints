@@ -33,7 +33,7 @@ sure==1.4.6
 decorator==4.0.11
 traitlets==4.3.2
 ipython_genutils==0.2.0
-ptyprocess==0.5.1
+ptyprocess==0.5.2
 pexpect==4.2.1
 pickleshare==0.7.4
 simplegeneric==0.8.1
