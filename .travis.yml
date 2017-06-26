@@ -11,3 +11,7 @@ script:
   - make
 notifications:
   slack: ccnmtl:GizSNscLWJLldjQrffB8mwgm
+addons:
+  apt:
+    packages:
+        - libgdal-dev
