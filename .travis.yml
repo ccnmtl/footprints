@@ -3,8 +3,6 @@ dist: trusty
 sudo: false
 python:
   - "2.7"
-before_install:
-    - sudo apt-get install -y libgdal-dev
 install:
   - pip install -U pip wheel
   - pip install -U setuptools
@@ -13,3 +11,7 @@ script:
   - make
 notifications:
   slack: ccnmtl:GizSNscLWJLldjQrffB8mwgm
+addons:
+  apt:
+    packages:
+        - libgdal-dev
