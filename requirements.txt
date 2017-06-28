@@ -117,7 +117,7 @@ django-audit-log==0.7.0
 djangorestframework==3.6.3
 djangorestframework-jsonp==1.0.2
 django-celery==3.2.1
-Unidecode==0.04.20
+Unidecode==0.04.21
 django-reversion==2.0.9
 python-dateutil==2.6.0
 requirements/src/edtf-0.9.2.tar.gz
