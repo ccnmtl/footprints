@@ -30,7 +30,7 @@ fuzzywuzzy==0.15.0
 sure==1.4.6
 
 # IPython
-decorator==4.0.11
+decorator==4.1.0
 traitlets==4.3.2
 ipython_genutils==0.2.0
 ptyprocess==0.5.2
