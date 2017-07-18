@@ -106,7 +106,7 @@ django-extensions==1.8.1
 django-stagingcontext==0.1.0
 django-ga-context==0.1.0
 django-impersonate==1.1
-django-registration-redux==1.6
+django-registration-redux==1.7
 django-markwhat==1.5.1
 gunicorn==19.7.1
 boto==2.48.0
