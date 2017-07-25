@@ -36,7 +36,7 @@ from footprints.main.models import (
     StandardizedIdentificationType, ExtendedDate, MEDIUM_CHOICES)
 from footprints.main.serializers import NameSerializer
 from footprints.main.templatetags.moderation import moderation_footprints
-from footprints.main.utils import string_to_point, stringify_roles_actors
+from footprints.main.utils import stringify_role_actors, string_to_point
 from footprints.mixins import (
     JSONResponseMixin, LoggedInMixin, ModerationAccessMixin,
     AddChangeAccessMixin)
@@ -343,8 +343,8 @@ class ExportFootprintListView(FootprintListView):
         return headers
 
     def get_footprint_actors_string(self, footprint):
-        return stringify_roles_actors(Role.objects.all().for_footprint(),
-                                      footprint.actors())
+        return stringify_role_actors(Role.objects.all().for_footprint(),
+                                     footprint.actors())
 
     def get_imprint_actors_string(self, footprint):
         imprint_actors = []
@@ -364,33 +364,33 @@ class ExportFootprintListView(FootprintListView):
         for o in self.object_list:
             row = []
             # Footprint title
-            row.append(smart_text(o.title))
+            row.append(smart_text(o.title).encode('utf-8'))
             # Footprint date
-            row.append(smart_text(o.associated_date))
+            row.append(smart_text(o.associated_date).encode('utf-8'))
 
             # Footprint location
-            row.append(smart_text(o.place))
+            row.append(smart_text(o.place).encode('utf-8'))
 
             # owners
             a = [owner.display_name() for owner in o.owners()]
-            row.append('; '.join(a))
+            row.append('; '.join(smart_text(a).encode('utf-8')))
 
             # Written work title
             row.append(smart_text(o.book_copy.imprint.work.title)
-                       )
+                       .encode('utf-8'))
 
             # Imprint display_title
-            a = smart_text(o.book_copy.imprint.display_title())\
-
+            a = smart_text(o.book_copy.imprint.display_title()).encode('utf-8')
             row.append(a)
 
             # Imprint Printers
             a = [p.display_name()
                  for p in o.book_copy.imprint.printers()]
-            row.append('; '.join(a))
+            row.append('; '.join(smart_text(a).encode('utf-8')))
 
             # Imprint publication date
-            row.append(smart_text(o.book_copy.imprint.publication_date))
+            row.append(smart_text(o.book_copy.imprint.publication_date)
+                       .encode('utf-8'))
 
             # Imprint created at date
             row.append(o.created_at.strftime('%m/%d/%Y'))
@@ -401,18 +401,19 @@ class ExportFootprintListView(FootprintListView):
             # Literary work LOC
             loc_id = o.book_copy.imprint.work\
                 .get_library_of_congress_identifier()
-            smart_text(loc_id)
+            loc_id = smart_text(loc_id).encode('utf-8')
             row.append(loc_id)
 
             # Imprint actor
-            actors = [smart_text(p) for p in o.book_copy.imprint.actor.all()]
+            actors = [smart_text(p).encode('utf-8') for p
+                      in o.book_copy.imprint.actor.all()]
             row.append('; '.join(actors))
 
             # Imprint BHB
             if o.book_copy.imprint.has_bhb_number():
                 row.append(smart_text(o.book_copy
                                        .imprint.get_bhb_number()
-                                       .identifier))
+                                       .identifier).encode('utf-8'))
             else:
                 row.append('')
 
@@ -420,27 +421,29 @@ class ExportFootprintListView(FootprintListView):
             if o.book_copy.imprint.has_oclc_number():
                 row.append(smart_text(o.book_copy
                                        .imprint.get_oclc_number()
-                                       .identifier))
+                                       .identifier).encode('utf-8'))
             else:
                 row.append('')
 
             # Evidence type
-            row.append(smart_text(o.medium))
+            row.append(smart_text(o.medium).encode('utf-8'))
 
             # Evidence location
-            row.append(smart_text(o.provenance))
+            row.append(smart_text(o.provenance).encode('utf-8'))
 
             # Evidence source
-            row.append(smart_text(o.call_number))
+            row.append(smart_text(o.call_number).encode('utf-8'))
 
             # Evidence details
-            row.append(smart_text(o.notes))
+            row.append(smart_text(o.notes).encode('utf-8'))
 
             # Footprint Actors
-            row.extend(self.get_footprint_actors_string(o))
+            row.extend(smart_text(self.get_footprint_actors_string(o))
+                       .encode('utf-8'))
 
             # Imprint Actors
-            row.extend(self.get_imprint_actors_string(o))
+            row.extend(smart_text(self.get_imprint_actors_string(o))
+                       .encode('utf-8'))
 
             yield row
 
