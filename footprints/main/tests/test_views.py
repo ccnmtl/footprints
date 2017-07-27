@@ -28,6 +28,7 @@ from footprints.main.views import (
     CreateFootprintView, AddActorView, ContactUsView, FootprintDetailView)
 from footprints.main.viewsets import ImprintViewSet, BookCopyViewSet, \
     WrittenWorkViewSet
+from footprints.main.utils import interpolate_role_actors
 
 
 class BasicTest(TestCase):
@@ -412,8 +413,6 @@ class FootprintListExportTest(TestCase):
         role = RoleFactory(name='Owner')
         self.owner = ActorFactory(role=role, person=PersonFactory(name='Tim'))
         self.footprint2.actor.add(self.owner)
-        # import pdb
-        # pdb.set_trace()
 
     def get_headers(self):
         headers = ('Footprint Title,Footprint Date,Footprint Location,'
@@ -426,13 +425,13 @@ class FootprintListExportTest(TestCase):
                    'Evidence Call Number,Evidence Details,')
 
         for r in Role.objects.for_footprint():
-            role = 'Footprint Role ' + smart_text(r.name)\
+            role = 'Footprint Role ' + smart_text(r.name).encode('utf-8')\
                      + ' Actor'
             headers += role + ','
             headers += (role + ' VIAF Number,')
 
         for r in Role.objects.for_imprint():
-            role = 'Imprint Role: ' + smart_text(r.name)\
+            role = 'Imprint Role: ' + smart_text(r.name).encode('utf-8')\
                      + ' Actor'
             headers += role + ','
             headers += (role + ' VIAF Number,')
@@ -459,13 +458,23 @@ class FootprintListExportTest(TestCase):
         p = '; '.join(p)
 
         # Imprint Actors
-        actors = [smart_text(a)
+        actors = [smart_text(a).encode('utf-8')
                   for a in self.footprint2.book_copy.imprint.actor.all()]
         actors = '; '.join(actors)
 
         row1 = ('Empty Footprint,None,None,,None,None,'
-                ',None,{},0,,,,,,,None,None\r\n').format(
+                ',None,{},0,None,,,,,,None,None,').format(
             self.footprint1.created_at.strftime('%m/%d/%Y'))
+
+        row1 += ','.join(interpolate_role_actors(
+                            Role.objects.all().for_footprint(),
+                            self.footprint1.actors()))
+
+        row1 += ','.join(interpolate_role_actors(
+                            Role.objects.all().for_imprint(),
+                            self.footprint1.book_copy.imprint.actor.all()))
+
+        row1 += '\r\n'
 
         row2 = ('Odyssey,'  # Footprint Title
                 'c. 1984,'  # Footprint Date
@@ -477,7 +486,7 @@ class FootprintListExportTest(TestCase):
                 'c. 1984,'  # Imprint Creation Date
                 '{},'  # Footprint Creation Date
                 '90,'  # Footprint Percent Complete
-                ','  # Literary Work LOC
+                '{},'  # Literary Work LOC
                 '{},'  # Imprint Actor and Role
                 ','  # Imprint BHB
                 ','  # Imprint OCLC Number
@@ -488,34 +497,20 @@ class FootprintListExportTest(TestCase):
                 ).format(
             o, self.footprint2.book_copy.imprint.work.title,
             p, self.footprint2.created_at.strftime('%m/%d/%Y'),
-            actors)
+            self.footprint2.book_copy.imprint.work
+                    .get_library_of_congress_identifier(), actors)
+
         # Footprint Actors
-        # Consider writing a stringifyFootprintActors?
-# it could be tested seperately in a smaller test
-# or a stringifyActors method inwhich footprints.actors and imprint.actors could
-# be passed
-        for r in Role.objects.all().for_footprint():
-            for a in self.footprint2.actors():
-                if r.pk == a.role.id:
-                    row2 += smart_text(a) + ','
-                    row2 += a.person.get_viaf_number() + ','
-                else:
-                    row2 += ','
-                    row2 += ','
+        row2 += ','.join(interpolate_role_actors(
+                            Role.objects.all().for_footprint(),
+                            self.footprint2.actors()))
 
         # Imprint Actors
-        for r in Role.objects.all().for_imprint():
-            for a in self.footprint2.book_copy.imprint.actor.all():
-                if r.pk == a.role.id:
-                    row2 += smart_text(a) + ','
-                    row2 += a.person.get_viaf_number() + ','
-                else:
-                    row2 += ','
-                    row2 += ','
+        row2 += ','.join(interpolate_role_actors(
+                            Role.objects.all().for_imprint(),
+                            self.footprint2.book_copy.imprint.actor.all()))
 
-        row2 = row2[:-1]
         row2 += '\r\n'
-        print(row2)
         self.assertEquals(response.streaming_content.next(),
                           self.get_headers())
         self.assertEquals(response.streaming_content.next(), row1)

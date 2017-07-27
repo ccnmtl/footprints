@@ -36,7 +36,7 @@ from footprints.main.models import (
     StandardizedIdentificationType, ExtendedDate, MEDIUM_CHOICES)
 from footprints.main.serializers import NameSerializer
 from footprints.main.templatetags.moderation import moderation_footprints
-from footprints.main.utils import stringify_role_actors, string_to_point
+from footprints.main.utils import interpolate_role_actors, string_to_point
 from footprints.mixins import (
     JSONResponseMixin, LoggedInMixin, ModerationAccessMixin,
     AddChangeAccessMixin)
@@ -342,21 +342,15 @@ class ExportFootprintListView(FootprintListView):
             headers.append(role + ' VIAF Number')
         return headers
 
+    # interpolate_role_actors returns a list of already encoded values, these
+    # strings do not need to be encoded again.
     def get_footprint_actors_string(self, footprint):
-        return stringify_role_actors(Role.objects.all().for_footprint(),
-                                     footprint.actors())
+        return interpolate_role_actors(Role.objects.all().for_footprint(),
+                                       footprint.actors())
 
     def get_imprint_actors_string(self, footprint):
-        imprint_actors = []
-        for r in Role.objects.all().for_imprint():
-            for a in footprint.book_copy.imprint.actor.all():
-                if r.pk == a.role.id:
-                    imprint_actors.append(smart_text(a))
-                    imprint_actors.append(a.person.get_viaf_number())
-                else:
-                    imprint_actors.append('')
-                    imprint_actors.append('')
-        return imprint_actors
+        return interpolate_role_actors(Role.objects.all().for_imprint(),
+                                       footprint.book_copy.imprint.actor.all())
 
     def get_rows(self):
         yield self.get_header_string()
@@ -373,7 +367,7 @@ class ExportFootprintListView(FootprintListView):
 
             # owners
             a = [owner.display_name() for owner in o.owners()]
-            row.append('; '.join(smart_text(a).encode('utf-8')))
+            row.append(smart_text('; '.join(a)).encode('utf-8'))
 
             # Written work title
             row.append(smart_text(o.book_copy.imprint.work.title)
@@ -386,7 +380,7 @@ class ExportFootprintListView(FootprintListView):
             # Imprint Printers
             a = [p.display_name()
                  for p in o.book_copy.imprint.printers()]
-            row.append('; '.join(smart_text(a).encode('utf-8')))
+            row.append(smart_text('; '.join(a)).encode('utf-8'))
 
             # Imprint publication date
             row.append(smart_text(o.book_copy.imprint.publication_date)
@@ -438,12 +432,10 @@ class ExportFootprintListView(FootprintListView):
             row.append(smart_text(o.notes).encode('utf-8'))
 
             # Footprint Actors
-            row.extend(smart_text(self.get_footprint_actors_string(o))
-                       .encode('utf-8'))
+            row.extend(self.get_footprint_actors_string(o))
 
             # Imprint Actors
-            row.extend(smart_text(self.get_imprint_actors_string(o))
-                       .encode('utf-8'))
+            row.extend(self.get_imprint_actors_string(o))
 
             yield row
 
