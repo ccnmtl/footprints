@@ -1,6 +1,6 @@
 from django.contrib.gis.geos.point import Point
 from rest_framework.renderers import BrowsableAPIRenderer
-
+from django.utils.encoding import smart_text
 from footprints.mixins import BatchAccessMixin, ModerationAccessMixin,\
     AddChangeAccessMixin
 
@@ -14,6 +14,46 @@ def permissions(request):
         'can_create':
             request.user.has_perms(AddChangeAccessMixin.permission_required)
     }
+
+
+def interpolate_role_actors(roles, actors):
+    ''' Takes in a list of roles and returns a list of actors
+    and the role that they have
+
+    The list will take the form of: <Role Name> Actor, <Role Name> Viaf Number
+    Within each field there could be multiple actors, and so the subsequent
+    field will contain multiple VIAF numbers. These multiple values will be
+    separated by a semicolon.'''
+    array = []
+    for r in roles:
+        actor_string = ''
+        viaf_string = ''
+        # for each actor
+        for a in actors:
+            # if the actor matches that role
+            if r.pk == a.role.id:
+                # If the actor string is empty, as it would be on the first
+                # iteration, add the actor, else append a semicolon and the
+                # actor to the end of the actor string
+                if not actor_string:
+                    actor_string = smart_text(a).encode('utf-8')
+                else:
+                    actor_string = '; '.join([actor_string, smart_text(a)
+                                              .encode('utf-8')])
+
+                # If the VIAF String is empty, as it would be on the first
+                # iteration, add the VIAF number. Else append a semicolon
+                # and the VIAF number at the end of the string
+                if not viaf_string:
+                    viaf_string = a.person.get_viaf_number()
+                else:
+                    viaf_string = '; '.join([viaf_string,
+                                             a.person.get_viaf_number()])
+
+        array.append(actor_string)
+        array.append(viaf_string)
+
+    return array
 
 
 class BrowsableAPIRendererNoForms(BrowsableAPIRenderer):

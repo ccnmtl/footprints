@@ -18,6 +18,7 @@ from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
+from django.utils.encoding import smart_text
 from djangowind.views import logout as wind_logout_view
 from haystack.generic_views import SearchView
 from haystack.query import SearchQuerySet
@@ -35,7 +36,7 @@ from footprints.main.models import (
     StandardizedIdentificationType, ExtendedDate, MEDIUM_CHOICES)
 from footprints.main.serializers import NameSerializer
 from footprints.main.templatetags.moderation import moderation_footprints
-from footprints.main.utils import string_to_point
+from footprints.main.utils import interpolate_role_actors, string_to_point
 from footprints.mixins import (
     JSONResponseMixin, LoggedInMixin, ModerationAccessMixin,
     AddChangeAccessMixin)
@@ -320,7 +321,7 @@ class Echo(object):
 
 
 class ExportFootprintListView(FootprintListView):
-    def get_rows(self):
+    def get_header_string(self):
         headers = ['Footprint Title', 'Footprint Date', 'Footprint Location',
                    'Footprint Owners', 'Written Work Title',
                    'Imprint Display Title', 'Imprint Printers',
@@ -329,37 +330,61 @@ class ExportFootprintListView(FootprintListView):
                    'Imprint Actor and Role', 'Imprint BHB Number',
                    'Imprint OCLC Number', 'Evidence Type', 'Evidence Location',
                    'Evidence Call Number', 'Evidence Details']
+        for r in Role.objects.for_footprint():
+            role = 'Footprint Role ' + smart_text(r.name)\
+                 + ' Actor'
+            headers.append(role)
+            headers.append(role + ' VIAF Number')
 
-        yield headers
+        for r in Role.objects.for_imprint():
+            role = 'Imprint Role: ' + smart_text(r.name) + ' Actor'
+            headers.append(role)
+            headers.append(role + ' VIAF Number')
+        return headers
+
+    # interpolate_role_actors returns a list of already encoded values, these
+    # strings do not need to be encoded again.
+    def get_footprint_actors_string(self, footprint):
+        return interpolate_role_actors(Role.objects.all().for_footprint(),
+                                       footprint.actors())
+
+    def get_imprint_actors_string(self, footprint):
+        return interpolate_role_actors(Role.objects.all().for_imprint(),
+                                       footprint.book_copy.imprint.actor.all())
+
+    def get_rows(self):
+        yield self.get_header_string()
 
         for o in self.object_list:
             row = []
             # Footprint title
-            row.append(unicode(o.title).encode('utf-8'))
+            row.append(smart_text(o.title).encode('utf-8'))
             # Footprint date
-            row.append(unicode(o.associated_date))
+            row.append(smart_text(o.associated_date).encode('utf-8'))
 
             # Footprint location
-            row.append(unicode(o.place).encode('utf-8'))
+            row.append(smart_text(o.place).encode('utf-8'))
 
             # owners
-            a = [owner.display_name().encode('utf-8') for owner in o.owners()]
-            row.append('; '.join(a))
+            a = [owner.display_name() for owner in o.owners()]
+            row.append(smart_text('; '.join(a)).encode('utf-8'))
 
             # Written work title
-            row.append(unicode(o.book_copy.imprint.work.title).encode('utf-8'))
+            row.append(smart_text(o.book_copy.imprint.work.title)
+                       .encode('utf-8'))
 
             # Imprint display_title
-            a = unicode(o.book_copy.imprint.display_title()).encode('utf-8')
+            a = smart_text(o.book_copy.imprint.display_title()).encode('utf-8')
             row.append(a)
 
             # Imprint Printers
-            a = [p.display_name().encode('utf-8')
+            a = [p.display_name()
                  for p in o.book_copy.imprint.printers()]
-            row.append('; '.join(a))
+            row.append(smart_text('; '.join(a)).encode('utf-8'))
 
             # Imprint publication date
-            row.append(unicode(o.book_copy.imprint.publication_date))
+            row.append(smart_text(o.book_copy.imprint.publication_date)
+                       .encode('utf-8'))
 
             # Imprint created at date
             row.append(o.created_at.strftime('%m/%d/%Y'))
@@ -370,41 +395,48 @@ class ExportFootprintListView(FootprintListView):
             # Literary work LOC
             loc_id = o.book_copy.imprint.work\
                 .get_library_of_congress_identifier()
-            unicode(loc_id).encode('utf-8')
+            loc_id = smart_text(loc_id).encode('utf-8')
             row.append(loc_id)
 
             # Imprint actor
-            actors = [unicode(p).encode('utf-8')
-                      for p in o.book_copy.imprint.actor.all()]
+            actors = [smart_text(p).encode('utf-8') for p
+                      in o.book_copy.imprint.actor.all()]
             row.append('; '.join(actors))
 
             # Imprint BHB
             if o.book_copy.imprint.has_bhb_number():
-                row.append(unicode(o.book_copy
-                                    .imprint.get_bhb_number()
-                                    .identifier).encode('utf-8'))
+                row.append(smart_text(o.book_copy
+                                       .imprint.get_bhb_number()
+                                       .identifier).encode('utf-8'))
             else:
                 row.append('')
 
             # Imprint OCLC #
             if o.book_copy.imprint.has_oclc_number():
-                row.append(unicode(o.book_copy
-                                   .imprint.get_oclc_number()
-                                   .identifier).encode('utf-8'))
+                row.append(smart_text(o.book_copy
+                                       .imprint.get_oclc_number()
+                                       .identifier).encode('utf-8'))
             else:
                 row.append('')
 
             # Evidence type
-            row.append(unicode(o.medium).encode('utf-8'))
+            row.append(smart_text(o.medium).encode('utf-8'))
 
             # Evidence location
-            row.append(unicode(o.provenance).encode('utf-8'))
+            row.append(smart_text(o.provenance).encode('utf-8'))
 
             # Evidence source
-            row.append(unicode(o.call_number).encode('utf-8'))
+            row.append(smart_text(o.call_number).encode('utf-8'))
 
             # Evidence details
-            row.append(unicode(o.notes).encode('utf-8'))
+            row.append(smart_text(o.notes).encode('utf-8'))
+
+            # Footprint Actors
+            row.extend(self.get_footprint_actors_string(o))
+
+            # Imprint Actors
+            row.extend(self.get_imprint_actors_string(o))
+
             yield row
 
     def get(self, request, *args, **kwargs):

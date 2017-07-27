@@ -479,9 +479,9 @@ class Person(models.Model):
     def get_viaf_number(self):
         if self.standardized_identifier:
             viaf_type = StandardizedIdentificationType.objects.viaf()
-            return self.standardized_identifier.filter(
-                identifier_type=viaf_type).first()
-        return None
+            if self.standardized_identifier.identifier_type == viaf_type:
+                return str(self.standardized_identifier.identifier)
+        return ''
 
 
 class ActorManager(models.Manager):
