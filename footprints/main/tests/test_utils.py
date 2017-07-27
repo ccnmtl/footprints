@@ -1,12 +1,12 @@
 from django.test.testcases import TestCase
 
-from footprints.main.utils import stringify_role_actors
+from footprints.main.utils import interpolate_role_actors
 from footprints.main.models import Actor, Role
 
 
 class CustomUtilsTest(TestCase):
 
-    def test_stringify_role_actors(self):
+    def test_interpolate_role_actors(self):
         roles = []
         actors = []
 
@@ -23,26 +23,24 @@ class CustomUtilsTest(TestCase):
             'Nick', 1234, role3, '11/09/84', '11/09/17')
         actors = [actor1, actor2, actor3]
         # no roles or actors
-        self.assertTrue('' == stringify_role_actors([], []))
+        self.assertTrue([] == interpolate_role_actors([], []))
 
         # roles but no actors should return 2 times the number roles as cols
-        string = stringify_role_actors(roles, [])
-        self.assertTrue(string.count(',') == 5)
+        array = interpolate_role_actors(roles, [])
+        self.assertTrue(len(array) == 6)
 
         # roles and actors should return the string you expect
-        string = stringify_role_actors(roles, actors)
-        self.assertTrue(string.count('Nick (Author)') == 1)
-        self.assertTrue(string.count('Nick (Printer)') == 1)
-        self.assertTrue(string.count('Nick (Censor)') == 1)
-        self.assertTrue(string.count('1234') == 3)
+        array = interpolate_role_actors(roles, actors)
+        self.assertTrue(array[0].count('Nick (Author)') == 1)
+        self.assertTrue(array[2].count('Nick (Printer)') == 1)
+        self.assertTrue(array[4].count('Nick (Censor)') == 1)
 
         # roles and multiple actors should put all the actors of a given role
         # into the same col
         actor4, created = Actor.objects.get_or_create_by_attributes(
             'Nick', 1234, role1, '11/09/84', '11/09/17')
         actors.append(actor4)
-        string = stringify_role_actors(roles, actors)
-        self.assertTrue(string.count('Nick (Author)') == 2)
-        self.assertTrue(string.count('Nick (Printer)') == 1)
-        self.assertTrue(string.count('Nick (Censor)') == 1)
-        self.assertTrue(string.count('1234') == 4)
+        array = interpolate_role_actors(roles, actors)
+        self.assertTrue(array[0].count('Nick (Author)') == 2)
+        self.assertTrue(array[2].count('Nick (Printer)') == 1)
+        self.assertTrue(array[4].count('Nick (Censor)') == 1)

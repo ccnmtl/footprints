@@ -16,27 +16,44 @@ def permissions(request):
     }
 
 
-def stringify_role_actors(roles, actors):
-    ''' What does this function do?'''
-    string = ''
+def interpolate_role_actors(roles, actors):
+    ''' Takes in a list of roles and returns a list of actors
+    and the role that they have
+
+    The list will take the form of: <Role Name> Actor, <Role Name> Viaf Number
+    Within each field there could be multiple actors, and so the subsequent
+    field will contain multiple VIAF numbers. These multiple values will be
+    separated by a semicolon.'''
+    array = []
     for r in roles:
         actor_string = ''
         viaf_string = ''
+        # for each actor
         for a in actors:
+            # if the actor matches that role
             if r.pk == a.role.id:
-                actor_string = smart_text(a) if not actor_string else\
-                    '; '.join([actor_string, smart_text(a)])
-                viaf_string = a.person.get_viaf_number() if not viaf_string\
-                    else '; '.join([viaf_string, a.person.get_viaf_number()])
-        if (string == ''):
-            string = actor_string
-        else:
-            string = ','.join([string, actor_string])
-        string = ','.join([string, viaf_string])
+                # If the actor string is empty, as it would be on the first
+                # iteration, add the actor, else append a semicolon and the
+                # actor to the end of the actor string
+                if not actor_string:
+                    actor_string = smart_text(a).encode('utf-8')
+                else:
+                    actor_string = '; '.join([actor_string, smart_text(a)
+                                              .encode('utf-8')])
 
-    import pdb
-    pdb.set_trace()
-    return string
+                # If the VIAF String is empty, as it would be on the first
+                # iteration, add the VIAF number. Else append a semicolon
+                # and the VIAF number at the end of the string
+                if not viaf_string:
+                    viaf_string = a.person.get_viaf_number()
+                else:
+                    viaf_string = '; '.join([viaf_string,
+                                             a.person.get_viaf_number()])
+
+        array.append(actor_string)
+        array.append(viaf_string)
+
+    return array
 
 
 class BrowsableAPIRendererNoForms(BrowsableAPIRenderer):
