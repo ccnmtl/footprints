@@ -1,0 +1,45 @@
+# flake8: noqa
+
+from settings_shared import *  # noqa
+
+
+DEBUG = True
+TEMPLATES[0]['OPTIONS']['debug'] = DEBUG
+
+# These settings control how static media is served in a debug environment.
+COMPRESS_ROOT = "<development directory>/footprints/media/"
+STATIC_ROOT = "<development directory>/footprints/media/"
+STATICFILES_DIRS = ()
+
+
+if 'test' not in sys.argv and 'jenkins' not in sys.argv and 'validate' not in sys.argv:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.contrib.gis.db.backends.postgis',
+            'NAME': 'footprints',
+            'HOST': 'localhost',
+            'PORT': '5432',
+            'USER': '<username>',
+            'PASSWORD': '<password>',
+        }
+    }
+
+# Send email to the console by default
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# Or send them to /dev/null
+#EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
+
+GOOGLE_MAP_API = '<your google map api'
+
+# This setting runs celery as an in-memory process
+CELERY_ALWAYS_EAGER = True
+BROKER_BACKEND = 'memory'
+
+# This setting enables a simple search backend for the Haystack layer
+# The simple backend using very basic matching via the database itself.
+# It’s not recommended for production use but it will return results.
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
+    },
+}
