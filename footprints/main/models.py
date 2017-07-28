@@ -79,15 +79,18 @@ class ExtendedDateManager(models.Manager):
 
     def from_dict(self, values):
         dt = self.to_edtf(
-            values['millenium1'], values['century1'], values['decade1'],
-            values['year1'], values['month1'], values['day1'],
-            values['approximate1'], values['uncertain1'])
+            values.get('millenium1'), values.get('century1'),
+            values.get('decade1'),
+            values.get('year1'), values.get('month1'),
+            values.get('day1'),
+            values.get('approximate1'), values.get('uncertain1'))
 
-        if values['is_range']:
+        if values.get('is_range'):
             dt2 = self.to_edtf(
-                values['millenium2'], values['century2'], values['decade2'],
-                values['year2'], values['month2'], values['day2'],
-                values['approximate2'], values['uncertain2'])
+                values.get('millenium2'), values.get('century2'),
+                values.get('decade2'),
+                values.get('year2'), values.get('month2'), values.get('day2'),
+                values.get('approximate2'), values.get('uncertain2'))
 
             dt = '{}/{}'.format(dt, dt2)
 
