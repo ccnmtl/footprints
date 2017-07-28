@@ -214,6 +214,19 @@ class ExtendedDateTest(TestCase):
         dt = ExtendedDate.objects.from_dict(values)
         self.assertEquals(dt.edtf_format, '2001-01-01?~/20xx')
 
+    def test_create_from_dict_missing_elements(self):
+        values = {
+            'is_range': True,
+            'millenium1': 2, 'century1': 0, 'decade1': 0, 'year1': 1,
+            'month1': 1,
+            'approximate1': True, 'uncertain1': True,
+            'millenium2': 2, 'century2': 0, 'decade2': None, 'year2': None,
+            'month2': None, 'day2': None,
+            'approximate2': False, 'uncertain2': False}
+
+        dt = ExtendedDate.objects.from_dict(values)
+        self.assertEquals(dt.edtf_format, '2001-01?~/20xx')
+
     def test_to_edtf(self):
         mgr = ExtendedDate.objects
         dt = mgr.to_edtf(2, None, None, None, None, None, True, True)
