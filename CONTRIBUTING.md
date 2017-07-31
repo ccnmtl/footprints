@@ -51,7 +51,7 @@ To ensure consistency throughout the source code, please keep these rules in min
 * All features or bug fixes **must be tested** by one or more unit tests.
 * We follow the conventions contained in:
      * Python's [PEP8 Style Guide](https://www.python.org/dev/peps/pep-0008/) (enforced by [flake8](https://pypi.python.org/pypi/flake8))
-     * Javscript's [ESint](http://eslint.org/) errors and warnings.
+     * Javscript's [ESLint](http://eslint.org/) errors and warnings.
 * The master branch is continuously integrated by [Travis-CI](https://travis-ci.org/ccnmtl/footprints), and all tests must pass before merging.
 
 ## <a name="changes"></a>Making Changes
