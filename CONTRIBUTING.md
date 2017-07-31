@@ -34,7 +34,7 @@ If you're not sure how to write a bug report, here's a quick guide:
 [Write an Effective Simple Bug Report](https://medium.com/prismapp/write-an-effective-simple-bug-report-c3f8ebe1b72f) 
 (4 minutes!).
 
-**Note:** Please don't file an issue to ask a question, use our please contact us via 
+**Note:** Please don't file an issue to ask a question, please contact us via 
 our [Contact Page](http://footprints.ccnmtl.columbia.edu/contact/) instead.
 
 ## <a name="start"></a> Getting Started
