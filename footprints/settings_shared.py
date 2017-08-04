@@ -47,13 +47,13 @@ if ('test' in sys.argv or 'jenkins' in sys.argv or 'validate' in sys.argv
         }
     }
 
+
+# This setting enables a simple search backend for the Haystack layer
+# The simple backend using very basic matching via the database itself.
+# It's not recommended for production use but it will return results.
 HAYSTACK_CONNECTIONS = {
     'default': {
-        'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
-        'URL': 'http://localhost:8080/solr/footprints',
-        'TIMEOUT': 60 * 5,
-        'INCLUDE_SPELLING': False,
-        'BATCH_SIZE': 10,
+        'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
     },
 }
 
