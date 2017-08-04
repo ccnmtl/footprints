@@ -159,16 +159,12 @@ SORT_OPTIONS = {
 }
 
 
-class FootprintSearchView(SearchView):
+class BaseSearchView(SearchView):
     model = Footprint
     form_class = FootprintSearchForm
-    template_name = 'main/footprint_advanced_search.html'
-    paginate_by = 15
-    facet_fields = [
-        'footprint_location', 'imprint_location', 'actor']
 
     def get_queryset(self):
-        sqs = super(FootprintSearchView, self).get_queryset()
+        sqs = super(BaseSearchView, self).get_queryset()
 
         # @todo - this is only required when the form is unbound
         # work through the flow to see if this can be removed
@@ -183,6 +179,13 @@ class FootprintSearchView(SearchView):
             sort_by = '-{}'.format(sort_by)
 
         return sqs.order_by(sort_by)
+
+
+class FootprintSearchView(BaseSearchView):
+    template_name = 'main/footprint_advanced_search.html'
+    paginate_by = 15
+    facet_fields = [
+        'footprint_location', 'imprint_location', 'actor']
 
     def get_context_data(self, **kwargs):
         context = super(FootprintSearchView, self).get_context_data(**kwargs)
@@ -320,7 +323,8 @@ class Echo(object):
             return value
 
 
-class ExportFootprintListView(FootprintListView):
+class ExportFootprintSearch(BaseSearchView):
+
     def get_header_string(self):
         headers = ['Footprint Title', 'Footprint Date', 'Footprint Location',
                    'Footprint Owners', 'Written Work Title',
@@ -352,10 +356,15 @@ class ExportFootprintListView(FootprintListView):
         return interpolate_role_actors(Role.objects.all().for_imprint(),
                                        footprint.book_copy.imprint.actor.all())
 
-    def get_rows(self):
+    def get_rows(self, queryset):
         yield self.get_header_string()
 
-        for o in self.object_list:
+        for search_result in queryset:
+            o = search_result.object
+            if o is None or type(o) != Footprint:
+                # Solr has an indexed object that is not in the database
+                continue
+
             row = []
             # Footprint title
             row.append(smart_text(o.title).encode('utf-8'))
@@ -439,9 +448,13 @@ class ExportFootprintListView(FootprintListView):
 
             yield row
 
-    def get(self, request, *args, **kwargs):
-        self.object_list = self.get_queryset()
-        rows = self.get_rows()
+    def get(self, request):
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        if form.is_valid():
+            self.queryset = form.search()
+
+        rows = self.get_rows(self.queryset)
         pseudo_buffer = Echo()
         writer = csv.writer(pseudo_buffer)
 

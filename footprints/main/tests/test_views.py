@@ -2,14 +2,14 @@ from json import loads
 import json
 
 from django.conf import settings
-from django.contrib.auth.models import AnonymousUser, Group, Permission
 from django.core import mail
-from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.urlresolvers import reverse
-from django.test import TestCase
-from django.test.client import Client, RequestFactory, encode_multipart
 from django.utils.encoding import smart_text
 
+from django.contrib.auth.models import AnonymousUser, Group, Permission
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test import TestCase
+from django.test.client import Client, RequestFactory, encode_multipart
 from footprints.main.forms import ContactUsForm
 from footprints.main.models import Footprint, Actor, Imprint, \
     StandardizedIdentificationType, ExtendedDate, Language, \
@@ -24,11 +24,12 @@ from footprints.main.tests.factories import (
     PersonFactory, RoleFactory, PlaceFactory, ActorFactory, BookCopyFactory,
     ExtendedDateFactory, LanguageFactory, StandardizedIdentificationFactory,
     GroupFactory, MODERATION_PERMISSIONS, ADD_CHANGE_PERMISSIONS)
+from footprints.main.utils import interpolate_role_actors
 from footprints.main.views import (
-    CreateFootprintView, AddActorView, ContactUsView, FootprintDetailView)
+    CreateFootprintView, AddActorView, ContactUsView, FootprintDetailView,
+    ExportFootprintSearch)
 from footprints.main.viewsets import ImprintViewSet, BookCopyViewSet, \
     WrittenWorkViewSet
-from footprints.main.utils import interpolate_role_actors
 
 
 class BasicTest(TestCase):
@@ -395,7 +396,8 @@ class FootprintListViewTest(TestCase):
         self.assertEquals(ctx['object_list'][0], self.footprint4)
 
 
-class FootprintListExportTest(TestCase):
+class ExportFootprintSearchTest(TestCase):
+
     def setUp(self):
         work = WrittenWork.objects.create()
         imprint = Imprint.objects.create(work=work)
@@ -441,15 +443,8 @@ class FootprintListExportTest(TestCase):
         return headers
 
     def test_export_list(self):
-        url = reverse('export-footprint-list')
-        response = self.client.get(url)
-
-        self.assertEquals(response.status_code, 200)
-        self.assertEquals(Footprint.objects.all().count(), 2)
-
         # owners
-        o = [owner.display_name()
-             for owner in self.footprint2.owners()]
+        o = [owner.display_name() for owner in self.footprint2.owners()]
         o = '; '.join(o)
 
         # Imprint Printers
@@ -462,62 +457,72 @@ class FootprintListExportTest(TestCase):
                   for a in self.footprint2.book_copy.imprint.actor.all()]
         actors = '; '.join(actors)
 
-        row1 = ('Empty Footprint,None,None,,None,None,'
-                ',None,{},0,None,,,,,,None,None,').format(
-            self.footprint1.created_at.strftime('%m/%d/%Y'))
+        row1 = ['Empty Footprint', 'None', 'None', '', 'None', 'None', '',
+                'None', self.footprint1.created_at.strftime('%m/%d/%Y'),
+                0, 'None', '', '', '', '', '', 'None', 'None']
 
-        row1 += ','.join(interpolate_role_actors(
-                            Role.objects.all().for_footprint(),
-                            self.footprint1.actors()))
+        row1 += interpolate_role_actors(Role.objects.all().for_footprint(),
+                                        self.footprint1.actors())
 
-        row1 += ','.join(interpolate_role_actors(
-                            Role.objects.all().for_imprint(),
-                            self.footprint1.book_copy.imprint.actor.all()))
+        row1 += interpolate_role_actors(
+            Role.objects.all().for_imprint(),
+            self.footprint1.book_copy.imprint.actor.all())
 
-        row1 += '\r\n'
-
-        row2 = ('Odyssey,'  # Footprint Title
-                'c. 1984,'  # Footprint Date
-                '"Cracow, Poland",'  # Footprint Location
-                '{},'  # Footprint Owners
-                '{},'  # Written Work Title
-                '"The Odyssey, Edition 1",'  # Imprint Display Title
-                '{},'  # Imprint Printers
-                'c. 1984,'  # Imprint Creation Date
-                '{},'  # Footprint Creation Date
-                '90,'  # Footprint Percent Complete
-                '{},'  # Literary Work LOC
-                '{},'  # Imprint Actor and Role
-                ','  # Imprint BHB
-                ','  # Imprint OCLC Number
-                'Medium,'  # Evidence Type
-                'Provenance,'  # Evidence Location
-                'call number,'  # Evidence Call Number
-                'lorem ipsum,'  # Evidence Details
-                ).format(
-            o, self.footprint2.book_copy.imprint.work.title,
-            p, self.footprint2.created_at.strftime('%m/%d/%Y'),
-            self.footprint2.book_copy.imprint.work
-                    .get_library_of_congress_identifier(), actors)
+        work = self.footprint2.book_copy.imprint.work
+        row2 = ['Odyssey',  # Footprint Title
+                'c. 1984',  # Footprint Date
+                'Cracow, Poland',  # Footprint Location
+                o,  # Footprint Owners
+                work.title,  # Written Work Title
+                'The Odyssey, Edition 1',  # Imprint Display Title
+                p,  # Imprint Printers
+                'c. 1984',  # Imprint Creation Date
+                self.footprint2.created_at.strftime('%m/%d/%Y'),
+                90,  # Footprint Percent Complete
+                'None',
+                actors,  # Imprint Actor and Role
+                '',  # Imprint BHB
+                '',  # Imprint OCLC Number
+                'Medium',  # Evidence Type
+                'Provenance',  # Evidence Location
+                'call number',  # Evidence Call Number
+                'lorem ipsum']
 
         # Footprint Actors
-        row2 += ','.join(interpolate_role_actors(
-                            Role.objects.all().for_footprint(),
-                            self.footprint2.actors()))
+        row2 += interpolate_role_actors(Role.objects.all().for_footprint(),
+                                        self.footprint2.actors())
 
         # Imprint Actors
-        row2 += ','.join(interpolate_role_actors(
-                            Role.objects.all().for_imprint(),
-                            self.footprint2.book_copy.imprint.actor.all()))
+        row2 += interpolate_role_actors(
+            Role.objects.all().for_imprint(),
+            self.footprint2.book_copy.imprint.actor.all())
 
-        row2 += '\r\n'
-        self.assertEquals(response.streaming_content.next(),
-                          self.get_headers())
-        self.assertEquals(response.streaming_content.next(), row1)
-        self.assertEquals(response.streaming_content.next(), row2)
+        # Mock a SearchQuerySet
+        qs = Footprint.objects.all()
+        for o in qs:
+            o.object = o
+
+        rows = ExportFootprintSearch().get_rows(qs)
+        rows.next()  # skip header row
+        self.assertEquals(rows.next(), row1)
+        self.assertEquals(rows.next(), row2)
 
         with self.assertRaises(StopIteration):
-            response.streaming_content.next()
+            rows.next()
+
+        def test_get(self):
+            url = reverse('export-footprint-list')
+            response = self.client.get(url)
+            self.assertEquals(response.status_code, 200)
+
+            self.assertEquals(response.streaming_content.next(),
+                              self.get_headers())
+
+            # As the SOLR search won't work properly with Haystack's
+            # SimpleBackend, the iteration stops immediately
+            # after the headers
+            with self.assertRaises(StopIteration):
+                response.streaming_content.next()
 
 
 class ApiViewTests(TestCase):
