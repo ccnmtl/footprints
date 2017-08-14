@@ -2094,7 +2094,6 @@ th.sortable.tablesorter-headerDesc,
 }
 
 .object-browse .page-count {
-    font-size: 16px;
     margin: -3px 15px 0px 15px;
 }
 
@@ -2323,15 +2322,13 @@ th.sortable.tablesorter-headerDesc,
 
 .total-results-count {
     margin-right: 10px;
-	vertical-align: middle;
-	display: inline-block;
-	line-height: 30px;
-	font-weight: bold;
+    vertical-align: middle;
+    display: inline-block;
+    line-height: 30px;
 }
 
 .btn-export {
     margin-right: 30px;
-    font-weight: 700;
 }
 
 .advanced-search-filter .has-error .form-control {
