@@ -9,15 +9,12 @@ from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.db.models.fields import FieldDoesNotExist
 from django.db.models.fields.related import ManyToManyField
-from django.db.models.query import Prefetch
-from django.db.models.query_utils import Q
 from django.http.response import HttpResponseRedirect, StreamingHttpResponse
 from django.shortcuts import get_object_or_404
 from django.template import loader
 from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
-from django.views.generic.list import ListView
 from django.utils.encoding import smart_text
 from djangowind.views import logout as wind_logout_view
 from haystack.generic_views import SearchView
@@ -209,107 +206,6 @@ class FootprintSearchView(BaseSearchView):
             self.request.GET.get('footprint_end_year'))
 
         return context
-
-
-class FootprintListView(ListView):
-    model = Footprint
-    template_name = 'main/footprint_list.html'
-    paginate_by = 15
-
-    def get_sort_by(self):
-        sort_by = self.kwargs.get('sort_by')
-        if sort_by in SORT_OPTIONS.keys():
-            return sort_by
-
-        return 'ftitle'
-
-    def get_context_data(self, **kwargs):
-        context = super(FootprintListView, self).get_context_data(**kwargs)
-        context['sort_options'] = SORT_OPTIONS
-
-        sort_by = self.get_sort_by()
-        direction = self.request.GET.get('direction', 'asc')
-        query = self.request.GET.get('q', '')
-
-        context['selected_sort'] = sort_by
-        context['direction'] = direction
-        context['query'] = query
-
-        base = reverse('browse-footprint-list', args=[sort_by])
-        context['base_url'] = \
-            u'{}?direction={}&q={}&page='.format(base, direction, query)
-
-        export = reverse('export-footprint-list')
-        context['export_url'] = u'{}?q={}'.format(export, query)
-
-        return context
-
-    def sort_by_date(self, qs, direction):
-        lst = list(qs)
-        lst.sort(reverse=direction == 'desc',
-                 key=lambda obj: obj.sort_date())
-        return lst
-
-    def sort_by_place(self, qs, direction):
-        lst = list(qs)
-        lst.sort(reverse=direction == 'desc',
-                 key=lambda obj:
-                 obj.place.__unicode__() if obj.place else '')
-        return lst
-
-    def format_owner(self, obj):
-        actors = [actor.display_name() for actor in obj.owners()]
-        return ', '.join(actors)
-
-    def sort_by_owner(self, qs, direction):
-        owners = Actor.objects.filter(
-            role__name=Role.OWNER).select_related('person')
-        qs = qs.prefetch_related(
-            Prefetch('actor', queryset=owners, to_attr='owners'))
-        lst = list(qs)
-        lst.sort(reverse=direction == 'desc',
-                 key=lambda obj: self.format_owner(obj))
-        return lst
-
-    def default_sort(self, qs, sort_by, direction):
-        qs = qs.order_by(*SORT_OPTIONS[sort_by]['q'])
-        if direction == 'asc':
-            return qs
-        else:
-            return qs.reverse()
-
-    def filter(self, qs):
-        q = self.request.GET.get('q', '')
-        if len(q) < 1:
-            return qs
-
-        return qs.filter(
-            Q(title__icontains=q) |
-            Q(book_copy__imprint__work__title__icontains=q) |
-            Q(actor__person__name__icontains=q) |
-            Q(book_copy__imprint__work__actor__person__name__icontains=q))
-
-    def get_queryset(self):
-        sort_by = self.get_sort_by()
-        direction = self.request.GET.get('direction', 'asc')
-
-        qs = super(FootprintListView, self).get_queryset()
-        qs = self.filter(qs)
-        qs = qs.select_related(
-            'book_copy', 'associated_date', 'place').prefetch_related(
-            'digital_object',
-            'book_copy__imprint__publication_date',
-            'book_copy__imprint__actor__person',
-            'book_copy__imprint__place').distinct()
-
-        if sort_by == 'fdate':
-            return self.sort_by_date(qs, direction)
-        elif sort_by == 'flocation':
-            return self.sort_by_place(qs, direction)
-        elif sort_by == 'owners':
-            return self.sort_by_owner(qs, direction)
-        else:
-            return self.default_sort(qs, sort_by, direction)
 
 
 class Echo(object):

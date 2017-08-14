@@ -300,16 +300,18 @@
 
     <!-- Results navigation  -->
     <div class="row tools results-navigation">
-        <div class="col-xs-12">
-            {% include 'main/pagination.html' %}
-                {% if object_list|length > 0 %}
-                    <button class="btn btn-white btn-sm pull-right btn-export" type="button">
-                    <span class="glyphicon glyphicon-download-alt"></span> Export
-                    </button>
-                {% endif %}
-            <div class="total-results-count pull-right">
+        <div class="col-xs-6">
+            <div class="total-results-count">
                 {{paginator.count}} footprints
             </div>
+            {% if object_list|length > 0 %}
+                <button class="btn btn-white btn-sm btn-export" type="button">
+                <span class="glyphicon glyphicon-download-alt"></span> Export
+                </button>
+            {% endif %}
+        </div>
+        <div class="col-xs-6">
+            {% include 'main/pagination.html' %}
         </div>
     </div>
 
