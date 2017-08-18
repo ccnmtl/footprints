@@ -118,7 +118,7 @@ djangorestframework==3.6.3
 djangorestframework-jsonp==1.0.2
 django-celery==3.2.1
 Unidecode==0.04.21
-django-reversion==2.0.9
+django-reversion==2.0.10
 python-dateutil==2.6.1
 requirements/src/edtf-0.9.2.tar.gz
 django-storages==1.6.5
