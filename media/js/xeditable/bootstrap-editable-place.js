@@ -45,15 +45,16 @@ Place editable input.
 
                 if (responses && responses.length > 0) {
                     var components = responses[0].address_components;
-
-                    for (var i = 0; i < components.length; i++) {
-                        if (components[i].types.indexOf('locality') > -1) {
-                            self.$city.val(components[i].long_name);
-                        } else if (components[i].types
-                                   .indexOf('country') > -1) {
-                            self.$country.val(components[i].long_name);
-                        }
-                    }
+                    components.forEach(function(component) {
+                        components.types.forEach(function(type) {
+                            if (type === 'locality') {
+                                self.$city.val(component.long_name);
+                            }
+                            if (type === 'country') {
+                                self.$country.val(component.long_name);
+                            }
+                        });
+                    });
                 }
             });
         },
@@ -173,9 +174,10 @@ Place editable input.
         value2str: function(value) {
             var str = '';
             if (value) {
-                for (var k in value) {
-                    str = str + k + ':' + value[k] + ';';
-                }
+                var keys = Object.keys(value);
+                keys.forEach(function(k) {
+                    str = str + k + ':' + k + ';';
+                });
             }
             return str;
         },

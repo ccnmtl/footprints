@@ -35,12 +35,12 @@
                         },
                         success: function(data) {
                             var names = [];
-                            for (var i = 0; i < data.length; i++) {
+                            data.forEach(function(item) {
                                 names.push({
-                                    object_id: data[i].object_id,
-                                    label: data[i].name
+                                    object_id: item.object_id,
+                                    label: item.name
                                 });
-                            }
+                            });
                             response(names);
                         }
                     });
@@ -83,9 +83,10 @@
         value2str: function(value) {
             var str = '';
             if (value) {
-                for (var k in value) {
-                    str = str + k + ':' + value[k] + ';';
-                }
+                var keys = Object.keys(value);
+                keys.forEach(function(k) {
+                    str = str + k + ':' + k + ';';
+                });
             }
             return str;
         },

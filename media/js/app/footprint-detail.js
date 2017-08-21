@@ -16,9 +16,11 @@
     window.FootprintBaseView = Backbone.View.extend({
         context: function() {
             var ctx = this.model.toJSON();
+            /* eslint-disable security/detect-object-injection */
             for (var attrname in this.baseContext) {
                 ctx[attrname] = this.baseContext[attrname];
             }
+            /* eslint-enable security/detect-object-injection */
             return ctx;
         },
         mapOptions: {
@@ -439,15 +441,15 @@
                 });
             }
 
-            for (var i = 0; i < data.length; i++) {
-                if (data[i].description &&
-                        data[i].description.length > 0) {
+            data.forEach(function(item) {
+                if (item.description &&
+                        item.description.length > 0) {
                     items.push({
-                        id: data[i].id,
-                        text: data[i].description
+                        id: item.id,
+                        text: item.description
                     });
                 }
-            }
+            });
             return {
                 results: items,
                 more: data.hasOwnProperty('next') && data.next !== null

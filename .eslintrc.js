@@ -4,7 +4,15 @@ module.exports = {
         "amd": true,
         "jquery": true
     },
-    "extends": "eslint:recommended",
+    "plugins": [
+        "security",
+        "scanjs-rules",
+        "no-unsafe-innerhtml"
+    ],
+    "extends": [
+        "eslint:recommended",
+        "plugin:security/recommended"
+    ],
     "globals": {
         "_": true,
         "Backbone": true,

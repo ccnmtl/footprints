@@ -77,9 +77,10 @@
         value2str: function(value) {
             var str = '';
             if (value) {
-                for (var k in value) {
-                    str = str + k + ':' + value[k] + ';';
-                }
+                var keys = Object.keys(value);
+                keys.forEach(function(k) {
+                    str = str + k + ':' + k + ';';
+                });
             }
             return str;
         },

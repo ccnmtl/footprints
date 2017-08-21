@@ -48,17 +48,19 @@
             streetViewControl: false
         },
         updateMarkerIcons: function() {
+            /* eslint-disable security/detect-object-injection */
             for (var key in this.markers) {
                 if (this.markers.hasOwnProperty(key)) {
                     var icon = this.getIcon(this.markers[key].marker.dataId);
                     this.markers[key].marker.setIcon(icon);
                 }
             }
+            /* eslint-enable security/detect-object-injection */
 
             var markers = this.spiderfier.markersNearAnyOtherMarker();
-            for (var i = 0; i < markers.length; i++) {
-                markers[i].setIcon(this.spiderIcon);
-            }
+            markers.forEach(function(m) {
+                m.setIcon(this.spiderIcon);
+            });
         },
         scrollToItem: function($elt) {
             var eltTop = $elt.offset().top - 150;
@@ -74,6 +76,7 @@
 
             this.spiderfier.addListener('click', function(marker, event) {
                 infowindow.setContent(marker.desc);
+                // eslint-disable-next-line security/detect-non-literal-fs-filename
                 infowindow.open(map, marker);
 
                 var q = '[data-map-id="' + marker.dataId + '"]';
@@ -86,17 +89,17 @@
             });
 
             this.spiderfier.addListener('spiderfy', function(markers) {
-                for (var i = 0; i < markers.length; i ++) {
-                    markers[i].setIcon(self.getIcon(markers[i].dataId));
-                }
+                markers.forEach(function(m) {
+                    m.setIcon(self.getIcon(m.dataId));
+                });
 
                 infowindow.close();
             });
 
             this.spiderfier.addListener('unspiderfy', function(markers) {
-                for (var i = 0; i < markers.length; i ++) {
-                    markers[i].setIcon(self.spiderIcon);
-                }
+                markers.forEach(function(m) {
+                    m.setIcon(self.spiderIcon);
+                });
             });
 
             google.maps.event.addListener(map, 'click', function() {
@@ -193,13 +196,13 @@
                     markersWontHide: false});
 
                 this.markers = {};
-                for (var i = 0; i < markers.length; i++) {
-                    var id = jQuery(markers[i]).data('related');
-                    var lat = jQuery(markers[i]).data('latitude');
-                    var lng = jQuery(markers[i]).data('longitude');
+                markers.forEach(function(m) {
+                    var id = jQuery(m).data('related');
+                    var lat = jQuery(m).data('latitude');
+                    var lng = jQuery(m).data('longitude');
                     var latlng = new google.maps.LatLng(lat, lng);
 
-                    var content = jQuery(markers[i]).html();
+                    var content = jQuery(m).html();
 
                     var marker = new google.maps.Marker({
                         position: latlng,
@@ -209,8 +212,11 @@
                         dataId: id
                     });
                     this.bounds.extend(latlng);
+
+                    // eslint-disable-next-line security/detect-object-injection
                     this.markers[id] = {'marker': marker, 'content': content};
-                }
+                });
+
                 this.map.fitBounds(this.bounds);
                 this.attachInfoWindow(this.infowindow, this.map);
 
@@ -315,6 +321,7 @@
                 }
             }
 
+            /* eslint-disable security/detect-object-injection */
             var bounds = new google.maps.LatLngBounds();
             for (var key in this.markers) {
                 if (this.markers.hasOwnProperty(key)) {
@@ -340,8 +347,10 @@
                 this.$el.find('.empty-map-message').hide();
                 this.activeBounds = bounds;
                 this.infowindow.setContent(this.markers[highlight].content);
+                // eslint-disable-next-line security/detect-non-literal-fs-filename
                 this.infowindow.open(this.map, this.markers[highlight].marker);
             }
+            /* eslint-enable security/detect-object-injection */
         },
         inView: function($elt) {
             var rect = $elt.get(0).getBoundingClientRect();
