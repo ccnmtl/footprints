@@ -3,15 +3,14 @@ function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie !== '') {
         var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = jQuery.trim(cookies[i]);
+        cookies.forEach(function(c) {
+            var cookie = jQuery.trim(c);
             // Does this cookie string begin with the name we want?
             if (cookie.substring(0, name.length + 1) === (name + '=')) {
                 var cookieName = cookie.substring(name.length + 1);
                 cookieValue = decodeURIComponent(cookieName);
-                break;
             }
-        }
+        });
     }
     return cookieValue;
 }

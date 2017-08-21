@@ -25,3 +25,4 @@ wheelhouse/
 .idea/
 .ropeproject
 test*.txt
+package-lock.json
