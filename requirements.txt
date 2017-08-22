@@ -114,7 +114,7 @@ django-infranil==1.1.0
 pysolr==3.6.0
 django-haystack==2.6.1
 django-audit-log==0.7.0
-djangorestframework==3.6.3
+djangorestframework==3.6.4
 djangorestframework-jsonp==1.0.2
 django-celery==3.2.1
 Unidecode==0.04.21
