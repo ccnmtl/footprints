@@ -121,8 +121,9 @@ Place editable input.
             self.$address =  self.$tpl.find('input[name="address"]').first();
             self.mapContainer = self.$tpl.find('.map-container')[0];
 
-            self.mapInstance = new google.maps.Map(self.mapContainer,
-                                                   self.mapOptions);
+            self.mapInstance = new google.maps.Map(
+                self.mapContainer,
+                self.mapOptions);
             self.mapInstance.controls[google.maps.ControlPosition.TOP_LEFT]
                 .push(self.$address[0]);
 

@@ -57,8 +57,9 @@
                 'change select[name="footprint-medium"]': 'onMediumChange'
             },
             initialize: function(options) {
-                _.bindAll(this, 'isValid', 'show', 'showError', 'clearError',
-                          'onMediumChange');
+                _.bindAll(
+                    this, 'isValid', 'show', 'showError', 'clearError',
+                    'onMediumChange');
                 this.identifier = '#evidencetype';
                 this.elTab = jQuery(this.el).find(this.identifier);
             },

@@ -82,10 +82,11 @@
                 var q = '[data-map-id="' + marker.dataId + '"]';
                 var $elt = self.$el.find(q).first();
                 jQuery(self.el).find('.infocus').removeClass('infocus');
-                self.setState($elt.data('imprint-id'),
-                              $elt.data('copy-id'),
-                              $elt.data('footprint-id'),
-                              false /* sync map */);
+                self.setState(
+                    $elt.data('imprint-id'),
+                    $elt.data('copy-id'),
+                    $elt.data('footprint-id'),
+                    false /* sync map */);
             });
 
             this.spiderfier.addListener('spiderfy', function(markers) {
@@ -167,7 +168,7 @@
         },
         getIcon: function(dataId) {
             return dataId.indexOf('footprint') > -1 ?
-                    this.footprintIcon : this.imprintIcon;
+                this.footprintIcon : this.imprintIcon;
         },
         iconWithColor: function(color, multiple) {
             var c = multiple ? '%2B' : '%E2%80%A2';
@@ -224,10 +225,11 @@
                     if (!self.mapLoaded) {
                         self.mapLoaded = true;
                         self.projection = self.map.getProjection();
-                        self.setState(options.state.imprint,
-                                      options.state.copy,
-                                      options.state.footprint,
-                                      true);
+                        self.setState(
+                            options.state.imprint,
+                            options.state.copy,
+                            options.state.footprint,
+                            true);
                         self.updateMarkerIcons();
                     }
                 });
@@ -240,18 +242,20 @@
                     }
                 );
 
-                google.maps.event.addListener(this.map, 'bounds_changed',
-                        function() {
-                            // An infowindow opening throws off the fitBounds
-                            // logic. Call fitBounds again when necessary
-                            if (self.mapLoaded && self.activeBounds) {
-                                self.map.fitBounds(self.activeBounds);
-                                delete self.activeBounds;
+                google.maps.event.addListener(
+                    this.map,
+                    'bounds_changed',
+                    function() {
+                        // An infowindow opening throws off the fitBounds
+                        // logic. Call fitBounds again when necessary
+                        if (self.mapLoaded && self.activeBounds) {
+                            self.map.fitBounds(self.activeBounds);
+                            delete self.activeBounds;
 
-                                self.map.setZoom(self.map.getZoom() - 1);
-                            }
+                            self.map.setZoom(self.map.getZoom() - 1);
                         }
-                    );
+                    }
+                );
 
                 jQuery('.imprint-map-container').affix({
                     offset: {

@@ -9,10 +9,11 @@
             'click #confirm-process-modal .btn-primary': 'processJob'
         },
         initialize: function(options) {
-            _.bindAll(this, 'clickRecord', 'updateRecord',
-                      'deleteRecord', 'confirmDeleteRecord', 'checkErrorState',
-                      'onKeydown', 'openRecord', 'closeRecord',
-                      'confirmProcessJob', 'processJob');
+            _.bindAll(
+                this, 'clickRecord', 'updateRecord',
+                'deleteRecord', 'confirmDeleteRecord', 'checkErrorState',
+                'onKeydown', 'openRecord', 'closeRecord',
+                'confirmProcessJob', 'processJob');
 
             this.baseUpdateUrl = options.baseUpdateUrl;
 

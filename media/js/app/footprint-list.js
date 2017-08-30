@@ -9,8 +9,9 @@
             'keypress .tools input.page-number': 'specifyPage',
         },
         initialize: function(options) {
-            _.bindAll(this, 'clickSortable', 'clickSearch', 'clickExport',
-                      'clickToggleRange', 'enterSearch', 'specifyPage');
+            _.bindAll(
+                this, 'clickSortable', 'clickSearch', 'clickExport',
+                'clickToggleRange', 'enterSearch', 'specifyPage');
             var self = this;
             this.baseUrl = options.baseUrl;
             this.selectedDirection = options.selectedDirection;
