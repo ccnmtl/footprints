@@ -48,17 +48,17 @@
         onKeydown: function(evt) {
             var dataId;
             switch (evt.which) {
-                case 37: // left
-                    dataId = jQuery(this.el).find('td.selected').first()
-                        .prev().data('record-id');
-                    break;
+            case 37: // left
+                dataId = jQuery(this.el).find('td.selected').first()
+                    .prev().data('record-id');
+                break;
 
-                case 39: // right
-                    dataId = jQuery(this.el).find('td.selected').first()
-                        .next().data('record-id');
-                    break;
-                default:
-                    return; // exit this handler for other keys
+            case 39: // right
+                dataId = jQuery(this.el).find('td.selected').first()
+                    .next().data('record-id');
+                break;
+            default:
+                return; // exit this handler for other keys
             }
             evt.preventDefault();
             if (dataId) {
