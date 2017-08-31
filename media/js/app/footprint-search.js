@@ -23,11 +23,12 @@
             'keyup input[name="pub_end_year"]': 'updateStatus'
         },
         initialize: function(options) {
-            _.bindAll(this, 'clickSortable', 'clickExport', 'clickToggleRange',
-                      'nextOrPreviousPage', 'specifyPage', 'onKeydown',
-                      'busy', 'matchHighlightedValue',
-                      'applySingleFilter', 'submitForm', 'clearErrors',
-                      'updateStatus');
+            _.bindAll(
+                this, 'clickSortable', 'clickExport', 'clickToggleRange',
+                'nextOrPreviousPage', 'specifyPage', 'onKeydown',
+                'busy', 'matchHighlightedValue',
+                'applySingleFilter', 'submitForm', 'clearErrors',
+                'updateStatus');
 
             var self = this;
             this.baseUrl = options.baseUrl;

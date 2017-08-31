@@ -118,9 +118,10 @@
             'click .toggle-edit-digital-object': 'toggleEditDigitalObject'
         },
         initialize: function(options) {
-            _.bindAll(this, 'context', 'refresh', 'render',
-               'confirmRemoveRelated', 'removeRelated',
-               'toggleEditDigitalObject');
+            _.bindAll(
+                this, 'context', 'refresh', 'render',
+                'confirmRemoveRelated', 'removeRelated',
+                'toggleEditDigitalObject');
 
             this.baseContext = options.baseContext;
             this.template = _.template(jQuery(options.template).html());
@@ -386,8 +387,9 @@
                     initSelection: function(elt, callback) {
                         callback({id: dataId, text: description});
                     },
-                    formatSelection: function(object, container, query,
-                            escMarkup) {
+                    formatSelection: function(
+                        object, container, query, escMarkup
+                    ) {
                         return object.text;
                     },
                     formatResult: function(object) {
@@ -510,8 +512,9 @@
             'click .list-group-item': 'clickRelatedFootprint'
         },
         initialize: function(options) {
-            _.bindAll(this, 'connectRecords', 'context', 'render',
-                      'maximizeCarousel');
+            _.bindAll(
+                this, 'connectRecords', 'context', 'render',
+                'maximizeCarousel');
 
             // Modifying X-Editable default properties
             jQuery.fn.editable.defaults.mode = 'inline';

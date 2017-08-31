@@ -2,13 +2,15 @@
     'use strict';
 
     var ExtendedDateTimeFormat = function(options) {
-        this.init('ExtendedDateTimeFormat', options,
-                ExtendedDateTimeFormat.defaults);
+        this.init(
+            'ExtendedDateTimeFormat', options,
+            ExtendedDateTimeFormat.defaults);
     };
 
     //inherit from Abstract input
-    $.fn.editableutils.inherit(ExtendedDateTimeFormat,
-            $.fn.editabletypes.abstractinput);
+    $.fn.editableutils.inherit(
+        ExtendedDateTimeFormat,
+        $.fn.editabletypes.abstractinput);
 
     $.extend(ExtendedDateTimeFormat.prototype, {
         /**
@@ -94,8 +96,8 @@
             jQuery('.edtf-entry').removeClass('required');
 
             this.$tpl.parents('.form-group')
-                     .removeClass('has-error')
-                     .find('.help-block').hide();
+                .removeClass('has-error')
+                .find('.help-block').hide();
 
             if (this.$millenium1.val().length < 1 ||
                     this.$millenium1.val() < 1) {
@@ -117,18 +119,18 @@
                     .filter(self.hasValue).get().reverse();
                 var selector = jQuery(jQuery(elts).first()).data('required');
                 jQuery(this).find(selector)
-                            .not(self.hasValue).each(function() {
-                                jQuery(this).addClass('required');
-                            });
+                    .not(self.hasValue).each(function() {
+                        jQuery(this).addClass('required');
+                    });
             });
         },
         renderDateDisplay: function() {
             var msg = this.validate();
             if (msg.length > 0) {
                 this.$tpl.parents('.form-group')
-                         .addClass('has-error')
-                         .find('.help-block')
-                         .html('Please fill out all required fields').show();
+                    .addClass('has-error')
+                    .find('.help-block')
+                    .html('Please fill out all required fields').show();
                 return;
             }
 
