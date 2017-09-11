@@ -1,8 +1,7 @@
-import datetime
-
 from django.contrib.auth.models import Group
 from django.db.utils import IntegrityError
 from django.test import TestCase
+from django.utils import timezone
 
 from footprints.main.models import Language, DigitalFormat, \
     ExtendedDate, StandardizedIdentification, \
@@ -492,7 +491,7 @@ class FootprintModerationTest(TestCase):
         self.assertTrue(moderation_flags(f3))
 
         # excluded footprints
-        today = datetime.datetime.now()
+        today = timezone.now()
         f4 = FootprintFactory()
         f4.save_verified(True)
         self.assertTrue(moderation_flags(f4))
