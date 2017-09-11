@@ -1,12 +1,13 @@
-from datetime import date, datetime
+from datetime import date
 
 from audit_log.models.fields import LastUserField, CreatingUserField
 from django.contrib.gis.db.models.fields import PointField
 from django.db import models
 from django.template import loader
+from django.utils import timezone
 from edtf import EDTF, edtf_date
 
-from footprints.main.templatetags.moderation import has_moderation_flags,\
+from footprints.main.templatetags.moderation import has_moderation_flags, \
     moderation_flags
 from footprints.main.utils import string_to_point
 
@@ -1066,7 +1067,7 @@ class Footprint(models.Model):
 
     def save_verified(self, verified):
         self.verified = verified
-        self.verified_modified_at = datetime.now()
+        self.verified_modified_at = timezone.now()
         self.save(update_fields=['verified', 'verified_modified_at'])
 
     def flags(self):
