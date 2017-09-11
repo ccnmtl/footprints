@@ -343,19 +343,18 @@ class ExportFootprintSearchTest(TestCase):
         with self.assertRaises(StopIteration):
             rows.next()
 
-        def test_get(self):
-            url = reverse('export-footprint-list')
-            response = self.client.get(url)
-            self.assertEquals(response.status_code, 200)
+    def test_get(self):
+        url = reverse('export-footprint-list')
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
 
-            self.assertEquals(response.streaming_content.next(),
-                              self.get_headers())
+        rows = response.streaming_content
+        rows.next()  # headers
+        rows.next()  # footprint1
+        rows.next()  # footprint2
 
-            # As the SOLR search won't work properly with Haystack's
-            # SimpleBackend, the iteration stops immediately
-            # after the headers
-            with self.assertRaises(StopIteration):
-                response.streaming_content.next()
+        with self.assertRaises(StopIteration):
+            response.streaming_content.next()
 
 
 class ApiViewTests(TestCase):
@@ -1236,8 +1235,8 @@ class SearchViewTest(TestCase):
 class SearchIndexTest(TestCase):
 
     def test_format_sort_by(self):
-        self.assertEquals(format_sort_by('ABCD'), 'abcd')
-        self.assertEquals(format_sort_by('The A', True), 'a')
+        self.assertEquals(format_sort_by(u'ABCD'), 'abcd')
+        self.assertEquals(format_sort_by(u'The A', True), 'a')
 
 
 class SerializerTest(TestCase):
