@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib.auth.models import Group
 from django.db.utils import IntegrityError
 from django.test import TestCase
@@ -7,12 +9,12 @@ from footprints.main.models import Language, DigitalFormat, \
     Actor, Imprint, FOOTPRINT_LEVEL, IMPRINT_LEVEL, WRITTENWORK_LEVEL, Role, \
     Place, Footprint, WrittenWork, BookCopy, StandardizedIdentificationType
 from footprints.main.templatetags.moderation import \
-    flag_empty_narrative, flag_percent_complete, flag_empty_call_number,\
+    flag_empty_narrative, flag_percent_complete, flag_empty_call_number, \
     flag_empty_bhb_number, moderation_flags, moderation_footprints
 from footprints.main.tests.factories import RoleFactory, \
     ActorFactory, PlaceFactory, CollectionFactory, \
     WrittenWorkFactory, ImprintFactory, BookCopyFactory, FootprintFactory, \
-    PersonFactory, DigitalObjectFactory, ExtendedDateFactory,\
+    PersonFactory, DigitalObjectFactory, ExtendedDateFactory, \
     EmptyFootprintFactory, StandardizedIdentificationFactory, UserFactory
 from footprints.main.utils import string_to_point
 
@@ -490,9 +492,11 @@ class FootprintModerationTest(TestCase):
         self.assertTrue(moderation_flags(f3))
 
         # excluded footprints
+        today = datetime.datetime.now()
         f4 = FootprintFactory()
         f4.save_verified(True)
         self.assertTrue(moderation_flags(f4))
+        self.assertTrue((f4.verified_modified_at - today).seconds < 1)
 
         # has a bhb identifier
         bhb_type = StandardizedIdentificationType.objects.bhb()
