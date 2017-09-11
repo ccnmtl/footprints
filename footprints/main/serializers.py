@@ -187,6 +187,7 @@ class FootprintSerializer(HyperlinkedModelSerializer):
     last_modified_by = UserSerializer(read_only=True)
     created_at = DateTimeZoneField(format='%m/%d/%y %I:%M %p')
     modified_at = DateTimeZoneField(format='%m/%d/%y %I:%M %p')
+    verified_modified_at = DateTimeZoneField(format='%m/%d/%y %I:%M %p')
 
     class Meta:
         model = Footprint
@@ -194,5 +195,6 @@ class FootprintSerializer(HyperlinkedModelSerializer):
                   'provenance', 'title', 'language', 'actor', 'call_number',
                   'notes', 'associated_date', 'place', 'narrative',
                   'percent_complete', 'digital_object',
-                  'flags', 'verified', 'created_at', 'modified_at',
+                  'flags', 'verified', 'verified_modified_at',
+                  'created_at', 'modified_at',
                   'created_by', 'last_modified_by')

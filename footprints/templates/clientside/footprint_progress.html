@@ -22,7 +22,7 @@
                         <div class="well">
                         <p>
                         <% if (footprint.verified) { %>
-                            Data experts have verified this record's information is accurate.
+                            Data experts have verified this record's information is accurate as of <%= footprint.verified_modified_at %>.
                         <% } else if (footprint.flags.length > 0) { %>
                             This footprint's data has some issues, and has not been verified.
                         <% } else { %>
