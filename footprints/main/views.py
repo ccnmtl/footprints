@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import logout as auth_logout_view
+from django.contrib.syndication.views import Feed
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.db.models.fields import FieldDoesNotExist
@@ -12,10 +13,10 @@ from django.db.models.fields.related import ManyToManyField
 from django.http.response import HttpResponseRedirect, StreamingHttpResponse
 from django.shortcuts import get_object_or_404
 from django.template import loader
+from django.utils.encoding import smart_text
 from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
-from django.utils.encoding import smart_text
 from djangowind.views import logout as wind_logout_view
 from haystack.generic_views import SearchView
 from haystack.query import SearchQuerySet
@@ -781,3 +782,20 @@ class VerifyFootprintView(LoggedInMixin, ModerationAccessMixin, View):
 
         url = reverse('footprint-detail-view', kwargs={'pk': fp.pk})
         return HttpResponseRedirect(url)
+
+
+class VerifiedFootprintFeed(Feed):
+    title = 'Recently Verified Footprints'
+    link = "/feed/verified/"
+    description = ('Updates on newly verified footprints '
+                   'for the Footprints project')
+
+    def items(self):
+        return Footprint.objects.filter(
+            verified=True).order_by('-verified_modified_at')[:10]
+
+    def item_title(self, item):
+        return item.display_title()
+
+    def item_description(self, item):
+        return item.description(plaintext=True)

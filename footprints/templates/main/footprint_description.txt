@@ -1,0 +1,6 @@
+{% with imprint=footprint.book_copy.imprint %}
+{% if footprint.associated_date %}Footprint Date: {{footprint.associated_date}}{% endif %}
+Footprint Place: {{footprint.place}}
+{% with owners=footprint.owners %}{% if owners|length > 0 %}Owner: {% if owners|length > 1 %}s{% endif %}{% for owner in owners %}{{owner.display_name}}{% if not forloop.last %},{% endif %}{% endfor %}{% endif %}{% endwith %}
+{% if imprint.display_title %}Imprint: {{imprint.display_title}}{% endif %}
+{% if imprint.publication_date or imprint.place %}Published: {% if imprint.publication_date %}{{imprint.publication_date}}{% if imprint.place %}, {% endif %}{% endif %}{% if imprint.place %}{{imprint.place}}{% endif %}{% endif %}{% endwith %}

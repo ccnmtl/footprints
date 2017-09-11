@@ -2,14 +2,14 @@ from json import loads
 import json
 
 from django.conf import settings
-from django.core import mail
-from django.core.urlresolvers import reverse
-from django.utils.encoding import smart_text
-
 from django.contrib.auth.models import AnonymousUser, Group, Permission
+from django.core import mail
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.test.client import Client, RequestFactory, encode_multipart
+from django.utils.encoding import smart_text
+
 from footprints.main.forms import ContactUsForm
 from footprints.main.models import Footprint, Actor, Imprint, \
     StandardizedIdentificationType, ExtendedDate, Language, \
@@ -27,7 +27,7 @@ from footprints.main.tests.factories import (
 from footprints.main.utils import interpolate_role_actors
 from footprints.main.views import (
     CreateFootprintView, AddActorView, ContactUsView, FootprintDetailView,
-    ExportFootprintSearch)
+    ExportFootprintSearch, VerifiedFootprintFeed)
 from footprints.main.viewsets import ImprintViewSet, BookCopyViewSet, \
     WrittenWorkViewSet
 
@@ -1305,6 +1305,7 @@ class ModerationViewTest(TestCase):
 class VerifyFootprintViewTest(TestCase):
 
     def test_post(self):
+        feed = VerifiedFootprintFeed()
         fp = FootprintFactory()
         user = UserFactory()
 
@@ -1323,8 +1324,10 @@ class VerifyFootprintViewTest(TestCase):
         self.assertEquals(self.client.post(url, data).status_code, 302)
         fp.refresh_from_db()
         self.assertTrue(fp.verified)
+        self.assertEquals(feed.items().count(), 1)
 
         data = {'verified': 0}
         self.assertEquals(self.client.post(url, data).status_code, 302)
         fp.refresh_from_db()
         self.assertFalse(fp.verified)
+        self.assertEquals(feed.items().count(), 0)

@@ -5,6 +5,7 @@ from django.contrib.gis.db.models.fields import PointField
 from django.db import models
 from django.template import loader
 from django.utils import timezone
+from django.urls.base import reverse
 from edtf import EDTF, edtf_date
 
 from footprints.main.templatetags.moderation import has_moderation_flags, \
@@ -1001,6 +1002,9 @@ class Footprint(models.Model):
     def __unicode__(self):
         return self.provenance
 
+    def get_absolute_url(self):
+        return reverse('footprint-detail-view', kwargs={'pk': self.id})
+
     def has_at_least_one_language(self):
         return self.language.exists()
 
@@ -1061,8 +1065,11 @@ class Footprint(models.Model):
     def is_bare(self):
         return self.book_copy.imprint.work.percent_complete() == 0
 
-    def description(self):
-        template = loader.get_template('main/footprint_description.html')
+    def description(self, plaintext=False):
+        if plaintext:
+            template = loader.get_template('main/footprint_description.txt')
+        else:
+            template = loader.get_template('main/footprint_description.html')
         return template.render({'footprint': self})
 
     def save_verified(self, verified):
