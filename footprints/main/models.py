@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 
 from audit_log.models.fields import LastUserField, CreatingUserField
 from django.contrib.gis.db.models.fields import PointField
@@ -985,6 +985,7 @@ class Footprint(models.Model):
     percent_complete = models.IntegerField(default=0)
 
     verified = models.BooleanField(default=False)
+    verified_modified_at = models.DateTimeField(null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
@@ -1065,7 +1066,8 @@ class Footprint(models.Model):
 
     def save_verified(self, verified):
         self.verified = verified
-        self.save(update_fields=['verified'])
+        self.verified_modified_at = datetime.now()
+        self.save(update_fields=['verified', 'verified_modified_at'])
 
     def flags(self):
         return moderation_flags(self)
