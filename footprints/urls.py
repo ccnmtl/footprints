@@ -19,7 +19,7 @@ from footprints.main.views import (
     AddIdentifierView, AddDigitalObjectView, ConnectFootprintView,
     ContactUsView, AddLanguageView, DisplayDateView, CopyFootprintView,
     SignS3View, ModerationView, VerifyFootprintView,
-    FootprintSearchView, ExportFootprintSearch)
+    FootprintSearchView, ExportFootprintSearch, VerifiedFootprintFeed)
 from footprints.main.viewsets import (
     BookCopyViewSet, ImprintViewSet, ActorViewSet,
     ExtendedDateViewSet, FootprintViewSet, LanguageViewSet,
@@ -147,6 +147,9 @@ urlpatterns = [
 
     # Moderation Interface
     url(r'^moderate/', ModerationView.as_view(), name='moderation-view'),
+
+    # Rss Feeds
+    url(r'^feed/verified/$', VerifiedFootprintFeed()),
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^_impersonate/', include('impersonate.urls')),
