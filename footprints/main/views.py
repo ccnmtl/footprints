@@ -795,7 +795,4 @@ class VerifiedFootprintFeed(Feed):
             verified=True).order_by('-verified_modified_at')[:10]
 
     def item_title(self, item):
-        return item.display_title()
-
-    def item_description(self, item):
-        return item.description(plaintext=True)
+        return item.narrative
