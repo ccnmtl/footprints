@@ -563,7 +563,7 @@ class AddActorViewTest(TestCase):
 
         try:
             Actor.objects.get(person__id=alpha.id)
-        except:
+        except Actor.DoesNotExist:
             pass  # expected
 
         Actor.objects.get(person__name='Alpha Beta',

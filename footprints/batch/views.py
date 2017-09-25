@@ -63,7 +63,7 @@ class BatchJobUpdateView(LoggedInMixin, BatchAccessMixin, View):
     def reverse_geocode(self, latitude, longitude):
         # reverse geocode the lat/long
         url = settings.GOOGLE_MAPS_REVERSE_GEOCODE
-        response = urllib2.urlopen(url.format(latitude, longitude))
+        response = urllib2.urlopen(url.format(latitude, longitude))  # nosec
         the_json = loads(response.read())
         components = the_json['results'][0]['address_components']
 
