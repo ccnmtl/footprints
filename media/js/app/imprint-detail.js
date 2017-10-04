@@ -1,4 +1,6 @@
 /* global OverlappingMarkerSpiderfier */
+/* eslint security/detect-object-injection: 0 */
+
 (function() {
     window.ImprintView = Backbone.View.extend({
         events: {
