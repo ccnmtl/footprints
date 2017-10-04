@@ -23,8 +23,9 @@ class CreateBatchJobForm(forms.Form):
         'Literary Work Author Birth Date', 'Literary Work Author Death Date',
         'Publisher', 'Publisher VIAF ID', 'Publication Location',
         'Publication Date', 'Book Copy Call Number', 'Evidence Type',
-        'Evidence Location Description', 'Evidence Call Number',
-        'Footprint Actor', 'Footprint Actor VIAF ID', 'Footprint Actor Role',
+        'Evidence Location Description', 'Evidence Citation',
+        'Footprint Actor (Former Owner/Seller/Other)',
+        'Footprint Actor VIAF ID', 'Footprint Actor Role',
         'Footprint Actor Begin Date', 'Footprint Actor End Date',
         'Footprint Notes', 'Footprint Location', 'Footprint Date']
 
