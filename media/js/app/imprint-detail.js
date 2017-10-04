@@ -1,4 +1,6 @@
 /* global OverlappingMarkerSpiderfier */
+/* eslint security/detect-object-injection: 0 */
+
 (function() {
     window.ImprintView = Backbone.View.extend({
         events: {
@@ -197,7 +199,8 @@
                     markersWontHide: false});
 
                 this.markers = {};
-                markers.forEach(function(m) {
+                for (var i=0; i < markers.length; i++) {
+                    var m = markers[i];
                     var id = jQuery(m).data('related');
                     var lat = jQuery(m).data('latitude');
                     var lng = jQuery(m).data('longitude');
@@ -216,7 +219,7 @@
 
                     // eslint-disable-next-line security/detect-object-injection
                     this.markers[id] = {'marker': marker, 'content': content};
-                });
+                }
 
                 this.map.fitBounds(this.bounds);
                 this.attachInfoWindow(this.infowindow, this.map);

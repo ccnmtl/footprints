@@ -1,3 +1,5 @@
+/* eslint security/detect-object-injection: 0 */
+
 /**
 Place editable input.
 
@@ -46,14 +48,15 @@ Place editable input.
                 if (responses && responses.length > 0) {
                     var components = responses[0].address_components;
                     components.forEach(function(component) {
-                        components.types.forEach(function(type) {
+                        for (var i=0; i < component.types.length; i++) {
+                            var type = component.types[i];
                             if (type === 'locality') {
                                 self.$city.val(component.long_name);
                             }
                             if (type === 'country') {
                                 self.$country.val(component.long_name);
                             }
-                        });
+                        }
                     });
                 }
             });
