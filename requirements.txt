@@ -88,7 +88,7 @@ anyjson==0.3.3
 billiard==3.5.0.3
 pytz==2017.2
 
-djangowind==1.0.0
+djangowind==1.0.1
 requirements/src/sorl-3.1.tar.gz
 django-indexer==0.3.0
 django-templatetag-sugar==1.0
