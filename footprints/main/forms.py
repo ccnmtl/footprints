@@ -72,7 +72,7 @@ class FootprintSearchForm(ModelSearchForm):
     def clean_year(self, fieldname):
         year = self.cleaned_data.get(fieldname, '')
 
-        if not re.match('^\d{4}$', year):
+        if not isinstance(year, int):
             return
 
         now = datetime.now()
