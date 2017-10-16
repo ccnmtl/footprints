@@ -69,8 +69,11 @@ class FootprintSearchForm(ModelSearchForm):
         choices=[], required=False)
 
     def clean_year(self, fieldname):
-        if not self.cleaned_data[fieldname]:
+        year = self.cleaned_data.get(fieldname, '')
+
+        if not isinstance(year, int):
             return
+
         now = datetime.now()
         if self.cleaned_data[fieldname] > now.year:
             self._errors[fieldname] = self.error_class([
@@ -85,8 +88,8 @@ class FootprintSearchForm(ModelSearchForm):
         self.clean_year('footprint_start_year')
         self.clean_year('footprint_end_year')
 
-        if (cleaned_data['footprint_start_year'] and
-            cleaned_data['footprint_end_year'] and
+        if (cleaned_data.get('footprint_start_year', None) and
+            cleaned_data.get('footprint_end_year', None) and
             cleaned_data['footprint_start_year'] >
                 cleaned_data['footprint_end_year']):
             self._errors['footprint_start_year'] = self.error_class([
@@ -95,19 +98,19 @@ class FootprintSearchForm(ModelSearchForm):
         self.clean_year('pub_start_year')
         self.clean_year('pub_end_year')
 
-        if (cleaned_data['pub_start_year'] and
-            cleaned_data['pub_end_year'] and
+        if (cleaned_data.get('pub_start_year', None) and
+            cleaned_data.get('pub_end_year', None) and
             cleaned_data['pub_start_year'] >
                 cleaned_data['pub_end_year']):
             self._errors['pub_start_year'] = self.error_class([
                 "Start year must be less than end year"])
 
         if (cleaned_data.get('search_level', False) and
-            not cleaned_data['q'] and
-            not (cleaned_data['footprint_start_year'] or
-                 cleaned_data['footprint_end_year']) and
-            not (cleaned_data['pub_start_year'] or
-                 cleaned_data['pub_end_year'])):
+            not cleaned_data.get('q', None) and
+            not (cleaned_data.get('footprint_start_year', None) or
+                 cleaned_data.get('footprint_end_year', None)) and
+            not (cleaned_data.get('pub_start_year', None) or
+                 cleaned_data.get('pub_end_year', None))):
             self._errors['q'] = self.error_class([
                 "Either a search term or year required"])
 

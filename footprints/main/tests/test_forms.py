@@ -39,6 +39,19 @@ class FootprintSearchFormTest(TestCase):
         self.assertEquals(len(form._errors.keys()), 1)
         self.assertTrue('q' in form._errors)
 
+    def test_form_clean_xss(self):
+        form = FootprintSearchForm()
+        form._errors = {}
+        form.cleaned_data = {
+            'q': 'oppenheim',
+            'direction': 'asc',
+            'footprint_start_year': "<script>alert('foo');</script>",
+            'sort_by': 'ftitle'
+        }
+
+        form.clean()
+        self.assertEquals(len(form._errors.keys()), 0)
+
     def test_form_clean_q(self):
         form = FootprintSearchForm()
         form._errors = {}
