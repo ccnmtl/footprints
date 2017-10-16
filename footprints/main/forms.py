@@ -1,5 +1,4 @@
 from datetime import date, datetime
-import re
 import urllib
 
 from django import forms
