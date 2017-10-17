@@ -566,7 +566,15 @@ class PlaceManager(models.Manager):
 
     def get_or_create_from_string(self, latlng):
         point = string_to_point(latlng)
-        return Place.objects.get_or_create(latlng=point)
+
+        created = False
+        pl = Place.objects.filter(latlng=point).first()
+
+        if pl is None:
+            pl = Place.objects.create(latlng=point)
+            created = True
+
+        return pl, created
 
 
 class Place(models.Model):
