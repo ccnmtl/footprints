@@ -705,16 +705,19 @@ class ImprintManager(models.Manager):
     def get_or_create_by_attributes(self, bhb_number, work_title, title,
                                     publication_date):
         created = False
+
+        # get the imprint by BHB Number
         bhb_type = StandardizedIdentificationType.objects.bhb()
         imprint = Imprint.objects.filter(
             standardized_identifier__identifier_type=bhb_type,
             standardized_identifier__identifier=bhb_number).first()
 
         if imprint is None:
+            # create or pickup an existing Written Work & Imprint
             work, created = WrittenWork.objects.get_or_create(title=work_title)
 
-            imprint, created = Imprint.objects.get_or_create(
-                title=title, work=work)
+            # always create the imprint if BHB is not found
+            imprint = Imprint.objects.create(title=title, work=work)
 
             # add identifier
             if bhb_number:
