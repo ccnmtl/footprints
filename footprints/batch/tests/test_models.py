@@ -1,7 +1,6 @@
 from django.test.testcases import TestCase
 
 from footprints.batch.tests.factories import BatchRowFactory
-from footprints.main.models import ExtendedDate, Place
 from footprints.main.tests.factories import ImprintFactory, BookCopyFactory, \
     FootprintFactory, WrittenWorkFactory, StandardizedIdentificationFactory, \
     ActorFactory
@@ -67,8 +66,7 @@ class BatchRowTest(TestCase):
         sid = StandardizedIdentificationFactory(identifier=row.bhb_number)
         imprint.standardized_identifier.add(sid)
 
-        flds = ['title', 'publication date',
-                'publication location', 'literary work title']
+        flds = ['literary work title']
         self.assertTrue(', '.join(flds) in row.check_imprint_integrity())
 
         # found imprint, fields match
@@ -77,11 +75,6 @@ class BatchRowTest(TestCase):
 
         sid = StandardizedIdentificationFactory(identifier=row.bhb_number)
         imprint.standardized_identifier.add(sid)
-
-        imprint.publication_date = ExtendedDate.objects.create(
-            edtf_format=row.publication_date)
-        imprint.place, created = Place.objects.get_or_create_from_string(coord)
-        imprint.save()
 
         self.assertIsNone(row.check_imprint_integrity())
 

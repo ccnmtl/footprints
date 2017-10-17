@@ -181,31 +181,15 @@ class BatchRow(models.Model):
 
         imprints = Imprint.objects.filter(
             standardized_identifier__identifier=self.bhb_number)
-        imprint = imprints.select_related(
-            'place', 'publication_date', 'work').first()
+        imprint = imprints.select_related('work').first()
 
         if imprint is None:
             return msg
 
-        fields = []
-
-        # title, date, location & writtenwork title should match
-        if imprint.title != self.imprint_title:
-            fields.append('title')
-
-        if (imprint.publication_date and
-            not imprint.publication_date.match_string(
-                self.publication_date)):
-            fields.append('publication date')
-
-        if not imprint.place.match_string(self.publication_location):
-            fields.append('publication location')
-
+        # writtenwork title must match
         if (self.writtenwork_title and
                 imprint.work.title.lower() != self.writtenwork_title.lower()):
-            fields.append('literary work title')
-
-        if len(fields):
+            fields = ['literary work title']
             msg = self.IMPRINT_INTEGRITY.format(
                 imprint.work.id, imprint.id, ', '.join(fields))
 
