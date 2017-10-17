@@ -713,7 +713,7 @@ class ImprintManager(models.Manager):
             standardized_identifier__identifier=bhb_number).first()
 
         if imprint is None:
-            # create or pickup an existing Written Work & Imprint
+            # create or pickup an existing Written Work
             work, created = WrittenWork.objects.get_or_create(title=work_title)
 
             # always create the imprint if BHB is not found
