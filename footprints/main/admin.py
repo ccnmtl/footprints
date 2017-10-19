@@ -28,8 +28,28 @@ class PersonAdmin(admin.ModelAdmin):
 admin.site.register(Person, PersonAdmin)
 
 
+def imprint_publication_date(obj):
+    if obj.imprint:
+        return '<a href="/admin/main/imprint/{}"/>Imprint</a>'.format(
+            obj.imprint.id)
+
+
+imprint_publication_date.allow_tags = True
+
+
+def footprint_associated_date(obj):
+        return '<a href="/admin/main/footprint/{}"/>Footprint</a>'.format(
+            obj.footprint.id)
+
+
+footprint_associated_date.allow_tags = True
+
+
 class ExtendedDateAdmin(admin.ModelAdmin):
-    list_display = ('edtf_format', '__unicode__')
+    list_display = (
+        'edtf_format', '__unicode__',
+        imprint_publication_date, footprint_associated_date)
+    search_fields = ('edtf_format',)
 
 
 admin.site.register(ExtendedDate, ExtendedDateAdmin)
@@ -76,6 +96,8 @@ def language(obj):
 
 class ImprintAdmin(admin.ModelAdmin):
     list_display = (work_title, 'title', 'publication_date', language)
+    raw_id_fields = ('actor',)
+    search_fields = ('title',)
 
 
 admin.site.register(Imprint, ImprintAdmin)
@@ -115,9 +137,11 @@ def creator(obj):
 
 
 class FootprintAdmin(VersionAdmin):
+    list_select_related = (
+        'book_copy__imprint__publication_date', 'place', 'associated_date')
     list_display = ('title', 'associated_date', 'place', owner,
                     imprint_title, imprint_date, language, creator)
-    readonly_fields = ('created_at', 'modified_at',
+    readonly_fields = ('actor', 'book_copy', 'created_at', 'modified_at',
                        'created_by', 'last_modified_by')
     search_fields = ('title',
                      'created_by__last_name', 'created_by__first_name')
