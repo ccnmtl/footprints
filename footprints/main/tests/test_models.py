@@ -257,6 +257,10 @@ class ExtendedDateTest(TestCase):
         dt = ExtendedDate.objects.create_from_string('before 1984')
         self.assertEquals(dt.edtf_format, 'unknown/1984')
 
+    def test_invalid_month(self):
+        dt = ExtendedDate.objects.create(edtf_format='uuuu-uu-17/uuuu-uu-18')
+        self.assertEquals(dt.__unicode__(), ' 17, uuuu -  18, uuuu')
+
 
 class ImprintTest(TestCase):
 

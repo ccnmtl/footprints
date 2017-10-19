@@ -163,6 +163,12 @@ class ExtendedDate(models.Model):
         millenium = int(millenium) + 1
         return '{} millenium'.format(self.ordinal(millenium))
 
+    def fmt_month(self, month):
+        try:
+            return self.month_names[month]
+        except KeyError:
+            return ''
+
     def fmt(self, date_obj, is_interval):
         if isinstance(date_obj, basestring):
             return self.fmt_modifier(date_obj)
@@ -192,11 +198,11 @@ class ExtendedDate(models.Model):
         elif precision == edtf_date.PRECISION_YEAR:
             result = '%s' % date_obj.get_year()
         elif precision == edtf_date.PRECISION_MONTH:
-            result = '%s %s' % (self.month_names[date_obj.get_month()],
+            result = '%s %s' % (self.fmt_month(date_obj.get_month()),
                                 date_obj.get_year())
         elif precision == edtf_date.PRECISION_DAY:
             result = '%s %s, %s' % (
-                self.month_names[date_obj.get_month()],
+                self.fmt_month(date_obj.get_month()),
                 date_obj.get_day(),
                 date_obj.get_year())
         return result
