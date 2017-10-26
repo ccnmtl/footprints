@@ -1256,14 +1256,14 @@ class SerializerTest(TestCase):
         self.assertEquals(qs.first(), si)
 
     def test_language_serializer(self):
-        l = LanguageFactory()
+        lang = LanguageFactory()
         serializer = LanguageSerializer()
 
         qs = serializer.get_queryset()
         self.assertEquals(qs.count(), 1)
-        self.assertEquals(qs.first(), l)
+        self.assertEquals(qs.first(), lang)
 
-        self.assertEquals(serializer.to_internal_value(l.id), l)
+        self.assertEquals(serializer.to_internal_value(lang.id), lang)
 
     def test_extended_date_serializer(self):
         dt = ExtendedDateFactory()
