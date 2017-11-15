@@ -72,7 +72,7 @@ ipaddress==1.0.18
 text-unidecode==1.1
 Faker==0.8.7
 factory_boy==2.9.2
-ldap3==2.3
+ldap3==2.4
 sqlparse==0.2.4
 contextlib2==0.5.5
 rcssmin==1.0.6
