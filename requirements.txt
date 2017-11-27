@@ -49,7 +49,7 @@ ipdb==0.10.3
 
 rdflib==4.2.2
 coverage==4.4.2
-pyasn1==0.3.7
+pyasn1==0.4.2
 pyOpenSSL==17.4.0
 ndg-httpsclient==0.4.3
 
