@@ -11,3 +11,4 @@
 {% for actor in object.book_copy.imprint.work.actor.all %}
     {{actor}}
 {% endfor %}
+{{object.created_by.get_full_name}}
