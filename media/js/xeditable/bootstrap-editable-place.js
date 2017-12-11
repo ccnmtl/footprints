@@ -139,13 +139,15 @@ Place editable input.
             self.searchBox = new google.maps.places.SearchBox(
                 /** @type {HTMLInputElement} */(self.$address[0]));
 
-            // Listen for the event fired when the user selects an item from the
-            // pick list. Retrieve the matching places for that item.
+            // Listen for the event fired when the user selects an item
+            // from the pick list. Retrieve the matching places for
+            // that item.
             google.maps.event
                 .addListener(self.searchBox, 'places_changed', function() {
                     self.mapSearchResult();
                 });
 
+            // eslint-disable-next-line scanjs-rules/call_setTimeout
             setTimeout(function() {
                 google.maps.event.trigger(self.mapInstance, 'resize');
                 self.mapInstance.setCenter(self.defaultLatLng);
@@ -153,7 +155,8 @@ Place editable input.
         },
 
         /**
-           Default method to show value in element. Can be overwritten by display option.
+           Default method to show value in element.
+           Can be overwritten by display option.
 
            @method value2html(value, element)
         **/
@@ -187,14 +190,16 @@ Place editable input.
         },
 
         /*
-          Converts string to value. Used for reading value from 'data-value' attribute.
+          Converts string to value.
+          Used for reading value from 'data-value' attribute.
 
           @method str2value(str)
         */
         str2value: function(str) {
             /*
-              this is mainly for parsing value defined in data-value attribute.
-              If you will always set value by javascript, no need to overwrite it
+              this is mainly for parsing value defined in data-value
+              attribute. If you will always set value by javascript,
+              no need to overwrite it
             */
             return str;
         },
@@ -258,7 +263,8 @@ Place editable input.
         },
 
         /**
-           Attaches handler to submit form in case of 'showbuttons=false' mode
+           Attaches handler to submit form in case of
+           'showbuttons=false' mode
 
            @method autosubmit()
         **/
@@ -278,9 +284,10 @@ Place editable input.
         }
     });
 
-    Place.defaults = $.extend({}, $.fn.editabletypes.abstractinput.defaults, {
-        inputclass: ''
-    });
+    Place.defaults =
+        $.extend({}, $.fn.editabletypes.abstractinput.defaults, {
+            inputclass: ''
+        });
 
     $.fn.editabletypes.place = Place;
 

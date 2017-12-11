@@ -13,8 +13,9 @@
         initialize: function(options) {
             _.bindAll(this, 'initializeMap', 'attachInfoWindow', 'resize',
                 'onClickBookCopy', 'onClickFootprint', 'onClickImprint',
-                'onClickWork', 'updateMarkerIcons', 'syncMap', 'onShareLink',
-                'clearState', 'setState', 'addHistory', 'popHistory');
+                'onClickWork', 'updateMarkerIcons', 'syncMap',
+                'onShareLink', 'clearState', 'setState',
+                'addHistory', 'popHistory');
 
             this.urlBase = options.urlBase;
 
@@ -78,8 +79,9 @@
 
             this.spiderfier.addListener('click', function(marker, event) {
                 infowindow.setContent(marker.desc);
-                // eslint-disable-next-line security/detect-non-literal-fs-filename
+                /* eslint-disable security/detect-non-literal-fs-filename */
                 infowindow.open(map, marker);
+                /* eslint-enable security/detect-non-literal-fs-filename */
 
                 var q = '[data-map-id="' + marker.dataId + '"]';
                 var $elt = self.$el.find(q).first();
@@ -354,8 +356,10 @@
                 this.$el.find('.empty-map-message').hide();
                 this.activeBounds = bounds;
                 this.infowindow.setContent(this.markers[highlight].content);
-                // eslint-disable-next-line security/detect-non-literal-fs-filename
-                this.infowindow.open(this.map, this.markers[highlight].marker);
+                /* eslint-disable security/detect-non-literal-fs-filename */
+                this.infowindow.open(
+                    this.map, this.markers[highlight].marker);
+                /* eslint-enable security/detect-non-literal-fs-filename */
             }
             /* eslint-enable security/detect-object-injection */
         },

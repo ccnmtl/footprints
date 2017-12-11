@@ -82,10 +82,13 @@
         },
         clickClear: function(evt) {
             this.busy('Clearing');
+            // eslint-disable-next-line scanjs-rules/assign_to_location
             window.location = this.baseUrl;
         },
         clickExport: function(evt) {
-            window.location = '/export/footprints/' + window.location.search;
+            // eslint-disable-next-line scanjs-rules/assign_to_location
+            window.location =
+                '/export/footprints/' + window.location.search;
         },
         clickToggleRange: function(evt) {
             evt.preventDefault();
