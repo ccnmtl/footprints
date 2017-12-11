@@ -27,7 +27,8 @@ class CreateBatchJobForm(forms.Form):
         'Footprint Actor (Former Owner/Seller/Other)',
         'Footprint Actor VIAF ID', 'Footprint Actor Role',
         'Footprint Actor Begin Date', 'Footprint Actor End Date',
-        'Footprint Notes', 'Footprint Location', 'Footprint Date']
+        'Footprint Notes', 'Footprint Location', 'Footprint Date',
+        'Footprint Narrative']
 
     csvfile = forms.FileField(required=True)
 

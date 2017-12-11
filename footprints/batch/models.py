@@ -46,7 +46,8 @@ class BatchRow(models.Model):
         'footprint_actor_death_date',
         'footprint_notes',
         'footprint_location',
-        'footprint_date'
+        'footprint_date',
+        'footprint_narrative'
     ]
 
     DATE_HELP_TEXT = (
@@ -148,6 +149,9 @@ class BatchRow(models.Model):
 
     footprint = models.ForeignKey(
         Footprint, on_delete=models.SET_NULL, blank=True, null=True)
+
+    footprint_narrative = models.TextField(
+        null=True, blank=True, verbose_name='Footprint Narrative')
 
     created_at = models.DateTimeField(auto_now_add=True)
 

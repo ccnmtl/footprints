@@ -252,6 +252,7 @@ class BatchJobUpdateViewTest(TestCase):
         self.assertEquals(fp.associated_date.__unicode__(),
                           self.record1.footprint_date)
         self.assertEquals(fp.place, None)
+        self.assertEquals(fp.narrative, 'Sample Narrative')
 
     def test_post(self):
         self.client.login(username=self.staff.username, password='test')
