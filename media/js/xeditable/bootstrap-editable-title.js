@@ -21,7 +21,8 @@
         },
 
         /**
-           Default method to show value in element. Can be overwritten by display option.
+           Default method to show value in element.
+           Can be overwritten by display option.
 
            @method value2html(value, element)
         **/
@@ -55,14 +56,16 @@
         },
 
         /*
-          Converts string to value. Used for reading value from 'data-value' attribute.
+          Converts string to value.
+          Used for reading value from 'data-value' attribute.
 
           @method str2value(str)
         */
         str2value: function(str) {
             /*
-              this is mainly for parsing value defined in data-value attribute.
-              If you will always set value by javascript, no need to overwrite it
+              this is mainly for parsing value defined in data-value
+              attribute. If you will always set value by javascript,
+              no need to overwrite it
             */
             return str;
         },
@@ -114,7 +117,8 @@
         },
 
         /**
-           Attaches handler to submit form in case of 'showbuttons=false' mode
+           Attaches handler to submit form in case of
+           'showbuttons=false' mode
 
            @method autosubmit()
         **/
@@ -127,9 +131,10 @@
         }
     });
 
-    Title.defaults = $.extend({}, $.fn.editabletypes.abstractinput.defaults, {
-        inputclass: ''
-    });
+    Title.defaults =
+        $.extend({}, $.fn.editabletypes.abstractinput.defaults, {
+            inputclass: ''
+        });
 
     $.fn.editabletypes.title = Title;
 

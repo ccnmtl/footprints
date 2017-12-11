@@ -258,7 +258,7 @@
                 namedParams: true,
                 tpl: jQuery('#xeditable-edtf-form').html(),
                 onblur: 'ignore',
-                validate:  this.validate,
+                validate: this.validate,
                 success: this.refresh
             });
 
@@ -571,6 +571,7 @@
             });
         },
         clickRelatedFootprint: function(evt) {
+            // eslint-disable-next-line scanjs-rules/assign_to_href
             location.href =
                 jQuery(evt.currentTarget).children('a').first().attr('href');
             return false;
