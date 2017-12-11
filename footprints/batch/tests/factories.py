@@ -45,3 +45,4 @@ class BatchRowFactory(factory.DjangoModelFactory):
     footprint_notes = 'Levita, Elijah.'
     footprint_location = None
     footprint_date = '1989'
+    footprint_narrative = 'Sample Narrative'

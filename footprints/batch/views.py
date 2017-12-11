@@ -172,6 +172,9 @@ class BatchJobUpdateView(LoggedInMixin, BatchAccessMixin, View):
         if record.footprint_location:
             self.add_place(fp, record.footprint_location)
 
+        if record.footprint_narrative:
+            fp.narrative = record.footprint_narrative
+
         fp.save()
 
         self.add_actor(record, fp)
