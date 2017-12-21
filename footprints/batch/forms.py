@@ -15,7 +15,8 @@ class CreateBatchJobForm(forms.Form):
         "translated correctly.<br /><br /> The full error is:<br />{}.")
 
     INVALID_HEADER_ROW = (
-            "The selected file has an invalid header row.")
+            "The selected file has an invalid header element. "
+            "Column {} is \"{}\", rather than \"{}\".")
 
     VALID_HEADERS = [
         'Catalog Link', 'BHB number', 'Imprint Title', 'Literary Work Title',
@@ -47,6 +48,9 @@ class CreateBatchJobForm(forms.Form):
     def validate_header(self, row):
         for idx, a in enumerate(row):
             if a.lower() != self.VALID_HEADERS[idx].lower():
+                msg = self.INVALID_HEADER_ROW.format(
+                    idx, a,  self.VALID_HEADERS[idx])
+                self._errors['csvfile'] = self.error_class([msg])
                 return False
         return True
 
@@ -64,9 +68,7 @@ class CreateBatchJobForm(forms.Form):
         # do some rudimentary validation on the file
         try:
             for idx, row in enumerate(csv.reader(cleaned_data['csvfile'])):
-                if (idx == 0 and not self.validate_header(row)):
-                    self._errors['csvfile'] = self.error_class([
-                        self.INVALID_HEADER_ROW])
+                if idx == 0 and not self.validate_header(row):
                     break
 
                 if not self.validate_column_count(row):
