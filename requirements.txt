@@ -10,7 +10,7 @@ pysqlite==2.8.3
 
 olefile==0.44
 
-Pillow==4.3.0
+Pillow==5.0.0
 
 versiontools==1.9.1
 statsd==3.2.2
