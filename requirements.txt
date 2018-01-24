@@ -8,7 +8,7 @@ psycopg2==2.7.3.2
 
 pysqlite==2.8.3
 
-olefile==0.44
+olefile==0.45
 
 Pillow==5.0.0
 
