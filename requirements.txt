@@ -41,7 +41,7 @@ path.py==11.0
 backports.shutil_get_terminal_size==1.0.0
 wcwidth==0.1.7
 prompt_toolkit==1.0.15
-scandir==1.6
+scandir==1.7
 pathlib2==2.3.0
 pygments==2.2.0
 ipython==5.5.0 # pyup: <6.0.0
