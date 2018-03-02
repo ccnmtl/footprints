@@ -379,7 +379,15 @@ ul.footer-logos li {
 .container.home {
     background-image: url("../img/fp_home_feat_bg.jpg");
     background-repeat: no-repeat;
-    background-size: 100%;
+    background-size: 190%;
+    background-position-x: 50%;
+}
+
+.home-intro {
+    display: block;
+    background-image: url("../img/fp_home_intro_bg.png");
+    padding: 1em 1em 1px 1em;
+    margin-bottom: 1.5em;
 }
 
 .home-intro-one {
@@ -557,11 +565,14 @@ ul.footer-logos li {
         background-image: url("../img/fp_home_feat_bg.jpg");
         background-repeat: no-repeat;
         background-size: 100%;
+        background-position-x: 0;
     }
 
     .home-intro {
         display: block;
         background-image: url("../img/fp_home_intro_bg.png");
+        padding: 1em 1em 1px 1em;
+        margin-bottom: 1.5em;
     }
     .home-intro-one {
         font-family: Arvo;
