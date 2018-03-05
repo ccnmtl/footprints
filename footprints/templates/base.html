@@ -35,36 +35,58 @@
 
     <body class="{% block bodyclass %}{% endblock %}" id="{% block bodyid %}{% endblock %}">
     <div id="wrap">
-        <div class="container header {% block container_header_ex %}{% endblock %}">
-            {% block logo %}<div class="logo"></div>{% endblock %}
-            <nav class="navbar navbar-default" role="navigation">
+        <div class="container header">
+            <div class="header-brand {% block container_header_ex %}{% endblock %}">
+                <a class="brand-logo" href="/">
+                {% block branding %}
+                <img class="img-responsive" src="{{STATIC_URL}}img/fp_header_logo.png" alt="Footprints" />
+                {% endblock %}
+                </a>
+            </div>
+            <!-- New navbar -->
+            <nav class="navbar navbar-default navbar-fp-top">
+              <div class="container">
                 <div class="navbar-header">
-                    <button type="button" class="navbar-toggle"
-                        data-toggle="collapse"
-                        data-target="#navbar-collapse-pl"  style="border: 1px solid #ccc;">
-                        <span class="sr-only">Toggle Navigation</span> <span
-                            class="icon-bar"></span> <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                     </button>
-                     <a class="navbar-brand" href="/">
-                        {% block branding %}
-                        <img class="img-responsive" src="{{STATIC_URL}}img/fp_header_logo.png" alt="Footprints" />
-                        {% endblock %}
-                     </a>
+                  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="glyphicon glyphicon-align-center"></span> Menu <span class="caret"></span>
+                  </button>
                 </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                  <ul class="nav navbar-nav">
+                    <li><a href="/about/">About</a></li>
+                    
+                    {% if can_create %}
+                    <li><a href="/footprint/create/">Create</a></li>
+                    {% endif %}
+                    
+                    {% flag "enable_search" %}
+                    <li><a href="/search/">Search</a></li>
+                    {% endflag %}
+                    
+                    <li><a href="http://edblogs.columbia.edu/footprints/" target="_blank">Blog</a></li>
 
-                <!--/.navbar-header -->
+                    <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Manage <span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                        <li><a href="/batch/">Batch Import</a></li>
+                        <li><a href="/admin/auth/user/">Manage Users</a></li>
+                        <li><a href="/moderate/">Moderate Footprints</a></li>
+                      </ul>
+                    </li>
+                    <li><a href="#contact">Log out</a></li>
+                  </ul>
+                </div><!--/.nav-collapse -->
+              </div>
+            </nav>
+        </div><!-- Header -->
+
+
+
+               <!--/.navbar-header -->
                 <div class="collapse navbar-collapse" id="navbar-collapse-pl">
                     <ul class="nav navbar-nav navbar-right navbar-nav-pl">
-                        <li><a href="/about/">About</a></li>
-                        {% if can_create %}
-                            <li><a href="/footprint/create/">Create</a></li>
-                        {% endif %}
-                        {% flag "enable_search" %}
-                            <li><a href="/search/">Search</a></li>
-                        {% endflag %}
-                		<li><a href="http://edblogs.columbia.edu/footprints/" target="_blank">Blog</a></li>
-                        {% if can_import or can_moderate %}
+\                        {% if can_import or can_moderate %}
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Manage <span class="caret"></span></a>
                                 <ul class="dropdown-menu">
@@ -92,6 +114,11 @@
                 <!--/.nav-collapse -->
             </nav><!--/.navbar-pl -->
         </div>
+
+
+
+
+
 
         {% if request.user.is_anonymous %}
         <!-- Login Modal -->

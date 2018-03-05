@@ -82,20 +82,33 @@ blockquote {
 
 /* All pages */
 
-.container.header {
+.header-brand {
     background-image: url("../img/fp_header_bg.jpg");
     background-repeat: repeat;
-    height: 80px;
+    height: 77px;
     padding: 0;
+    margin: 0 -15px;
 }
 
-.navbar-header {
-    width: 100%;
-    text-align: center;
-    display: block;
-    float: none;
-    padding: 0;
-    height: 77px;
+a.brand-logo {
+  display: block;
+  float: none;
+  width: 220px;
+  height: 55px;
+  padding: 15px 0 0 0;
+  margin: auto;
+}
+
+.navbar-fp-top {
+    border-radius: 0;
+    border: 0;
+    margin: 0 -15px;
+    background-color: #97421b;
+    min-height: 30px;
+}
+
+.navbar-fp-top #navbar {
+    border: 0;
 }
 
 .page-header {
@@ -109,41 +122,61 @@ blockquote {
     padding: 0 10px;
 }
 
-.collapse.navbar-collapse {
-    background-color: #97421b;
-    height: 25px !important;
-    display: block !important;
-    float: left;
-    width: 100%;
+.navbar-fp-top .navbar-nav {
+    text-align: center;
+    margin: 0 auto;
+    float: none;
 }
 
-.navbar-collapse.collapse.in {
-  margin: 0;
-  height: 195px;
-  position: relative;
-}
-
-.navbar-collapse.collapse.in ul {
-    float: left;
-}
-
-.container.header.front .in ul.navbar-nav li {
+.navbar-fp-top .navbar-nav > li {
+    margin-left: 15px;
+    margin-right: 15px;
     display: block;
-    clear: both;
+    float: none;
 }
 
-.container.header .navbar-right {
-    height: 25px;
+.navbar-fp-top .navbar-nav > li > a {
+    color: #d3c1a2;
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: .95em;
+    letter-spacing: 1px;
+    outline: none;
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 
-.container.header .navbar-default {
-    background-color: transparent;
-    border: none;
+.navbar-fp-top .navbar-nav > li > a:hover {
+    color: #edebe6 !important;
 }
 
-.navbar-nav > li > a {
-    padding-top: 3px;
-    color: #d3c1a2 !important;
+.navbar-fp-top .navbar-nav > li > a:active,
+.navbar-fp-top .navbar-nav > li > a:focus {
+    color: #ffffcc !important;
+}
+
+.navbar-fp-top .navbar-nav > li.dropdown.open a {
+    background-color: #ac532a;
+    color: #ffffcc;
+}
+
+.navbar-fp-top .navbar-nav > li.open > .dropdown-menu,
+.navbar-fp-top .navbar-nav > li.open > .dropdown-menu a {
+    background-color: #fff;
+    color: #333;
+}
+
+.navbar-fp-top .navbar-nav > li.open > .dropdown-menu a:hover {
+    text-decoration: underline;
+}
+
+.navbar-fp-top .navbar-toggle {
+    border: 0;
+    float: none;
+    padding: 5px 15px;
+    display: block;
+    margin: 0 auto;
+    color: #d3c1a2;
     text-transform: uppercase;
     font-weight: 600;
     font-size: .95em;
@@ -151,102 +184,30 @@ blockquote {
     outline: none;
 }
 
-.navbar-nav > li > a:hover {
-    padding-top: 3px;
-    color: #edebe6 !important;
-    text-transform: uppercase;
-    font-weight: 600;
-    font-size: .95em;
-    letter-spacing: 1px;
-}
-
-.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover {
-    background-color: #97421b;
-    padding-bottom: 2px;
-}
-
-.navbar-default .dropdown-menu > li > a:hover,
-.navbar-default .dropdown-menu > li > a:focus {
-  color: #333;
-  text-decoration: underline !important;
-  background-color: white;
-}
-.navbar-default .dropdown-menu > .active > a,
-.navbar-default .dropdown-menu > .active > a:hover,
-.navbar-default .dropdown-menu > .active > a:focus {
-  color: #fff;
-  text-decoration: underline !important;
-  background-color: white;
-  outline: 0;
+.navbar-fp-top .navbar-toggle:hover,
+.navbar-fp-top .navbar-toggle:focus {
+    background: transparent;
 }
 
 /* Header FRONT PAGE ONLY */
 
-.container.header.front {
+.header-brand.front {
     background-image: url("../img/fp_header_bg.jpg");
     background-repeat: repeat;
-    height: 150px;
-}
-
-.container.header.front > .navbar-default {
-    background-color: transparent;
-    border: none;
-    display: block;
+    padding: 0;
+    margin: 0 -15px;
     height: 125px;
 }
 
-.container.header.front .navbar-header {
-    width: 100%;
-    display: block;
-    height: 125px;
-    float: left;
-}
-
-.container.header.front a.navbar-brand {
+.front a.brand-logo {
   display: block;
-  float: left;
-  width: 250px;
+  float: none;
+  width: 220px;
   height: inherit;
-  margin: 1em 0 0 1em;
-}
-.container.header.front a.navbar-brand.cjh {
-  display: block;
-  float: left;
-  width: 126px;
-  height: inherit;
-  margin: 1.7em 0 0 0;
+  padding: 25px 0 0 0;
+  margin: auto;
 }
 
-.navbar-brand img {
-    max-width: 100%;
-}
-
-a.navbar-brand {
-    display: block;
-    margin: 0;
-}
-
-.container.header.front ul.navbar-nav {
-    text-align: center;
-    margin: 0 auto;
-    float: none !important;
-}
-
-.container.header.front ul.navbar-nav li {
-    padding: 0 30px 0 0;
-    float: none;
-    display: inline-block;
-}
-
-.container.header.front ul > li > a:hover {
-    text-decoration: none;
-    background-color: transparent;
-}
-
-.nav > li > a:focus {
-    text-decoration: none;
-    background-color: transparent;
-}
 
 /* Footer */
 
@@ -678,14 +639,31 @@ ul.footer-logos li {
       vertical-align: middle;
       padding: 20px 0px;
     }
-	.container.header.front a.navbar-brand {
-	display: block;
-	float: left;
-	width: 300px;
-	height: inherit;
-	margin: .25em 0 0 2em;
+    a.brand-logo {
+      display: block;
+      float: left;
+      width: 270px;
+      height: 55px;
+      padding: 0;
+      margin: 15px 0 0 15px;
+    }
+	.front a.brand-logo {
+        display: block;
+        float: left;
+        width: 270px;
+        height: 80px;
+        padding: 0;
+        margin: 20px 0 0 50px;
 	}
-
+	.navbar-fp-top .navbar-toggle {
+        display: none;
+    }	
+    .navbar-fp-top .navbar-nav > li {
+        margin-left: 8px;
+        margin-right: 8px;
+        display: inline-block;
+        float: none;
+    }
 	.container.header.front a.navbar-brand.cjh {
 	display: block;
 	float: right;
@@ -710,7 +688,10 @@ ul.footer-logos li {
 
 /* Block outercontainer Narrow Desktop */
 @media (min-width: 992px) {
-
+    .navbar-fp-top .navbar-nav > li {
+        margin-left: 15px;
+        margin-right: 15px;
+    }
     .home-visual {
         display: initial;
           margin: 3em auto 1em 0;
