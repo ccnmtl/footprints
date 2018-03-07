@@ -209,6 +209,39 @@ a.brand-logo {
 }
 
 
+/* About side nav */
+
+ul.about-nav {
+  float: none;
+  margin: 1em 0 2em -40px;
+  width: auto;
+  list-style: none;
+  position: static;
+  border-bottom: 1px dotted #ccc;
+}
+
+ul.about-nav li {
+    padding: 6px 0 8px 0;
+}
+
+.flatpage_contain .about-content {
+    background-image: url("../img/fp_section_bg.png");
+    background-repeat: repeat;
+    padding: 10px 20px;
+    margin: 0 0 10px 0;
+    float: none;
+}
+
+.flatpage_contain .about-content div {
+    border-bottom: dotted 1px #ccc;
+    padding: 1em 0 2em 0;
+}
+
+.flatpage_contain .about-content div:last-child {
+    border-bottom: none;
+}
+
+
 /* Footer */
 
 .container.foot {
@@ -682,6 +715,21 @@ ul.footer-logos li {
 
     .footer .footer-navigation li {
         padding: 0 20px;
+    }
+    ul.about-nav {
+      float: left;
+      margin: 1em 5em 2em -40px;
+      width: 200px;
+      list-style: none;
+      position: fixed;
+    border-bottom: none;
+    }
+    ul.about-nav li {
+        padding: 6px 0 8px 0;
+    }
+    .flatpage_contain .about-content {
+        margin: 0 0 10px 200px;
+        float: left;
     }
 }
 
@@ -2371,17 +2419,6 @@ margin: 0 auto;
   .flatpage_contain .flat-well div:last-child {
   border-bottom: none;
   }
-
-ul.about-nav {
-  float: left;
-  margin: 1em 5em 2em -40px;
-  width: 200px;
-  position: fixed;
-}
-
-ul.about-nav li {
-    padding: 0 0 10px 0;
-}
 
 .flatpage_contain .well a {
     font-weight: bold;
