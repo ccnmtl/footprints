@@ -3,6 +3,7 @@ dist: trusty
 sudo: false
 python:
   - "2.7.6"
+  - "2.7"
 install:
   - pip install -U pip wheel
   - pip install -U setuptools

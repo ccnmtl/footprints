@@ -205,13 +205,14 @@ class DetailViewTest(TestCase):
 
     def test_has_perm(self):
         view = FootprintDetailView()
-        user = UserFactory()
 
         fp1 = FootprintFactory()
-        self.assertFalse(view.has_perm(user, False, False, fp1))
-        self.assertTrue(view.has_perm(user, True, False, fp1))
-        self.assertFalse(view.has_perm(user, True, True, fp1))
+        self.assertFalse(view.has_perm(self.user, False, False, fp1))
+        self.assertTrue(view.has_perm(self.user, True, False, fp1))
+        self.assertFalse(view.has_perm(self.user, True, True, fp1))
 
+    def test_has_perm_two(self):
+        view = FootprintDetailView()
         creator = UserFactory(group=self.get_group())
         fp2 = FootprintFactory(created_by=creator)
         self.assertTrue(view.has_perm(creator, True, True, fp2))
