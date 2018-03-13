@@ -26,3 +26,4 @@ wheelhouse/
 .ropeproject
 test*.txt
 package-lock.json
+local.mk

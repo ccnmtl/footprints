@@ -5,9 +5,7 @@ Markdown==2.6.11
 smartypants==2.0.1
 uuid==1.30
 psycopg2==2.7.4
-
 pysqlite==2.8.3
-
 olefile==0.45.1
 
 Pillow==5.0.0
@@ -23,7 +21,6 @@ enum34==1.1.6
 configparser==3.5.0
 flake8==3.5.0
 tornado==4.5.3 # pyup: <5.0
-BeautifulSoup==3.2.1
 cssselect==1.0.3
 lxml==4.1.1
 fuzzywuzzy==0.16.0
@@ -50,6 +47,7 @@ ipdb==0.11
 rdflib==4.2.2
 coverage==4.5.1
 pyasn1==0.4.2
+cryptography==2.1.4  # pyOpenSSL
 pyOpenSSL==17.5.0
 ndg-httpsclient==0.4.4
 

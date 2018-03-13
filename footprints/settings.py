@@ -1,7 +1,7 @@
 # flake8: noqa
-from settings_shared import *
+from footprints.settings_shared import *
 
 try:
-    from local_settings import *
+    from footprints.local_settings import *
 except ImportError:
     pass
