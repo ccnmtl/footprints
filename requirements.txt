@@ -82,7 +82,7 @@ amqp==2.2.2
 amqplib==1.0.2
 kombu==3.0.37 # pyup: <4.0.0
 librabbitmq==1.6.1
-celery==3.1.25 # pyup: <4.0.0
+celery==3.1.26 # pyup: <4.0.0
 anyjson==0.3.3
 billiard==3.5.0.3
 pytz==2018.3
