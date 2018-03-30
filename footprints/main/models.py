@@ -3,9 +3,10 @@ from datetime import date
 from audit_log.models.fields import LastUserField, CreatingUserField
 from django.contrib.gis.db.models.fields import PointField
 from django.db import models
+from django.db.models.signals import m2m_changed
 from django.template import loader
-from django.utils import timezone
 from django.urls.base import reverse
+from django.utils import timezone
 from edtf import EDTF, edtf_date
 
 from footprints.main.templatetags.moderation import has_moderation_flags, \
@@ -1121,3 +1122,19 @@ class Footprint(models.Model):
 
     def sort_date(self):
         return self.start_date()
+
+
+def work_actor_changed(sender, **kwargs):
+    # Save Footprint to trigger index update
+    work = kwargs['instance']
+    for fp in Footprint.objects.filter(book_copy__imprint__work=work):
+        fp.save()
+
+
+def footprint_actor_changed(sender, **kwargs):
+    # Save Footprint to trigger index update
+    kwargs['instance'].save()
+
+
+m2m_changed.connect(footprint_actor_changed, sender=Footprint.actor.through)
+m2m_changed.connect(work_actor_changed, sender=WrittenWork.actor.through)
