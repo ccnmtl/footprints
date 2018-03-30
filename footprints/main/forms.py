@@ -122,7 +122,12 @@ class FootprintSearchForm(ModelSearchForm):
             'django_ct': 'main.footprint',
         }
 
-        q = self.cleaned_data.get('q')
+        q = self.cleaned_data.get('q', '')
+
+        if q.find('has:image') > -1:
+            args.append(Q(has_image=True))
+            q = q.replace('has:image', '')
+
         if q:
             kwargs['content'] = q
 

@@ -149,6 +149,8 @@
 
     <field name="footprint_location_exact" type="string" indexed="true" stored="true" multiValued="false" />
 
+    <field name="has_image" type="boolean" indexed="true" stored="true" stored="true" multiValued="false" />
+
     <field name="footprint_start_date" type="date" indexed="true" stored="true" multiValued="false" />
 
     <field name="text" type="ngram" indexed="true" stored="true" multiValued="false" />
