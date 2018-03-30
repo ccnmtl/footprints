@@ -39,8 +39,8 @@
     <form class="form-inline" action="{% url 'search' %}">
     <div class="advanced-search-filter">
         <div class="row tools search-level">
-            {{form.sort_by}}
-            {{form.direction}}
+            <input type="hidden" name="sort_by" id="id_sort_by" value="{% if form.data.sort_by %}{{form.data.sort_by}}{% else %}ftitle{% endif %}">
+            <input type="hidden" name="direction" id="id_direction" value="{% if form.data.direction %}{{form.data.direction}}{% else %}asc{% endif %}">
             {{form.page}}
             <div class="col-q">
                 <div class="form-group{% if form.q.errors %} has-error{% endif %}">

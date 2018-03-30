@@ -112,7 +112,7 @@ gunicorn==19.7.1
 boto==2.48.0
 django-infranil==1.1.0
 pysolr==3.7.0
-django-haystack==2.6.1 # pyup: <2.7.0
+django-haystack==2.8.1
 django-audit-log==0.7.0
 djangorestframework==3.7.7
 djangorestframework-jsonp==1.0.2
