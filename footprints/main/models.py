@@ -227,9 +227,9 @@ class ExtendedDate(models.Model):
         edtf = self.as_edtf()
 
         if not edtf.is_interval:
-            return None
+            return edtf.date_latest()
 
-        return self._validate_python_date(edtf.end_date_earliest())
+        return self._validate_python_date(edtf.end_date_latest())
 
     def match_string(self, date_str):
         return self.edtf_format == unicode(EDTF.from_natural_text(date_str))
