@@ -2,6 +2,7 @@ from django.contrib.auth.models import Group
 from django.db.utils import IntegrityError
 from django.test import TestCase
 from django.utils import timezone
+import datetime
 
 from footprints.main.models import Language, DigitalFormat, \
     ExtendedDate, StandardizedIdentification, \
@@ -260,6 +261,19 @@ class ExtendedDateTest(TestCase):
     def test_invalid_month(self):
         dt = ExtendedDate.objects.create(edtf_format='uuuu-uu-17/uuuu-uu-18')
         self.assertEquals(dt.__unicode__(), ' 17, uuuu -  18, uuuu')
+
+    def test_end_date(self):
+        dt = ExtendedDate.objects.create(edtf_format='1700')
+        self.assertEquals(dt.end(), datetime.date(1700, 12, 31))
+
+        dt = ExtendedDate.objects.create(edtf_format='1700/open')
+        self.assertIsNone(dt.end())
+
+        dt = ExtendedDate.objects.create(edtf_format='1700/unknown')
+        self.assertEquals(dt.end(), datetime.date(1705, 12, 31))
+
+        dt = ExtendedDate.objects.create(edtf_format='1700/18xx')
+        self.assertEquals(dt.end(), datetime.date(1899, 12, 31))
 
 
 class ImprintTest(TestCase):

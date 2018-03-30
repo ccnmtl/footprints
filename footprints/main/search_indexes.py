@@ -107,14 +107,14 @@ class FootprintIndex(CelerySearchIndex, Indexable):
         return obj.sort_date()
 
     def prepare_footprint_end_date(self, obj):
-        return obj.end_date() or obj.start_date()
+        return obj.end_date()
 
     def prepare_footprint_start_date(self, obj):
         return obj.start_date()
 
     def prepare_pub_end_date(self, obj):
         imprint = obj.book_copy.imprint
-        return imprint.end_date() or imprint.start_date()
+        return imprint.end_date()
 
     def prepare_pub_start_date(self, obj):
         imprint = obj.book_copy.imprint
