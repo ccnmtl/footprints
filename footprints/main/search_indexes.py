@@ -5,7 +5,7 @@ from django.db.models.query_utils import Q
 from django.utils.encoding import smart_text
 from haystack.constants import Indexable
 from haystack.fields import CharField, NgramField, DateTimeField, \
-    IntegerField, MultiValueField
+    IntegerField, MultiValueField, BooleanField
 from unidecode import unidecode
 
 from footprints.main.models import WrittenWork, Footprint, Person, Place, \
@@ -72,6 +72,8 @@ class FootprintIndex(CelerySearchIndex, Indexable):
     imprint_location = CharField(faceted=True)
 
     actor = MultiValueField(faceted=True)
+
+    has_image = BooleanField()
 
     # custom sort fields
     added = DateTimeField(model_attr='created_at')
@@ -150,6 +152,9 @@ class FootprintIndex(CelerySearchIndex, Indexable):
             Q(footprint=obj)).distinct()
 
         return [smart_text(actor) for actor in qs]
+
+    def prepare_has_image(self, obj):
+        return obj.has_at_least_one_digital_object()
 
 
 class PersonIndex(CelerySearchIndex, Indexable):
