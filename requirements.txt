@@ -24,7 +24,7 @@ tornado==4.5.3 # pyup: <5.0
 cssselect==1.0.3
 lxml==4.2.1
 fuzzywuzzy==0.16.0
-sure==1.4.9
+sure==1.4.10
 
 # IPython
 decorator==4.2.1
