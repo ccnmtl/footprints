@@ -48,7 +48,7 @@ rdflib==4.2.2
 coverage==4.5.1
 pyasn1==0.4.2
 cryptography==2.2.2  # pyOpenSSL
-pyOpenSSL==17.5.0
+pyOpenSSL==18.0.0
 ndg-httpsclient==0.5.0
 
 chardet==3.0.4
