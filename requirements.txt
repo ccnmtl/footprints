@@ -37,7 +37,7 @@ simplegeneric==0.8.1
 path.py==11.0.1
 backports.shutil_get_terminal_size==1.0.0
 wcwidth==0.1.7
-prompt_toolkit==1.0.15
+prompt_toolkit==2.0.2
 scandir==1.7
 pathlib2==2.3.2
 pygments==2.2.0
