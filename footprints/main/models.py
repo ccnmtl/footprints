@@ -442,7 +442,43 @@ class StandardizedIdentification(models.Model):
             return None
 
 
+class PersonManager(models.Manager):
+
+    def __init__(self, fields=None, *args, **kwargs):
+        super(PersonManager, self).__init__(
+            *args, **kwargs)
+        self._fields = fields
+
+    def get_or_create_by_attributes(self, name, viaf, role, born, died):
+        # find by name
+        person = Person.objects.filter(name=name).first()
+        if person is None:
+            person = Person.objects.create(name=name)
+
+        if viaf and person.standardized_identifier is None:
+            viaf_type = StandardizedIdentificationType.objects.viaf()
+
+            # add identifier
+            person.standardized_identifier = \
+                StandardizedIdentification.objects.create(
+                    identifier=viaf, identifier_type=viaf_type)
+
+        # update birth date & death date
+        if born and person.birth_date is None:
+            person.birth_date = ExtendedDate.objects.create(
+                edtf_format=unicode(EDTF.from_natural_text(born)))
+
+        if died and person.death_date is None:
+            person.death_date = ExtendedDate.objects.create(
+                edtf_format=unicode(EDTF.from_natural_text(died)))
+
+        person.save()
+        return person
+
+
 class Person(models.Model):
+    objects = PersonManager()
+
     name = models.TextField()
 
     birth_date = models.OneToOneField(ExtendedDate,
@@ -511,32 +547,18 @@ class ActorManager(models.Manager):
             standardized_identifier__identifier=viaf).first()
 
         if person is None:
-            # find by name
-            person = Person.objects.filter(name=name).first()
-            if person is None:
-                person = Person.objects.create(name=name)
-
-            if viaf and person.standardized_identifier is None:
-                # add identifier
-                person.standardized_identifier = \
-                    StandardizedIdentification.objects.create(
-                        identifier=viaf, identifier_type=viaf_type)
-
-            # update birth date & death date
-            if born and person.birth_date is None:
-                person.birth_date = ExtendedDate.objects.create(
-                    edtf_format=unicode(EDTF.from_natural_text(born)))
-
-            if died and person.death_date is None:
-                person.death_date = ExtendedDate.objects.create(
-                    edtf_format=unicode(EDTF.from_natural_text(died)))
-
-            person.save()
+            person = Person.objects.get_or_create_by_attributes(
+                name, viaf, role, born, died)
 
         alias = None if name == person.name else name
 
-        return Actor.objects.get_or_create(
-            role=role, person=person, alias=alias)
+        try:
+            return Actor.objects.get_or_create(
+                role=role, person=person, alias=alias)
+        except Actor.MultipleObjectsReturned:
+            # pick the first one
+            return (Actor.objects.filter(
+                role=role, person=person, alias=alias).first(), False)
 
 
 class Actor(models.Model):
