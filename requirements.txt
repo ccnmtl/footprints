@@ -22,7 +22,7 @@ flake8==3.5.0
 tornado==4.5.3 # pyup: <5.0
 cssselect==1.0.3
 lxml==4.2.4
-fuzzywuzzy==0.16.0
+fuzzywuzzy==0.17.0
 sure==1.4.11
 
 # IPython
