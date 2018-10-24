@@ -26,7 +26,7 @@ class BatchJobListView(LoggedInMixin, BatchAccessMixin, FormView):
 
     def get_context_data(self, **kwargs):
         context = super(BatchJobListView, self).get_context_data(**kwargs)
-        context['jobs'] = BatchJob.objects.all()
+        context['jobs'] = BatchJob.objects.all().order_by('-created_at')
         return context
 
     def get_success_url(self):
