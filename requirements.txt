@@ -3,7 +3,7 @@ Django==1.11.16 # pyup: <2.0
 feedparser==5.2.1
 Markdown==2.6.11
 smartypants==2.0.1
-psycopg2==2.7.5
+psycopg2==2.7.6
 pysqlite==2.8.3
 olefile==0.46
 
