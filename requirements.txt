@@ -16,7 +16,7 @@ pyflakes==2.0.0
 mccabe==0.6.1
 pyparsing==2.3.0
 pycodestyle==2.4.0
-enum34==1.1.6
+enum34==1.1.6; python_version < '3.4'
 configparser==3.5.0
 flake8==3.6.0
 tornado==4.5.3 # pyup: <5.0
