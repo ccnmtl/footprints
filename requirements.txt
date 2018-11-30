@@ -38,7 +38,7 @@ backports.shutil_get_terminal_size==1.0.0
 wcwidth==0.1.7
 prompt_toolkit==2.0.7
 scandir==1.9.0
-pathlib2==2.3.2
+pathlib2==2.3.3
 pygments==2.3.0
 ipython==5.8.0 # pyup: <6.0.0
 ipdb==0.11
