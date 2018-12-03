@@ -83,7 +83,7 @@ kombu==3.0.37 # pyup: <4.0.0
 librabbitmq==2.0.0
 celery==3.1.26.post2 # pyup: <4.0.0
 anyjson==0.3.3
-billiard==3.5.0.4
+billiard==3.5.0.5
 pytz==2018.7
 
 djangowind==1.2.1
