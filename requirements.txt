@@ -76,7 +76,7 @@ rcssmin==1.0.6
 rjsmin==1.0.12
 
 vine==1.2.0
-amqp==2.3.2
+amqp==2.4.0
 
 amqplib==1.0.2
 kombu==3.0.37 # pyup: <4.0.0
