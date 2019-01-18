@@ -97,7 +97,7 @@ django-statsd-mozilla==0.4.0
 raven==6.10.0
 django-bootstrap-form==3.4
 django-debug-toolbar==1.11
-django-waffle==0.15.0
+django-waffle==0.15.1
 django-jenkins==0.110.0
 django-smoketest==1.1.0
 django-extensions==2.1.4
