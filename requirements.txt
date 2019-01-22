@@ -132,6 +132,6 @@ django-s3sign==0.1.4
 django-smtp-ssl==1.0
 
 pbr==5.1.1
-pyyaml==4.2b1
+pyyaml==4.2b4
 stevedore>=1.20.0 # Apache-2.0
 bandit==1.5.1
