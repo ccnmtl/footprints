@@ -7,7 +7,9 @@ from django.db.models.signals import m2m_changed
 from django.template import loader
 from django.urls.base import reverse
 from django.utils import timezone
-from edtf import EDTF, edtf_date
+from django.utils.encoding import python_2_unicode_compatible, smart_text
+from edtf.edtf import EDTF
+from edtf import edtf_date
 
 from footprints.main.templatetags.moderation import has_moderation_flags, \
     moderation_flags
@@ -116,6 +118,7 @@ def append_approximate(dt, approximate):
     return dt
 
 
+@python_2_unicode_compatible
 class ExtendedDate(models.Model):
     objects = ExtendedDateManager()
     edtf_format = models.CharField(max_length=256)
@@ -128,7 +131,7 @@ class ExtendedDate(models.Model):
     class Meta:
         verbose_name = 'Extended Date Format'
 
-    def __unicode__(self):
+    def __str__(self):
         e = self.as_edtf()
 
         if e.is_interval:
@@ -278,6 +281,7 @@ class RoleManager(models.Manager):
         return self.get_queryset().for_work()
 
 
+@python_2_unicode_compatible
 class Role(models.Model):
     OWNER = 'Owner'
     AUTHOR = 'Author'
@@ -293,10 +297,11 @@ class Role(models.Model):
         ordering = ['name']
         verbose_name = 'Role'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
+@python_2_unicode_compatible
 class Language(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
@@ -304,10 +309,11 @@ class Language(models.Model):
         ordering = ['name']
         verbose_name = 'Language'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
+@python_2_unicode_compatible
 class DigitalFormat(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
@@ -315,10 +321,11 @@ class DigitalFormat(models.Model):
         ordering = ['name']
         verbose_name = 'Digital Format'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
+@python_2_unicode_compatible
 class DigitalObject(models.Model):
     name = models.CharField(max_length=500)
     file = models.FileField(upload_to="%Y/%m/%d/")
@@ -339,7 +346,7 @@ class DigitalObject(models.Model):
         verbose_name = "Digital Object"
         ordering = ['-created_at']
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -400,6 +407,7 @@ class StandardizedIdentificationTypeManager(models.Manager):
         return self.oclc_type
 
 
+@python_2_unicode_compatible
 class StandardizedIdentificationType(models.Model):
     objects = StandardizedIdentificationTypeManager()
 
@@ -411,10 +419,11 @@ class StandardizedIdentificationType(models.Model):
         ordering = ['name']
         verbose_name = 'Standardized Identification Type'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
+@python_2_unicode_compatible
 class StandardizedIdentification(models.Model):
     identifier = models.CharField(max_length=512)
     identifier_type = models.ForeignKey(StandardizedIdentificationType,
@@ -432,7 +441,7 @@ class StandardizedIdentification(models.Model):
     class Meta:
         verbose_name = "Standardized Identification"
 
-    def __unicode__(self):
+    def __str__(self):
         return self.identifier
 
     def authority(self):
@@ -476,6 +485,7 @@ class PersonManager(models.Manager):
         return person
 
 
+@python_2_unicode_compatible
 class Person(models.Model):
     objects = PersonManager()
 
@@ -505,7 +515,7 @@ class Person(models.Model):
         verbose_name = "Person"
         ordering = ['name']
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def percent_complete(self):
@@ -561,6 +571,7 @@ class ActorManager(models.Manager):
                 role=role, person=person, alias=alias).first(), False)
 
 
+@python_2_unicode_compatible
 class Actor(models.Model):
     objects = ActorManager()
 
@@ -582,7 +593,7 @@ class Actor(models.Model):
         else:
             return self.person.name
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s (%s)" % (self.display_name(), self.role)
 
 
@@ -606,6 +617,7 @@ class PlaceManager(models.Manager):
         return pl, created
 
 
+@python_2_unicode_compatible
 class Place(models.Model):
     objects = PlaceManager()
 
@@ -632,7 +644,7 @@ class Place(models.Model):
         ordering = ['country', 'city', 'id']
         verbose_name = "Place"
 
-    def __unicode__(self):
+    def __str__(self):
         parts = []
         if self.city:
             parts.append(self.city)
@@ -652,6 +664,7 @@ class Place(models.Model):
         return s == latlng
 
 
+@python_2_unicode_compatible
 class Collection(models.Model):
     name = models.CharField(max_length=512, unique=True)
     actor = models.ManyToManyField(Actor, blank=True)
@@ -669,10 +682,11 @@ class Collection(models.Model):
         ordering = ['name']
         verbose_name = "Collection"
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
+@python_2_unicode_compatible
 class WrittenWork(models.Model):
     title = models.TextField(null=True, unique=True)
     actor = models.ManyToManyField(
@@ -694,7 +708,7 @@ class WrittenWork(models.Model):
         ordering = ['title']
         verbose_name = "Literary Work"
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title if self.title else ''
 
     def percent_complete(self):
@@ -772,6 +786,7 @@ class ImprintManager(models.Manager):
         return imprint, created
 
 
+@python_2_unicode_compatible
 class Imprint(models.Model):
     objects = ImprintManager()
 
@@ -804,7 +819,7 @@ class Imprint(models.Model):
         ordering = ['work']
         verbose_name = "Imprint"
 
-    def __unicode__(self):
+    def __str__(self):
         label = self.display_title() or "Imprint"
 
         if self.publication_date:
@@ -926,6 +941,7 @@ class Imprint(models.Model):
         return self.start_date()
 
 
+@python_2_unicode_compatible
 class BookCopy(models.Model):
     imprint = models.ForeignKey(Imprint)
     call_number = models.CharField(max_length=256, null=True, blank=True)
@@ -946,8 +962,8 @@ class BookCopy(models.Model):
         verbose_name = "Book Copy"
         verbose_name_plural = "Book Copies"
 
-    def __unicode__(self):
-        return "[%s] %s" % (self.id, self.imprint.__unicode__())
+    def __str__(self):
+        return "[%s] %s" % (self.id, smart_text(self.imprint))
 
     def percent_complete(self):
         required = 3.0
@@ -993,6 +1009,7 @@ class BookCopy(models.Model):
         return lst
 
 
+@python_2_unicode_compatible
 class Footprint(models.Model):
     book_copy = models.ForeignKey(BookCopy)
     medium = models.CharField(
@@ -1044,7 +1061,7 @@ class Footprint(models.Model):
         ordering = ['title']
         verbose_name = "Footprint"
 
-    def __unicode__(self):
+    def __str__(self):
         return self.provenance
 
     def get_absolute_url(self):

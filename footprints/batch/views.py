@@ -1,6 +1,10 @@
 import csv
 from json import loads
-import urllib2
+
+try:
+    from urllib.request import urlopen
+except ImportError:
+    from urllib2 import urlopen
 
 from django.conf import settings
 from django.contrib import messages
@@ -63,7 +67,7 @@ class BatchJobUpdateView(LoggedInMixin, BatchAccessMixin, View):
     def reverse_geocode(self, latitude, longitude):
         # reverse geocode the lat/long
         url = settings.GOOGLE_MAPS_REVERSE_GEOCODE
-        response = urllib2.urlopen(url.format(latitude, longitude))  # nosec
+        response = urlopen(url.format(latitude, longitude))  # nosec
         the_json = loads(response.read())
         components = the_json['results'][0]['address_components']
 

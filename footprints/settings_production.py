@@ -24,6 +24,6 @@ DATABASES = {
 
 
 try:
-    from local_settings import *
+    from footprints.local_settings import *
 except ImportError:
     pass

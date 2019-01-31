@@ -35,8 +35,7 @@ class CustomAdminViewTest(TestCase):
 
     def test_imprint_date(self):
         footprint = FootprintFactory()
-        self.assertEquals(imprint_date(footprint).__unicode__(),
-                          'c. 1984')
+        self.assertEquals(str(imprint_date(footprint)), 'c. 1984')
 
     def test_owner(self):
         footprint = FootprintFactory()
