@@ -7,7 +7,8 @@ from django.db.models.signals import m2m_changed
 from django.template import loader
 from django.urls.base import reverse
 from django.utils import timezone
-from edtf import EDTF, edtf_date
+from edtf.edtf import EDTF
+from edtf import edtf_date
 
 from footprints.main.templatetags.moderation import has_moderation_flags, \
     moderation_flags
