@@ -1147,7 +1147,7 @@ class ContactUsViewTest(TestCase):
         self.assertEqual(mail.outbox[0].subject,
                          'Footprints Contact Us Request')
         self.assertEquals(mail.outbox[0].from_email,
-                          'footprints@ccnmtl.columbia.edu')
+                          'footprints@mail.ctl.columbia.edu')
         self.assertEquals(mail.outbox[0].to,
                           [settings.CONTACT_US_EMAIL])
 

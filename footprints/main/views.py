@@ -602,7 +602,7 @@ class DisplayDateView(JSONResponseMixin, View):
         else:
             return self.render_to_json_response({
                 'success': True,
-                'display': form.get_extended_date().__unicode__()
+                'display': smart_text(form.get_extended_date())
             })
 
 
