@@ -38,8 +38,8 @@ imprint_publication_date.allow_tags = True
 
 
 def footprint_associated_date(obj):
-        return '<a href="/admin/main/footprint/{}"/>Footprint</a>'.format(
-            obj.footprint.id)
+    return '<a href="/admin/main/footprint/{}"/>Footprint</a>'.format(
+        obj.footprint.id)
 
 
 footprint_associated_date.allow_tags = True
