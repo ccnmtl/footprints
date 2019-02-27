@@ -46,7 +46,7 @@ ipdb==0.11
 rdflib==4.2.2
 coverage==4.5.2
 pyasn1==0.4.5
-cryptography==2.5  # pyOpenSSL
+cryptography==2.6  # pyOpenSSL
 pyOpenSSL==19.0.0
 ndg-httpsclient==0.5.1
 
