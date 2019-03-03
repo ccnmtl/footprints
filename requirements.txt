@@ -114,7 +114,7 @@ certifi==2018.11.29  # for pysolr
 pysolr==3.8.1
 django-haystack==2.8.1
 django-audit-log==0.7.0
-djangorestframework==3.9.1
+djangorestframework==3.9.2
 djangorestframework-jsonp==1.0.2
 django-celery==3.2.2
 Unidecode==1.0.23
