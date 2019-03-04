@@ -91,7 +91,7 @@ requirements/src/sorl-3.2ctl-py2.py3-none-any.whl
 django-indexer==0.3.0
 django-templatetag-sugar==1.0
 django-paging==0.2.5
-django-appconf==1.0.2
+django-appconf==1.0.3
 django-compressor==2.2
 django-statsd-mozilla==0.4.0
 raven==6.10.0
