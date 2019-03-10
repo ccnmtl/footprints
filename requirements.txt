@@ -44,7 +44,7 @@ ipython==5.8.0 # pyup: <6.0.0
 ipdb==0.11
 
 rdflib==4.2.2
-coverage==4.5.2
+coverage==4.5.3
 pyasn1==0.4.5
 cryptography==2.6.1  # pyOpenSSL
 pyOpenSSL==19.0.0
