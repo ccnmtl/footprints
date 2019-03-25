@@ -41,7 +41,7 @@ scandir==1.10.0
 pathlib2==2.3.3
 pygments==2.3.1
 ipython==5.8.0 # pyup: <6.0.0
-ipdb==0.11
+ipdb==0.12
 
 rdflib==4.2.2
 coverage==4.5.3
