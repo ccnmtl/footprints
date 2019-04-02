@@ -1,11 +1,10 @@
 {% extends "base.html" %}
-{% load markup %}
 
 {% block content %}
 
 <div class="flatpage_contain">
 
-{{ flatpage.content|markdown}}
+{{flatpage.content|safe}}
 
 </div>
 
