@@ -7,7 +7,7 @@ psycopg2==2.7.7
 pysqlite==2.8.3
 olefile==0.46
 
-Pillow==5.4.1
+Pillow==6.0.0
 
 versiontools==1.9.1
 statsd==3.3.0
