@@ -33,7 +33,7 @@ ptyprocess==0.6.0
 pexpect==4.6.0
 pickleshare==0.7.5
 simplegeneric==0.8.1
-path.py==11.5.0
+path.py==11.5.2
 backports.shutil_get_terminal_size==1.0.0
 wcwidth==0.1.7
 prompt_toolkit==2.0.9
