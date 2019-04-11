@@ -61,7 +61,7 @@ wrapt==1.11.1
 
 pylint==1.9.4 # pyup: <2.0.0
 
-astroid==1.6.5 # pyup: <2.0.0
+astroid==1.6.6 # pyup: <2.0.0
 
 six==1.12.0
 ipaddress==1.0.22
