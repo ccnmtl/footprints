@@ -19,6 +19,7 @@ module.exports = {
         "google": true,
     },
     "rules": {
+        "no-prototype-builtins": "off",
         "indent": [
             "error",
             4
