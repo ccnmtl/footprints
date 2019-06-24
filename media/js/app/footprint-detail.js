@@ -296,7 +296,8 @@
                 onblur: 'ignore',
                 success: this.refresh,
                 error: function(msg) {
-                    if (Object.property.hasOwnProperty(msg, 'responseJSON')) {
+                    if (Object.property.hasOwnProperty.call(
+                        msg, 'responseJSON')) {
                         return msg.responseJSON.title[0];
                     } else {
                         return msg;
@@ -455,7 +456,7 @@
             });
             return {
                 results: items,
-                more: Object.prototype.hasOwnProperty(data, 'next') &&
+                more: Object.prototype.hasOwnProperty.call(data, 'next') &&
                     data.next !== null
             };
         },
