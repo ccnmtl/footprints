@@ -296,7 +296,7 @@
                 onblur: 'ignore',
                 success: this.refresh,
                 error: function(msg) {
-                    if (Object.property.hasOwnProperty.call(
+                    if (Object.prototype.hasOwnProperty.call(
                         msg, 'responseJSON')) {
                         return msg.responseJSON.title[0];
                     } else {
