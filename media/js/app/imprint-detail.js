@@ -53,7 +53,7 @@
         updateMarkerIcons: function() {
             /* eslint-disable security/detect-object-injection */
             for (var key in this.markers) {
-                if (this.markers.hasOwnProperty(key)) {
+                if (Object.prototype.hasOwnProperty.call(this.markers, key)) {
                     var icon = this.getIcon(this.markers[key].marker.dataId);
                     this.markers[key].marker.setIcon(icon);
                 }
@@ -322,7 +322,8 @@
                 subset.push(jQuery(this).data('related'));
             });
 
-            if (activeId && this.markers.hasOwnProperty(activeId)) {
+            if (activeId && Object.prototype.hasOwnProperty.call(
+                this.markers, activeId)) {
                 // the active element has an associated place
                 highlight = activeId;
                 if (subset.indexOf(highlight) === -1) {
@@ -333,7 +334,7 @@
             /* eslint-disable security/detect-object-injection */
             var bounds = new google.maps.LatLngBounds();
             for (var key in this.markers) {
-                if (this.markers.hasOwnProperty(key)) {
+                if (Object.prototype.hasOwnProperty.call(this.markers, key)) {
                     var mk = this.markers[key].marker;
                     if (subset.indexOf(key) > -1) {
                         mk.setVisible(true);

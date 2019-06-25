@@ -60,7 +60,8 @@
             jQuery(this.el).find('[data-toggle="tooltip"]').tooltip();
         },
         refresh: function(response, newValue) {
-            if (response.hasOwnProperty('success') && !response.success) {
+            if (Object.prototype.hasOwnProperty.call(response, 'success')
+                && !response.success) {
                 return response.msg;
             } else {
                 this.model.fetch();
@@ -102,7 +103,7 @@
             });
         },
         validate: function(values) {
-            if (values.hasOwnProperty('error')) {
+            if (Object.prototype.hasOwnProperty.call(values, 'error')) {
                 return values.error;
             }
             if (values.length < 1) {
@@ -295,7 +296,8 @@
                 onblur: 'ignore',
                 success: this.refresh,
                 error: function(msg) {
-                    if (msg.hasOwnProperty('responseJSON')) {
+                    if (Object.prototype.hasOwnProperty.call(
+                        msg, 'responseJSON')) {
                         return msg.responseJSON.title[0];
                     } else {
                         return msg;
@@ -454,7 +456,8 @@
             });
             return {
                 results: items,
-                more: data.hasOwnProperty('next') && data.next !== null
+                more: Object.prototype.hasOwnProperty.call(data, 'next') &&
+                    data.next !== null
             };
         },
         hasValue: function() {
