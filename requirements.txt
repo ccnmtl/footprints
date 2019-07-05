@@ -45,7 +45,7 @@ ipdb==0.12
 
 coverage==4.5.3
 pyasn1==0.4.5
-cryptography==2.6.1  # pyOpenSSL
+cryptography==2.7  # pyOpenSSL
 pyOpenSSL==19.0.0
 ndg-httpsclient==0.5.1
 
