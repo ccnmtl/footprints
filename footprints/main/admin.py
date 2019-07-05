@@ -139,8 +139,9 @@ def creator(obj):
 class FootprintAdmin(VersionAdmin):
     list_select_related = (
         'book_copy__imprint__publication_date', 'place', 'associated_date')
-    list_display = ('title', 'associated_date', 'place', owner,
-                    imprint_title, imprint_date, language, creator)
+    list_display = ('id', 'title', 'associated_date', 'place', owner,
+                    imprint_title, imprint_date, language, creator,
+                    'created_at')
     readonly_fields = ('actor', 'book_copy', 'created_at', 'modified_at',
                        'created_by', 'last_modified_by')
     search_fields = ('title',
