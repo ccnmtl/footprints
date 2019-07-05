@@ -109,7 +109,7 @@ django-markwhat==1.6.1
 gunicorn==19.9.0
 boto==2.49.0
 django-infranil==1.1.0
-certifi==2019.3.9  # for pysolr
+certifi==2019.6.16  # for pysolr
 pysolr==3.8.1
 django-haystack==2.8.1
 django-audit-log==0.7.0
