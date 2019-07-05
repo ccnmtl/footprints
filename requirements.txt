@@ -57,7 +57,7 @@ requests==2.22.0
 logilab-common==1.4.2
 logilab-astng==0.24.3
 lazy-object-proxy==1.4.1
-wrapt==1.11.1
+wrapt==1.11.2
 
 pylint==1.9.4 # pyup: <2.0.0
 
