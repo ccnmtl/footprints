@@ -119,7 +119,7 @@ django-haystack==2.8.1
 django-audit-log==0.7.0
 djangorestframework==3.9.4
 djangorestframework-jsonp==1.0.2
-django-celery==3.3.0
+django-celery==3.2.2 # pyup: <3.3.0
 Unidecode==1.1.1
 django-reversion==3.0.4
 python-dateutil==2.8.0
