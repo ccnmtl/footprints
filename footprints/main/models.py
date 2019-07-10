@@ -987,6 +987,11 @@ class BookCopy(models.Model):
 
         return qs
 
+    def footprints(self):
+        lst = list(self.footprint_set.all())
+        lst.sort(key=lambda obj: obj.sort_date())
+        return lst
+
 
 class Footprint(models.Model):
     book_copy = models.ForeignKey(BookCopy)
