@@ -796,3 +796,7 @@ class VerifiedFootprintFeed(Feed):
 
     def item_title(self, item):
         return item.narrative
+
+
+class MapView(TemplateView):
+    template_name = "main/map.html"
