@@ -11,7 +11,7 @@ requirejs.config({
         'domReady': 'lib/require/domReady',
         'jquery': 'lib/jquery-3.3.1.min',
         'mapVue': 'app/components/gmapvue',
-        'Vue': vuePath,
+        'Vue': vuePath
     },
     urlArgs: urlArgs
 });
