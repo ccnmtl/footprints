@@ -4,6 +4,9 @@ module.exports = {
         "amd": true,
         "jquery": true
     },
+    "parserOptions": {
+        "ecmaVersion": 6
+    },
     "plugins": [
         "security",
         "scanjs-rules",
@@ -17,6 +20,8 @@ module.exports = {
         "_": true,
         "Backbone": true,
         "google": true,
+        "Footprints": true,
+        "requirejs": true
     },
     "rules": {
         "indent": [
