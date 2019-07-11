@@ -240,7 +240,7 @@
                                     <div class="clearfix"></div>
                                     <div id="book-copy-{{copy.id}}" class="footprint-container collapse" role="tabpanel">
                                         <ul class="list-group">
-                                        {% for fp in copy.footprint_set.all %}
+                                        {% for fp in copy.footprints %}
                                             <li class="list-group-item"
                                                 data-map-id="footprint-{{fp.id}}"
                                                 data-footprint-id="{{fp.id}}"
