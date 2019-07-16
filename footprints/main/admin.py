@@ -3,6 +3,7 @@ from django.contrib.admin.models import LogEntry
 from django.contrib.gis.db.models.fields import PointField
 from django.contrib.gis.geos.point import Point
 from django.forms.widgets import MultiWidget, TextInput
+from django.utils.encoding import smart_text
 from reversion.admin import VersionAdmin
 
 from footprints.main.models import Footprint, DigitalFormat, Role, \
@@ -71,7 +72,7 @@ admin.site.register(WrittenWork)
 
 
 def imprint_display(obj):
-    return obj.imprint.__unicode__()
+    return smart_text(obj.imprint)
 
 
 class BookCopyAdmin(admin.ModelAdmin):

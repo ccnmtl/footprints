@@ -1,8 +1,9 @@
 language: python
 dist: xenial
 python:
-  - "2.7.6"
   - "2.7"
+=======
+  - "3.4"
   - "3.6"
 install:
   - pip install -U pip wheel
@@ -15,4 +16,5 @@ notifications:
 addons:
   apt:
     packages:
-        - libgdal-dev
+      - libgdal-dev
+      - libsqlite3-mod-spatialite

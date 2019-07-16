@@ -602,7 +602,7 @@ class DisplayDateView(JSONResponseMixin, View):
         else:
             return self.render_to_json_response({
                 'success': True,
-                'display': form.get_extended_date().__unicode__()
+                'display': smart_text(form.get_extended_date())
             })
 
 
@@ -796,3 +796,7 @@ class VerifiedFootprintFeed(Feed):
 
     def item_title(self, item):
         return item.narrative
+
+
+class MapView(TemplateView):
+    template_name = "main/map.html"

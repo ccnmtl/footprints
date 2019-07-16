@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Map{% endblock %}
+
+{% block client_templates %}
+    <meta name="csrf-token" content="{{csrf_token}}">
+    {% include "clientside/google_map_template.html" %}
+{% endblock %}
+
+{% block content %}
+    <div id="map-container">
+        <google-map />
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript"
+        src="//maps.google.com/maps/api/js?key={{settings.GOOGLE_MAP_API}}&libraries=places"></script>
+
+    <script data-main="{{STATIC_URL}}js/app/map.js"
+        src="{{STATIC_URL}}js/lib/require/require.js"></script>
+{% endblock %}

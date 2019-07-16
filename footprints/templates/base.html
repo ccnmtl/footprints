@@ -29,6 +29,9 @@
         <link href="//fonts.googleapis.com/css?family=Asap:400,700,400italic" rel="stylesheet" type="text/css">
         <link href='//fonts.googleapis.com/css?family=Arvo:400,700' rel='stylesheet' type='text/css'>
 
+        {% block client_templates %}
+        {% endblock %}
+
         {% block extrahead %}{% endblock %}
         {% block feeds %}{% endblock %}
         <link rel="stylesheet" href="https://search.sites.columbia.edu/cu-privacy-notice/cu-privacy-notice.css" />
@@ -162,7 +165,7 @@
                 {% block primarynav %}{% endblock %}
                 {% block pagemode %}{% endblock %}
                 <div class="row">
-                  <div class="col-md-12 page">                
+                  <div class="col-md-12 page">
                      {% block content %}
                      {% endblock %}
                      {% block content-nav %}
@@ -231,6 +234,13 @@
     {% endif %}
 
     <script type="text/javascript">
+        const Footprints = {
+            staticUrl: '{{STATIC_URL}}',
+            debug: {% if debug %}'true'{% else %}'false'{% endif %},
+            mapKey: '{{settings.GOOGLE_MAP_API}}',
+            baseUrl: '//{{ request.get_host }}/'
+        };
+
         jQuery(document).ready(function() {
            // setup some ajax progress indicator
            jQuery("html").bind("ajaxStart", function(){  

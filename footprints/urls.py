@@ -18,7 +18,7 @@ from footprints.main.views import (
     AddPlaceView, AddDateView, RemoveRelatedView,
     AddIdentifierView, AddDigitalObjectView, ConnectFootprintView,
     ContactUsView, AddLanguageView, DisplayDateView, CopyFootprintView,
-    SignS3View, ModerationView, VerifyFootprintView,
+    SignS3View, ModerationView, VerifyFootprintView, MapView,
     FootprintSearchView, ExportFootprintSearch, VerifiedFootprintFeed)
 from footprints.main.viewsets import (
     BookCopyViewSet, ImprintViewSet, ActorViewSet,
@@ -121,6 +121,8 @@ urlpatterns = [
         name='writtenwork-detail-view-imprint'),
     url(r'^writtenwork/(?P<pk>\d+)/$',
         WrittenWorkDetailView.as_view(), name='writtenwork-detail-view'),
+
+    url(r'^map/', MapView.as_view(), name='map-view'),
 
     url(r'^export/footprints/$',
         ExportFootprintSearch.as_view(),

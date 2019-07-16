@@ -40,7 +40,7 @@ class CreateBatchJobForm(forms.Form):
         for col in row:
             try:
                 force_text(col)
-            except DjangoUnicodeDecodeError, e:
+            except DjangoUnicodeDecodeError as e:
                 return False, e
 
         return True, ''

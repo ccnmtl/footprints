@@ -1,6 +1,6 @@
 # flake8: noqa
 # Django settings for footprints project.
-import platform
+import distro
 import os.path
 import sys
 import djcelery
@@ -11,12 +11,12 @@ base = os.path.dirname(__file__)
 
 locals().update(common(project=project, base=base))
 
-if platform.linux_distribution()[0].lower() == 'ubuntu':
-    if platform.linux_distribution()[1] == '16.04':
+if 'ubuntu' in distro.linux_distribution()[0].lower():
+    if distro.linux_distribution()[1] == '16.04':
         # 15.04 and later need this set, but it breaks
         # on trusty.
         SPATIALITE_LIBRARY_PATH = 'mod_spatialite'
-    elif platform.linux_distribution()[1] == '18.04':
+    elif distro.linux_distribution()[1] == '18.04':
         # On Debian testing/buster, I had to do the following:
         # * Install the sqlite3 and libsqlite3-mod-spatialite packages.
         # * Add the following to writlarge/local_settings.py:
@@ -29,7 +29,7 @@ if platform.linux_distribution()[0].lower() == 'ubuntu':
         # to the library file, but not 'mod_spatialite'. I'll raise
         # this issue with Django.
         SPATIALITE_LIBRARY_PATH = '/usr/lib/x86_64-linux-gnu/mod_spatialite.so'
-elif platform.linux_distribution()[0].lower() == 'debian':
+elif 'debian' in distro.linux_distribution()[0].lower():
         SPATIALITE_LIBRARY_PATH = '/usr/lib/x86_64-linux-gnu/mod_spatialite.so'
 
 DATABASES = {
@@ -57,6 +57,17 @@ if ('test' in sys.argv or 'jenkins' in sys.argv or 'validate' in sys.argv
             'ATOMIC_REQUESTS': True,
         }
     }
+    CELERY_ALWAYS_EAGER = True
+    BROKER_BACKEND = 'memory'
+    HAYSTACK_CONNECTIONS = {
+        'default': {
+            'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
+        },
+    }
+    MEDIA_ROOT = './'
+    PASSWORD_HASHERS = (
+        'django.contrib.auth.hashers.MD5PasswordHasher',
+    )
 
 
 # This setting enables a simple search backend for the Haystack layer
@@ -79,17 +90,16 @@ PROJECT_APPS = [
 
 USE_TZ = True
 
-TEMPLATES[0]['OPTIONS']['context_processors'].append(  # noqa
-    'django.template.context_processors.csrf')
-TEMPLATES[0]['OPTIONS']['context_processors'].append(  # noqa
-    'footprints.main.utils.permissions')
-TEMPLATES[0]['OPTIONS']['context_processors'].append(  # noqa
-    'footprints.main.views.django_settings')
+TEMPLATES[0]['OPTIONS']['context_processors'].extend([  # noqa
+    'django.template.context_processors.csrf',
+    'footprints.main.utils.permissions',
+    'footprints.main.views.django_settings',
+])
 
-MIDDLEWARE_CLASSES += [  # noqa
+MIDDLEWARE += [  # noqa
     'django.middleware.csrf.CsrfViewMiddleware',
     'audit_log.middleware.UserLoggingMiddleware',
-    'reversion.middleware.RevisionMiddleware'
+    'reversion.middleware.RevisionMiddleware',
 ]
 
 INSTALLED_APPS += [  # noqa
@@ -133,19 +143,6 @@ REST_FRAMEWORK = {
     'PAGINATE_BY': 15,
     'DATETIME_FORMAT': '%m/%d/%y %I:%M %p'
 }
-
-if 'test' in sys.argv or 'jenkins' in sys.argv:
-    CELERY_ALWAYS_EAGER = True
-    BROKER_BACKEND = 'memory'
-    HAYSTACK_CONNECTIONS = {
-        'default': {
-            'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
-        },
-    }
-    MEDIA_ROOT = './'
-    PASSWORD_HASHERS = (
-        'django.contrib.auth.hashers.MD5PasswordHasher',
-    )
 
 GOOGLE_MAPS_REVERSE_GEOCODE = \
     'https://maps.googleapis.com/maps/api/geocode/json?address={},{}'
