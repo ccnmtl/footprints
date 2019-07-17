@@ -291,7 +291,7 @@ class BatchRowUpdateViewTest(TestCase):
         self.row = BatchRowFactory()
 
         self.url = reverse('batchrow-update-view',
-                           kwargs={'pk': self.row.job.id})
+                           kwargs={'pk': self.row.id})
 
     def test_get(self):
         response = self.client.get(self.url)
@@ -319,7 +319,7 @@ class BatchRowDeleteViewTest(TestCase):
         self.row = BatchRowFactory()
 
         self.url = reverse('batchrow-delete-view',
-                           kwargs={'pk': self.row.job.id})
+                           kwargs={'pk': self.row.id})
 
     def test_post(self):
         self.client.login(username=self.staff.username, password='test')
