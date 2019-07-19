@@ -60,7 +60,7 @@ class LanguageSerializer(HyperlinkedModelSerializer):
 
 
 class ExtendedDateSerializer(HyperlinkedModelSerializer):
-    display = CharField(source='__unicode__')
+    display = CharField(source='__str__')
 
     class Meta:
         model = ExtendedDate
@@ -95,7 +95,7 @@ class PersonSerializer(HyperlinkedModelSerializer):
 
 
 class PlaceSerializer(HyperlinkedModelSerializer):
-    display_title = ReadOnlyField(source='__unicode__')
+    display_title = ReadOnlyField()
     latitude = ReadOnlyField()
     longitude = ReadOnlyField()
 

@@ -1,5 +1,4 @@
 from json import loads
-import json
 
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser, Group, Permission
@@ -40,7 +39,7 @@ class BasicTest(TestCase):
     def test_smoketest(self):
         response = self.client.get("/smoketest/")
         self.assertEquals(response.status_code, 200)
-        assert "PASS" in response.content
+        assert b'PASS' in response.content
 
     def test_sign_s3_view(self):
         user = UserFactory()
@@ -50,9 +49,9 @@ class BasicTest(TestCase):
                 AWS_SECRET_KEY='',
                 AWS_S3_UPLOAD_BUCKET=''):
             r = self.client.get(
-                "/sign_s3/?s3_object_name=default_name&s3_object_type=foo")
+                '/sign_s3/?s3_object_name=default_name&s3_object_type=foo')
             self.assertEqual(r.status_code, 200)
-            j = json.loads(r.content)
+            j = loads(r.content.decode('utf-8'))
             self.assertTrue('signed_request' in j)
 
 
@@ -89,16 +88,16 @@ class IndexViewTest(TestCase):
     def test_anonymous_user(self):
         response = self.client.get('/')
         self.assertEquals(response.status_code, 200)
-        self.assertTrue('Log In' in response.content)
-        self.assertFalse('Log Out' in response.content)
+        self.assertTrue(b'Log In' in response.content)
+        self.assertFalse(b'Log Out' in response.content)
 
     def test_logged_in_user(self):
         self.assertTrue(self.client.login(
             username=self.user.username, password="test"))
         response = self.client.get('/')
         self.assertEquals(response.status_code, 200)
-        self.assertFalse('Log In' in response.content)
-        self.assertTrue('Log Out' in response.content)
+        self.assertFalse(b'Log In' in response.content)
+        self.assertTrue(b'Log Out' in response.content)
 
 
 class LoginTest(TestCase):
@@ -124,7 +123,7 @@ class LoginTest(TestCase):
                                      'password': ''},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = loads(response.content)
+        the_json = loads(response.content.decode('utf-8'))
         self.assertTrue(the_json['error'], True)
 
         response = self.client.post('/accounts/login/',
@@ -132,7 +131,7 @@ class LoginTest(TestCase):
                                      'password': 'test'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = loads(response.content)
+        the_json = loads(response.content.decode('utf-8'))
         self.assertTrue(the_json['next'], "/")
         self.assertTrue('error' not in the_json)
 
@@ -149,8 +148,8 @@ class LogoutTest(TestCase):
 
         response = self.client.get('/accounts/logout/?next=/', follow=True)
         self.assertEquals(response.status_code, 200)
-        self.assertTrue('Log In' in response.content)
-        self.assertFalse('Log Out' in response.content)
+        self.assertTrue(b'Log In' in response.content)
+        self.assertFalse(b'Log Out' in response.content)
 
 
 class DetailViewTest(TestCase):
@@ -287,13 +286,13 @@ class ExportFootprintSearchTest(TestCase):
         p = '; '.join(p)
 
         # Imprint Actors
-        actors = [smart_text(a).encode('utf-8')
+        actors = [smart_text(a)
                   for a in self.footprint2.book_copy.imprint.actor.all()]
         actors = '; '.join(actors)
 
-        row1 = ['Empty Footprint', 'None', 'None', '', 'None', 'None', '',
-                'None', self.footprint1.created_at.strftime('%m/%d/%Y'),
-                0, 'None', '', '', '', '', '', 'None', 'None']
+        row1 = [b'Empty Footprint', b'None', b'None', b'', b'None', b'None',
+                b'', b'None', self.footprint1.created_at.strftime('%m/%d/%Y'),
+                0, b'None', b'', b'', b'', b'', b'', b'None', b'None']
 
         row1 += interpolate_role_actors(Role.objects.all().for_footprint(),
                                         self.footprint1.actors())
@@ -303,24 +302,24 @@ class ExportFootprintSearchTest(TestCase):
             self.footprint1.book_copy.imprint.actor.all())
 
         work = self.footprint2.book_copy.imprint.work
-        row2 = ['Odyssey',  # Footprint Title
-                'c. 1984',  # Footprint Date
-                'Cracow, Poland',  # Footprint Location
-                o,  # Footprint Owners
-                work.title,  # Written Work Title
-                'The Odyssey, Edition 1',  # Imprint Display Title
-                p,  # Imprint Printers
-                'c. 1984',  # Imprint Creation Date
+        row2 = [b'Odyssey',  # Footprint Title
+                b'c. 1984',  # Footprint Date
+                b'Cracow, Poland',  # Footprint Location
+                o.encode(),  # Footprint Owners
+                work.title.encode(),  # Written Work Title
+                b'The Odyssey, Edition 1',  # Imprint Display Title
+                p.encode(),  # Imprint Printers
+                b'c. 1984',  # Imprint Creation Date
                 self.footprint2.created_at.strftime('%m/%d/%Y'),
                 90,  # Footprint Percent Complete
-                'None',
-                actors,  # Imprint Actor and Role
-                '',  # Imprint BHB
-                '',  # Imprint OCLC Number
-                'Medium',  # Evidence Type
-                'Provenance',  # Evidence Location
-                'call number',  # Evidence Call Number
-                'lorem ipsum']
+                b'None',
+                actors.encode(),  # Imprint Actor and Role
+                b'',  # Imprint BHB
+                b'',  # Imprint OCLC Number
+                b'Medium',  # Evidence Type
+                b'Provenance',  # Evidence Location
+                b'call number',  # Evidence Call Number
+                b'lorem ipsum']
 
         # Footprint Actors
         row2 += interpolate_role_actors(Role.objects.all().for_footprint(),
@@ -337,12 +336,13 @@ class ExportFootprintSearchTest(TestCase):
             o.object = o
 
         rows = ExportFootprintSearch().get_rows(qs)
-        rows.next()  # skip header row
-        self.assertEquals(rows.next(), row1)
-        self.assertEquals(rows.next(), row2)
+        next(rows)  # skip header row
+
+        self.assertEquals(next(rows), row1)
+        self.assertEquals(next(rows), row2)
 
         with self.assertRaises(StopIteration):
-            rows.next()
+            next(rows)
 
     def test_get(self):
         url = reverse('export-footprint-list')
@@ -350,12 +350,12 @@ class ExportFootprintSearchTest(TestCase):
         self.assertEquals(response.status_code, 200)
 
         rows = response.streaming_content
-        rows.next()  # headers
-        rows.next()  # footprint1
-        rows.next()  # footprint2
+        next(rows)  # headers
+        next(rows)  # footprint1
+        next(rows)  # footprint2
 
         with self.assertRaises(StopIteration):
-            response.streaming_content.next()
+            next(response.streaming_content)
 
 
 class ApiViewTests(TestCase):
@@ -382,13 +382,13 @@ class ApiViewTests(TestCase):
         response = self.client.get('/api/title/', {'q': 'Foo'},
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = loads(response.content)
+        the_json = loads(response.content.decode('utf-8'))
         self.assertEquals(len(the_json), 0)
 
         response = self.client.get('/api/title/', {'q': 'Alp'},
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = loads(response.content)
+        the_json = loads(response.content.decode('utf-8'))
         self.assertEquals(len(the_json), 1)
         self.assertEquals(the_json[0], 'Alpha')
 
@@ -600,7 +600,7 @@ class AddActorViewTest(TestCase):
                                      'role': self.role.id},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = loads(response.content)
+        the_json = loads(response.content.decode('utf-8'))
         self.assertTrue(the_json['success'])
 
         # refresh footprint from database
@@ -636,7 +636,7 @@ class RemoveRelatedViewTest(TestCase):
                                      'parent_model': 'footprint'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        self.assertFalse(loads(response.content)['success'])
+        self.assertFalse(loads(response.content.decode('utf-8'))['success'])
 
         # success
         dt = self.footprint.associated_date
@@ -651,7 +651,7 @@ class RemoveRelatedViewTest(TestCase):
             HTTP_X_REQUESTED_WITH='XMLHttpRequest')
 
         self.assertEquals(response.status_code, 200)
-        self.assertTrue(loads(response.content)['success'])
+        self.assertTrue(loads(response.content.decode('utf-8'))['success'])
 
         footprint = Footprint.objects.get(id=self.footprint.id)  # refresh
         self.assertIsNone(footprint.associated_date)
@@ -672,7 +672,7 @@ class RemoveRelatedViewTest(TestCase):
             HTTP_X_REQUESTED_WITH='XMLHttpRequest')
 
         self.assertEquals(response.status_code, 200)
-        self.assertFalse(loads(response.content)['success'])
+        self.assertFalse(loads(response.content.decode('utf-8'))['success'])
 
         footprint = Footprint.objects.get(id=self.footprint.id)  # refresh
         self.assertIsNotNone(footprint.associated_date)
@@ -704,7 +704,7 @@ class RemoveRelatedActorViewTest(TestCase):
                                      'attr': 'actor'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        self.assertTrue(loads(response.content)['success'])
+        self.assertTrue(loads(response.content.decode('utf-8'))['success'])
         self.assertEquals(self.footprint.actor.count(), 1)
 
 
@@ -732,7 +732,7 @@ class RemoveRelatedIdentifierViewTest(TestCase):
                                      'attr': 'standardized_identifier'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        self.assertTrue(loads(response.content)['success'])
+        self.assertTrue(loads(response.content.decode('utf-8'))['success'])
 
         imprint = Imprint.objects.get(id=imprint.id)  # refresh
         self.assertEquals(imprint.standardized_identifier.count(), 0)
@@ -765,7 +765,7 @@ class AddDateViewTest(TestCase):
                                      'parent_model': 'footprint'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = loads(response.content)
+        the_json = loads(response.content.decode('utf-8'))
         self.assertFalse(the_json['success'])
 
         self.client.login(username=self.contributor.username, password="test")
@@ -781,7 +781,7 @@ class AddDateViewTest(TestCase):
                                      'month2': '', 'day2': ''},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = loads(response.content)
+        the_json = loads(response.content.decode('utf-8'))
 
         self.footprint.refresh_from_db()
         self.assertTrue(the_json['success'])
@@ -812,7 +812,7 @@ class DisplayDateViewTest(TestCase):
                                      'parent_model': 'footprint'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = loads(response.content)
+        the_json = loads(response.content.decode('utf-8'))
         self.assertFalse(the_json['success'])
 
         # success
@@ -829,7 +829,7 @@ class DisplayDateViewTest(TestCase):
                                      'month2': '', 'day2': ''},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = loads(response.content)
+        the_json = loads(response.content.decode('utf-8'))
         self.assertTrue(the_json['success'])
         self.assertEquals(the_json['display'], '1673')
 
@@ -861,7 +861,7 @@ class AddPlaceViewTest(TestCase):
                                      'parent_model': 'footprint'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = loads(response.content)
+        the_json = loads(response.content.decode('utf-8'))
         self.assertFalse(the_json['success'])
 
         # success
@@ -874,7 +874,7 @@ class AddPlaceViewTest(TestCase):
                                      'position': '40.752946,-73.983435'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = loads(response.content)
+        the_json = loads(response.content.decode('utf-8'))
 
         # place is created
         self.footprint.refresh_from_db()
@@ -950,7 +950,7 @@ class AddIdentifierViewTest(TestCase):
                                      'identifier_type': 'LOC'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = loads(response.content)
+        the_json = loads(response.content.decode('utf-8'))
         self.assertTrue(the_json['success'])
 
         imprint = Imprint.objects.get(id=self.imprint.id)  # refresh from db
@@ -987,11 +987,11 @@ class AddDigitalObjectViewTest(TestCase):
                                      'parent_model': 'footprint'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = loads(response.content)
+        the_json = loads(response.content.decode('utf-8'))
         self.assertFalse(the_json['success'])
 
         # success
-        f = SimpleUploadedFile("file.txt", "file_content")
+        f = SimpleUploadedFile('file.txt', b'file_content')
 
         self.client.login(username=self.contributor.username, password="test")
         response = self.client.post(self.url,
@@ -1002,7 +1002,7 @@ class AddDigitalObjectViewTest(TestCase):
                                      'file': f},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = loads(response.content)
+        the_json = loads(response.content.decode('utf-8'))
 
         footprint = Footprint.objects.get(id=self.footprint.id)  # refresh
         self.assertTrue(the_json['success'])
@@ -1147,7 +1147,7 @@ class ContactUsViewTest(TestCase):
         self.assertEqual(mail.outbox[0].subject,
                          'Footprints Contact Us Request')
         self.assertEquals(mail.outbox[0].from_email,
-                          'footprints@ccnmtl.columbia.edu')
+                          'footprints@mail.ctl.columbia.edu')
         self.assertEquals(mail.outbox[0].to,
                           [settings.CONTACT_US_EMAIL])
 

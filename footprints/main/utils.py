@@ -1,8 +1,8 @@
 from django.contrib.gis.geos.point import Point
+from footprints.mixins import BatchAccessMixin, ModerationAccessMixin, \
+    AddChangeAccessMixin
 from rest_framework.renderers import BrowsableAPIRenderer
 from django.utils.encoding import smart_text
-from footprints.mixins import BatchAccessMixin, ModerationAccessMixin,\
-    AddChangeAccessMixin
 
 
 def permissions(request):
@@ -26,8 +26,8 @@ def interpolate_role_actors(roles, actors):
     separated by a semicolon.'''
     array = []
     for r in roles:
-        actor_string = ''
-        viaf_string = ''
+        actor_string = b''
+        viaf_string = b''
         # for each actor
         for a in actors:
             # if the actor matches that role
@@ -38,17 +38,19 @@ def interpolate_role_actors(roles, actors):
                 if not actor_string:
                     actor_string = smart_text(a).encode('utf-8')
                 else:
-                    actor_string = '; '.join([actor_string, smart_text(a)
-                                              .encode('utf-8')])
+                    actor_string = b'; '.join(
+                        [actor_string, smart_text(a).encode('utf-8')])
 
                 # If the VIAF String is empty, as it would be on the first
                 # iteration, add the VIAF number. Else append a semicolon
                 # and the VIAF number at the end of the string
                 if not viaf_string:
-                    viaf_string = a.person.get_viaf_number()
+                    viaf_string = \
+                        a.person.get_viaf_number().encode('utf-8')
                 else:
-                    viaf_string = '; '.join([viaf_string,
-                                             a.person.get_viaf_number()])
+                    viaf_string = b'; '.join(
+                        [viaf_string,
+                         a.person.get_viaf_number().encode('utf-8')])
 
         array.append(actor_string)
         array.append(viaf_string)

@@ -1,7 +1,8 @@
 import csv
-
+import io
 from django import forms
-from django.utils.encoding import DjangoUnicodeDecodeError, force_text
+from django.utils.encoding import (
+    DjangoUnicodeDecodeError, force_text, smart_text)
 
 from footprints.batch.models import BatchRow
 
@@ -33,6 +34,12 @@ class CreateBatchJobForm(forms.Form):
 
     csvfile = forms.FileField(required=True)
 
+    def csvfile_reader(self):
+        csv_file = self.cleaned_data['csvfile']
+        csv_file.seek(0)
+        as_string = io.StringIO(csv_file.read().decode('utf-8'))
+        return csv.reader(as_string)
+
     def validate_column_count(self, row):
         return len(row) == len(BatchRow.FIELD_MAPPING)
 
@@ -40,7 +47,7 @@ class CreateBatchJobForm(forms.Form):
         for col in row:
             try:
                 force_text(col)
-            except DjangoUnicodeDecodeError, e:
+            except DjangoUnicodeDecodeError as e:
                 return False, e
 
         return True, ''
@@ -67,7 +74,8 @@ class CreateBatchJobForm(forms.Form):
     def validate_clean_data(self, cleaned_data):
         # do some rudimentary validation on the file
         try:
-            for idx, row in enumerate(csv.reader(cleaned_data['csvfile'])):
+            csvreader = self.csvfile_reader()
+            for idx, row in enumerate(csvreader):
                 if idx == 0 and not self.validate_header(row):
                     break
 
@@ -79,7 +87,8 @@ class CreateBatchJobForm(forms.Form):
                 valid, e = self.validate_encoding(row)
                 if not valid:
                     self._errors['csvfile'] = self.error_class([
-                        self.INVALID_ENCODING.format(unicode(e))])
+                        self.INVALID_ENCODING.format(
+                            smart_text(e).encode('utf-8'))])
                     break
 
         except csv.Error:

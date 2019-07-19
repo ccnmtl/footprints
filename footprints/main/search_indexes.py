@@ -39,7 +39,7 @@ class WrittenWorkIndex(CelerySearchIndex, Indexable):
         return type(obj).__name__
 
     def prepare_sort_by(self, obj):
-        return format_sort_by(obj.__unicode__(), remove_articles=True)
+        return format_sort_by(smart_text(obj), remove_articles=True)
 
 
 class ImprintIndex(CelerySearchIndex, Indexable):
@@ -101,7 +101,7 @@ class FootprintIndex(CelerySearchIndex, Indexable):
 
     def prepare_flocation(self, obj):
         if obj.place:
-            return obj.place.__unicode__()
+            return smart_text(obj.place)
 
         return ''
 
@@ -135,13 +135,13 @@ class FootprintIndex(CelerySearchIndex, Indexable):
 
     def prepare_footprint_location(self, obj):
         if obj.place:
-            return obj.place.__unicode__()
+            return smart_text(obj.place)
 
         return ''
 
     def prepare_imprint_location(self, obj):
         if obj.book_copy.imprint.place:
-            return obj.book_copy.imprint.place.__unicode__()
+            return smart_text(obj.book_copy.imprint.place)
 
         return ''
 
@@ -187,4 +187,4 @@ class PlaceIndex(CelerySearchIndex, Indexable):
         return type(obj).__name__
 
     def prepare_sort_by(self, obj):
-        return format_sort_by(obj.__unicode__(), remove_articles=True)
+        return format_sort_by(smart_text(obj), remove_articles=True)

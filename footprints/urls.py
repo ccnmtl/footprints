@@ -110,7 +110,7 @@ urlpatterns = [
         FootprintDetailView.as_view(), name='footprint-detail-view'),
 
     url(r'^writtenwork/(?P<pk>\d+)/(?P<imprint>\d+)/'
-        '(?P<copy>\d+)/(?P<footprint>\d+)/$',
+        r'(?P<copy>\d+)/(?P<footprint>\d+)/$',
         WrittenWorkDetailView.as_view(),
         name='writtenwork-detail-view-footprint'),
     url(r'^writtenwork/(?P<pk>\d+)/(?P<imprint>\d+)/(?P<copy>\d+)/$',

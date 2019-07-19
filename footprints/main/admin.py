@@ -3,6 +3,7 @@ from django.contrib.admin.models import LogEntry
 from django.contrib.gis.db.models.fields import PointField
 from django.contrib.gis.geos.point import Point
 from django.forms.widgets import MultiWidget, TextInput
+from django.utils.encoding import smart_text
 from reversion.admin import VersionAdmin
 
 from footprints.main.models import Footprint, DigitalFormat, Role, \
@@ -47,7 +48,7 @@ footprint_associated_date.allow_tags = True
 
 class ExtendedDateAdmin(admin.ModelAdmin):
     list_display = (
-        'edtf_format', '__unicode__',
+        'edtf_format', '__str__',
         imprint_publication_date, footprint_associated_date)
     search_fields = ('edtf_format',)
 
@@ -71,7 +72,7 @@ admin.site.register(WrittenWork)
 
 
 def imprint_display(obj):
-    return obj.imprint.__unicode__()
+    return smart_text(obj.imprint)
 
 
 class BookCopyAdmin(admin.ModelAdmin):
@@ -166,7 +167,7 @@ admin.site.register(Footprint, FootprintAdmin)
 
 
 class LogEntryAdmin(VersionAdmin):
-    list_display = ('__unicode__', 'user', 'action_time')
+    list_display = ('__str__', 'user', 'action_time')
     search_fields = ('user',)
 
 

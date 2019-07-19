@@ -307,7 +307,7 @@ class ExportFootprintSearch(BaseSearchView):
             # Imprint actor
             actors = [smart_text(p).encode('utf-8') for p
                       in o.book_copy.imprint.actor.all()]
-            row.append('; '.join(actors))
+            row.append(b'; '.join(actors))
 
             # Imprint BHB
             if o.book_copy.imprint.has_bhb_number():
@@ -315,7 +315,7 @@ class ExportFootprintSearch(BaseSearchView):
                                        .imprint.get_bhb_number()
                                        .identifier).encode('utf-8'))
             else:
-                row.append('')
+                row.append(b'')
 
             # Imprint OCLC #
             if o.book_copy.imprint.has_oclc_number():
@@ -323,7 +323,7 @@ class ExportFootprintSearch(BaseSearchView):
                                        .imprint.get_oclc_number()
                                        .identifier).encode('utf-8'))
             else:
-                row.append('')
+                row.append(b'')
 
             # Evidence type
             row.append(smart_text(o.medium).encode('utf-8'))
@@ -602,7 +602,7 @@ class DisplayDateView(JSONResponseMixin, View):
         else:
             return self.render_to_json_response({
                 'success': True,
-                'display': form.get_extended_date().__unicode__()
+                'display': smart_text(form.get_extended_date())
             })
 
 

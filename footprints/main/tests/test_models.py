@@ -23,7 +23,7 @@ class LanguageTest(TestCase):
 
     def test_language(self):
         language = Language.objects.create(name='English')
-        self.assertEquals(language.__unicode__(), 'English')
+        self.assertEquals(str(language), 'English')
 
         with self.assertRaises(IntegrityError):
             Language.objects.create(name='English')
@@ -55,7 +55,7 @@ class DigitalFormatTest(TestCase):
 
     def test_digital_format(self):
         digital_format = DigitalFormat.objects.create(name='png')
-        self.assertEquals(digital_format.__unicode__(), 'png')
+        self.assertEquals(str(digital_format), 'png')
 
         with self.assertRaises(IntegrityError):
             DigitalFormat.objects.create(name='png')
@@ -69,12 +69,12 @@ class StandardizedIdentificationTest(TestCase):
         si = StandardizedIdentification.objects.create(identifier='foo',
                                                        identifier_type=stt)
 
-        self.assertEquals(si.__unicode__(), 'foo')
+        self.assertEquals(str(si), 'foo')
         self.assertEquals(si.authority(), 'Sample')
 
         si = StandardizedIdentification.objects.create(identifier='foo',
                                                        identifier_type=None)
-        self.assertEquals(si.__unicode__(), 'foo')
+        self.assertEquals(str(si), 'foo')
         self.assertIsNone(si.authority())
 
 
@@ -82,7 +82,7 @@ class PersonTest(TestCase):
 
     def test_person(self):
         person = PersonFactory(name='Cicero')
-        self.assertEquals(person.__unicode__(), "Cicero")
+        self.assertEquals(str(person), "Cicero")
 
         person.digital_object.add(DigitalObjectFactory())
         self.assertEquals(person.percent_complete(), 100)
@@ -94,12 +94,12 @@ class PlaceTest(TestCase):
         pt = string_to_point(latlng)
         place = Place.objects.create(latlng=pt)
 
-        self.assertEquals(place.__unicode__(), '')
+        self.assertEquals(str(place), '')
         self.assertTrue(place.match_string(latlng))
         self.assertFalse(place.match_string('12.34,56.789'))
 
         place = PlaceFactory()
-        self.assertEquals(place.__unicode__(), 'Cracow, Poland')
+        self.assertEquals(str(place), 'Cracow, Poland')
         self.assertEquals(place.latitude(), 50.064650)
         self.assertEquals(place.longitude(), 19.944979)
 
@@ -107,14 +107,14 @@ class PlaceTest(TestCase):
 class CollectionTest(TestCase):
     def test_collection(self):
         collection = CollectionFactory(name='The Morgan Collection')
-        self.assertEquals(collection.__unicode__(), 'The Morgan Collection')
+        self.assertEquals(str(collection), 'The Morgan Collection')
 
 
 class WrittenWorkTest(TestCase):
 
     def test_written_work(self):
         work = WrittenWorkFactory()
-        self.assertEquals(work.__unicode__(), work.title)
+        self.assertEquals(str(work), work.title)
         self.assertEquals(work.percent_complete(), 100)
 
         author_role, created = Role.objects.get_or_create(name=Role.AUTHOR)
@@ -145,7 +145,7 @@ class BookCopyTest(TestCase):
     def test_book_copy(self):
         copy = BookCopyFactory()
         self.assertTrue(
-            copy.__unicode__().endswith('The Odyssey, Edition 1 (c. 1984)'))
+            str(copy).endswith('The Odyssey, Edition 1 (c. 1984)'))
 
         self.assertTrue(copy.identifier() in copy.description())
 
@@ -201,7 +201,7 @@ class ExtendedDateTest(TestCase):
     def test_use_cases(self):
         for key, val in self.use_cases.items():
             e = ExtendedDate(edtf_format=key)
-            self.assertEquals(e.__unicode__(), val)
+            self.assertEquals(str(e), val)
 
     def test_create_from_dict(self):
         values = {
@@ -260,7 +260,7 @@ class ExtendedDateTest(TestCase):
 
     def test_invalid_month(self):
         dt = ExtendedDate.objects.create(edtf_format='uuuu-uu-17/uuuu-uu-18')
-        self.assertEquals(dt.__unicode__(), ' 17, uuuu -  18, uuuu')
+        self.assertEquals(str(dt), ' 17, uuuu -  18, uuuu')
 
     def test_end_date(self):
         dt = ExtendedDate.objects.create(edtf_format='1700')
@@ -288,11 +288,10 @@ class ImprintTest(TestCase):
 
     def test_basics(self):
         imprint = Imprint.objects.create(work=WrittenWorkFactory())
-        self.assertEquals(imprint.__unicode__(), imprint.work.title)
+        self.assertEquals(str(imprint), imprint.work.title)
 
         imprint = ImprintFactory()
-        self.assertEquals(imprint.__unicode__(),
-                          'The Odyssey, Edition 1 (c. 1984)')
+        self.assertEquals(str(imprint), 'The Odyssey, Edition 1 (c. 1984)')
 
         # imprint.digital_object.add(DigitalObjectFactory())
         # self.assertEquals(imprint.percent_complete(), 100)
@@ -393,13 +392,13 @@ class ActorTest(TestCase):
 
         # No Alternate Name
         self.assertEquals(
-            actor.__unicode__(),
+            str(actor),
             '%s (%s)' % (actor.person.name, role.name))
 
         # With Alternate Name
         actor = ActorFactory(role=role)
         self.assertEquals(
-            actor.__unicode__(),
+            str(actor),
             '%s as %s (%s)' % (actor.person.name, actor.alias, role.name))
 
     def test_get_or_create_by_attributes(self):
@@ -461,7 +460,7 @@ class FootprintTest(TestCase):
 
     def test_footprint(self):
         footprint = FootprintFactory()
-        self.assertEquals(footprint.__unicode__(), 'Provenance')
+        self.assertEquals(str(footprint), 'Provenance')
         self.assertFalse(footprint.is_bare())
 
         footprint.digital_object.add(DigitalObjectFactory())

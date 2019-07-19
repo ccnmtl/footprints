@@ -2,7 +2,11 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.urlresolvers import reverse
 from django.test.client import RequestFactory
 from django.test.testcases import TestCase
-import mock
+
+try:
+    from unittest import mock
+except ImportError:
+    import mock
 
 from footprints.batch.forms import CreateBatchJobForm
 from footprints.batch.models import BatchRow, BatchJob
@@ -36,13 +40,13 @@ class BatchJobListViewTest(TestCase):
 
     def test_get_success_url(self):
         self.view.job = BatchJobFactory()
-        self.assertEquals(self.view.get_success_url(),
-                          '/batch/job/{}/'.format(self.view.job.id))
+        self.assertEqual(self.view.get_success_url(),
+                         '/batch/job/{}/'.format(self.view.job.id))
 
     def test_form_valid(self):
         row = ','.join(BatchRow.FIELD_MAPPING)
         content = '{}\n{}'.format(row, row)
-        csvfile = SimpleUploadedFile('test.csv', content)
+        csvfile = SimpleUploadedFile('test.csv', str.encode(content))
 
         form = CreateBatchJobForm()
         form.cleaned_data = {'csvfile': csvfile}
@@ -52,11 +56,11 @@ class BatchJobListViewTest(TestCase):
         self.view.form_valid(form)
 
         jobs = BatchJob.objects.all()
-        self.assertEquals(jobs.count(), 1)
+        self.assertEqual(jobs.count(), 1)
 
         job = jobs.first()
-        self.assertEquals(job.created_by, self.view.request.user)
-        self.assertEquals(job.batchrow_set.count(), 1)
+        self.assertEqual(job.created_by, self.view.request.user)
+        self.assertEqual(job.batchrow_set.count(), 1)
 
 
 class BatchJobDetailView(TestCase):
@@ -66,13 +70,13 @@ class BatchJobDetailView(TestCase):
         url = reverse('batchjob-detail-view', kwargs={'pk': job.id})
 
         response = self.client.get(url)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
         grp = GroupFactory(permissions=BATCH_PERMISSIONS)
         staff = UserFactory(group=grp)
         self.client.login(username=staff.username, password='test')
         response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertTrue('fields' in response.context_data)
 
 
@@ -88,7 +92,7 @@ class BatchJobDeleteViewTest(TestCase):
     def test_post(self):
         self.client.login(username=self.staff.username, password='test')
         response = self.client.post(self.url, {})
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
         self.assertFalse(BatchJob.objects.filter(id=self.job.id).exists())
 
@@ -112,14 +116,14 @@ class BatchJobUpdateViewTest(TestCase):
 
     def test_view_basics(self):
         response = self.client.get(self.url)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
         response = self.client.post(self.url)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
         self.client.login(username=self.user.username, password='test')
         response = self.client.post(self.url)
-        self.assertEquals(response.status_code, 403)
+        self.assertEqual(response.status_code, 403)
 
     def test_add_author(self):
         work = WrittenWorkFactory()
@@ -166,25 +170,25 @@ class BatchJobUpdateViewTest(TestCase):
         }
         self.assertTrue(footprint.actor.filter(**q).exists())
 
-    @mock.patch('urllib2.urlopen')
-    def test_add_place_new(self, m_urlopen):
+    def test_add_place_new(self):
         content = """{"results": [{
             "address_components": [
                 {"long_name": "Osgiliath", "types": ["locality", "political"]},
                 {"long_name": "Gondor", "types": ["country", "political"]}
             ]}]}"""
-        m_urlopen().read.side_effect = [content]
 
-        footprint = FootprintFactory()
+        with mock.patch('footprints.batch.views.urlopen') as urlopen:
+            urlopen().read.side_effect = [content]
 
-        view = BatchJobUpdateView()
-        view.add_place(footprint, '51.064650,20.944979')
+            footprint = FootprintFactory()
+            view = BatchJobUpdateView()
+            view.add_place(footprint, '51.064650,20.944979')
 
-        footprint.refresh_from_db()
-        self.assertEquals(51.064650, footprint.place.latitude())
-        self.assertEquals(20.944979, footprint.place.longitude())
-        self.assertEquals('Osgiliath', footprint.place.city)
-        self.assertEquals('Gondor', footprint.place.country)
+            footprint.refresh_from_db()
+            self.assertEqual(51.064650, footprint.place.latitude())
+            self.assertEqual(20.944979, footprint.place.longitude())
+            self.assertEqual('Osgiliath', footprint.place.city)
+            self.assertEqual('Gondor', footprint.place.country)
 
     def test_add_place_existing(self):
         position = '51.064650,20.944979'
@@ -195,9 +199,9 @@ class BatchJobUpdateViewTest(TestCase):
         view.add_place(footprint, position)
 
         footprint.refresh_from_db()
-        self.assertEquals(place.latitude(), footprint.place.latitude())
-        self.assertEquals(place.longitude(), footprint.place.longitude())
-        self.assertEquals(place.country, footprint.place.country)
+        self.assertEqual(place.latitude(), footprint.place.latitude())
+        self.assertEqual(place.longitude(), footprint.place.longitude())
+        self.assertEqual(place.country, footprint.place.country)
 
     def test_get_or_create_imprint(self):
         view = BatchJobUpdateView()
@@ -219,7 +223,7 @@ class BatchJobUpdateViewTest(TestCase):
         copy = view.get_or_create_copy('12345',
                                        existing_copy.imprint,
                                        existing_copy.call_number)
-        self.assertEquals(existing_copy, copy)
+        self.assertEqual(existing_copy, copy)
 
         # match copy via footprint call number
         # book copy's call number will be updated
@@ -229,13 +233,13 @@ class BatchJobUpdateViewTest(TestCase):
 
         copy = view.get_or_create_copy(
             fp.call_number, fp.book_copy.imprint, 'efgh')
-        self.assertEquals(fp.book_copy, copy)
-        self.assertEquals(copy.call_number, 'efgh')
+        self.assertEqual(fp.book_copy, copy)
+        self.assertEqual(copy.call_number, 'efgh')
 
         # get a new copy. no footprint found to match
         imprint = ImprintFactory()
         copy = view.get_or_create_copy('45678', imprint, 'abcd')
-        self.assertEquals(copy.call_number, 'abcd')
+        self.assertEqual(copy.call_number, 'abcd')
 
     def test_create_footprint(self):
         copy = BookCopyFactory()
@@ -243,35 +247,35 @@ class BatchJobUpdateViewTest(TestCase):
         view = BatchJobUpdateView()
         fp = view.create_footprint(self.record1, copy)
 
-        self.assertEquals(fp.book_copy, copy)
-        self.assertEquals(fp.medium, self.record1.medium)
-        self.assertEquals(fp.provenance, self.record1.provenance)
-        self.assertEquals(fp.call_number, self.record1.call_number)
-        self.assertEquals(fp.notes, self.record1.aggregate_notes())
+        self.assertEqual(fp.book_copy, copy)
+        self.assertEqual(fp.medium, self.record1.medium)
+        self.assertEqual(fp.provenance, self.record1.provenance)
+        self.assertEqual(fp.call_number, self.record1.call_number)
+        self.assertEqual(fp.notes, self.record1.aggregate_notes())
 
-        self.assertEquals(fp.associated_date.__unicode__(),
-                          self.record1.footprint_date)
-        self.assertEquals(fp.place, None)
-        self.assertEquals(fp.narrative, 'Sample Narrative')
+        self.assertEqual(str(fp.associated_date),
+                         self.record1.footprint_date)
+        self.assertEqual(fp.place, None)
+        self.assertEqual(fp.narrative, 'Sample Narrative')
 
     def test_post(self):
         self.client.login(username=self.staff.username, password='test')
         response = self.client.post(self.url)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
         fp1 = Footprint.objects.get(medium='Library Catalog/Union Catalog')
         a = self.record1.similar_footprints()
-        self.assertEquals(a.count(), 1)
-        self.assertEquals(a.first(), fp1.id)
+        self.assertEqual(a.count(), 1)
+        self.assertEqual(a.first(), fp1.id)
         self.record1.refresh_from_db()
-        self.assertEquals(self.record1.footprint, fp1)
+        self.assertEqual(self.record1.footprint, fp1)
 
         fp2 = Footprint.objects.get(medium='Approbation in imprint')
         a = self.record2.similar_footprints()
-        self.assertEquals(a.count(), 1)
-        self.assertEquals(a.first(), fp2.id)
+        self.assertEqual(a.count(), 1)
+        self.assertEqual(a.first(), fp2.id)
         self.record2.refresh_from_db()
-        self.assertEquals(self.record2.footprint, fp2)
+        self.assertEqual(self.record2.footprint, fp2)
 
         self.assertTrue(fp1.book_copy, fp2.book_copy)
 
@@ -295,7 +299,7 @@ class BatchRowUpdateViewTest(TestCase):
 
     def test_get(self):
         response = self.client.get(self.url)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
     def test_post(self):
         self.client.login(username=self.staff.username, password='test')
@@ -305,11 +309,11 @@ class BatchRowUpdateViewTest(TestCase):
         }
 
         response = self.client.post(self.url, data)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
         self.row.refresh_from_db()
-        self.assertEquals(self.row.imprint_title, 'Something different')
-        self.assertEquals(self.row.bhb_number, 'abcdefg')
+        self.assertEqual(self.row.imprint_title, 'Something different')
+        self.assertEqual(self.row.bhb_number, 'abcdefg')
 
 
 class BatchRowDeleteViewTest(TestCase):
@@ -324,6 +328,6 @@ class BatchRowDeleteViewTest(TestCase):
     def test_post(self):
         self.client.login(username=self.staff.username, password='test')
         response = self.client.post(self.url, {})
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
         self.assertFalse(BatchRow.objects.filter(id=self.row.id).exists())
