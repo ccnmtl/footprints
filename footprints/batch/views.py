@@ -1,4 +1,3 @@
-import csv
 from json import loads
 
 try:
@@ -39,8 +38,8 @@ class BatchJobListView(LoggedInMixin, BatchAccessMixin, FormView):
     @transaction.atomic
     def form_valid(self, form):
         self.job = BatchJob.objects.create(created_by=self.request.user)
-        table = csv.reader(form.cleaned_data['csvfile'])
-        table.next()  # skip the header row
+        table = form.csvfile_reader()
+        next(table)  # skip the header row
         for row in table:
             batch_row = BatchRow(job=self.job)
             for idx, col in enumerate(row):

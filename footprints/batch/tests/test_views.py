@@ -46,7 +46,7 @@ class BatchJobListViewTest(TestCase):
     def test_form_valid(self):
         row = ','.join(BatchRow.FIELD_MAPPING)
         content = '{}\n{}'.format(row, row)
-        csvfile = SimpleUploadedFile('test.csv', content)
+        csvfile = SimpleUploadedFile('test.csv', str.encode(content))
 
         form = CreateBatchJobForm()
         form.cleaned_data = {'csvfile': csvfile}

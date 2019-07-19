@@ -120,6 +120,7 @@ django-registration-redux==2.6
 django-markwhat==1.6.1
 gunicorn==19.9.0
 futures==3.2.0; python_version < '3'
+future==0.17.1;
 s3transfer==0.2.1
 jmespath==0.9.4
 botocore==1.12.182

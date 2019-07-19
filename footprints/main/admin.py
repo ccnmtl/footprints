@@ -48,7 +48,7 @@ footprint_associated_date.allow_tags = True
 
 class ExtendedDateAdmin(admin.ModelAdmin):
     list_display = (
-        'edtf_format', '__unicode__',
+        'edtf_format', '__str__',
         imprint_publication_date, footprint_associated_date)
     search_fields = ('edtf_format',)
 
@@ -167,7 +167,7 @@ admin.site.register(Footprint, FootprintAdmin)
 
 
 class LogEntryAdmin(VersionAdmin):
-    list_display = ('__unicode__', 'user', 'action_time')
+    list_display = ('__str__', 'user', 'action_time')
     search_fields = ('user',)
 
 

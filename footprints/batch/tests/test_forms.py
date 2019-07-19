@@ -18,7 +18,7 @@ class CreateBatchJobFormTest(TestCase):
     def test_form_clean_invalid_file_format(self):
         content = ','.join(CreateBatchJobForm.VALID_HEADERS) + '\r\n'
         content += '1,2,3,'
-        csvfile = SimpleUploadedFile('file.csv', content)
+        csvfile = SimpleUploadedFile('file.csv', str.encode(content))
 
         form = CreateBatchJobForm()
         form._errors = {}
@@ -30,7 +30,7 @@ class CreateBatchJobFormTest(TestCase):
 
     def test_form_validate_headers(self):
         content = 'bad content'
-        csvfile = SimpleUploadedFile('file.csv', content)
+        csvfile = SimpleUploadedFile('file.csv', str.encode(content))
 
         form = CreateBatchJobForm()
         form._errors = {}
@@ -50,7 +50,7 @@ class CreateBatchJobFormTest(TestCase):
     def test_form_clean_valid_file_format(self):
         content = ','.join(CreateBatchJobForm.VALID_HEADERS) + '\r\n'
         content += ',' * (len(BatchRow.FIELD_MAPPING) - 1)
-        csvfile = SimpleUploadedFile('file.csv', content)
+        csvfile = SimpleUploadedFile('file.csv', str.encode(content))
 
         form = CreateBatchJobForm()
         form._errors = {}

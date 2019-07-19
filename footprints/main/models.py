@@ -1,5 +1,5 @@
 from datetime import date
-
+from past.builtins import basestring
 from audit_log.models.fields import LastUserField, CreatingUserField
 from django.contrib.gis.db.models.fields import PointField
 from django.db import models
@@ -8,9 +8,8 @@ from django.template import loader
 from django.urls.base import reverse
 from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible, smart_text
-from edtf.edtf import EDTF
 from edtf import edtf_date
-
+from edtf.edtf import EDTF
 from footprints.main.templatetags.moderation import has_moderation_flags, \
     moderation_flags
 from footprints.main.utils import string_to_point
@@ -102,7 +101,7 @@ class ExtendedDateManager(models.Manager):
         return ExtendedDate(edtf_format=dt)
 
     def create_from_string(self, date_str):
-        edtf = unicode(EDTF.from_natural_text(date_str))
+        edtf = smart_text(EDTF.from_natural_text(date_str))
         return ExtendedDate.objects.create(edtf_format=edtf)
 
 
@@ -236,7 +235,7 @@ class ExtendedDate(models.Model):
         return self._validate_python_date(edtf.end_date_latest())
 
     def match_string(self, date_str):
-        return self.edtf_format == unicode(EDTF.from_natural_text(date_str))
+        return self.edtf_format == smart_text(EDTF.from_natural_text(date_str))
 
 
 def fmt_uncertain(date_obj, result):
@@ -475,11 +474,11 @@ class PersonManager(models.Manager):
         # update birth date & death date
         if born and person.birth_date is None:
             person.birth_date = ExtendedDate.objects.create(
-                edtf_format=unicode(EDTF.from_natural_text(born)))
+                edtf_format=smart_text(EDTF.from_natural_text(born)))
 
         if died and person.death_date is None:
             person.death_date = ExtendedDate.objects.create(
-                edtf_format=unicode(EDTF.from_natural_text(died)))
+                edtf_format=smart_text(EDTF.from_natural_text(died)))
 
         person.save()
         return person
@@ -645,6 +644,9 @@ class Place(models.Model):
         verbose_name = "Place"
 
     def __str__(self):
+        return self.display_title()
+
+    def display_title(self):
         parts = []
         if self.city:
             parts.append(self.city)
