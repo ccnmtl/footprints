@@ -1,5 +1,4 @@
 from json import loads
-import json
 
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser, Group, Permission
@@ -52,7 +51,7 @@ class BasicTest(TestCase):
             r = self.client.get(
                 '/sign_s3/?s3_object_name=default_name&s3_object_type=foo')
             self.assertEqual(r.status_code, 200)
-            j = json.loads(r.content)
+            j = loads(r.content.decode('utf-8'))
             self.assertTrue('signed_request' in j)
 
 
@@ -124,7 +123,7 @@ class LoginTest(TestCase):
                                      'password': ''},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = loads(response.content)
+        the_json = loads(response.content.decode('utf-8'))
         self.assertTrue(the_json['error'], True)
 
         response = self.client.post('/accounts/login/',
@@ -132,7 +131,7 @@ class LoginTest(TestCase):
                                      'password': 'test'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = loads(response.content)
+        the_json = loads(response.content.decode('utf-8'))
         self.assertTrue(the_json['next'], "/")
         self.assertTrue('error' not in the_json)
 
@@ -383,13 +382,13 @@ class ApiViewTests(TestCase):
         response = self.client.get('/api/title/', {'q': 'Foo'},
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = loads(response.content)
+        the_json = loads(response.content.decode('utf-8'))
         self.assertEquals(len(the_json), 0)
 
         response = self.client.get('/api/title/', {'q': 'Alp'},
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = loads(response.content)
+        the_json = loads(response.content.decode('utf-8'))
         self.assertEquals(len(the_json), 1)
         self.assertEquals(the_json[0], 'Alpha')
 
@@ -601,7 +600,7 @@ class AddActorViewTest(TestCase):
                                      'role': self.role.id},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = loads(response.content)
+        the_json = loads(response.content.decode('utf-8'))
         self.assertTrue(the_json['success'])
 
         # refresh footprint from database
@@ -637,7 +636,7 @@ class RemoveRelatedViewTest(TestCase):
                                      'parent_model': 'footprint'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        self.assertFalse(loads(response.content)['success'])
+        self.assertFalse(loads(response.content.decode('utf-8'))['success'])
 
         # success
         dt = self.footprint.associated_date
@@ -652,7 +651,7 @@ class RemoveRelatedViewTest(TestCase):
             HTTP_X_REQUESTED_WITH='XMLHttpRequest')
 
         self.assertEquals(response.status_code, 200)
-        self.assertTrue(loads(response.content)['success'])
+        self.assertTrue(loads(response.content.decode('utf-8'))['success'])
 
         footprint = Footprint.objects.get(id=self.footprint.id)  # refresh
         self.assertIsNone(footprint.associated_date)
@@ -673,7 +672,7 @@ class RemoveRelatedViewTest(TestCase):
             HTTP_X_REQUESTED_WITH='XMLHttpRequest')
 
         self.assertEquals(response.status_code, 200)
-        self.assertFalse(loads(response.content)['success'])
+        self.assertFalse(loads(response.content.decode('utf-8'))['success'])
 
         footprint = Footprint.objects.get(id=self.footprint.id)  # refresh
         self.assertIsNotNone(footprint.associated_date)
@@ -705,7 +704,7 @@ class RemoveRelatedActorViewTest(TestCase):
                                      'attr': 'actor'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        self.assertTrue(loads(response.content)['success'])
+        self.assertTrue(loads(response.content.decode('utf-8'))['success'])
         self.assertEquals(self.footprint.actor.count(), 1)
 
 
@@ -733,7 +732,7 @@ class RemoveRelatedIdentifierViewTest(TestCase):
                                      'attr': 'standardized_identifier'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        self.assertTrue(loads(response.content)['success'])
+        self.assertTrue(loads(response.content.decode('utf-8'))['success'])
 
         imprint = Imprint.objects.get(id=imprint.id)  # refresh
         self.assertEquals(imprint.standardized_identifier.count(), 0)
@@ -766,7 +765,7 @@ class AddDateViewTest(TestCase):
                                      'parent_model': 'footprint'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = loads(response.content)
+        the_json = loads(response.content.decode('utf-8'))
         self.assertFalse(the_json['success'])
 
         self.client.login(username=self.contributor.username, password="test")
@@ -782,7 +781,7 @@ class AddDateViewTest(TestCase):
                                      'month2': '', 'day2': ''},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = loads(response.content)
+        the_json = loads(response.content.decode('utf-8'))
 
         self.footprint.refresh_from_db()
         self.assertTrue(the_json['success'])
@@ -813,7 +812,7 @@ class DisplayDateViewTest(TestCase):
                                      'parent_model': 'footprint'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = loads(response.content)
+        the_json = loads(response.content.decode('utf-8'))
         self.assertFalse(the_json['success'])
 
         # success
@@ -830,7 +829,7 @@ class DisplayDateViewTest(TestCase):
                                      'month2': '', 'day2': ''},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = loads(response.content)
+        the_json = loads(response.content.decode('utf-8'))
         self.assertTrue(the_json['success'])
         self.assertEquals(the_json['display'], '1673')
 
@@ -862,7 +861,7 @@ class AddPlaceViewTest(TestCase):
                                      'parent_model': 'footprint'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = loads(response.content)
+        the_json = loads(response.content.decode('utf-8'))
         self.assertFalse(the_json['success'])
 
         # success
@@ -875,7 +874,7 @@ class AddPlaceViewTest(TestCase):
                                      'position': '40.752946,-73.983435'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = loads(response.content)
+        the_json = loads(response.content.decode('utf-8'))
 
         # place is created
         self.footprint.refresh_from_db()
@@ -951,7 +950,7 @@ class AddIdentifierViewTest(TestCase):
                                      'identifier_type': 'LOC'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = loads(response.content)
+        the_json = loads(response.content.decode('utf-8'))
         self.assertTrue(the_json['success'])
 
         imprint = Imprint.objects.get(id=self.imprint.id)  # refresh from db
@@ -988,7 +987,7 @@ class AddDigitalObjectViewTest(TestCase):
                                      'parent_model': 'footprint'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = loads(response.content)
+        the_json = loads(response.content.decode('utf-8'))
         self.assertFalse(the_json['success'])
 
         # success
@@ -1003,7 +1002,7 @@ class AddDigitalObjectViewTest(TestCase):
                                      'file': f},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = loads(response.content)
+        the_json = loads(response.content.decode('utf-8'))
 
         footprint = Footprint.objects.get(id=self.footprint.id)  # refresh
         self.assertTrue(the_json['success'])
