@@ -124,7 +124,7 @@ future==0.17.1;
 s3transfer==0.2.1
 jmespath==0.9.4
 botocore==1.12.182
-boto3==1.9.180
+boto3==1.9.192
 django-infranil==1.1.0
 certifi==2019.6.16  # for pysolr
 pysolr==3.8.1
