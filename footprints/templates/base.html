@@ -34,9 +34,13 @@
         <link rel="icon" href="{{STATIC_URL}}img/favicon.ico">
         <link rel="icon" type="image/png" href="{{STATIC_URL}}img/favicon.png">
         
-        <!-- Open Graph placeholder -->
+        <!-- Open Graph metadata -->
+        {% block opengraph %}{% endblock %}
         
-        <!-- JSON-LD placeholder -->
+         <!-- Twitter card metadata -->
+        {% block twittercard %}{% endblock %}
+
+       <!-- JSON-LD placeholder -->
 
         {% block client_templates %}
         {% endblock %}
