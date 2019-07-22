@@ -10,12 +10,23 @@
     Written Work {{object.title}}
 {% endblock %}
 
-{% block extrahead %}
-    <meta property="og:url" content="{{request.build_absolute_uri}}" />
+{% block opengraph %}
+    <meta property="og:title" content="{% spaceless %}Footprints Written Work: {{object}}{% endspaceless %}" />
     <meta property="og:type" content="article" />
-    <meta property="og:title" content="{{object}}" />
-    <meta property="og:description" content="{{object}}" />
-    <meta property="og:image" content="{{STATIC_URL}}img/share_logo.png">
+    <meta property="og:image" content="{% spaceless %}{{ request.scheme }}://{{ request.get_host }}{{STATIC_URL}}img/footprints_opengraph.jpg{% endspaceless %}" />
+    <meta property="og:image:alt" content="Footprints: Jewish Books Through Time and Place logo">
+    <meta property="og:url" content="{{request.build_absolute_uri}}" />
+    <meta property="og:description" content="{% spaceless %}Footprints Written Work: {{object}}{% endspaceless %}" />
+    <meta property="og:site_name" content="Footprints" />
+{% endblock %}
+
+{% block twittercard %}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@Footprints_Heb" />
+    <meta name="twitter:title" content="{% spaceless %}Footprints Written Work: {{object}}{% endspaceless %}" />
+    <meta name="twitter:description" content="{% spaceless %}Footprints Written Work: {{object}}{% endspaceless %}" />
+    <meta name="twitter:image" content="{% spaceless %}{{ request.scheme }}://{{ request.get_host }}{{STATIC_URL}}img/footprints_opengraph.jpg{% endspaceless %}" />
+    <meta name="twitter:image:alt" content="Footprints: Jewish Books Through Time and Place logo" />
 {% endblock %}
 
 {% block js %}
