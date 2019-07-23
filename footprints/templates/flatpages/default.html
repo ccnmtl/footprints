@@ -3,7 +3,7 @@
 {% block opengraph %}
     <meta property="og:title" content="Footprints: {{ flatpage.title }}" />
     <meta property="og:type" content="article" />
-    <meta property="og:image" content="{% spaceless %}{{ request.scheme }}://{{ request.get_host }}{{STATIC_URL}}img/footprints_opengraph.jpg{% endspaceless %}" />
+    <meta property="og:image" content="{% spaceless %}{{STATIC_URL}}img/footprints_opengraph.jpg{% endspaceless %}" />
     <meta property="og:image:alt" content="Footprints: Jewish Books Through Time and Place logo">
     <meta property="og:url" content="{{request.build_absolute_uri}}" />
     <meta property="og:description" content="{{ flatpage.title }}" />
@@ -15,7 +15,7 @@
     <meta name="twitter:site" content="@Footprints_Heb" />
     <meta name="twitter:title" content="Footprints: {{ flatpage.title }}" />
     <meta name="twitter:description" content="{{ flatpage.title }}" />
-    <meta name="twitter:image" content="{% spaceless %}{{ request.scheme }}://{{ request.get_host }}{{STATIC_URL}}img/footprints_opengraph.jpg{% endspaceless %}" />
+    <meta name="twitter:image" content="{% spaceless %}{{STATIC_URL}}img/footprints_opengraph.jpg{% endspaceless %}" />
     <meta name="twitter:image:alt" content="Footprints: Jewish Books Through Time and Place logo" />
 {% endblock %}
 
