@@ -1,5 +1,48 @@
 {% extends "base.html" %}
 
+{% block description %}Footprints is a database that traces the history and movement of Jewish books since the inception of print.{% endblock %}
+
+{% block seosettings %}
+<!-- DCMI Metadata -->
+<meta name="DC.Title" content="Footprints: Jewish Books Through Time and Place -- {{ flatpage.title }}" />
+<meta name="DC.Description" content="Footprints is a database that traces the history and movement of Jewish books since the inception of print." />
+<meta name="DC.Publisher" content="Columbia University Center for Teaching and Learning" />
+
+<!-- JSON Structured Data-->
+<script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "WebSite",
+    "url": {{request.build_absolute_uri}}",
+    "name": "Footprints: Jewish Books Through Time and Place -- {{ flatpage.title }}",
+    "image": "{% spaceless %}{{STATIC_URL}}img/footprints_opengraph.jpg{% endspaceless %}", 
+    "about": "Footprints is a database that traces the history and movement of Jewish books since the inception of print.",
+    "publisher": "Columbia University Center for Teaching and Learning",
+    "keywords": "Hebrew books, Provenance, Jewish books, Jewish, Nazi-looted books, Hebrew Incunabula, Lost Jewish books, Footsteps, Sefarim, Sefer, Seforim, Old books, Ancient Jewish books"
+}
+</script>
+{% endblock %}
+
+{% block opengraph %}
+    <meta property="og:title" content="Footprints: {{ flatpage.title }}" />
+    <meta property="og:type" content="article" />
+    <meta property="og:image" content="{% spaceless %}{{STATIC_URL}}img/footprints_opengraph.jpg{% endspaceless %}" />
+    <meta property="og:image:alt" content="Footprints: Jewish Books Through Time and Place logo">
+    <meta property="og:url" content="{{request.build_absolute_uri}}" />
+    <meta property="og:description" content="{{ flatpage.title }}" />
+    <meta property="og:site_name" content="Footprints" />
+{% endblock %}
+
+{% block twittercard %}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@Footprints_Heb" />
+    <meta name="twitter:title" content="Footprints: {{ flatpage.title }}" />
+    <meta name="twitter:description" content="{{ flatpage.title }}" />
+    <meta name="twitter:image" content="{% spaceless %}{{STATIC_URL}}img/footprints_opengraph.jpg{% endspaceless %}" />
+    <meta name="twitter:image:alt" content="Footprints: Jewish Books Through Time and Place logo" />
+{% endblock %}
+
+
 {% block content %}
 
 <div class="flatpage_contain">

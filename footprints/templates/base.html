@@ -9,9 +9,12 @@
 
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="Footprints {% block description %}{% endblock %}">
+        <meta name="description" content="{% spaceless %}{% block description %}{% endblock %}{% endspaceless %}">
         <meta name="author" content="Columbia University Center for Teaching and Learning">
-
+        {% block seosettings %}
+        <meta name="robots" content="noindex">
+        {% endblock %}
+        
         <!-- Bootstrap CSS: -->
         <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
         {% compress css %}
@@ -34,9 +37,11 @@
         <link rel="icon" href="{{STATIC_URL}}img/favicon.ico">
         <link rel="icon" type="image/png" href="{{STATIC_URL}}img/favicon.png">
         
-        <!-- Open Graph placeholder -->
+        <!-- Open Graph metadata -->
+        {% block opengraph %}{% endblock %}
         
-        <!-- JSON-LD placeholder -->
+         <!-- Twitter card metadata -->
+        {% block twittercard %}{% endblock %}
 
         {% block client_templates %}
         {% endblock %}
