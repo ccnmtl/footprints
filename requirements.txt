@@ -50,7 +50,7 @@ pygments==2.3.1 # pyup: <2.4
 ipython==5.8.0 # pyup: <6.0.0
 ipdb==0.12.1
 
-coverage==4.5.3
+coverage==4.5.4
 pyasn1==0.4.5
 cryptography==2.7  # pyOpenSSL
 pyOpenSSL==19.0.0
