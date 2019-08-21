@@ -70,7 +70,7 @@ astroid==1.6.6 # pyup: <2.0.0
 six==1.12.0
 ipaddress==1.0.22
 text-unidecode==1.2
-Faker==2.0.0
+Faker==2.0.1
 factory_boy==2.12.0
 ldap3==2.6
 sqlparse==0.3.0
