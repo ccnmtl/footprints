@@ -14,15 +14,14 @@
 {% block client_templates %}
     <meta name="csrf-token" content="{{csrf_token}}">
     {% include "clientside/google_map_template.html" %}
+    {% include "clientside/search_template.html" %}
 {% endblock %}
 
 {% block content %}
-    <div class="widget-pane">
-        <div class="widget-pane-content">
-        </div>
-        <div class="widget-pane-toggle">
-        </div>
+    <div id="search-container">
+        <search-widget />
     </div>
+
     <div id="map-container">
         <google-map />
     </div>
@@ -32,6 +31,6 @@
     <script type="text/javascript"
         src="//maps.google.com/maps/api/js?key={{settings.GOOGLE_MAP_API}}&libraries=places"></script>
 
-    <script data-main="{{STATIC_URL}}js/app/map.js"
+    <script data-main="{{STATIC_URL}}js/app/pathmapper.js"
         src="{{STATIC_URL}}js/lib/require/require.js"></script>
 {% endblock %}
