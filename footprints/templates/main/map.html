@@ -1,6 +1,15 @@
 {% extends 'base.html' %}
 
-{% block title %}Map{% endblock %}
+{% block title %}Pathmapper{% endblock %}
+
+{% block css %}
+<link href="{{STATIC_URL}}css/pathmapper-tool.css" rel="stylesheet">
+{% endblock %}
+
+{% block bodyclass %}pathmapper-tool{% endblock %}
+{% block headercontainer %}container-fluid{% endblock %}
+{% block contentcontainer %}container-fluid{% endblock %}
+{% block footercontainer %}container-fluid{% endblock %}
 
 {% block client_templates %}
     <meta name="csrf-token" content="{{csrf_token}}">
@@ -8,6 +17,12 @@
 {% endblock %}
 
 {% block content %}
+    <div class="widget-pane">
+        <div class="widget-pane-content">
+        </div>
+        <div class="widget-pane-toggle">
+        </div>
+    </div>
     <div id="map-container">
         <google-map />
     </div>

@@ -1,0 +1,61 @@
+/* --- PATHMAPPER tool --*/
+
+html {
+    font-size: 16px;
+}
+
+.pathmapper-tool .content {
+    margin: 0;
+}
+
+#map-container {
+    width: 100%;
+    height: 760px;
+    margin: 0;
+    padding: 0;
+}
+
+#the-map {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    width: 100%; 
+    height: 100%; 
+}
+
+.widget-pane {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    width: 35rem;
+    height: 100%;
+    z-index: 1;
+    /*border-right: 1px solid red;*/
+}
+
+.widget-pane-content {
+    width: 32rem;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f5f4;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+.widget-pane-toggle {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 3rem;
+    height: 4rem;
+    background-color: #f8f5f4;
+}
+
+

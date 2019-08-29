@@ -244,7 +244,8 @@ ul.about-nav li {
 
 /* Footer */
 
-.container.foot {
+.container.foot,
+.container-fluid.foot {
     background-color: #171717;
 }
 

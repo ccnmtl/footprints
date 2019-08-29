@@ -54,7 +54,7 @@
 
     <body class="{% block bodyclass %}{% endblock %}" id="{% block bodyid %}{% endblock %}">
     <div id="wrap">
-        <div class="container header">
+        <div class="{% block headercontainer %}container{% endblock %} header">
             <div class="header-brand {% block container_header_ex %}{% endblock %}">
                 <a class="brand-logo" href="/">
                 {% block branding %}
@@ -174,7 +174,7 @@
         {% endif %}<!-- request.user.is_anonymous -->
 
         {% block outercontainer %}
-        <div class="container container-pl" id="outer-container">
+        <div class="{% block contentcontainer %}container{% endblock %} container-pl" id="outer-container">
             <div class="content">
                 {% block primarynav %}{% endblock %}
                 {% block pagemode %}{% endblock %}
@@ -194,7 +194,7 @@
     </div>   <!-- /#wrap -->
 
     {% block footer %}
-    <div class="container foot">
+    <div class="{% block footercontainer %}container{% endblock %} foot">
     <footer class="footer">
         <ul class="footer-navigation">
             <li><a href="/credits/">Credits</a></li>
