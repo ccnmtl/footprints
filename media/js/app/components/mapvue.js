@@ -1,5 +1,4 @@
-const libs = ['jquery'];
-define(libs, function($) {
+define(['jquery'], function($) {
     const GoogleMapVue = {
         props: [],
         template: '#google-map-template',
