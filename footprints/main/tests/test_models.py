@@ -177,6 +177,28 @@ class BookCopyTest(TestCase):
         self.assertEquals(current_owners.count(), 1)
         self.assertIsNotNone(current_owners.get(id=owner2.id))
 
+    def test_book_copy_dates(self):
+        copy = BookCopyFactory()
+
+        EmptyFootprintFactory(book_copy=copy)
+        FootprintFactory(
+            book_copy=copy,
+            associated_date=ExtendedDateFactory(edtf_format=''))
+        FootprintFactory(
+            book_copy=copy,
+            associated_date=ExtendedDateFactory(edtf_format='1981/2000'))
+        FootprintFactory(
+            book_copy=copy,
+            associated_date=ExtendedDateFactory(edtf_format='1982'))
+        FootprintFactory(
+            book_copy=copy,
+            associated_date=ExtendedDateFactory(edtf_format='1983'))
+
+        self.assertEqual(
+            copy.footprints_start_date(), datetime.date(1981, 1, 1))
+        self.assertEqual(
+            copy.footprints_end_date(), datetime.date(2000, 12, 31))
+
 
 class ExtendedDateTest(TestCase):
 

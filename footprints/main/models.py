@@ -1010,6 +1010,28 @@ class BookCopy(models.Model):
         lst.sort(key=lambda obj: obj.sort_date())
         return lst
 
+    def footprints_with_valid_dates(self):
+        return self.footprint_set.filter(
+            associated_date__isnull=False).exclude(
+                associated_date__edtf_format__exact='').select_related(
+                    'associated_date')
+
+    def footprints_start_date(self):
+        try:
+            lst = list(self.footprints_with_valid_dates())
+            lst.sort(key=lambda obj: obj.start_date())
+            return lst[0].start_date()
+        except IndexError:
+            None
+
+    def footprints_end_date(self):
+        try:
+            lst = list(self.footprints_with_valid_dates())
+            lst.sort(key=lambda obj: obj.end_date())
+            return lst[-1].end_date()
+        except IndexError:
+            return None
+
 
 @python_2_unicode_compatible
 class Footprint(models.Model):

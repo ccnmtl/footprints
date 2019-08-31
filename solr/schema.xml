@@ -189,6 +189,9 @@
 
     <field name="name" type="ngram" indexed="true" stored="true" multiValued="false" />
 
+    <field name="footprint_locations" type="text_en" indexed="true" stored="true" multiValued="true" />
+
+    <field name="footprint_locations_exact" type="string" indexed="true" stored="true" multiValued="true" />
   </fields>
 
   <!-- field to use to determine and enforce document uniqueness. -->

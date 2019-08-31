@@ -1,0 +1,2 @@
+{{object.imprint.title}}
+{{object.imprint.work.title}}
