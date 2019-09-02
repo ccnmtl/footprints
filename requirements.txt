@@ -1,4 +1,4 @@
-Django==1.11.23 # pyup: <2.0
+Django==1.11.24 # pyup: <2.0
 
 feedparser==5.2.1
 
