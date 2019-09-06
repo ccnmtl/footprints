@@ -9,7 +9,7 @@ from haystack.fields import CharField, NgramField, DateTimeField, \
 from unidecode import unidecode
 
 from footprints.main.models import WrittenWork, Footprint, Person, Place, \
-    Imprint, Actor
+    Imprint, Actor, BookCopy
 
 
 def format_sort_by(sort_term, remove_articles=False):
@@ -19,10 +19,13 @@ def format_sort_by(sort_term, remove_articles=False):
         * (optional) remove leading a/the
         * removes outside spaces
     '''
-    sort_term = unidecode(sort_term).lower().strip()
-    if remove_articles:
-        sort_term = re.sub(r'^(a\s+|the\s+)', '', sort_term)
-    return sort_term
+    try:
+        sort_term = unidecode(sort_term).lower().strip()
+        if remove_articles:
+            sort_term = re.sub(r'^(a\s+|the\s+)', '', sort_term)
+        return sort_term
+    except AttributeError:
+        return ''
 
 
 class WrittenWorkIndex(CelerySearchIndex, Indexable):
@@ -53,6 +56,85 @@ class ImprintIndex(CelerySearchIndex, Indexable):
 
     def prepare_object_type(self, obj):
         return type(obj).__name__
+
+
+class BookCopyIndex(CelerySearchIndex, Indexable):
+    object_id = CharField(model_attr='id')
+    object_type = CharField()
+    text = NgramField(document=True, use_template=True)
+    title = NgramField()
+    sort_by = CharField()
+
+    wtitle = CharField()
+
+    imprint_title = CharField()
+    imprint_location = CharField(faceted=True)
+    pub_start_date = DateTimeField()
+    pub_end_date = DateTimeField()
+
+    footprint_start_date = DateTimeField()
+    footprint_end_date = DateTimeField()
+    footprint_locations = MultiValueField(faceted=True)
+
+    actor = MultiValueField(faceted=True)
+
+    # custom sort fields
+    fdate = DateTimeField()
+
+    def get_model(self):
+        return BookCopy
+
+    def prepare_object_type(self, obj):
+        return type(obj).__name__
+
+    def prepare_title(self, obj):
+        return smart_text(obj.imprint.title)
+
+    def prepare_sort_by(self, obj):
+        return format_sort_by(obj.imprint.title, remove_articles=True)
+
+    def prepare_fdate(self, obj):
+        return obj.imprint.sort_date()
+
+    def prepare_footprints_end_date(self, obj):
+        return obj.footprint_end_date()
+
+    def prepare_footprints_start_date(self, obj):
+        return obj.footprint_start_date()
+
+    def prepare_pub_end_date(self, obj):
+        return obj.imprint.end_date()
+
+    def prepare_pub_start_date(self, obj):
+        return obj.imprint.start_date()
+
+    def prepare_wtitle(self, obj):
+        return smart_text(obj.imprint.work.title)
+
+    def prepare_footprint_locations(self, obj):
+        places = []
+        for f in obj.footprints():
+            if f.place:
+                places.append(f.place.id)
+
+        names = []
+        for place in Place.objects.filter(id__in=places).distinct():
+            names.append(smart_text(place))
+        return names
+
+    def prepare_imprint_location(self, obj):
+        if obj.imprint.place:
+            return smart_text(obj.imprint.place)
+
+        return ''
+
+    def prepare_actor(self, obj):
+        qs = Actor.objects.filter(
+            Q(writtenwork=obj.imprint.work) |
+            Q(imprint=obj.imprint) |
+            Q(footprint__book_copy=obj)).distinct()
+
+        return [smart_text(actor) for actor in qs]
 
 
 class FootprintIndex(CelerySearchIndex, Indexable):
@@ -94,10 +176,7 @@ class FootprintIndex(CelerySearchIndex, Indexable):
         return format_sort_by(obj.title, remove_articles=True)
 
     def prepare_ftitle(self, obj):
-        try:
-            return format_sort_by(obj.title, remove_articles=True)
-        except AttributeError:
-            return ''
+        return format_sort_by(obj.title, remove_articles=True)
 
     def prepare_flocation(self, obj):
         if obj.place:
@@ -123,11 +202,8 @@ class FootprintIndex(CelerySearchIndex, Indexable):
         return imprint.start_date()
 
     def prepare_wtitle(self, obj):
-        try:
-            return format_sort_by(obj.book_copy.imprint.work.title,
-                                  remove_articles=True)
-        except AttributeError:
-            return ''
+        return format_sort_by(obj.book_copy.imprint.work.title,
+                              remove_articles=True)
 
     def prepare_owners(self, obj):
         a = [o.display_name() for o in obj.owners()]
