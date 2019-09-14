@@ -27,7 +27,7 @@ from rest_framework_jsonp.renderers import JSONPRenderer
 from s3sign.views import SignS3View as BaseSignS3View
 
 from footprints.main.forms import DigitalObjectForm, ContactUsForm, \
-    SUBJECT_CHOICES, ExtendedDateForm, FootprintSearchForm
+    SUBJECT_CHOICES, ExtendedDateForm, FootprintSearchForm, BookCopySearchForm
 from footprints.main.models import (
     Footprint, Actor, Person, Role, WrittenWork, Language,
     Place, Imprint, BookCopy, StandardizedIdentification,
@@ -799,4 +799,15 @@ class VerifiedFootprintFeed(Feed):
 
 
 class MapView(TemplateView):
-    template_name = "main/map.html"
+    template_name = 'main/map.html'
+
+
+class BookCopySearchView(JSONResponseMixin, View):
+
+    def post(self, request):
+        form = BookCopySearchForm(request.POST)
+        if form.is_valid():
+            sqs = form.search()
+            return self.render_to_json_response({'total': sqs.count()})
+
+        return self.render_to_json_response({'errors': form.errors()})

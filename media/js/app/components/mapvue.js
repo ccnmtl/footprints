@@ -24,6 +24,9 @@ define(['jquery'], function($) {
                     position: google.maps.ControlPosition.RIGHT_BOTTOM,
                 }
             });
+        },
+        updated: function() {
+            // @todo - map the paths
         }
     };
     return {

@@ -19,7 +19,8 @@ from footprints.main.views import (
     AddIdentifierView, AddDigitalObjectView, ConnectFootprintView,
     ContactUsView, AddLanguageView, DisplayDateView, CopyFootprintView,
     SignS3View, ModerationView, VerifyFootprintView, MapView,
-    FootprintSearchView, ExportFootprintSearch, VerifiedFootprintFeed)
+    FootprintSearchView, ExportFootprintSearch, VerifiedFootprintFeed,
+    BookCopySearchView)
 from footprints.main.viewsets import (
     BookCopyViewSet, ImprintViewSet, ActorViewSet,
     ExtendedDateViewSet, FootprintViewSet, LanguageViewSet,
@@ -131,6 +132,8 @@ urlpatterns = [
     url(r'^date/display/$',
         DisplayDateView.as_view(), name='display-date-view'),
 
+    url(r'^search/book/', BookCopySearchView.as_view(),
+        name='bookcopy-search-view'),
     url(r'^search/', FootprintSearchView.as_view(), name='search'),
 
     url(r'^api-auth/', include('rest_framework.urls',

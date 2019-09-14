@@ -19,7 +19,7 @@
 
 {% block content %}
     <div id="search-container">
-        <search-widget />
+        <search-widget v-model="criteria" :total="total" />
     </div>
 
     <div id="map-container">
