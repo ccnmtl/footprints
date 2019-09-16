@@ -1,7 +1,17 @@
 {% verbatim %}
 <script type="text/x-template" id="search-template">
     <div class="widget-pane">
-        <div class="widget-pane-content">
+        <div class="widget-pane-content" v-if="criteria">
+            <div v-if="total">
+                Book Copies: {{total}}
+            </div>
+            <form>
+                <select v-model="criteria.work">
+                    <option>-----</option>
+                    <option value="67">Akedet</option>
+                </select>
+                <button>Add Layer</button>
+            </form>
         </div>
         <div class="widget-pane-toggle">
         </div>

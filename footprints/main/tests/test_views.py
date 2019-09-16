@@ -1332,3 +1332,14 @@ class VerifyFootprintViewTest(TestCase):
         fp.refresh_from_db()
         self.assertFalse(fp.verified)
         self.assertEquals(feed.items().count(), 0)
+
+
+class BookCopySearchViewTest(TestCase):
+
+    def test_post(self):
+        url = reverse('bookcopy-search-view')
+        response = self.client.post(url, {},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        the_json = loads(response.content.decode('utf-8'))
+        self.assertEquals(the_json['total'], 0)

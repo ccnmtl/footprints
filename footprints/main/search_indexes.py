@@ -62,12 +62,10 @@ class BookCopyIndex(CelerySearchIndex, Indexable):
     object_id = CharField(model_attr='id')
     object_type = CharField()
     text = NgramField(document=True, use_template=True)
-    title = NgramField()
-    sort_by = CharField()
 
-    wtitle = CharField()
+    work_id = CharField(model_attr='imprint__work__id')
+    imprint_id = CharField(model_attr='imprint__id')
 
-    imprint_title = CharField()
     imprint_location = CharField(faceted=True)
     pub_start_date = DateTimeField()
     pub_end_date = DateTimeField()
@@ -87,15 +85,6 @@ class BookCopyIndex(CelerySearchIndex, Indexable):
     def prepare_object_type(self, obj):
         return type(obj).__name__
 
-    def prepare_title(self, obj):
-        return smart_text(obj.imprint.title)
-
-    def prepare_sort_by(self, obj):
-        return format_sort_by(obj.imprint.title, remove_articles=True)
-
-    def prepare_fdate(self, obj):
-        return obj.imprint.sort_date()
-
     def prepare_footprints_end_date(self, obj):
         return obj.footprint_end_date()
 
@@ -107,9 +96,6 @@ class BookCopyIndex(CelerySearchIndex, Indexable):
 
     def prepare_pub_start_date(self, obj):
         return obj.imprint.start_date()
-
-    def prepare_wtitle(self, obj):
-        return smart_text(obj.imprint.work.title)
 
     def prepare_footprint_locations(self, obj):
         places = []

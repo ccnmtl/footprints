@@ -198,3 +198,28 @@ class FootprintSerializer(HyperlinkedModelSerializer):
                   'flags', 'verified', 'verified_modified_at',
                   'created_at', 'modified_at',
                   'created_by', 'last_modified_by')
+
+
+class WrittenWorkPathSerializer(HyperlinkedModelSerializer):
+    class Meta:
+        model = WrittenWork
+        fields = ('id', 'title')
+
+
+class ImprintPathSerializer(HyperlinkedModelSerializer):
+    work = WrittenWorkPathSerializer()
+    place = PlaceSerializer()
+    publication_date = ExtendedDateSerializer()
+
+    class Meta:
+        model = Imprint
+        fields = ('id', 'work', 'title', 'place', 'publication_date')
+
+
+class FootprintPathSerializer(HyperlinkedModelSerializer):
+    associated_date = ExtendedDateSerializer()
+    place = PlaceSerializer()
+
+    class Meta:
+        model = Footprint
+        fields = ('id', 'title', 'associated_date', 'place', 'sort_date')
