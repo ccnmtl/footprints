@@ -160,6 +160,34 @@ class ContactUsFormTest(TestCase):
         form.clean()
         self.assertEquals(len(form._errors.keys()), 0)
 
+    def test_form_clean_no_subject(self):
+        form = ContactUsForm()
+        form._errors = {}
+        form.cleaned_data = {
+            'decoy': '',
+            'description': 'Lorem Ipsum',
+            'email': 'jdoe@foo.com',
+            'name': 'Jane Doe'
+        }
+
+        form.clean()
+        self.assertEquals(len(form._errors.keys()), 1)
+        self.assertTrue('subject' in form._errors)
+
+    def test_form_clean_no_decoy(self):
+        form = ContactUsForm()
+        form._errors = {}
+        form.cleaned_data = {
+            'subject': '',
+            'description': 'Lorem Ipsum',
+            'email': 'jdoe@foo.com',
+            'name': 'Jane Doe'
+        }
+
+        form.clean()
+        self.assertEquals(len(form._errors.keys()), 1)
+        self.assertTrue('decoy' in form._errors)
+
     def test_form_clean_errors(self):
         form = ContactUsForm()
         form._errors = {}

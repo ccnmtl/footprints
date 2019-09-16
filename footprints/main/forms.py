@@ -242,11 +242,12 @@ class ContactUsForm(forms.Form):
     def clean(self):
         cleaned_data = super(ContactUsForm, self).clean()
 
-        if cleaned_data['subject'] == '-----':
+        if 'subject' not in cleaned_data or cleaned_data['subject'] == '-----':
             self._errors["subject"] = self.error_class([
                 "Please specify a subject"])
 
-        if 'decoy' in cleaned_data and len(cleaned_data['decoy']) > 0:
+        if ('decoy' not in cleaned_data or
+                ('decoy' in cleaned_data and len(cleaned_data['decoy']) > 0)):
             self._errors["decoy"] = self.error_class([
                 "Please leave this field blank"])
 
