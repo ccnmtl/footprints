@@ -9,7 +9,6 @@ define(['jquery'], function($) {
         },
         methods: {
             updateCriteria: function() {
-                console.log('updateCriteria');
                 const newValue = $.extend(true, {}, this.criteria);
                 this.$emit('input', newValue);
             }
