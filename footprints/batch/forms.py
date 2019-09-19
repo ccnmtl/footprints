@@ -58,13 +58,17 @@ class CreateBatchJobForm(forms.Form):
         return True, ''
 
     def validate_header(self, row):
-        for idx, a in enumerate(row):
-            if a.lower() != self.VALID_HEADERS[idx].lower():
-                msg = self.INVALID_HEADER_ROW.format(
-                    idx, a,  self.VALID_HEADERS[idx])
-                self._errors['csvfile'] = self.error_class([msg])
-                return False
-        return True
+        try:
+            for idx, a in enumerate(row):
+                if a.lower() != self.VALID_HEADERS[idx].lower():
+                    msg = self.INVALID_HEADER_ROW.format(
+                        idx, a,  self.VALID_HEADERS[idx])
+                    self._errors['csvfile'] = self.error_class([msg])
+                    return False
+            return True
+        except IndexError:
+            # The row has too many columns
+            return False
 
     def clean(self):
         cleaned_data = super(CreateBatchJobForm, self).clean()
