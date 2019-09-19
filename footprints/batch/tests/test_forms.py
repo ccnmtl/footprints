@@ -43,6 +43,11 @@ class CreateBatchJobFormTest(TestCase):
             '"bad content", rather than "Catalog Link".'
         ])
 
+    def test_form_validate_headers_too_long(self):
+        form = CreateBatchJobForm()
+        headers = CreateBatchJobForm.VALID_HEADERS + ['foo']
+        self.assertFalse(form.validate_header(headers))
+
     def test_form_validate_headers_success(self):
         form = CreateBatchJobForm()
         self.assertTrue(form.validate_header(CreateBatchJobForm.VALID_HEADERS))
