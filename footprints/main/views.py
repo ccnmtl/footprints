@@ -810,4 +810,4 @@ class BookCopySearchView(JSONResponseMixin, View):
             sqs = form.search()
             return self.render_to_json_response({'total': sqs.count()})
 
-        return self.render_to_json_response({'errors': form.errors()})
+        return self.render_to_json_response({'errors': form.errors})
