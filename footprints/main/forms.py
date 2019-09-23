@@ -9,7 +9,8 @@ from django.utils.encoding import smart_text
 from haystack.forms import ModelSearchForm
 from registration.forms import RegistrationForm
 
-from footprints.main.models import DigitalObject, ExtendedDate, BookCopy
+from footprints.main.models import DigitalObject, ExtendedDate, BookCopy, \
+    WrittenWork, Imprint
 
 
 class DigitalObjectForm(ModelForm):
@@ -370,11 +371,92 @@ class CustomRegistrationForm(RegistrationForm):
 
 class BookCopySearchForm(ModelSearchForm):
 
-    work = forms.IntegerField(required=False)
-    imprint = forms.IntegerField(required=False)
+    work_id = forms.IntegerField(required=False)
+    imprint_id = forms.IntegerField(required=False)
+    footprint_start_date = forms.IntegerField(required=False, min_value=1000)
+    footprint_end_date = forms.IntegerField(required=False, min_value=1000)
+    footprint_range = forms.BooleanField(
+        required=False, widget=forms.HiddenInput())
+    pub_start_date = forms.IntegerField(required=False, min_value=1000)
+    pub_end_date = forms.IntegerField(required=False, min_value=1000)
+    pub_range = forms.BooleanField(
+        required=False, widget=forms.HiddenInput())
 
     class Meta:
         model = BookCopy
+
+    def valid_key(self, key):
+        return key in self.cleaned_data and self.cleaned_data[key]
+
+    def clean_work(self):
+        if not self.valid_key('work'):
+            return
+
+        try:
+            WrittenWork.objects.get(id=self.cleaned_data['work'])
+        except WrittenWork.DoesNotExist:
+            self._errors['work'] = self.error_class([
+                'No Written Work matches'])
+
+    def clean_imprint(self):
+        if not self.valid_key('imprint'):
+            return
+
+        try:
+            Imprint.objects.get(id=self.cleaned_data['imprint'])
+        except WrittenWork.DoesNotExist:
+            self._errors['imprint'] = self.error_class([
+                'No Imprint matches'])
+
+    def validate_date_range(self, start_key, end_key):
+        if (self.cleaned_data.get(start_key, None) and
+            self.cleaned_data.get(end_key, None) and
+            self.cleaned_data[start_key] >
+                self.cleaned_data[end_key]):
+            self._errors[start_key] = self.error_class([
+                'The start year must be less than end year'])
+
+    def handle_date_range(self, start_key, end_key, range_key):
+        kwargs = {}
+        start_year = self.cleaned_data.get(start_key)
+        end_year = self.cleaned_data.get(end_key)
+
+        if self.cleaned_data.get(range_key):
+            kwargs.update(self.handle_range(
+                'footprint_start_date', 'footprint_end_date',
+                footprint_start_year, footprint_end_year))
+        elif footprint_start_year:
+            kwargs.update(self.handle_single_year(
+                'footprint_start_date', footprint_start_year))
+        return kwargs
+
+    def handle_pub_year(self):
+        kwargs = {}
+        pub_start_year = self.cleaned_data.get(
+            'pub_start_year')
+        pub_end_year = self.cleaned_data.get(
+            'pub_end_year')
+
+        if self.cleaned_data.get('pub_range'):
+            kwargs.update(self.handle_range(
+                'pub_start_date', 'pub_end_date',
+                pub_start_year, pub_end_year))
+        elif pub_start_year:
+            kwargs.update(self.handle_single_year(
+                'pub_start_date', pub_start_year))
+        return kwargs
+
+    def clean(self):
+        super(BookCopySearchForm, self).clean()
+
+        self.clean_work()
+        self.clean_imprint()
+        self.clean_year('footprint_start_date')
+        self.clean_year('footprint_end_date')
+        self.validate_date_range('footprint_start_year', 'footprint_end_year')
+        self.clean_year('pub_start_year')
+        self.clean_year('pub_end_year')
+        self.validate_date_range('pub_start_year', 'pub_end_year')
 
     def search(self):
         args = []
@@ -382,8 +464,13 @@ class BookCopySearchForm(ModelSearchForm):
             'django_ct': 'main.bookcopy',
         }
 
-        work_id = self.cleaned_data.get('work')
-        if work_id:
-            kwargs['work_id'] = work_id
+        kwargs['work_id'] = self.cleaned_data.get('work_id')
+        kwargs['imprint_id'] = self.cleaned_data.get('imprint_id')
+
+        kwargs.update(self.handle_footprint_year())
+        kwargs.update(self.handle_pub_year())
+        args += self.handle_footprint_location()
+        args += self.handle_imprint_location()
+
 
         return self.searchqueryset.filter(*args, **kwargs)
