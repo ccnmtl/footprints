@@ -1,5 +1,5 @@
 from datetime import date
-from past.builtins import basestring
+
 from audit_log.models.fields import LastUserField, CreatingUserField
 from django.contrib.gis.db.models.fields import PointField
 from django.db import models
@@ -10,6 +10,8 @@ from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible, smart_text
 from edtf import edtf_date
 from edtf.edtf import EDTF
+from past.builtins import basestring
+
 from footprints.main.templatetags.moderation import has_moderation_flags, \
     moderation_flags
 from footprints.main.utils import string_to_point
@@ -1205,4 +1207,3 @@ def footprint_actor_changed(sender, **kwargs):
 
 
 m2m_changed.connect(footprint_actor_changed, sender=Footprint.actor.through)
-m2m_changed.connect(work_actor_changed, sender=WrittenWork.actor.through)

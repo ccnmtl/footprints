@@ -31,7 +31,8 @@ from footprints.main.forms import DigitalObjectForm, ContactUsForm, \
 from footprints.main.models import (
     Footprint, Actor, Person, Role, WrittenWork, Language,
     Place, Imprint, BookCopy, StandardizedIdentification,
-    StandardizedIdentificationType, ExtendedDate, MEDIUM_CHOICES)
+    StandardizedIdentificationType, ExtendedDate, MEDIUM_CHOICES,
+    work_actor_changed)
 from footprints.main.serializers import NameSerializer
 from footprints.main.templatetags.moderation import moderation_footprints
 from footprints.main.utils import interpolate_role_actors, string_to_point
@@ -505,6 +506,11 @@ class RemoveRelatedView(LoggedInMixin, AddChangeAccessMixin,
     def removeManyToMany(self, the_parent, the_child, attr):
         m2m = getattr(the_parent, attr)
         m2m.remove(the_child)
+
+        if (isinstance(the_parent, WrittenWork) and
+                isinstance(the_child, Actor)):
+            work_actor_changed(None, **{'instance': the_parent})
+
         return self.render_to_json_response({'success': True})
 
     def post(self, *args, **kwargs):
@@ -568,6 +574,9 @@ class AddActorView(AddRelatedRecordView):
 
         actor = self.create_actor(person_id, person_name, role, alias)
         the_parent.actor.add(actor)
+
+        if isinstance(the_parent, WrittenWork):
+            work_actor_changed(None, **{'instance': the_parent})
 
         return self.render_to_json_response({'success': True})
 
