@@ -40,7 +40,7 @@ backports.shutil_get_terminal_size==1.0.0
 wcwidth==0.1.7
 prompt_toolkit==2.0.9
 scandir==1.10.0
-pathlib2==2.3.4
+pathlib2==2.3.5
 
 pygments==2.4.2
 
