@@ -1,0 +1,117 @@
+/* Footprints CSS
+ * Zarina Mustapha
+ * ctl.columbia.edu
+ * 2019
+ *
+ * notes
+ * fpm == footprints pathmapper
+ */
+
+/* General Typography */
+
+@import url('https://fonts.googleapis.com/css?family=Asap:400,400i,700&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Arvo:400,700&display=swap');
+
+html, body {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+}
+
+body  {
+    font-family: 'Asap', Helvetica, Arial, sans-serif;
+}
+
+/* Header elements ---------- */
+
+.skippy {
+    display: block;
+    padding: 0;
+    text-align: center;
+}
+
+.skippy:focus, .skippy:active {
+    color: #06c !important;
+}
+
+.skippy-text {
+    padding: 0.5rem;
+    background-color: transparent !important;
+    outline: 0.125rem dotted #06c !important;
+    color: #ccc !important;
+    border: 0;
+}
+
+.bg-fpm-nav {
+    background: #000033 url("../img/fp_header_bg.jpg") repeat;
+    border-bottom: 0.5rem solid #97421b;
+}
+
+.bg-fpm-nav .navbar-toggler
+{
+    border-color: #d3c1a2;
+    color: #d3c1a2;
+}
+
+.footprints-brand
+{
+    display: inline-block;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-right: 1rem;
+    font-size: 1.25rem;
+    line-height: inherit;
+    white-space: nowrap;
+}
+
+.footprints-brand-img
+{
+    height: 2.125rem;
+}
+
+.pathmapper-tool header h1 {
+    font-size: 1.125rem;
+    color: #d3c1a2;
+    text-transform: uppercase;
+    padding: 0;
+    margin: 0;
+    line-height: 100%;
+}
+
+.fpm-nav a.nav-link {
+    color: #d3c1a2;
+    text-transform: uppercase;
+    font-size: 0.875rem;
+    letter-spacing: 0.0625rem;
+}
+
+.fpm-nav a.nav-link:hover,
+.fpm-nav a.nav-link:focus,
+.fpm-nav a.nav-link:active,
+.fpm-nav .nav-item.show a.nav-link {
+    border: 0;
+    outline: 0.125rem solid #97421b;
+    color: #fff;
+    background-color: #97421b;
+    text-decoration: underline;
+}
+
+.fpm-nav .dropdown-menu {
+    border-radius: 0.125rem;
+}
+
+.fpm-nav .dropdown-item:hover,
+.fpm-nav .dropdown-item:focus,
+.fpm-nav .dropdown-item:active {
+    text-decoration: underline;
+}
+
+/* Map-specific ------ */
+
+.map-space {
+    position: absolute;
+    top: 3.8rem;
+    bottom: 0;
+    width: 100%; 
+}

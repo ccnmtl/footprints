@@ -3,7 +3,7 @@ requirejs(['./common'], function(common) {
     requirejs(libs,
         function($, Vue, map, search, utils) {
             new Vue({
-                el: '#outer-container',
+                el: '#pathmapper-container',
                 data: function() {
                     return {
                         criteria: {},

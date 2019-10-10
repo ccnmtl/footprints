@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base-new.html' %}
 
 {% block title %}Pathmapper{% endblock %}
 
@@ -7,9 +7,8 @@
 {% endblock %}
 
 {% block bodyclass %}pathmapper-tool{% endblock %}
-{% block headercontainer %}container-fluid{% endblock %}
-{% block contentcontainer %}container-fluid{% endblock %}
-{% block footercontainer %}container-fluid{% endblock %}
+{% block mainclass %}container-fluid px-0 map-space{% endblock %}
+{% block footerclass %}d-none{% endblock %}
 
 {% block client_templates %}
     <meta name="csrf-token" content="{{csrf_token}}">
