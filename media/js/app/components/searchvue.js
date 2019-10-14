@@ -16,11 +16,9 @@ define(['jquery'], function($) {
                 if ($('#container-pane').hasClass('widget-pane-expanded')) {
                     $('#container-pane').removeClass('widget-pane-expanded');
                     $('#container-pane').addClass('widget-pane-collapsed');
-                    console.log($('#container-pane').attr('class'));
                 } else {
                     $('#container-pane').addClass('widget-pane-expanded');
                     $('#container-pane').removeClass('widget-pane-collapsed');
-                    console.log($('#container-pane').attr('class'));
                 }
             }
         },

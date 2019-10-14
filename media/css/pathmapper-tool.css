@@ -86,15 +86,15 @@
     background-color: #e5d9ca;
 }
 
-.widget-pane-expanded .fa-times { display: inline-block;}
-.widget-pane-expanded .fa-layer-group { display: none; }
+.widget-pane-expanded .widget-pane-toggle .fa-times { display: inline-block;}
+.widget-pane-expanded .widget-pane-toggle .fa-layer-group { display: none; }
 .widget-pane-expanded {
     -webkit-transform: translateX(0em);
     transform: translateX(0rem);
 }
 
-.widget-pane-collapsed .fa-times { display: none;}
-.widget-pane-collapsed .fa-layer-group { display: inline-block; }
+.widget-pane-collapsed .widget-pane-toggle .fa-times { display: none;}
+.widget-pane-collapsed .widget-pane-toggle .fa-layer-group { display: inline-block; }
 .widget-pane-collapsed {
     -webkit-transform: translateX(-32rem);
     transform: translateX(-32rem);
