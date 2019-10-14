@@ -1,8 +1,8 @@
 {% verbatim %}
 <script type="text/x-template" id="search-template">
-    <div class="widget-pane">
+    <div class="widget-pane widget-pane-expanded" id="container-pane">
         <div class="widget-pane-content" v-if="criteria">
-            <div v-if="total">
+                <div v-if="total">
                 Book Copies: {{total}}
             </div>
             <form>
@@ -12,9 +12,17 @@
                 </select>
                 <button>Add Layer</button>
             </form>
-        </div>
+            </div><!-- /.widget-pane-content -->
         <div class="widget-pane-toggle">
-        </div>
-    </div>
+            <button v-on:click="togglePane"
+                type="button"
+                id="btn-pane-toggle"
+                class="btn"
+                aria-label="Collapse layers panel">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                    <i class="fas fa-layer-group"></i>
+                </button>
+        </div><!-- /.widget-pane-toggle -->
+    </div><!-- /.widget-pane -->
 </script>
 {% endverbatim %}
