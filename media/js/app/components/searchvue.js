@@ -11,6 +11,15 @@ define(['jquery'], function($) {
             updateCriteria: function() {
                 const newValue = $.extend(true, {}, this.criteria);
                 this.$emit('input', newValue);
+            },
+            togglePane: function() {
+                if ($('#container-pane').hasClass('widget-pane-expanded')) {
+                    $('#container-pane').removeClass('widget-pane-expanded');
+                    $('#container-pane').addClass('widget-pane-collapsed');
+                } else {
+                    $('#container-pane').addClass('widget-pane-expanded');
+                    $('#container-pane').removeClass('widget-pane-collapsed');
+                }
             }
         },
         created: function() {

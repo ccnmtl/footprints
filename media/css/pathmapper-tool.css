@@ -1,18 +1,15 @@
 /* --- PATHMAPPER tool --*/
 
-html {
-    font-size: 16px;
-}
-
 .pathmapper-tool .content {
     margin: 0;
 }
 
 #map-container {
     width: 100%;
-    height: 760px;
+    height: 100%;
     margin: 0;
     padding: 0;
+    z-index: 1;
 }
 
 #the-map {
@@ -34,28 +31,71 @@ html {
     left: 0;
     margin: 0;
     padding: 0;
-    width: 35rem;
+    width: 32rem;
     height: 100%;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
     z-index: 1;
-    /*border-right: 1px solid red;*/
+    transition-property: -webkit-transform,transform,opacity;
+    transition-duration: 0.2s;
+    transition-timing-function: cubic-bezier(0.0,0.0,0.2,1);
 }
 
 .widget-pane-content {
-    width: 32rem;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
     height: 100%;
     margin: 0;
     padding: 0;
     background-color: #f8f5f4;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    z-index: 1;
 }
 
 .widget-pane-toggle {
     position: absolute;
     top: 0;
-    right: 0;
-    width: 3rem;
-    height: 4rem;
-    background-color: #f8f5f4;
+    left: 100%;
+    /* width: 3rem;
+    height: 4rem;*/
+    z-index: 0;
+    display: block
 }
 
+#btn-pane-toggle {
+    width: 2.5rem;
+    height: 3.25rem;
+    padding: 0;
+    margin: 0;
+    line-height: 1;
+    font-size: 1.25rem;
+    color: #999;
+    background-color: #f8f5f4;
+    border-left: 1px solid #ddd;
+    border-radius: 0 0.25rem 0.25rem 0;
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.3);
+}
 
+#btn-pane-toggle:hover {
+    color: #000;
+    background-color: #e5d9ca;
+}
+
+#btn-pane-toggle:focus {
+    color: #000;
+    background-color: #e5d9ca;
+}
+
+.widget-pane-expanded .widget-pane-toggle .fa-times { display: inline-block;}
+.widget-pane-expanded .widget-pane-toggle .fa-layer-group { display: none; }
+.widget-pane-expanded {
+    -webkit-transform: translateX(0em);
+    transform: translateX(0rem);
+}
+
+.widget-pane-collapsed .widget-pane-toggle .fa-times { display: none;}
+.widget-pane-collapsed .widget-pane-toggle .fa-layer-group { display: inline-block; }
+.widget-pane-collapsed {
+    -webkit-transform: translateX(-32rem);
+    transform: translateX(-32rem);
+}
