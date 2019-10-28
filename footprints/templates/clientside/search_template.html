@@ -57,6 +57,21 @@
 
                     <section aria-labelledby="region4">
                         <h2 id="region4">Years</h2>
+                        <div class="form-group row">
+                            <label for="criteriaPubYearBegin" class="col-4 col-form-label">Publication:</label>
+                            <div class="col-8 d-flex">
+                                <input type="text" class="form-control" id="criteriaPubYearBegin" >
+                                <button type="button" class="btn btn-outline-secondary criteria-range range-on">to</button>
+                                <input type="text" class="form-control" id="criteriaPubYearEnd">
+                            </div>
+                        </div>
+                        <div class="form-group mb-0 row">
+                            <label for="criteriaFootprintYearBegin" class="col-4 col-form-label">Footprint:</label>
+                            <div class="col-8 d-flex">
+                                <input type="text" class="form-control" id="criteriaFootprintYearBegin" >
+                                <button type="button" class="btn btn-outline-secondary criteria-range">add range</button>
+                            </div>
+                        </div>
                     </section><!-- /#criteria-years -->
 
                     <section aria-labelledby="region5">
@@ -70,14 +85,33 @@
                     </section><!-- /#criteria-person -->
 
                     <section aria-labelledby="region6">
-                        <h2 id="region6">Censorship and expurgation</h2>
-                    </section><!-- /#criteria-lwi -->
-<p>
-Morbi commodo, tortor nec aliquam ultrices, ipsum ex pretium lorem, non consequat magna dui id eros. Aliquam erat volutpat. Sed id nibh nec tellus posuere rutrum. Maecenas ac risus vel lectus scelerisque efficitur non eget magna. Sed sodales risus in aliquet rhoncus. Nam eget tincidunt nibh. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas rhoncus risus nec dictum viverra. In gravida suscipit mattis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;
-</p>
-<p>
-Mauris sed cursus lacus, vel ornare lorem. Vivamus tincidunt id lacus eu ultricies. Curabitur nec nibh tempus, eleifend mi id, dignissim massa. Aenean sagittis id erat a commodo. Phasellus tempus tortor et lectus imperdiet, a condimentum elit dictum. Praesent nec hendrerit elit, eget luctus eros. Vivamus dapibus tristique sodales. Sed dignissim, libero eu consectetur tincidunt, erat libero placerat justo, a rhoncus enim mauris at metus. Aliquam orci arcu, aliquam id augue in, posuere porta lectus.
-</p>
+                        <h2 id="region6">Censored</h2>
+                            <div class="form-group md-radio mb-0 col-10 offset-1" aria-labelledby="region6" role="radiogroup">
+                                <input name="criteriaCensored" id="criteriaCensoredNotApp" type="radio" value="notapp" checked>
+                                <label for="criteriaCensoredNotApp">Not applicable</label>
+                                <input name="criteriaCensored" id="criteriaCensoredYes" type="radio" value="yes">
+                                <label for="criteriaCensoredYes">Yes</label>
+                                <input name="criteriaCensored" id="criteriaCensoredNo" type="radio" value="no">
+                                <label for="criteriaCensoredNo">No</label>
+                            </div>
+                    </section><!-- /#criteria-censored -->
+
+                    <section aria-labelledby="region7">
+                        <h2 id="region7">Expurgated</h2>
+                            <div class="form-group md-radio mb-0 col-10 offset-1" aria-labelledby="region6" role="radiogroup">
+                                <input name="criteriaExpurgated" id="criteriaExpurgatedNotApp" type="radio" value="notapp" checked>
+                                <label for="criteriaExpurgatedNotApp">Not applicable</label>
+                                <input name="criteriaExpurgated" id="criteriaExpurgatedYes" type="radio" value="yes">
+                                <label for="criteriaExpurgatedYes">Yes</label>
+                                <input name="criteriaExpurgated" id="criteriaExpurgatedNo" type="radio" value="no">
+                                <label for="criteriaExpurgatedNo">No</label>
+                            </div>
+                    </section><!-- /#criteria-Expurgated -->
+                    <div class="layer-actions">
+                        <button type="button" class="btn btn-priority-low">Cancel</button>
+                        <button type="button" class="btn btn-priority-mid">Create layer</button>
+                    </div>
+
                </div>
             </div><!-- /#create-layer-init -->
             </form>
@@ -98,7 +132,7 @@ Mauris sed cursus lacus, vel ornare lorem. Vivamus tincidunt id lacus eu ultrici
             </div><!~~ /.widget-pane-content ~~>
  -->
         <div class="widget-pane-toggle">
-            <button v-on:click="togglePane"
+            <button accesskey="p" v-on:click="togglePane"
                 type="button"
                 id="btn-pane-toggle"
                 class="btn"

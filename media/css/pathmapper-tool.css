@@ -133,6 +133,7 @@
     padding: 0 0.625rem;
     height: 3.25rem;
     background-color: #edeae6;
+    border-bottom: 1px solid #ddd;
 }
 
 .pane-content header h1 {
@@ -162,6 +163,7 @@ label.layer-title {
     margin-bottom: auto;
 }
 
+
 .pane-content-container {
     margin: 0;
     overflow-y: scroll;
@@ -169,7 +171,7 @@ label.layer-title {
 }
 
 .pane-content-container h2 {
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     font-weight: 500;
     color: #836737;
 }
@@ -181,12 +183,74 @@ label.layer-title {
     background: #f8f5f4 url("../img/fp_section_bg.png") repeat;
 }
 
+.layer-actions {
+    margin: 1rem;
+    padding: 1rem;
+    border-top: 1px solid #ddd;
+    text-align: right;
+}
+
+.layer-actions .btn-priority-low {
+    margin-left: 0.125rem;
+    margin-right: 0.125rem;
+    font-weight: 500;
+    color: #97421b;
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.layer-actions .btn-priority-low:hover {
+    color: #82320d;
+    background-color: #efefef;
+    border-color: #efefef;
+    /* offset-x | offset-y | blur-radius | color */
+    box-shadow: 0 2px 1px -1px rgba(0,0,0,0.2), 0 1px 1px 0 rgba(0,0,0,0.141), 0 1px 3px 0 rgba(0,0,0,0.122);
+}
+
+.layer-actions .btn-priority-mid {
+    margin-left: 0.125rem;
+    margin-right: 0.125rem;
+    font-weight: 500;
+    color: #fff;
+    background-color: #97421b;
+    border-color: #97421b;
+}
+
+.layer-actions .btn-priority-mid:hover {
+    color: #fff;
+    background-color: #82320d;
+    border-color: #82320d;
+    /* offset-x | offset-y | blur-radius | color 
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);*/
+    box-shadow: 0 2px 1px -1px rgba(0,0,0,0.2), 0 1px 1px 0 rgba(0,0,0,0.141), 0 1px 3px 0 rgba(0,0,0,0.122);
+}
+
 .pane-content-container .col-form-label {
     font-size: 1rem;
     text-align: right;
     padding-right: 0;
 }
 
+.criteria-range {
+    white-space: nowrap;
+    color: #888;
+    border-color: #888;
+    padding-right: 0.5rem;
+    padding-left: 0.5rem;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}
+
+.criteria-range:before {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    content: "\f055";
+    margin-right: 0.5rem;
+}
+
+.criteria-range.range-on:before {
+    content: "\f057";
+}
 
 /*
  *  STYLE 3
@@ -208,3 +272,85 @@ label.layer-title {
 {
     background-color: #999;
 }
+
+
+
+
+
+/* Material design experiment */
+
+@keyframes ripple {
+  0% {
+    box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0);
+  }
+  50% {
+    box-shadow: 0px 0px 0px 15px rgba(0, 0, 0, 0.1);
+  }
+  100% {
+    box-shadow: 0px 0px 0px 15px rgba(0, 0, 0, 0);
+  }
+}
+.md-radio {
+  position: relative;
+}
+.md-radio.md-radio-inline {
+  display: inline-block;
+}
+.md-radio input[type="radio"] {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin-bottom: 0.25rem;
+}
+.md-radio input[type="radio"]:checked + label::before {
+  margin-top: 0.1rem;
+  border-color: #97421b;
+  animation: ripple 0.2s linear forwards;
+}
+.md-radio input[type="radio"]:checked + label::after {
+  transform: scale(1);
+}
+.md-radio label {
+  display: block;
+  min-height: 20px;
+  position: relative;
+  padding: 0 30px;
+  margin-bottom: 0.25rem;
+  cursor: pointer;
+  vertical-align: bottom;
+}
+.md-radio label::before, .md-radio label::after {
+  margin-top: 0.1rem;
+  position: absolute;
+  content: '';
+  border-radius: 50%;
+  transition: all .3s ease;
+  transition-property: transform, border-color;
+  background-color: #edeae6;
+}
+.md-radio label::before {
+  left: 0;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(0, 0, 0, 0.54);
+}
+.md-radio label::after {
+  top: 5px;
+  left: 5px;
+  width: 10px;
+  height: 10px;
+  transform: scale(0);
+  background: #97421b;
+}
+.md-radio input[type="radio"]:focus + label::before {
+  border: 2px solid #97421b !important;
+  box-shadow: 0 0 5px 2px rgba(81, 203, 238, 1) !important;
+}
+.md-radio input[type="radio"]:focus + label::after {
+  border: 2px solid #97421b !important;
+  box-shadow: 0 0 5px 2px rgba(81, 203, 238, 1) !important;
+}
+
+/* #2e5367, hover #222a38 */
