@@ -1,7 +1,7 @@
 from django.test.testcases import TestCase
 
 from footprints.main.forms import FootprintSearchForm, ContactUsForm, \
-    ExtendedDateForm, BookCopySearchForm
+    ExtendedDateForm
 from footprints.main.models import ExtendedDate
 
 
@@ -352,15 +352,3 @@ class ExtendedDateFormTest(TestCase):
 
         self.assertEquals(form.get_error_messages(),
                           u'Please specify a valid date<br />')
-
-
-class BookCopySearchFormTest(TestCase):
-
-    def test_empty_search(self):
-        form = BookCopySearchForm()
-        form.cleaned_data = {
-            'work': None,
-            'imprint': None
-        }
-        sqs = form.search()
-        self.assertEquals(sqs.count(), 0)

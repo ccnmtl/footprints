@@ -85,7 +85,7 @@ HAYSTACK_SEARCH_RESULTS_PER_PAGE = 15
 PROJECT_APPS = [
     'footprints.main',
     'footprints.batch',
-    'viaf',
+    'footprints.pathmapper'
 ]
 
 USE_TZ = True
@@ -116,7 +116,8 @@ INSTALLED_APPS += [  # noqa
     'footprints.batch',
     's3sign',
     'registration',
-    'django.contrib.gis'
+    'django.contrib.gis',
+    'footprints.pathmapper',
 ]
 
 djcelery.setup_loader()

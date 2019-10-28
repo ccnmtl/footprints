@@ -1,15 +1,14 @@
 from django.conf import settings
-from django.conf.urls import include, url
-from django.contrib import admin
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import password_change, password_change_done, \
     password_reset_done, password_reset_confirm, password_reset_complete, \
     password_reset
-from django.views.generic import TemplateView
-from django.views.static import serve
-from registration.backends.default.views import RegistrationView
 from rest_framework import routers
 
+from django.conf.urls import include, url
+from django.contrib import admin
+from django.contrib.auth.decorators import login_required
+from django.views.generic import TemplateView
+from django.views.static import serve
 from footprints.main import views
 from footprints.main.forms import CustomRegistrationForm
 from footprints.main.views import (
@@ -18,15 +17,16 @@ from footprints.main.views import (
     AddPlaceView, AddDateView, RemoveRelatedView,
     AddIdentifierView, AddDigitalObjectView, ConnectFootprintView,
     ContactUsView, AddLanguageView, DisplayDateView, CopyFootprintView,
-    SignS3View, ModerationView, VerifyFootprintView, MapView,
-    FootprintSearchView, ExportFootprintSearch, VerifiedFootprintFeed,
-    BookCopySearchView)
+    SignS3View, ModerationView, VerifyFootprintView,
+    FootprintSearchView, ExportFootprintSearch, VerifiedFootprintFeed)
 from footprints.main.viewsets import (
     BookCopyViewSet, ImprintViewSet, ActorViewSet,
     ExtendedDateViewSet, FootprintViewSet, LanguageViewSet,
     PersonViewSet, PlaceViewSet, RoleViewSet, WrittenWorkViewSet,
     StandardizedIdentificationViewSet, DigitalFormatViewSet,
     DigitalObjectViewSet, StandardizedIdentificationTypeViewSet)
+from registration.backends.default.views import RegistrationView
+from footprints.pathmapper.views import MapView, BookCopySearchView
 
 
 admin.autodiscover()
