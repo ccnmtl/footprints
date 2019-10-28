@@ -4,7 +4,9 @@
         <div class="widget-pane-content">
             <!-- Initial Create Layer pane -->
             <form class="criteria-set-pane"><!-- Begin form -->
-            <div class="pane-content" id="create-layer-init">
+            <!-- Begin #create-layer-init pane -->
+            <!-- d-none CLASS IS ON THIS DIV. It is there because I needed to work on Layer List pane. Remove that class to not hide it -->
+            <div class="pane-content d-none" id="create-layer-init">
                 <header class="d-flex flex-row">
                     <h1><i class="fas fa-layer-group mr-2" aria-hidden="true"></i>
                     New layer</h1>
@@ -107,13 +109,52 @@
                                 <label for="criteriaExpurgatedNo">No</label>
                             </div>
                     </section><!-- /#criteria-Expurgated -->
+     
                     <div class="layer-actions">
                         <button type="button" class="btn btn-priority-low">Cancel</button>
                         <button type="button" class="btn btn-priority-mid">Create layer</button>
                     </div><!-- /.layer actions -->
-
-               </div>
+     
+                </div><!-- /.pane-content-container -->
             </div><!-- /#create-layer-init -->
+
+            <!-- Begin #layer-list pane -->
+            <div class="pane-content" id="layer-list-pane">
+                <header class="d-flex flex-row">
+                    <h1><i class="fas fa-layer-group mr-2" aria-hidden="true"></i>
+                    Layer list (N)</h1>
+                    <button type="button" class="btn btn-priority-hi">Create layer</button>
+                </header>
+                <div class="pane-content-container" id="style-3">
+                    <section aria-labelledby="layer-IDGOHERE1" class="d-flex">
+                        <h2 id="layer-IDGOHERE1">Layer title 1 m m m m m m m m m m m m m m </h2>
+                        <ul class="indiv-layer-actions d-flex">
+                            <li><button type="button" class="btn btn-layer-action"><i class="fas fa-pencil-alt"></i></button></li>
+                            <li><button type="button" class="btn btn-layer-action""><i class="fas fa-eye"></i></button></li>
+                            <li><button type="button" class="btn btn-layer-action""><i class="fas fa-trash-alt"></i></button></li>
+                        </ul>
+                    </section>
+
+                    <section aria-labelledby="layer-IDGOHERE2" class="d-flex">
+                        <h2 id="layer-IDGOHERE2">Layer title 2 is very long also</h2>
+                        <ul class="indiv-layer-actions d-flex">
+                            <li><button type="button" class="btn btn-layer-action"><i class="fas fa-pencil-alt"></i></button></li>
+                            <li><button type="button" class="btn btn-layer-action"><i class="fas fa-eye"></i></button></li>
+                            <li><button type="button" class="btn btn-layer-action"><i class="fas fa-trash-alt"></i></button></li>
+                        </ul>
+                    </section>
+
+                    <section aria-labelledby="layer-IDGOHERE3" class="d-flex">
+                        <h2 id="layer-IDGOHERE3">Layer title 3 demonstrate hidden setting</h2>
+                        <ul class="indiv-layer-actions d-flex">
+                            <li><button type="button" class="btn btn-layer-action"><i class="fas fa-pencil-alt"></i></button></li>
+                            <li><button type="button" class="btn btn-layer-action disabled"><i class="fas fa-eye-slash"></i></button></li>
+                            <li><button type="button" class="btn btn-layer-action""><i class="fas fa-trash-alt"></i></button></li>
+                        </ul>
+                    </section>
+                </div><!-- /.pane-content-container -->
+            </div><!-- /#layer-list -->
+
             </form><!-- Closing the form -->
         </div><!-- /.widget-pane-content -->
 
@@ -132,7 +173,7 @@
             </div><!~~ /.widget-pane-content ~~>
  -->
         <div class="widget-pane-toggle">
-            <button accesskey="p" v-on:click="togglePane"
+            <button accesskey="," v-on:click="togglePane"
                 type="button"
                 id="btn-pane-toggle"
                 class="btn"
