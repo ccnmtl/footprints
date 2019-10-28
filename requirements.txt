@@ -20,7 +20,7 @@ pyparsing==2.4.2
 pycodestyle==2.5.0
 enum34==1.1.6; python_version < '3.4'
 configparser==4.0.2
-flake8==3.7.8
+flake8==3.7.9
 tornado==4.5.3 # pyup: <5.0
 cssselect==1.1.0
 lxml==4.3.5 # pyup: <4.4
