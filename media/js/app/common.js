@@ -10,7 +10,9 @@ requirejs.config({
     paths: {
         'jquery': 'jquery/js/jquery-3.4.1.min',
         'mapVue': 'js/app/components/mapvue',
+        'select2': 'js/lib/select2-4.0.10/js/select2.min',
         'searchVue': 'js/app/components/searchvue',
+        'selectWidget': 'js/app/components/select-widget',
         'utils': 'js/app/utils',
         'Vue': vuePath
     },
