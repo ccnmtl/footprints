@@ -88,7 +88,7 @@
 {% endblock %}
 
 {% block extrahead %}
-    <link href="{{STATIC_URL}}select2-3.5.2/select2.css" rel="stylesheet" />
+    <link href="{{STATIC_URL}}js/lib/select2-4.0.10/css/select2.min.css" rel="stylesheet"/>
 
     {% include "xeditable/actor.html" %}
     {% include "xeditable/author.html" %}
@@ -116,6 +116,7 @@
     <script src="{{STATIC_URL}}tinymce/tinymce.min.js"></script>
 
     {% compress js %}
+        <script src="{{STATIC_URL}}js/lib/select2-4.0.10/js/select2.js"></script>
         <script src="{{STATIC_URL}}select2-3.5.2/select2.js"></script>
         <script src="{{STATIC_URL}}jquery-ui-1.11.2/jquery-ui.js"></script>
         <script src="{{STATIC_URL}}s3sign/js/s3upload.js"></script>
