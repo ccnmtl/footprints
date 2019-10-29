@@ -1,4 +1,4 @@
-define(['jquery'], function($) {
+define(['jquery', 'selectWidget'], function($, select) {
     const SearchVue = {
         props: ['total'],
         template: '#search-template',
@@ -6,6 +6,9 @@ define(['jquery'], function($) {
             return {
                 criteria: {}
             };
+        },
+        components: {
+            'select-widget': select.SelectWidget
         },
         methods: {
             updateCriteria: function() {

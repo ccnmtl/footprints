@@ -4,6 +4,7 @@
 
 {% block css %}
 <link href="{{STATIC_URL}}css/pathmapper-tool.css" rel="stylesheet">
+<link href="{{STATIC_URL}}js/lib/select2-4.0.10/css/select2.min.css" rel="stylesheet">
 {% endblock %}
 
 {% block bodyclass %}pathmapper-tool{% endblock %}
@@ -14,6 +15,7 @@
     <meta name="csrf-token" content="{{csrf_token}}">
     {% include "clientside/google_map_template.html" %}
     {% include "clientside/search_template.html" %}
+    {% include "clientside/select_template.html" %}
 {% endblock %}
 
 {% block content %}
