@@ -4,6 +4,7 @@
         <div class="widget-pane-content">
             <!-- Initial Create Layer pane -->
             <form class="criteria-set-pane"><!-- Begin form -->
+
             <!-- Begin #create-layer-init pane -->
             <!-- d-none CLASS IS ON THIS DIV. It is there because I needed to work on Layer List pane. Remove that class to not hide it -->
             <div class="pane-content d-none" id="create-layer-init">
@@ -116,7 +117,7 @@
                     </div><!-- /.layer actions -->
      
                 </div><!-- /.pane-content-container -->
-            </div><!-- /#create-layer-init -->
+            </div><!-- /#create-layer-init pane -->
 
             <!-- Begin #layer-list pane -->
             <div class="pane-content" id="layer-list-pane">
@@ -153,25 +154,11 @@
                         </ul>
                     </section>
                 </div><!-- /.pane-content-container -->
-            </div><!-- /#layer-list -->
+            </div><!-- /End #layer-list pane -->
 
             </form><!-- Closing the form -->
         </div><!-- /.widget-pane-content -->
 
-<!-- 
-        <div class="widget-pane-content" v-if="criteria">
-                <div v-if="total">
-                Book Copies: {{total}}
-            </div>
-            <form>
-                <select v-model="criteria.work">
-                    <option>~~~~-</option>
-                    <option value="67">Akedet</option>
-                </select>
-                <button>Add Layer</button>
-            </form>
-            </div><!~~ /.widget-pane-content ~~>
- -->
         <div class="widget-pane-toggle">
             <button accesskey="," v-on:click="togglePane"
                 type="button"
