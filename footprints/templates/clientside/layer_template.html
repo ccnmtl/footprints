@@ -3,16 +3,16 @@
     <div class="pane-content" id="create-layer-init">
         <header class="d-flex flex-row">
             <h1><i class="fas fa-layer-group mr-2" aria-hidden="true"></i>
-                <span v-if="editing">Edit Layer</span>
+                <span v-if="layer.id">Edit Layer</span>
                 <span v-else>New layer</span>
             </h1>
             <label for="layerTitle" class="sr-only">New layer title</label>
-            <input type="text" class="form-control criteria-form-field" id="layerTitle" :value="layer.title">
+            <input type="text" class="form-control criteria-form-field" id="layerTitle" v-model="layer.title">
         </header>
         <div class="pane-content-container" id="style-3">
             <section aria-labelledby="region1">
                 <h2 id="region1" class="sr-only">Contextual description of this layer's criteria set</h2>
-                {{criteria}}
+                {{displayCriteria}}
                 <div v-if="total">Book Copies: {{total}}</div>
             </section><!-- /contextual description -->
 
@@ -108,8 +108,8 @@
             </section><!-- /#criteria-Expurgated -->
 
             <div class="layer-actions">
-                <button type="button" class="btn btn-priority-low">Cancel</button>
-                <button type="button" class="btn btn-priority-mid">Create layer</button>
+                <button v-on:click="cancel" type="button" class="btn btn-priority-low">Cancel</button>
+                <button v-on:click="save" type="button" class="btn btn-priority-mid">Create layer</button>
             </div><!-- /.layer actions -->
 
         </div><!-- /.pane-content-container -->

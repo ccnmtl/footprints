@@ -21,7 +21,7 @@
 
 {% block content %}
     <div id="search-container">
-        <layer-list v-model="layers" />
+        <layer-list v-model="collection.layers" />
     </div>
 
     <div id="share-view-container">
@@ -33,7 +33,7 @@
     </div>
 
     <div id="map-container">
-        <google-map v-model="layers" />
+        <google-map v-model="collection.layers" />
     </div>
 {% endblock %}
 

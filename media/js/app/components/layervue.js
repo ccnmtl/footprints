@@ -1,6 +1,6 @@
 define(['jquery', 'selectWidget'], function($, select) {
     const LayerVue = {
-        props: ['value', 'layerCount'],
+        props: ['value'],
         template: '#layer-template',
         data: function() {
             return {
@@ -13,10 +13,7 @@ define(['jquery', 'selectWidget'], function($, select) {
             };
         },
         computed: {
-            editing: function() {
-                return this.layer.id;
-            },
-            criteria: function() {
+            displayCriteria: function() {
                 return '';
             }
         },
@@ -41,7 +38,7 @@ define(['jquery', 'selectWidget'], function($, select) {
 
                 this.setIsSearching();
 
-                // retrieve book copies
+                // retrieve book copies based on criteria
                 $.ajax({
                     url: this.searchUrl,
                     data: this.layer,
@@ -51,6 +48,12 @@ define(['jquery', 'selectWidget'], function($, select) {
                     this.total = results.total;
                     $('html').removeClass('busy');
                 });
+            },
+            cancel: function() {
+                this.$emit('cancel');
+            },
+            save: function() {
+                this.$emit('save', $.extend(true, {}, this.layer));
             },
             togglePane: function() {
                 if ($('#container-pane').hasClass('widget-pane-expanded')) {
