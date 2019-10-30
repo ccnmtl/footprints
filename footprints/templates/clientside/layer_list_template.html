@@ -6,22 +6,24 @@
             <form class="criteria-set-pane"><!-- Begin form -->
 
             <!-- Layer Create / Edit form -->
-            <layer-form v-if="selectedLayer" class="" v-model="selectedLayer" :layer-count="layers.length"/>
+            <layer-form v-if="selectedLayer" v-model="selectedLayer"
+                @save="saveLayer" @cancel="cancelLayer" 
+            />
 
             <!-- Begin #layer-list pane -->
             <div v-if="!selectedLayer" class="pane-content" id="layer-list-pane">
                 <header class="d-flex flex-row">
                     <h1><i class="fas fa-layer-group mr-2" aria-hidden="true"></i>
-                    Layer list (N)</h1>
-                    <button type="button" class="btn btn-priority-hi">Create layer</button>
+                    Layer list ({{layers.length}})</h1>
+                    <button v-on:click="createLayer" type="button" class="btn btn-priority-hi">Create layer</button>
                 </header>
                 <div class="pane-content-container" id="style-3">
-                    <section v-for="layer in layers" :aria-labelledby="'layer-' + layer.id" class="d-flex">
-                        <h2 :id="'layer-' + layer.id">{{layer.title}}</h2>
+                    <section v-for="(layer, idx) in layers" :aria-labelledby="'layer-' + idx" class="d-flex">
+                        <h2 :id="'layer-' + idx">{{layer.title}}</h2>
                         <ul class="indiv-layer-actions d-flex">
-                            <li><button type="button" class="btn btn-layer-action"><i class="fas fa-pencil-alt"></i></button></li>
-                            <li><button type="button" class="btn btn-layer-action"><i class="fas fa-eye"></i></button></li>
-                            <li><button type="button" class="btn btn-layer-action"><i class="fas fa-trash-alt"></i></button></li>
+                            <li><button :data-idx="idx" v-on:click="editLayer" type="button" class="btn btn-layer-action"><i class="fas fa-pencil-alt"></i></button></li>
+                            <li><button :data-idx="idx" type="button" class="btn btn-layer-action"><i class="fas fa-eye"></i></button></li>
+                            <li><button :data-idx="idx" v-on:click="deleteLayer" type="button" class="btn btn-layer-action"><i class="fas fa-trash-alt"></i></button></li>
                         </ul>
                     </section>
                 </div><!-- /.pane-content-container -->

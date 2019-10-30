@@ -6,7 +6,10 @@ requirejs(['./common'], function(common) {
                 el: '#pathmapper-container',
                 data: function() {
                     return {
-                        layers: []
+                        collection: {
+                            id: null,
+                            layers: []
+                        }
                     };
                 },
                 components: {
