@@ -21,13 +21,18 @@
                 <div class="form-group row">
                     <label for="criteriaLiteraryWork" class="col-4 col-form-label">Literary work:</label>
                     <div class="col-8">
-                        <select-widget v-model="layer.work" id="criteriaLiteraryWork" data-url="api/writtenwork/"></select-widget>
+                        <select-widget v-model="layer.work" id="criteriaLiteraryWork" 
+                            :criteria="criteria" data-url="api/writtenwork/">
+                        </select-widget>
                     </div>
                 </div>
                 <div class="form-group mb-0 row">
                     <label for="criteriaImprint" class="col-4 col-form-label">Imprint:</label>
                     <div class="col-8">
-                        <input type="text" class="form-control" id="criteriaImprint" placeholder="placehoder text">
+                        <select-widget v-model="layer.imprint" id="criteriaImprint"
+                            :disabled="!layer.work"
+                            :criteria="criteria" data-url="api/imprint/">
+                        </select-widget>
                     </div>
                 </div>
             </section><!-- /Literary work and imprint criteria -->
@@ -37,22 +42,27 @@
                 <div class="form-group row">
                     <label for="criteriaImprintLoc" class="col-4 col-form-label">Imprint:</label>
                     <div class="col-8">
-                        <input type="text" class="form-control" id="criteriaImprintLoc" placeholder="placehoder text">
+                        <select-widget v-model="layer.imprintLocation" id="criteriaImprintLoc"
+                            :criteria="criteria" data-url="api/place/">
+                        </select-widget>
                     </div>
                 </div>
                 <div class="form-group mb-0 row">
                     <label for="criteriaFootprintLoc" class="col-4 col-form-label">Footprint:</label>
                     <div class="col-8">
-                        <input type="text" class="form-control" id="criteriaFootprintLoc" placeholder="placehoder text">
-                            <div class="form-check mt-1">
-                                <input class="form-check-input" type="checkbox" value="" id="footprintLocFinal">
-                                <label class="form-check-label" for="footprintLocFinal">
+                        <select-widget v-model="layer.footprintLocation" id="criteriaFootprintLoc"
+                            :criteria="criteria" data-url="api/place/">
+                        </select-widget>
+                        <div class="form-check mt-1">
+                            <input v-model="layer.footprintLocationFinal" class="form-check-input"
+                                type="checkbox" value="" id="footprintLocFinal">
+                            <label class="form-check-label" for="footprintLocFinal">
                                 as final footprint
-                                </label>
+                            </label>
                         </div>
                     </div>
                 </div>
-            </section><!-- /#criteria-loctaions -->
+            </section><!-- /#criteria-locations -->
 
             <section aria-labelledby="region4">
                 <h2 id="region4">Years</h2>
@@ -78,7 +88,9 @@
                 <div class="form-group mb-0 row">
                     <label for="criteriaPerson" class="col-4 col-form-label">Person:</label>
                     <div class="col-8">
-                        <input type="text" class="form-control" id="criteriaPerson" placeholder="placehoder text">
+                        <select-widget v-model="layer.person" id="criteriaPerson"
+                            :criteria="criteria" data-url="api/person/">
+                        </select-widget>
                     </div>
                 </div>
             </section><!-- /#criteria-person -->
@@ -86,11 +98,11 @@
             <section aria-labelledby="region6">
                 <h2 id="region6">Censored</h2>
                     <div class="form-group md-radio mb-0 col-10 offset-1" aria-labelledby="region6" role="radiogroup">
-                        <input name="criteriaCensored" id="criteriaCensoredNotApp" type="radio" value="notapp" checked>
+                        <input v-model="layer.censored" name="criteriaCensored" id="criteriaCensoredNotApp" type="radio" value="notapp" checked>
                         <label for="criteriaCensoredNotApp">Not applicable</label>
-                        <input name="criteriaCensored" id="criteriaCensoredYes" type="radio" value="yes">
+                        <input v-model="layer.censored" name="criteriaCensored" id="criteriaCensoredYes" type="radio" value="yes">
                         <label for="criteriaCensoredYes">Yes</label>
-                        <input name="criteriaCensored" id="criteriaCensoredNo" type="radio" value="no">
+                        <input v-model="layer.censored" name="criteriaCensored" id="criteriaCensoredNo" type="radio" value="no">
                         <label for="criteriaCensoredNo">No</label>
                     </div>
             </section><!-- /#criteria-censored -->
@@ -98,11 +110,11 @@
             <section aria-labelledby="region7">
                 <h2 id="region7">Expurgated</h2>
                     <div class="form-group md-radio mb-0 col-10 offset-1" aria-labelledby="region7" role="radiogroup">
-                        <input name="criteriaExpurgated" id="criteriaExpurgatedNotApp" type="radio" value="notapp" checked>
+                        <input v-model="layer.expurgated" name="criteriaExpurgated" id="criteriaExpurgatedNotApp" type="radio" value="notapp" checked>
                         <label for="criteriaExpurgatedNotApp">Not applicable</label>
-                        <input name="criteriaExpurgated" id="criteriaExpurgatedYes" type="radio" value="yes">
+                        <input v-model="layer.expurgated" name="criteriaExpurgated" id="criteriaExpurgatedYes" type="radio" value="yes">
                         <label for="criteriaExpurgatedYes">Yes</label>
-                        <input name="criteriaExpurgated" id="criteriaExpurgatedNo" type="radio" value="no">
+                        <input v-model="layer.expurgated" name="criteriaExpurgated" id="criteriaExpurgatedNo" type="radio" value="no">
                         <label for="criteriaExpurgatedNo">No</label>
                     </div>
             </section><!-- /#criteria-Expurgated -->

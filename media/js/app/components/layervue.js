@@ -7,7 +7,18 @@ define(['jquery', 'selectWidget'], function($, select) {
                 layer: {
                     'id': null,
                     'title': '',
-                    'work': null
+                    'work': null,
+                    'imprint': null,
+                    'imprintLocation': null,
+                    'footprintLocation': null,
+                    'footprintLocationFinal': null,
+                    'person': null,
+                    'pubStart': null,
+                    'pubEnd': null,
+                    'footprintStart': null,
+                    'footprintEnd': null,
+                    'censored': null,
+                    'expurgated': null
                 },
                 total: null
             };
@@ -21,6 +32,12 @@ define(['jquery', 'selectWidget'], function($, select) {
             'select-widget': select.SelectWidget
         },
         methods: {
+            criteria: function() {
+                return {
+                    'work': this.layer.work,
+                    'imprint': this.layer.imprint
+                };
+            },
             isDirty: function() {
                 return this.state !== JSON.stringify(this.layer);
             },
