@@ -23,6 +23,14 @@
         <search-widget v-model="criteria" :total="total" />
     </div>
 
+    <div id="share-view-container">
+        <div class="widget-share-map-table">
+            <button type="button" class="btn btn-share" title="Share results"><i class="fas fa-share-alt"></i></i></button>
+            <button type="button" class="btn btn-view active">Map view</button>
+            <button type="button" class="btn btn-view">Table view</button>
+        </div><!-- /.widget-share-map-table -->
+    </div>
+
     <div id="map-container">
         <google-map />
     </div>
