@@ -1,0 +1,118 @@
+{% verbatim %}
+<script type="text/x-template" id="layer-template">
+    <div class="pane-content" id="create-layer-init">
+        <header class="d-flex flex-row">
+            <h1><i class="fas fa-layer-group mr-2" aria-hidden="true"></i>
+                <span v-if="editing">Edit Layer</span>
+                <span v-else>New layer</span>
+            </h1>
+            <label for="layerTitle" class="sr-only">New layer title</label>
+            <input type="text" class="form-control criteria-form-field" id="layerTitle" :value="layer.title">
+        </header>
+        <div class="pane-content-container" id="style-3">
+            <section aria-labelledby="region1">
+                <h2 id="region1" class="sr-only">Contextual description of this layer's criteria set</h2>
+                {{criteria}}
+                <div v-if="total">Book Copies: {{total}}</div>
+            </section><!-- /contextual description -->
+
+            <section aria-labelledby="region2">
+                <h2 id="region2" class="sr-only">Literary work and imprint criteria</h2>
+                <div class="form-group row">
+                    <label for="criteriaLiteraryWork" class="col-4 col-form-label">Literary work:</label>
+                    <div class="col-8">
+                        <select-widget v-model="layer.work" id="criteriaLiteraryWork" data-url="api/writtenwork/"></select-widget>
+                    </div>
+                </div>
+                <div class="form-group mb-0 row">
+                    <label for="criteriaImprint" class="col-4 col-form-label">Imprint:</label>
+                    <div class="col-8">
+                        <input type="text" class="form-control" id="criteriaImprint" placeholder="placehoder text">
+                    </div>
+                </div>
+            </section><!-- /Literary work and imprint criteria -->
+
+            <section aria-labelledby="region3">
+                <h2 id="region3">Location</h2>
+                <div class="form-group row">
+                    <label for="criteriaImprintLoc" class="col-4 col-form-label">Imprint:</label>
+                    <div class="col-8">
+                        <input type="text" class="form-control" id="criteriaImprintLoc" placeholder="placehoder text">
+                    </div>
+                </div>
+                <div class="form-group mb-0 row">
+                    <label for="criteriaFootprintLoc" class="col-4 col-form-label">Footprint:</label>
+                    <div class="col-8">
+                        <input type="text" class="form-control" id="criteriaFootprintLoc" placeholder="placehoder text">
+                            <div class="form-check mt-1">
+                                <input class="form-check-input" type="checkbox" value="" id="footprintLocFinal">
+                                <label class="form-check-label" for="footprintLocFinal">
+                                as final footprint
+                                </label>
+                        </div>
+                    </div>
+                </div>
+            </section><!-- /#criteria-loctaions -->
+
+            <section aria-labelledby="region4">
+                <h2 id="region4">Years</h2>
+                <div class="form-group row">
+                    <label for="criteriaPubYearBegin" class="col-4 col-form-label">Publication:</label>
+                    <div class="col-8 d-flex">
+                        <input type="text" class="form-control" id="criteriaPubYearBegin" >
+                        <button type="button" class="btn btn-outline-secondary criteria-range range-on">to</button>
+                        <input type="text" class="form-control" id="criteriaPubYearEnd">
+                    </div>
+                </div>
+                <div class="form-group mb-0 row">
+                    <label for="criteriaFootprintYearBegin" class="col-4 col-form-label">Footprint:</label>
+                    <div class="col-8 d-flex">
+                        <input type="text" class="form-control" id="criteriaFootprintYearBegin" >
+                        <button type="button" class="btn btn-outline-secondary criteria-range">add range</button>
+                    </div>
+                </div>
+            </section><!-- /#criteria-years -->
+
+            <section aria-labelledby="region5">
+                <h2 id="region5" class="sr-only">Person</h2>
+                <div class="form-group mb-0 row">
+                    <label for="criteriaPerson" class="col-4 col-form-label">Person:</label>
+                    <div class="col-8">
+                        <input type="text" class="form-control" id="criteriaPerson" placeholder="placehoder text">
+                    </div>
+                </div>
+            </section><!-- /#criteria-person -->
+
+            <section aria-labelledby="region6">
+                <h2 id="region6">Censored</h2>
+                    <div class="form-group md-radio mb-0 col-10 offset-1" aria-labelledby="region6" role="radiogroup">
+                        <input name="criteriaCensored" id="criteriaCensoredNotApp" type="radio" value="notapp" checked>
+                        <label for="criteriaCensoredNotApp">Not applicable</label>
+                        <input name="criteriaCensored" id="criteriaCensoredYes" type="radio" value="yes">
+                        <label for="criteriaCensoredYes">Yes</label>
+                        <input name="criteriaCensored" id="criteriaCensoredNo" type="radio" value="no">
+                        <label for="criteriaCensoredNo">No</label>
+                    </div>
+            </section><!-- /#criteria-censored -->
+
+            <section aria-labelledby="region7">
+                <h2 id="region7">Expurgated</h2>
+                    <div class="form-group md-radio mb-0 col-10 offset-1" aria-labelledby="region7" role="radiogroup">
+                        <input name="criteriaExpurgated" id="criteriaExpurgatedNotApp" type="radio" value="notapp" checked>
+                        <label for="criteriaExpurgatedNotApp">Not applicable</label>
+                        <input name="criteriaExpurgated" id="criteriaExpurgatedYes" type="radio" value="yes">
+                        <label for="criteriaExpurgatedYes">Yes</label>
+                        <input name="criteriaExpurgated" id="criteriaExpurgatedNo" type="radio" value="no">
+                        <label for="criteriaExpurgatedNo">No</label>
+                    </div>
+            </section><!-- /#criteria-Expurgated -->
+
+            <div class="layer-actions">
+                <button type="button" class="btn btn-priority-low">Cancel</button>
+                <button type="button" class="btn btn-priority-mid">Create layer</button>
+            </div><!-- /.layer actions -->
+
+        </div><!-- /.pane-content-container -->
+    </div><!-- /#create-layer-init pane -->
+</script>
+{% endverbatim %}

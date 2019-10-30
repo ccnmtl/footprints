@@ -1,11 +1,9 @@
 define(['jquery', 'select2'], function($, select2) {
     const SelectWidget = {
         name: 'select-widget',
-        props: ['options', 'value', 'dataUrl', 'id'],
+        props: ['value', 'dataUrl', 'id'],
         template: '#select-template',
         mounted: function() {
-            var vm = this;
-
             $(this.$el).select2({
                 ajax: {
                     url: Footprints.baseUrl + this.dataUrl,
@@ -23,21 +21,14 @@ define(['jquery', 'select2'], function($, select2) {
                 minimumInputLength: 1
             });
 
-            $(this.$el)
-                .val(this.value)
-                .trigger('change')
-                .on('change', function() {
-                    vm.$emit('input', this.value);
-                });
-        },
-        watch: {
-            value: function(value) {
-                // update value
-                $(this.$el).val(value).trigger('change');
-            },
-            options: function(options) {
-                // update options
-                $(this.$el).empty().select2({data: options});
+            // trigger update if value changes
+            $(this.$el).on('change', () => {
+                this.$emit('input', $(this.$el).val());
+            });
+
+            // set original value if needed
+            if (this.value) {
+                $(this.$el).val(this.value);
             }
         },
         destroyed: function() {

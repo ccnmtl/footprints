@@ -14,13 +14,14 @@
 {% block client_templates %}
     <meta name="csrf-token" content="{{csrf_token}}">
     {% include "clientside/google_map_template.html" %}
-    {% include "clientside/search_template.html" %}
-    {% include "clientside/select_template.html" %}
+    {% include "clientside/layer_list_template.html" %}
+    {% include "clientside/layer_template.html" %}
+    {% include "clientside/select_widget_template.html" %}
 {% endblock %}
 
 {% block content %}
     <div id="search-container">
-        <search-widget v-model="criteria" :total="total" />
+        <layer-list v-model="layers" />
     </div>
 
     <div id="share-view-container">
@@ -32,7 +33,7 @@
     </div>
 
     <div id="map-container">
-        <google-map />
+        <google-map v-model="layers" />
     </div>
 {% endblock %}
 
