@@ -369,8 +369,6 @@
             // Initialize select2
             jQuery(this.el).find('input.select-object').each(function() {
                 var dataUrl = jQuery(this).data('url');
-                var dataId = jQuery(this).val();
-                var description = jQuery(this).prev().html();
                 jQuery(this).select2({
                     width: '100%',
                     allowClear: true,
