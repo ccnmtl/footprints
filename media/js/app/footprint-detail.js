@@ -386,9 +386,6 @@
                     escapeMarkup: function(markup) {
                         return markup;
                     },
-                    initSelection: function(elt, callback) {
-                        callback({id: dataId, text: description});
-                    },
                     formatSelection: function(
                         object, container, query, escMarkup
                     ) {
