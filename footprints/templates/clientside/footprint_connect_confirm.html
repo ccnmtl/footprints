@@ -23,15 +23,15 @@
         <% } else if (imprint.id != current_book.imprint.id) { %>
             <% if (is_bare) { %>
                 <li>
-                    Connect to the imprint<br /><b><%= imprint.text %></b>
+                    Connect to the imprint<br /><b><%= imprint.html %></b>
                 </li>
             <% } else { %>
                 <li>
-                    Change imprint from <b><%=current_book.imprint.description%></b> to <b><%= imprint.text %></b>
+                    Change imprint from <b><%=current_book.imprint.description%></b> to <b><%= imprint.html %></b>
                 </li>
             <% } %>
         <% } else { %>
-            <li>Keep connection to the imprint <b><%= imprint.text %></b></li>
+            <li>Keep connection to the imprint <b><%= imprint.html %></b></li>
         <% } %>
     <% } %>
 
@@ -42,15 +42,15 @@
         <% } else if (copy.id != current_book.id) { %>
             <% if (is_bare) { %>
                 <li>
-                    Connect to the book copy<br /><b><%= copy.text %></b>
+                    Connect to the book copy<br /><b><%= copy.html %></b>
                 </li>
             <% } else { %>
                 <li>
-                    Change book copy from <b><%=current_book.description%></b> to <b><%= copy.text %></b>
+                    Change book copy from <b><%=current_book.description%></b> to <b><%= copy.html %></b>
                 </li>
             <% } %> 
         <% } else { %>
-            <li>Keep connection to the copy <b><%= copy.text %></b></li>
+            <li>Keep connection to the copy <b><%= copy.html %></b></li>
         <% } %>
     <% } %>
 </ul>

@@ -166,7 +166,7 @@ class BookCopySerializer(HyperlinkedModelSerializer):
 
     class Meta:
         model = BookCopy
-        fields = ('id', 'call_number', 'imprint',
+        fields = ('id', 'call_number', 'imprint', 'identifier',
                   'notes', 'description', 'owners', 'current_owners')
 
 

@@ -16,25 +16,40 @@
                         <div class="form-group writtenwork">
                             <div><label>Literary Work</label></div>
                             <div style="display: none">{{footprint.book_copy.imprint.work.description}}</div>
-                            <input {% if not footprint.is_bare %}value="{{footprint.book_copy.imprint.work.id}}"{% endif %}
-                                type="hidden" name="work" class="select-object work required"
-                                data-url="/api/writtenwork/" />
+                            <select type="hidden" name="work" class="select-object work required"
+                                data-url="/api/writtenwork/" data-placeholder="Select a literary work">
+                                {% if not footprint.is_bare %}
+                                    <option selected="selected" value="{{footprint.book_copy.imprint.work.id}}">
+                                        {{footprint.book_copy.imprint.work.title}}
+                                    </option>
+                                {% endif %}
+                            </select>
                             <div class="error-block">This field is required.</div>
                         </div>
                         <div class="form-group imprint" {% if footprint.is_bare %}style="display: none"{% endif %}>
                             <div><label>Imprint</label></div>
                             <div style="display: none">{{footprint.book_copy.imprint.description}}</div>
-                            <input {% if not footprint.is_bare %}value="{{footprint.book_copy.imprint.id}}"{% endif %}
-                                type="hidden" name="imprint" class="select-object imprint required"
-                                data-url="/api/imprint/" />
+                            <select type="hidden" name="imprint" class="select-object imprint required"
+                                data-url="/api/imprint/" data-placeholder="Select an imprint">
+                                 {% if not footprint.is_bare %}
+                                    <option selected="selected" value="{{footprint.book_copy.imprint.id}}">
+                                        {{footprint.book_copy.imprint.title}}
+                                    </option>
+                                 {% endif %}
+                            </select>
                             <div class="error-block">This field is required.</div>
                         </div>
                         <div class="form-group" {% if footprint.is_bare %}style="display: none"{% endif %}>
                             <div><label>Physical Copy</label></div>
                             <div style="display: none">{{footprint.book_copy.description}}</div>
-                            <input {% if not footprint.is_bare %}value="{{footprint.book_copy.id}}"{% endif %}
-                                type="hidden" name="copy" class="select-object copy required" 
-                                data-url="/api/book/" />
+                            <select type="hidden" name="copy" class="select-object copy required" 
+                                data-url="/api/book/" data-placeholder="Select a physical copy">
+                                 {% if not footprint.is_bare %}
+                                    <option selected="selected" value="{{footprint.book_copy.id}}">
+                                        {{footprint.book_copy.identifier}}
+                                    </option>
+                                 {% endif %}
+                            </select>
                             <div class="error-block">This field is required.</div>
                         </div>
                     </div>
