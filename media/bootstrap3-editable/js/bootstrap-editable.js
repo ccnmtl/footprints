@@ -3849,9 +3849,17 @@ $(function(){
                }
            }
        },
-       
-       input2value: function() { 
-           return this.$input.select2('val');
+
+       input2value: function() {
+           if (this.isMultiple) {
+               let selected = [];
+               for (let item of this.$input.select2('data')) {
+                   selected.push(item.id);
+               }
+               return selected;
+           } else {
+               return this.$input.select2('val');
+           }
        },
 
        str2value: function(str, separator) {
