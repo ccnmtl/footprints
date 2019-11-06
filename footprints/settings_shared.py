@@ -141,7 +141,9 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
         'footprints.main.utils.BrowsableAPIRendererNoForms'
     ),
-    'PAGINATE_BY': 15,
+    'DEFAULT_PAGINATION_CLASS':
+        'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 15,
     'DATETIME_FORMAT': '%m/%d/%y %I:%M %p'
 }
 

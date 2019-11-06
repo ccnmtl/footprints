@@ -345,53 +345,58 @@
             this.baseContext = options.baseContext;
             this.initChoices();
             this.$eltWork = jQuery(this.el)
-                .find('input.select-object.work').first();
+                .find('select.select-object.work').first();
             this.$eltImprint = jQuery(this.el)
-                .find('input.select-object.imprint').first();
+                .find('select.select-object.imprint').first().fadeOut();
             this.$eltCopy = jQuery(this.el)
-                .find('input.select-object.copy').first();
+                .find('select.select-object.copy').first().fadeOut();
 
             this.template = _.template(jQuery(options.template).html());
 
             jQuery(this.el).on('show.bs.modal', this.reset);
         },
-        context: function(term, page) {
+        context: function(params) {
             return {
                 work: this.$eltWork.val(),
                 imprint: this.$eltImprint.val(),
-                page: page,
-                q: term
+                page: params.page || 1,
+                q: params.term
             };
         },
         initChoices: function() {
             var self = this;
 
             // Initialize select2
-            jQuery(this.el).find('input.select-object').each(function() {
-                var dataUrl = jQuery(this).data('url');
+            jQuery(this.el).find('select.select-object').each(function() {
+                const dataUrl = jQuery(this).data('url');
+                const placeholder = jQuery(this).data('placeholder');
                 jQuery(this).select2({
                     width: '100%',
-                    allowClear: true,
                     minimumInputLength: 0,
+                    placeholder: {
+                        id: '-1', // the value of the option
+                        text: placeholder
+                    },
                     ajax: {
                         url: dataUrl,
                         dataType: 'json',
                         delay: 250,
                         data: self.context,
-                        results: self.results,
+                        processResults: self.results,
                         cache: true
                     },
                     escapeMarkup: function(markup) {
                         return markup;
                     },
-                    formatSelection: function(
-                        object, container, query, escMarkup
-                    ) {
-                        return object.text;
+                    templateResult: function(result) {
+                        if (result.loading) {
+                            return 'Searching...';
+                        }
+                        return result.html;
                     },
-                    formatResult: function(object) {
-                        return object.text;
-                    }
+                    templateSelection: function(data) {
+                        return data.text;
+                    },
                 });
                 jQuery(this).on('change', self.onListSelect);
                 jQuery(this).on('select2-clearing', self.onListClear);
@@ -400,16 +405,16 @@
         onListSelect: function(evt, added, removed) {
             this.removeErrors();
             var value = jQuery(evt.currentTarget).val();
-            if (value.length > 0) {
+            if (value && value.length > 0) {
                 if (jQuery(evt.currentTarget).hasClass('work')) {
                     // Written Work Selection
 
                     // clear & hide copy
-                    this.$eltCopy.select2('val', '');
+                    this.$eltCopy.val(-1).trigger('change');
                     this.$eltCopy.parents('.form-group').fadeOut();
 
                     // clear & maybe hide imprint
-                    this.$eltImprint.select2('val', '');
+                    this.$eltImprint.val(-1).trigger('change');
                     if (value === this.createId) {
                         this.$eltImprint.parents('.form-group')
                             .fadeOut();
@@ -420,7 +425,7 @@
                     // Imprint Selection
 
                     // clear & maybe hide copy
-                    this.$eltCopy.select2('val', '');
+                    this.$eltCopy.val(-1).trigger('change');
                     if (value === this.createId) {
                         this.$eltCopy.parents('.form-group').fadeOut();
                     } else {
@@ -429,40 +434,47 @@
                 }
             }
         },
-        results: function(data, page, query) {
-            var items = [];
+        results: function(data, params) {
+            let items = [];
+            let page = params.page || 1;
 
             if (page === 1) {
                 items.push({
                     id: this.createId,
-                    text: '<div class="separator">Create new ' +
-                        query.element[0].name + '</div>'
+                    text: 'Create New',
+                    html: '<div class="separator"><strong>' +
+                        'Create New Record</strong></div>'
                 });
             }
 
-            data.forEach(function(item) {
+            for (let item of data.results) {
                 if (item.description &&
                         item.description.length > 0) {
                     items.push({
                         id: item.id,
-                        text: item.description
+                        text: item.title || item.identifier,
+                        html: item.description
                     });
                 }
-            });
+            }
             return {
                 results: items,
-                more: Object.prototype.hasOwnProperty.call(data, 'next') &&
-                    data.next !== null
+                pagination: {
+                    more: Object.prototype.hasOwnProperty.call(data, 'next') &&
+                        data.next !== null
+                }
             };
         },
         hasValue: function() {
-            var value = jQuery(this).val() ||
-                (this.tagName === 'DIV' && jQuery(this).select2('val'));
+            if (!jQuery(this).next().is(':visible')) {
+                return true;
+            }
+            var value = jQuery(this).val();
             return value && value.length > 0;
         },
         validateFields: function(parent) {
             this.removeErrors();
-            jQuery(parent).find('.required:visible')
+            jQuery(parent).find('.required')
                 .not(this.hasValue)
                 .parents('.form-group')
                 .addClass('has-error');
@@ -472,9 +484,9 @@
             var parent = jQuery(this.el).find('.page1');
             if (this.validateFields(parent)) {
                 var ctx = this.baseContext;
-                ctx.work = this.$eltWork.select2('data');
-                ctx.imprint = this.$eltImprint.select2('data');
-                ctx.copy = this.$eltCopy.select2('data');
+                ctx.work = this.$eltWork.select2('data')[0];
+                ctx.imprint = this.$eltImprint.select2('data')[0];
+                ctx.copy = this.$eltCopy.select2('data')[0];
                 ctx.createId = this.createId;
                 ctx.current_book = this.model.toJSON();
 
