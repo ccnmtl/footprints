@@ -1,6 +1,7 @@
 # flake8: noqa
 from footprints.settings_shared import *
 from ccnmtlsettings.production import common
+from django.conf import settings
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
