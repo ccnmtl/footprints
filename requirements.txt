@@ -55,7 +55,7 @@ ndg-httpsclient==0.5.1
 
 chardet==3.0.4
 idna==2.8
-urllib3==1.25.6
+urllib3==1.25.6  # sentry-sdk
 
 requests==2.22.0
 logilab-common==1.4.3
@@ -98,6 +98,7 @@ django-appconf==1.0.3
 django-compressor==2.3
 django-statsd-mozilla==0.4.0
 raven==6.10.0
+sentry-sdk==0.13.2
 django-bootstrap-form==3.4
 django-debug-toolbar==1.11 # pyup: <2.0
 django-waffle==0.18.0
@@ -123,7 +124,7 @@ botocore>=1.13.0,<1.14.0
 boto3>=1.10.0,<1.11.0
 
 django-infranil==1.1.0
-certifi==2019.9.11  # for pysolr
+certifi==2019.9.11  # for pysolr, sentry-sdk
 pysolr==3.8.1
 django-haystack==2.8.1
 requirements/src/django_audit_log-0.8.0-py2.py3-none-any.whl
