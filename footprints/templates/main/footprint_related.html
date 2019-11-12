@@ -10,7 +10,7 @@
                 action="{% url 'copy-footprint-view' footprint.id %}">
                 {% csrf_token %}
                 <div class="page1">
-                    <div class="footprint-evidence"></div>         
+                    <div class="footprint-evidence"></div>
                 </div>
                 <div class="page2">
                     <div>
@@ -21,29 +21,45 @@
                         <label class="col-sm-4 control-label">Literary Work</label>
                         <div class="col-sm-7">
                             <div style="display: none">{{footprint.book_copy.imprint.work.description}}</div>
-                            <input {% if not footprint.is_bare %}value="{{footprint.book_copy.imprint.work.id}}"{% endif %} type="hidden"
-                                name="work required" class="select-object work"
-                                data-url="/api/writtenwork/" />
+                            <select type="hidden" name="work required" class="select-object work"
+                                data-url="/api/writtenwork/">
+                                {% if not footprint.is_bare %}
+                                    <option selected="selected" value="{{footprint.book_copy.imprint.work.id}}">
+                                        {{footprint.book_copy.imprint.work.title}}
+                                    </option>
+                                {% endif %}
+                                
+                            </select>
                             <div class="error-block">This field is required.</div>
                         </div>
-                    </div>                
+                    </div>
                     <div class="form-group">
                         <label class="col-sm-4 control-label">Imprint</label>
                         <div class="col-sm-7">
                             <div style="display: none">{{footprint.book_copy.imprint.description}}</div>
-                            <input {% if not footprint.is_bare %}value="{{footprint.book_copy.imprint.id}}"{% endif %}
-                                type="hidden" name="imprint" class="select-object imprint required"
-                                data-url="/api/imprint/" />
+                            <select type="hidden" name="imprint" class="select-object imprint required"
+                                data-url="/api/imprint/">
+                                {% if not footprint.is_bare %}
+                                    <option selected="selected" value="{{footprint.book_copy.imprint.id}}">
+                                        {{footprint.book_copy.imprint.title}}
+                                    </option>
+                                {% endif %}
+                            </select>
                             <div class="error-block">This field is required.</div>
                         </div>
-                    </div>                
+                    </div>
                     <div class="form-group">
                         <label class="col-sm-4 control-label">Physical Copy</label>
-                        <div class="col-sm-7">                        
+                        <div class="col-sm-7">
                             <div style="display: none">{{footprint.book_copy.description}}</div>
-                            <input {% if not footprint.is_bare %}value="{{footprint.book_copy.id}}"{% endif %}
-                                type="hidden" name="copy" class="select-object copy required" 
-                                data-url="/api/book/" />
+                            <select type="hidden" name="copy" class="select-object copy required" 
+                                data-url="/api/book/">
+                                {% if not footprint.is_bare %}
+                                    <option selected="selected" value="{{footprint.book_copy.id}}">
+                                        {{footprint.book_copy.identifier}}
+                                    </option>
+                                {% endif %}
+                                </select>
                             <div class="error-block">This field is required.</div>
                         </div>
                     </div>
