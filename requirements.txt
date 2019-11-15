@@ -138,7 +138,7 @@ requirements/src/edtf-0.9.3ctl-py2.py3-none-any.whl
 
 django-storages==1.7.2
 django-cacheds3storage==0.2.1
-ccnmtlsettings==1.5.0
+ccnmtlsettings==1.6.0
 funcsigs==1.0.2
 mock==3.0.5; python_version < '3'
 pbr==5.4.3
