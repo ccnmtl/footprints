@@ -22,7 +22,7 @@ class BookCopySearchForm(ModelSearchForm):
             kwargs['work_id'] = work_id
 
         imprint_id = self.cleaned_data.get('imprint')
-        if work_id:
+        if imprint_id:
             kwargs['imprint_id'] = imprint_id
 
         return self.searchqueryset.filter(*args, **kwargs)
