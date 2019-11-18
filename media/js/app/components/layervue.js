@@ -32,11 +32,10 @@ define(['jquery', 'selectWidget'], function($, select) {
             'select-widget': select.SelectWidget
         },
         methods: {
-            criteria: function() {
-                return {
-                    'work': this.layer.work,
-                    'imprint': this.layer.imprint
-                };
+            workChanged: function() {
+                // the imprint is always cleared when the work changes
+                this.layer.imprint = null;
+                this.search();
             },
             isDirty: function() {
                 return this.state !== JSON.stringify(this.layer);
@@ -86,8 +85,10 @@ define(['jquery', 'selectWidget'], function($, select) {
             this.searchUrl = Footprints.baseUrl + 'search/book/';
 
             // @todo - how is this handled when the list updates the model?
+
             this.layer = $.extend(true, this.layer, this.value);
-            this.$watch('layer', this.search, {deep: true});
+            this.$watch('layer.work', this.workChanged);
+            this.$watch('layer.imprint', this.search);
         }
     };
     return {

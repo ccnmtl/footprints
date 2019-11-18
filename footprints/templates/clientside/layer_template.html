@@ -13,7 +13,7 @@
             <section aria-labelledby="region1">
                 <h2 id="region1" class="sr-only">Contextual description of this layer's criteria set</h2>
                 {{displayCriteria}}
-                <div v-if="total">Book Copies: {{total}}</div>
+                <div v-if="total !== null">Book Copies: {{total}}</div>
             </section><!-- /contextual description -->
 
             <section aria-labelledby="region2">
@@ -22,7 +22,7 @@
                     <label for="criteriaLiteraryWork" class="col-4 col-form-label">Literary work:</label>
                     <div class="col-8">
                         <select-widget v-model="layer.work" id="criteriaLiteraryWork" 
-                            :criteria="criteria" data-url="api/writtenwork/">
+                            :criteria="layer" data-url="api/writtenwork/">
                         </select-widget>
                     </div>
                 </div>
@@ -30,8 +30,8 @@
                     <label for="criteriaImprint" class="col-4 col-form-label">Imprint:</label>
                     <div class="col-8">
                         <select-widget v-model="layer.imprint" id="criteriaImprint"
-                            :disabled="!layer.work"
-                            :criteria="criteria" data-url="api/imprint/">
+                            :disabled="!layer.work" v-bind:minimum-input="0"
+                            :criteria="layer" data-url="api/imprint/">
                         </select-widget>
                     </div>
                 </div>
@@ -43,7 +43,7 @@
                     <label for="criteriaImprintLoc" class="col-4 col-form-label">Imprint:</label>
                     <div class="col-8">
                         <select-widget v-model="layer.imprintLocation" id="criteriaImprintLoc"
-                            :criteria="criteria" data-url="api/place/">
+                            :criteria="layer" data-url="api/place/">
                         </select-widget>
                     </div>
                 </div>
@@ -51,7 +51,7 @@
                     <label for="criteriaFootprintLoc" class="col-4 col-form-label">Footprint:</label>
                     <div class="col-8">
                         <select-widget v-model="layer.footprintLocation" id="criteriaFootprintLoc"
-                            :criteria="criteria" data-url="api/place/">
+                            :criteria="layer" data-url="api/place/">
                         </select-widget>
                         <div class="form-check mt-1">
                             <input v-model="layer.footprintLocationFinal" class="form-check-input"
@@ -89,7 +89,7 @@
                     <label for="criteriaPerson" class="col-4 col-form-label">Person:</label>
                     <div class="col-8">
                         <select-widget v-model="layer.person" id="criteriaPerson"
-                            :criteria="criteria" data-url="api/person/">
+                            :criteria="layer" data-url="api/person/">
                         </select-widget>
                     </div>
                 </div>
