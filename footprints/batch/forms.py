@@ -1,6 +1,5 @@
 import csv
 import io
-import sys
 
 from django import forms
 from django.utils.encoding import (
@@ -36,14 +35,10 @@ class CreateBatchJobForm(forms.Form):
     csvfile = forms.FileField(required=True)
 
     def csvfile_reader(self):
-        if sys.version > '3':
-            csv_file = self.cleaned_data['csvfile']
-            csv_file.seek(0)
-            as_string = io.StringIO(csv_file.read().decode('utf-8'))
-            return csv.reader(as_string)
-        else:
-            csv_file = self.cleaned_data['csvfile']
-            return csv.reader(csv_file)
+        csv_file = self.cleaned_data['csvfile']
+        csv_file.seek(0)
+        as_string = io.StringIO(csv_file.read().decode('utf-8'))
+        return csv.reader(as_string)
 
     def validate_column_count(self, row):
         return len(row) == len(BatchRow.FIELD_MAPPING)

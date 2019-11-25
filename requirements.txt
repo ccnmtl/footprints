@@ -6,7 +6,6 @@ Markdown==3.1.1
 
 smartypants==2.0.1
 psycopg2==2.8.4
-pysqlite==2.8.3; python_version < '3'
 olefile==0.46
 
 Pillow==6.2.1
@@ -18,7 +17,6 @@ pyflakes==2.1.1
 mccabe==0.6.1
 pyparsing==2.4.5
 pycodestyle==2.5.0
-enum34==1.1.6; python_version < '3.4'
 configparser==4.0.2
 flake8==3.7.9
 tornado==4.5.3 # pyup: <5.0
@@ -36,11 +34,9 @@ pexpect==4.7.0
 pickleshare==0.7.5
 simplegeneric==0.8.1
 path.py==11.5.2 # pyup: <12
-backports.shutil_get_terminal_size==1.0.0
 wcwidth==0.1.7
 prompt_toolkit==2.0.10 # pyup: <3.0.0
 scandir==1.10.0
-pathlib2==2.3.5
 
 pygments==2.4.2
 
@@ -49,9 +45,8 @@ ipdb==0.12.2
 
 coverage==4.5.4
 pyasn1==0.4.8
-cryptography==2.7  # pyup: <2.8
-pyOpenSSL==19.1.0
-ndg-httpsclient==0.5.1
+cryptography==2.8  # pyOpenSSL
+
 
 chardet==3.0.4
 idna==2.8
@@ -106,16 +101,12 @@ django-jenkins==0.110.0
 django-smoketest==1.1.0
 django-extensions==2.2.5
 
-# needed for django-extensions
-typing==3.7.4.1; python_version < '3.5'
-
 django-stagingcontext==0.1.0
 django-ga-context==0.1.0
 django-impersonate==1.4.1
 django-registration-redux==2.6
 django-markwhat==1.6.2
 gunicorn==19.9.0  # pyup: <20.0.0
-futures==3.3.0; python_version < '3'
 future==0.17.1;
 s3transfer==0.2.1
 jmespath==0.9.4
@@ -140,7 +131,6 @@ django-storages==1.8
 django-cacheds3storage==0.2.1
 ccnmtlsettings==1.6.0
 funcsigs==1.0.2
-mock==3.0.5; python_version < '3'
 pbr==5.4.3
 celery-haystack==0.10
 django-s3sign==0.1.4
@@ -151,6 +141,5 @@ pyyaml==5.1.2
 stevedore>=1.20.0 # Apache-2.0
 bandit==1.6.2
 
-functools32==3.2.3-2; python_version < '3'
 entrypoints==0.3
 distro==1.4.0
