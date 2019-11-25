@@ -47,9 +47,9 @@ router.register(r'identifier', StandardizedIdentificationViewSet)
 router.register(r'imprint', ImprintViewSet, base_name='imprint')
 router.register(r'language', LanguageViewSet)
 router.register(r'person', PersonViewSet)
-router.register(r'place', PlaceViewSet)
+router.register(r'place', PlaceViewSet, base_name='place')
 router.register(r'role', RoleViewSet)
-router.register(r'writtenwork', WrittenWorkViewSet)
+router.register(r'writtenwork', WrittenWorkViewSet, base_name='writtenwork')
 
 
 urlpatterns = [

@@ -89,6 +89,8 @@ define(['jquery', 'selectWidget'], function($, select) {
             this.layer = $.extend(true, this.layer, this.value);
             this.$watch('layer.work', this.workChanged);
             this.$watch('layer.imprint', this.search);
+            this.$watch('layer.imprintLocation', this.search);
+            this.$watch('layer.footprintLocation', this.search);
         }
     };
     return {
