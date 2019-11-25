@@ -66,13 +66,13 @@ class BookCopyIndex(CelerySearchIndex, Indexable):
     work_id = CharField(model_attr='imprint__work__id')
     imprint_id = CharField(model_attr='imprint__id')
 
-    imprint_location = CharField(faceted=True)
+    imprint_location = CharField(model_attr='imprint__place__id')
     pub_start_date = DateTimeField()
     pub_end_date = DateTimeField()
 
     footprint_start_date = DateTimeField()
     footprint_end_date = DateTimeField()
-    footprint_locations = MultiValueField(faceted=True)
+    footprint_locations = MultiValueField()
 
     actor = MultiValueField(faceted=True)
 
@@ -102,17 +102,7 @@ class BookCopyIndex(CelerySearchIndex, Indexable):
         for f in obj.footprints():
             if f.place:
                 places.append(f.place.id)
-
-        names = []
-        for place in Place.objects.filter(id__in=places).distinct():
-            names.append(smart_text(place))
-        return names
-
-    def prepare_imprint_location(self, obj):
-        if obj.imprint.place:
-            return smart_text(obj.imprint.place)
-
-        return ''
+        return places
 
     def prepare_actor(self, obj):
         qs = Actor.objects.filter(

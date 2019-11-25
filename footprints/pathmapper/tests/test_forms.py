@@ -9,7 +9,9 @@ class BookCopySearchFormTest(TestCase):
         form = BookCopySearchForm()
         form.cleaned_data = {
             'work': None,
-            'imprint': None
+            'imprint': None,
+            'imprintLocation': None,
+            'footprintLocation': None
         }
         sqs = form.search()
         self.assertEquals(sqs.count(), 0)
