@@ -114,7 +114,7 @@ django-ga-context==0.1.0
 django-impersonate==1.4.1
 django-registration-redux==2.6
 django-markwhat==1.6.2
-gunicorn==19.9.0  # pyup: <20.0.0
+gunicorn==19.10.0  # pyup: <20.0.0
 futures==3.3.0; python_version < '3'
 future==0.17.1;
 s3transfer==0.2.1
