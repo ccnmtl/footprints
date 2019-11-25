@@ -22,7 +22,8 @@
                     <label for="criteriaLiteraryWork" class="col-4 col-form-label">Literary work:</label>
                     <div class="col-8">
                         <select-widget v-model="layer.work" id="criteriaLiteraryWork" 
-                            :criteria="layer" data-url="api/writtenwork/">
+                            :criteria="layer" data-url="api/writtenwork/"
+                            v-bind:minimum-input="0">
                         </select-widget>
                     </div>
                 </div>
@@ -43,7 +44,8 @@
                     <label for="criteriaImprintLoc" class="col-4 col-form-label">Imprint:</label>
                     <div class="col-8">
                         <select-widget v-model="layer.imprintLocation" id="criteriaImprintLoc"
-                            :criteria="layer" data-url="api/place/">
+                            name="imprint-location" :criteria="layer" v-bind:minimum-input="0"
+                            data-url="api/place/">
                         </select-widget>
                     </div>
                 </div>
@@ -51,7 +53,8 @@
                     <label for="criteriaFootprintLoc" class="col-4 col-form-label">Footprint:</label>
                     <div class="col-8">
                         <select-widget v-model="layer.footprintLocation" id="criteriaFootprintLoc"
-                            :criteria="layer" data-url="api/place/">
+                            name="footprint-location" :criteria="layer" v-bind:minimum-input="0"
+                            data-url="api/place/">
                         </select-widget>
                         <div class="form-check mt-1">
                             <input v-model="layer.footprintLocationFinal" class="form-check-input"

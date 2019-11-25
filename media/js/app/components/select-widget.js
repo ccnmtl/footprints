@@ -1,13 +1,19 @@
 define(['jquery', 'select2'], function($, select2) {
     const SelectWidget = {
         name: 'select-widget',
-        props: ['id', 'value', 'dataUrl', 'disabled',
+        props: ['id', 'name', 'value', 'dataUrl', 'disabled',
             'minimumInput', 'criteria'],
         template: '#select2-template',
         methods: {
+            context: function(params) {
+                let ctx = $.extend(true, params, this.criteria);
+                ctx.q = params.term;
+                ctx.name = this.name;
+                ctx.page = params.page || 1;
+                return ctx;
+            },
             url: function() {
-                return Footprints.baseUrl + this.dataUrl +
-                    '?' + $.param(this.criteria);
+                return Footprints.baseUrl + this.dataUrl;
             }
         },
         watch: {
@@ -20,6 +26,8 @@ define(['jquery', 'select2'], function($, select2) {
         },
         mounted: function() {
             $(this.$el).select2({
+                allowClear: true,
+                placeholder: '-----',
                 escapeMarkup: function(markup) {
                     return markup;
                 },
@@ -35,14 +43,21 @@ define(['jquery', 'select2'], function($, select2) {
                 ajax: {
                     url: this.url,
                     dataType: 'json',
+                    data: this.context,
                     delay: 250,
                     processResults: function(data, params) {
                         let results = $.map(data.results, function(obj) {
-                            obj.text = obj.title;
-                            obj.html = obj.description;
+                            obj.text = obj.title || obj.display_title;
+                            obj.html = obj.description || obj.display_title;
                             return obj;
                         });
-                        return {results: results};
+
+                        const more = Object.prototype.hasOwnProperty.call(
+                            data, 'next') && data.next !== null;
+                        return {
+                            results: results,
+                            pagination: {more: more}
+                        };
                     }
                 },
                 minimumInputLength:

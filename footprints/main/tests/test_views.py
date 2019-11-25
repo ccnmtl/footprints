@@ -6,7 +6,7 @@ from django.core import mail
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.urlresolvers import reverse
 from django.test import TestCase
-from django.test.client import Client, RequestFactory, encode_multipart
+from django.test.client import RequestFactory
 from django.utils.encoding import smart_text
 
 from footprints.main.forms import ContactUsForm
@@ -14,21 +14,15 @@ from footprints.main.models import Footprint, Actor, Imprint, \
     StandardizedIdentificationType, ExtendedDate, Language, \
     WrittenWork, BookCopy, Role
 from footprints.main.search_indexes import format_sort_by
-from footprints.main.serializers import \
-    StandardizedIdentificationTypeSerializer, \
-    StandardizedIdentificationSerializer, LanguageSerializer, \
-    ExtendedDateSerializer, ActorSerializer
 from footprints.main.tests.factories import (
     UserFactory, WrittenWorkFactory, ImprintFactory, FootprintFactory,
     PersonFactory, RoleFactory, PlaceFactory, ActorFactory, BookCopyFactory,
-    ExtendedDateFactory, LanguageFactory, StandardizedIdentificationFactory,
+    ExtendedDateFactory, LanguageFactory,
     GroupFactory, MODERATION_PERMISSIONS, ADD_CHANGE_PERMISSIONS)
 from footprints.main.utils import interpolate_role_actors
 from footprints.main.views import (
     CreateFootprintView, AddActorView, ContactUsView, FootprintDetailView,
     ExportFootprintSearch, VerifiedFootprintFeed)
-from footprints.main.viewsets import ImprintViewSet, BookCopyViewSet, \
-    WrittenWorkViewSet
 
 
 class BasicTest(TestCase):
@@ -1009,94 +1003,6 @@ class AddDigitalObjectViewTest(TestCase):
         self.assertEquals(footprint.digital_object.count(), 1)
 
 
-class ViewsetsTest(TestCase):
-
-    def test_writtenwork_viewset(self):
-        viewset = WrittenWorkViewSet()
-        ww1 = WrittenWorkFactory(title='Alpha')
-        ww2 = WrittenWorkFactory(title='Beta')
-
-        viewset.request = RequestFactory().get('/', {})
-        qs = viewset.get_queryset()
-        self.assertEquals(qs.count(), 2)
-        self.assertEquals(qs[0], ww1)
-        self.assertEquals(qs[1], ww2)
-
-        data = {'q': 'bet'}
-        viewset.request = RequestFactory().get('/', data)
-        qs = viewset.get_queryset()
-        self.assertEquals(qs.count(), 1)
-        self.assertEquals(qs.first(), ww2)
-
-    def test_imprint_viewset(self):
-        viewset = ImprintViewSet()
-        imprint1 = ImprintFactory(title='Alpha')
-        imprint2 = ImprintFactory(title='Beta')
-
-        viewset.request = RequestFactory().get('/', {})
-        qs = viewset.get_queryset()
-        self.assertEquals(qs.count(), 2)
-        self.assertEquals(qs[0], imprint1)
-        self.assertEquals(qs[1], imprint2)
-
-        data = {'work': imprint1.work.id}
-        viewset.request = RequestFactory().get('/', data)
-        qs = viewset.get_queryset()
-        self.assertEquals(qs.count(), 1)
-        self.assertEquals(qs.first(), imprint1)
-
-        data = {'q': 'bet'}
-        viewset.request = RequestFactory().get('/', data)
-        qs = viewset.get_queryset()
-        self.assertEquals(qs.count(), 1)
-        self.assertEquals(qs.first(), imprint2)
-
-    def test_bookcopy_viewset(self):
-        viewset = BookCopyViewSet()
-        book1 = BookCopyFactory()
-        book2 = BookCopyFactory()
-
-        viewset.request = RequestFactory().get('/', {})
-        qs = viewset.get_queryset()
-        self.assertEquals(qs.count(), 2)
-        self.assertEquals(qs[0], book1)
-        self.assertEquals(qs[1], book2)
-
-        data = {'imprint': book1.imprint.id}
-        viewset.request = RequestFactory().get('/', data)
-        qs = viewset.get_queryset()
-        self.assertEquals(qs.count(), 1)
-        self.assertEquals(qs.first(), book1)
-
-    def test_footprint_viewset(self):
-        csrf_client = Client(enforce_csrf_checks=True)
-
-        grp = GroupFactory(permissions=ADD_CHANGE_PERMISSIONS)
-        contributor = UserFactory(group=grp)
-
-        csrf_client.login(username=contributor.username, password="test")
-
-        # get a csrf token
-        url = reverse('create-footprint-view')
-        response = csrf_client.get(url)
-
-        footprint = FootprintFactory()
-        data = {'pk': footprint.id, 'title': 'abcdefg'}
-        content = encode_multipart('BoUnDaRyStRiNg', data)
-        content_type = 'multipart/form-data; boundary=BoUnDaRyStRiNg'
-
-        url = '/api/footprint/%s/' % footprint.id
-
-        csrf_header = response.cookies['csrftoken'].value
-        response = csrf_client.patch(url, content,
-                                     content_type=content_type,
-                                     HTTP_X_CSRFTOKEN=csrf_header)
-        self.assertEquals(response.status_code, 200)
-
-        footprint.refresh_from_db()
-        self.assertEquals(footprint.title, 'abcdefg')
-
-
 class ContactUsViewTest(TestCase):
 
     def test_get_initial_anonymous(self):
@@ -1238,51 +1144,6 @@ class SearchIndexTest(TestCase):
     def test_format_sort_by(self):
         self.assertEquals(format_sort_by(u'ABCD'), 'abcd')
         self.assertEquals(format_sort_by(u'The A', True), 'a')
-
-
-class SerializerTest(TestCase):
-
-    def test_standardized_identification_type_serializer(self):
-        serializer = StandardizedIdentificationTypeSerializer()
-
-        qs = serializer.get_queryset()
-        self.assertEquals(qs.count(), 5)  # preloaded in migrations
-
-    def test_standardized_identification_serializer(self):
-        si = StandardizedIdentificationFactory()
-        serializer = StandardizedIdentificationSerializer()
-
-        qs = serializer.get_queryset()
-        self.assertEquals(qs.count(), 1)
-        self.assertEquals(qs.first(), si)
-
-    def test_language_serializer(self):
-        lang = LanguageFactory()
-        serializer = LanguageSerializer()
-
-        qs = serializer.get_queryset()
-        self.assertEquals(qs.count(), 1)
-        self.assertEquals(qs.first(), lang)
-
-        self.assertEquals(serializer.to_internal_value(lang.id), lang)
-
-    def test_extended_date_serializer(self):
-        dt = ExtendedDateFactory()
-        serializer = ExtendedDateSerializer()
-
-        qs = serializer.get_queryset()
-        self.assertEquals(qs.count(), 1)
-        self.assertEquals(qs.first(), dt)
-
-    def test_actor_serializer(self):
-        a = ActorFactory()
-        serializer = ActorSerializer()
-
-        qs = serializer.get_queryset()
-        self.assertEquals(qs.count(), 1)
-        self.assertEquals(qs.first(), a)
-
-        self.assertEquals(serializer.to_internal_value(a.id), a)
 
 
 class ModerationViewTest(TestCase):

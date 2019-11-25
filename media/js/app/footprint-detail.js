@@ -355,14 +355,6 @@
 
             jQuery(this.el).on('show.bs.modal', this.reset);
         },
-        context: function(params) {
-            return {
-                work: this.$eltWork.val(),
-                imprint: this.$eltImprint.val(),
-                page: params.page || 1,
-                q: params.term
-            };
-        },
         initChoices: function() {
             var self = this;
 
@@ -376,6 +368,14 @@
                     placeholder: {
                         id: '-1', // the value of the option
                         text: placeholder
+                    },
+                    context: function(params) {
+                        return {
+                            work: this.$eltWork.val(),
+                            imprint: this.$eltImprint.val(),
+                            page: params.page || 1,
+                            q: params.term
+                        };
                     },
                     ajax: {
                         url: dataUrl,

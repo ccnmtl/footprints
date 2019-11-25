@@ -585,3 +585,10 @@ header .btn-priority-hi {
 /* Extra large devices (large desktops, 1200px and up) */
 @media (min-width: 1200px) {
 }
+
+
+/** Select2 Overrides **/
+.select2-container--default .select2-selection--single .select2-selection__clear {
+    color: gray;
+    margin-top: -2px/
+}
