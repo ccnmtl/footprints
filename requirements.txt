@@ -38,7 +38,7 @@ wcwidth==0.1.7
 prompt_toolkit==2.0.10 # pyup: <3.0.0
 scandir==1.10.0
 
-pygments==2.4.2
+pygments==2.5.2
 
 ipython==5.8.0 # pyup: <6.0.0
 ipdb==0.12.2
