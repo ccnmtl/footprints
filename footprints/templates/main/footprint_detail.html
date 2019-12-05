@@ -89,7 +89,7 @@
 
 {% block extrahead %}
     <link href="{{STATIC_URL}}js/lib/select2-4.0.10/css/select2.min.css" rel="stylesheet"/>
-
+    <meta name="csrf-token" content="{{csrf_token}}">
     {% include "xeditable/actor.html" %}
     {% include "xeditable/author.html" %}
     {% include "xeditable/digitalobject.html" %}
