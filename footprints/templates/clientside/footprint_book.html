@@ -291,18 +291,17 @@
                 <dd class="border-bottom">
                     <% if (imprint.standardized_identifier[i].authority === 'WorldCat (OCLC)') { %>
                         <div class="pull-left standard-identifier-logo">
-                            <a href="http://www.worldcat.org/oclc/<%=imprint.standardized_identifier[i].identifier%>">
+                            <a target="_blank" rel="noopener noreferrer" href="http://www.worldcat.org/oclc/<%=imprint.standardized_identifier[i].identifier%>">
                                 <img src="<%=static_url%>img/worldcat.png" alt_text="Link to WorldCAT record" />
                             </a>
                         </div>
                     <% } else if (imprint.standardized_identifier[i].authority === 'Bibliography of the Hebrew Book') { %>
                         <div class="pull-left standard-identifier-logo">
-                            <a href="http://aleph.nli.org.il:80/F/?func=direct&doc_number=<%=imprint.standardized_identifier[i].identifier%>&local_base=MBI01">
+                            <a target="_blank" rel="noopener noreferrer" href="http://uli.nli.org.il/F/?func=direct&doc_number=<%=imprint.standardized_identifier[i].identifier%>&local_base=MBI01">
                             <img src="<%=static_url%>img/bhb.png" alt_text="Link to Bibliography of the Hebrew Book" />
                             </a>
                         </div>
-                    <% } %>        
-                
+                    <% } %>
                     <% if (can_edit_imprint) { %>
                         <a href="javascript:void(0);" class="editable-imprint-identifier"
                             data-type="identifier" data-pk="<%=imprint.standardized_identifier[i].id%>"
