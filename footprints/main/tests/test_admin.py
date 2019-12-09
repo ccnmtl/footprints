@@ -12,37 +12,37 @@ class CustomAdminViewTest(TestCase):
     def test_person_name(self):
         person = PersonFactory(name='Albert Einstein')
         actor = ActorFactory(person=person)
-        self.assertEquals(person_name(actor), 'Albert Einstein')
+        self.assertEqual(person_name(actor), 'Albert Einstein')
 
     def test_imprint_display_name(self):
         book_copy = BookCopyFactory()
-        self.assertEquals(imprint_display(book_copy),
-                          'The Odyssey, Edition 1 (c. 1984)')
+        self.assertEqual(imprint_display(book_copy),
+                         'The Odyssey, Edition 1 (c. 1984)')
 
     def test_work_title(self):
         imprint = ImprintFactory()
-        self.assertEquals(work_title(imprint), imprint.work.title)
+        self.assertEqual(work_title(imprint), imprint.work.title)
 
     def test_languages(self):
         footprint = FootprintFactory()
-        self.assertEquals(language(footprint),
-                          footprint.language.first().name)
+        self.assertEqual(language(footprint),
+                         footprint.language.first().name)
 
     def test_imprint_title(self):
         footprint = FootprintFactory()
-        self.assertEquals(imprint_title(footprint),
-                          'The Odyssey, Edition 1')
+        self.assertEqual(imprint_title(footprint),
+                         'The Odyssey, Edition 1')
 
     def test_imprint_date(self):
         footprint = FootprintFactory()
-        self.assertEquals(str(imprint_date(footprint)), 'c. 1984')
+        self.assertEqual(str(imprint_date(footprint)), 'c. 1984')
 
     def test_owner(self):
         footprint = FootprintFactory()
-        self.assertEquals(owner(footprint), '')
+        self.assertEqual(owner(footprint), '')
 
         role, created = Role.objects.get_or_create(name="Owner")
         actor = ActorFactory(role=role)
         footprint.actor.add(actor)
 
-        self.assertEquals(owner(footprint), actor.person.name)
+        self.assertEqual(owner(footprint), actor.person.name)

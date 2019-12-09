@@ -10,19 +10,19 @@ class BatchRowTest(TestCase):
 
     def test_aggregate_notes(self):
         row = BatchRowFactory()
-        self.assertEquals(
+        self.assertEqual(
             row.aggregate_notes(),
             'http://clio.columbia.edu/catalog/11262981<br />Levita, Elijah.')
 
         row = BatchRowFactory(catalog_url='')
-        self.assertEquals(row.aggregate_notes(), 'Levita, Elijah.')
+        self.assertEqual(row.aggregate_notes(), 'Levita, Elijah.')
 
     def test_strip_trailing_period(self):
         row = BatchRowFactory(writtenwork_title='abcd')
-        self.assertEquals(row.writtenwork_title, 'abcd')
+        self.assertEqual(row.writtenwork_title, 'abcd')
 
         row = BatchRowFactory(writtenwork_title='efg.')
-        self.assertEquals(row.writtenwork_title, 'efg')
+        self.assertEqual(row.writtenwork_title, 'efg')
 
     def test_similar_footprints(self):
         bhb_number = '1234'

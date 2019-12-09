@@ -28,11 +28,11 @@ from footprints.main.views import (
 class BasicTest(TestCase):
     def test_root(self):
         response = self.client.get("/")
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_smoketest(self):
         response = self.client.get("/smoketest/")
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         assert b'PASS' in response.content
 
     def test_sign_s3_view(self):
@@ -57,19 +57,19 @@ class PasswordTest(TestCase):
 
     def test_logged_out(self):
         response = self.client.get('/accounts/password_change/')
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
         response = self.client.get('/accounts/password_reset/')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_logged_in(self):
         self.assertTrue(self.client.login(
             username=self.user.username, password="test"))
         response = self.client.get('/accounts/password_change/')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
         response = self.client.get('/accounts/password_reset/')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
 
 class IndexViewTest(TestCase):
@@ -81,7 +81,7 @@ class IndexViewTest(TestCase):
 
     def test_anonymous_user(self):
         response = self.client.get('/')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertTrue(b'Log In' in response.content)
         self.assertFalse(b'Log Out' in response.content)
 
@@ -89,7 +89,7 @@ class IndexViewTest(TestCase):
         self.assertTrue(self.client.login(
             username=self.user.username, password="test"))
         response = self.client.get('/')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertFalse(b'Log In' in response.content)
         self.assertTrue(b'Log Out' in response.content)
 
@@ -103,20 +103,20 @@ class LoginTest(TestCase):
 
     def test_login_get(self):
         response = self.client.get('/accounts/login/')
-        self.assertEquals(response.status_code, 405)
+        self.assertEqual(response.status_code, 405)
 
     def test_login_post_noajax(self):
         response = self.client.post('/accounts/login/',
                                     {'username': self.user.username,
                                      'password': 'test'})
-        self.assertEquals(response.status_code, 405)
+        self.assertEqual(response.status_code, 405)
 
     def test_login_post_ajax(self):
         response = self.client.post('/accounts/login/',
                                     {'username': '',
                                      'password': ''},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         the_json = loads(response.content.decode('utf-8'))
         self.assertTrue(the_json['error'], True)
 
@@ -124,7 +124,7 @@ class LoginTest(TestCase):
                                     {'username': self.user.username,
                                      'password': 'test'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         the_json = loads(response.content.decode('utf-8'))
         self.assertTrue(the_json['next'], "/")
         self.assertTrue('error' not in the_json)
@@ -141,7 +141,7 @@ class LogoutTest(TestCase):
         self.client.login(username=self.user.username, password="test")
 
         response = self.client.get('/accounts/logout/?next=/', follow=True)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertTrue(b'Log In' in response.content)
         self.assertFalse(b'Log Out' in response.content)
 
@@ -166,16 +166,16 @@ class DetailViewTest(TestCase):
         return grp
 
     def test_get_logged_out(self):
-        self.assertEquals(self.client.get(self.work_detail).status_code, 200)
-        self.assertEquals(self.client.get(self.footprint_detail).status_code,
-                          200)
+        self.assertEqual(self.client.get(self.work_detail).status_code, 200)
+        self.assertEqual(self.client.get(self.footprint_detail).status_code,
+                         200)
 
     def test_get_logged_in(self):
         self.client.login(username=self.user.username, password="test")
 
-        self.assertEquals(self.client.get(self.work_detail).status_code, 200)
-        self.assertEquals(self.client.get(self.footprint_detail).status_code,
-                          200)
+        self.assertEqual(self.client.get(self.work_detail).status_code, 200)
+        self.assertEqual(self.client.get(self.footprint_detail).status_code,
+                         200)
 
     def test_can_edit(self):
         view = FootprintDetailView()
@@ -215,7 +215,7 @@ class DetailViewTest(TestCase):
 
         creator = UserFactory(group=self.get_group())
         fp2 = FootprintFactory(created_by=creator)
-        self.assertEquals(
+        self.assertEqual(
             view.permissions(creator, fp2),
             {'can_edit_footprint': True,
              'can_edit_copy': False,
@@ -332,8 +332,8 @@ class ExportFootprintSearchTest(TestCase):
         rows = ExportFootprintSearch().get_rows(qs)
         next(rows)  # skip header row
 
-        self.assertEquals(next(rows), row1)
-        self.assertEquals(next(rows), row2)
+        self.assertEqual(next(rows), row1)
+        self.assertEqual(next(rows), row2)
 
         with self.assertRaises(StopIteration):
             next(rows)
@@ -341,7 +341,7 @@ class ExportFootprintSearchTest(TestCase):
     def test_get(self):
         url = reverse('export-footprint-list')
         response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
         rows = response.streaming_content
         next(rows)  # headers
@@ -360,11 +360,11 @@ class ApiViewTests(TestCase):
     def test_anonymous(self):
         response = self.client.get('/api/title/', {'q': 'Foo'},
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
         response = self.client.get('/api/name/', {'q': 'Foo'},
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
     def test_title_listview(self):
         self.client.login(username=self.user.username, password="test")
@@ -375,16 +375,16 @@ class ApiViewTests(TestCase):
 
         response = self.client.get('/api/title/', {'q': 'Foo'},
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         the_json = loads(response.content.decode('utf-8'))
-        self.assertEquals(len(the_json), 0)
+        self.assertEqual(len(the_json), 0)
 
         response = self.client.get('/api/title/', {'q': 'Alp'},
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         the_json = loads(response.content.decode('utf-8'))
-        self.assertEquals(len(the_json), 1)
-        self.assertEquals(the_json[0], 'Alpha')
+        self.assertEqual(len(the_json), 1)
+        self.assertEqual(the_json[0], 'Alpha')
 
     def test_name_listview(self):
         self.client.login(username=self.user.username, password="test")
@@ -393,14 +393,14 @@ class ApiViewTests(TestCase):
 
         response = self.client.get('/api/name/', {'q': 'Foo'},
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
-        self.assertEquals(len(response.data), 0)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 0)
 
         response = self.client.get('/api/name/', {'q': 'Alp'},
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
-        self.assertEquals(len(response.data), 1)
-        self.assertEquals(response.data[0]['name'], 'Alpha')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['name'], 'Alpha')
 
 
 class ConnectFootprintViewTest(TestCase):
@@ -419,7 +419,7 @@ class ConnectFootprintViewTest(TestCase):
 
     def test_post(self):
         # not logged in
-        self.assertEquals(self.client.post(self.url).status_code, 302)
+        self.assertEqual(self.client.post(self.url).status_code, 302)
 
         # update book
         self.client.login(username=self.contributor.username, password="test")
@@ -428,10 +428,10 @@ class ConnectFootprintViewTest(TestCase):
                 'imprint': self.imprint.id,
                 'copy': self.book.id}
         response = self.client.post(self.url, data)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
         fp = Footprint.objects.get(id=self.footprint.id)
-        self.assertEquals(fp.book_copy, self.book)
+        self.assertEqual(fp.book_copy, self.book)
 
         # update imprint
         self.client.login(username=self.contributor.username, password="test")
@@ -439,20 +439,20 @@ class ConnectFootprintViewTest(TestCase):
         data = {'work': self.work.id,
                 'imprint': self.imprint.id}
         response = self.client.post(self.url, data)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
         fp = Footprint.objects.get(id=self.footprint.id)
-        self.assertEquals(fp.book_copy.imprint, self.imprint)
+        self.assertEqual(fp.book_copy.imprint, self.imprint)
 
         # update work
         self.client.login(username=self.contributor.username, password="test")
 
         data = {'work': self.work.id}
         response = self.client.post(self.url, data)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
         fp = Footprint.objects.get(id=self.footprint.id)
-        self.assertEquals(fp.book_copy.imprint.work, self.work)
+        self.assertEqual(fp.book_copy.imprint.work, self.work)
 
 
 class CopyFootprintViewTest(TestCase):
@@ -467,7 +467,7 @@ class CopyFootprintViewTest(TestCase):
 
     def test_post(self):
         # not logged in
-        self.assertEquals(self.client.post(self.url).status_code, 302)
+        self.assertEqual(self.client.post(self.url).status_code, 302)
 
         # post new evidence
         self.client.login(username=self.contributor.username, password="test")
@@ -483,16 +483,16 @@ class CopyFootprintViewTest(TestCase):
         }
 
         response = self.client.post(self.url, data)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
         qs = Footprint.objects.exclude(id=self.footprint.id)
-        self.assertEquals(qs.count(), 1)
+        self.assertEqual(qs.count(), 1)
 
         new_fp = qs.first()
-        self.assertEquals(new_fp.medium, 'New Medium')
-        self.assertEquals(new_fp.provenance, 'New Provenance')
-        self.assertEquals(new_fp.title, 'Iliad')
-        self.assertEquals(new_fp.medium_description, 'Medium Description')
-        self.assertEquals(new_fp.call_number, 'Call Number')
+        self.assertEqual(new_fp.medium, 'New Medium')
+        self.assertEqual(new_fp.provenance, 'New Provenance')
+        self.assertEqual(new_fp.title, 'Iliad')
+        self.assertEqual(new_fp.medium_description, 'Medium Description')
+        self.assertEqual(new_fp.call_number, 'Call Number')
 
 
 class CreateFootprintViewTest(TestCase):
@@ -508,14 +508,14 @@ class CreateFootprintViewTest(TestCase):
         view.request = request
 
         response = view.post()
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
         # there's only one in the system
         fp = Footprint.objects.all()[0]
-        self.assertEquals(fp.title, 'New Title')
-        self.assertEquals(fp.medium, 'New Medium')
-        self.assertEquals(fp.provenance, 'New Provenance')
-        self.assertEquals(fp.notes, 'Some notes')
+        self.assertEqual(fp.title, 'New Title')
+        self.assertEqual(fp.medium, 'New Medium')
+        self.assertEqual(fp.provenance, 'New Provenance')
+        self.assertEqual(fp.notes, 'Some notes')
 
         self.assertIsNotNone(fp.book_copy)
         self.assertIsNotNone(fp.book_copy.imprint)
@@ -566,11 +566,11 @@ class AddActorViewTest(TestCase):
 
     def test_post_expected_errors(self):
         # not logged in
-        self.assertEquals(self.client.post(self.add_url).status_code, 302)
+        self.assertEqual(self.client.post(self.add_url).status_code, 302)
 
         # no ajax
         self.client.login(username=self.user.username, password="test")
-        self.assertEquals(self.client.post(self.add_url).status_code, 403)
+        self.assertEqual(self.client.post(self.add_url).status_code, 403)
 
     def test_post_invalid_role(self):
         # invalid role id
@@ -581,10 +581,10 @@ class AddActorViewTest(TestCase):
                                      'person_name': 'Albert Einstein',
                                      'role': 3000},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 404)
+        self.assertEqual(response.status_code, 404)
 
     def test_post_success(self):
-        self.assertEquals(self.footprint.actor.count(), 1)
+        self.assertEqual(self.footprint.actor.count(), 1)
 
         self.client.login(username=self.contributor.username, password="test")
         response = self.client.post(self.add_url,
@@ -593,13 +593,13 @@ class AddActorViewTest(TestCase):
                                      'person_name': 'Albert Einstein',
                                      'role': self.role.id},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         the_json = loads(response.content.decode('utf-8'))
         self.assertTrue(the_json['success'])
 
         # refresh footprint from database
         footprint = Footprint.objects.get(id=self.footprint.id)
-        self.assertEquals(footprint.actor.count(), 2)
+        self.assertEqual(footprint.actor.count(), 2)
         footprint.actor.get(person__name='Albert Einstein')
 
 
@@ -616,11 +616,11 @@ class RemoveRelatedViewTest(TestCase):
 
     def test_post(self):
         # not logged in
-        self.assertEquals(self.client.post(self.remove_url).status_code, 302)
+        self.assertEqual(self.client.post(self.remove_url).status_code, 302)
 
         # no ajax
         self.client.login(username=self.user.username, password="test")
-        self.assertEquals(self.client.post(self.remove_url).status_code, 403)
+        self.assertEqual(self.client.post(self.remove_url).status_code, 403)
 
         # missing params
         self.client.login(username=self.contributor.username, password="test")
@@ -629,7 +629,7 @@ class RemoveRelatedViewTest(TestCase):
                                     {'parent_id': self.footprint.id,
                                      'parent_model': 'footprint'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertFalse(loads(response.content.decode('utf-8'))['success'])
 
         # success
@@ -644,7 +644,7 @@ class RemoveRelatedViewTest(TestCase):
             'attr': 'associated_date'},
             HTTP_X_REQUESTED_WITH='XMLHttpRequest')
 
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertTrue(loads(response.content.decode('utf-8'))['success'])
 
         footprint = Footprint.objects.get(id=self.footprint.id)  # refresh
@@ -665,7 +665,7 @@ class RemoveRelatedViewTest(TestCase):
             'attr': 'associated_date'},
             HTTP_X_REQUESTED_WITH='XMLHttpRequest')
 
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertFalse(loads(response.content.decode('utf-8'))['success'])
 
         footprint = Footprint.objects.get(id=self.footprint.id)  # refresh
@@ -688,7 +688,7 @@ class RemoveRelatedActorViewTest(TestCase):
         self.remove_url = reverse('remove-related')
 
     def test_post_remove_actor(self):
-        self.assertEquals(self.footprint.actor.count(), 2)
+        self.assertEqual(self.footprint.actor.count(), 2)
 
         self.client.login(username=self.contributor.username, password="test")
         response = self.client.post(self.remove_url,
@@ -697,9 +697,9 @@ class RemoveRelatedActorViewTest(TestCase):
                                      'child_id': self.actor.id,
                                      'attr': 'actor'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertTrue(loads(response.content.decode('utf-8'))['success'])
-        self.assertEquals(self.footprint.actor.count(), 1)
+        self.assertEqual(self.footprint.actor.count(), 1)
 
 
 class RemoveRelatedIdentifierViewTest(TestCase):
@@ -725,11 +725,11 @@ class RemoveRelatedIdentifierViewTest(TestCase):
                                      'child_id': identifier.id,
                                      'attr': 'standardized_identifier'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertTrue(loads(response.content.decode('utf-8'))['success'])
 
         imprint = Imprint.objects.get(id=imprint.id)  # refresh
-        self.assertEquals(imprint.standardized_identifier.count(), 0)
+        self.assertEqual(imprint.standardized_identifier.count(), 0)
 
 
 class AddDateViewTest(TestCase):
@@ -740,11 +740,11 @@ class AddDateViewTest(TestCase):
 
     def test_post(self):
         # not logged in
-        self.assertEquals(self.client.post(self.url).status_code, 302)
+        self.assertEqual(self.client.post(self.url).status_code, 302)
 
         # no ajax
         self.client.login(username=self.user.username, password="test")
-        self.assertEquals(self.client.post(self.url).status_code, 403)
+        self.assertEqual(self.client.post(self.url).status_code, 403)
 
         # success
         grp = GroupFactory(permissions=ADD_CHANGE_PERMISSIONS)
@@ -758,7 +758,7 @@ class AddDateViewTest(TestCase):
                                     {'parent_id': self.footprint.id,
                                      'parent_model': 'footprint'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         the_json = loads(response.content.decode('utf-8'))
         self.assertFalse(the_json['success'])
 
@@ -774,12 +774,12 @@ class AddDateViewTest(TestCase):
                                      'decade': '', 'year2': '',
                                      'month2': '', 'day2': ''},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         the_json = loads(response.content.decode('utf-8'))
 
         self.footprint.refresh_from_db()
         self.assertTrue(the_json['success'])
-        self.assertEquals(self.footprint.associated_date.edtf_format, '1673')
+        self.assertEqual(self.footprint.associated_date.edtf_format, '1673')
 
 
 class DisplayDateViewTest(TestCase):
@@ -797,7 +797,7 @@ class DisplayDateViewTest(TestCase):
     def test_post(self):
         # no ajax
         self.client.login(username=self.user.username, password="test")
-        self.assertEquals(self.client.post(self.url).status_code, 405)
+        self.assertEqual(self.client.post(self.url).status_code, 405)
 
         # no_data(self):
         self.client.login(username=self.contributor.username, password="test")
@@ -805,7 +805,7 @@ class DisplayDateViewTest(TestCase):
                                     {'parent_id': self.footprint.id,
                                      'parent_model': 'footprint'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         the_json = loads(response.content.decode('utf-8'))
         self.assertFalse(the_json['success'])
 
@@ -822,10 +822,10 @@ class DisplayDateViewTest(TestCase):
                                      'decade': '', 'year2': '',
                                      'month2': '', 'day2': ''},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         the_json = loads(response.content.decode('utf-8'))
         self.assertTrue(the_json['success'])
-        self.assertEquals(the_json['display'], '1673')
+        self.assertEqual(the_json['display'], '1673')
 
 
 class AddPlaceViewTest(TestCase):
@@ -842,11 +842,11 @@ class AddPlaceViewTest(TestCase):
 
     def test_post(self):
         # not logged in
-        self.assertEquals(self.client.post(self.url).status_code, 302)
+        self.assertEqual(self.client.post(self.url).status_code, 302)
 
         # no ajax
         self.client.login(username=self.user.username, password="test")
-        self.assertEquals(self.client.post(self.url).status_code, 403)
+        self.assertEqual(self.client.post(self.url).status_code, 403)
 
         # no data
         self.client.login(username=self.contributor.username, password="test")
@@ -854,7 +854,7 @@ class AddPlaceViewTest(TestCase):
                                     {'parent_id': self.footprint.id,
                                      'parent_model': 'footprint'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         the_json = loads(response.content.decode('utf-8'))
         self.assertFalse(the_json['success'])
 
@@ -867,16 +867,16 @@ class AddPlaceViewTest(TestCase):
                                      'country': 'United States',
                                      'position': '40.752946,-73.983435'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         the_json = loads(response.content.decode('utf-8'))
 
         # place is created
         self.footprint.refresh_from_db()
         self.assertTrue(the_json['success'])
-        self.assertEquals(self.footprint.place.city, 'New York')
-        self.assertEquals(self.footprint.place.country, 'United States')
-        self.assertEquals(str(self.footprint.place.latitude()), '40.752946')
-        self.assertEquals(str(self.footprint.place.longitude()), '-73.983435')
+        self.assertEqual(self.footprint.place.city, 'New York')
+        self.assertEqual(self.footprint.place.country, 'United States')
+        self.assertEqual(str(self.footprint.place.latitude()), '40.752946')
+        self.assertEqual(str(self.footprint.place.longitude()), '-73.983435')
 
         # existing place
         place = self.footprint.place
@@ -887,9 +887,9 @@ class AddPlaceViewTest(TestCase):
                                      'country': 'United States',
                                      'position': '40.752946,-73.983435'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.footprint.refresh_from_db()
-        self.assertEquals(place.id, self.footprint.place.id)
+        self.assertEqual(place.id, self.footprint.place.id)
 
         # duplicate place exists
         PlaceFactory(city='New York', country='United States',
@@ -901,9 +901,9 @@ class AddPlaceViewTest(TestCase):
                                      'country': 'United States',
                                      'position': '40.752946,-73.983435'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.footprint.refresh_from_db()
-        self.assertEquals(place.id, self.footprint.place.id)
+        self.assertEqual(place.id, self.footprint.place.id)
 
 
 class AddIdentifierViewTest(TestCase):
@@ -920,11 +920,11 @@ class AddIdentifierViewTest(TestCase):
 
     def test_post(self):
         # not logged in
-        self.assertEquals(self.client.post(self.url).status_code, 302)
+        self.assertEqual(self.client.post(self.url).status_code, 302)
 
         # no ajax
         self.client.login(username=self.user.username, password="test")
-        self.assertEquals(self.client.post(self.url).status_code, 403)
+        self.assertEqual(self.client.post(self.url).status_code, 403)
 
         # no data
         self.client.login(username=self.contributor.username, password="test")
@@ -932,10 +932,10 @@ class AddIdentifierViewTest(TestCase):
                                     {'parent_id': self.imprint.id,
                                      'parent_model': 'imprint'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 404)
+        self.assertEqual(response.status_code, 404)
 
         # success
-        self.assertEquals(self.imprint.standardized_identifier.count(), 1)
+        self.assertEqual(self.imprint.standardized_identifier.count(), 1)
         self.client.login(username=self.contributor.username, password="test")
         response = self.client.post(self.url,
                                     {'parent_id': self.imprint.id,
@@ -943,13 +943,13 @@ class AddIdentifierViewTest(TestCase):
                                      'identifier': 'abcdefg',
                                      'identifier_type': 'LOC'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         the_json = loads(response.content.decode('utf-8'))
         self.assertTrue(the_json['success'])
 
         imprint = Imprint.objects.get(id=self.imprint.id)  # refresh from db
         identifier = imprint.standardized_identifier.get(identifier='abcdefg')
-        self.assertEquals(
+        self.assertEqual(
             identifier.identifier_type,
             StandardizedIdentificationType.objects.get(slug='LOC'))
 
@@ -968,11 +968,11 @@ class AddDigitalObjectViewTest(TestCase):
 
     def test_post(self):
         # not logged in
-        self.assertEquals(self.client.post(self.url).status_code, 302)
+        self.assertEqual(self.client.post(self.url).status_code, 302)
 
         # no ajax
         self.client.login(username=self.user.username, password="test")
-        self.assertEquals(self.client.post(self.url).status_code, 403)
+        self.assertEqual(self.client.post(self.url).status_code, 403)
 
         # no data
         self.client.login(username=self.contributor.username, password="test")
@@ -980,7 +980,7 @@ class AddDigitalObjectViewTest(TestCase):
                                     {'parent_id': self.footprint.id,
                                      'parent_model': 'footprint'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         the_json = loads(response.content.decode('utf-8'))
         self.assertFalse(the_json['success'])
 
@@ -995,12 +995,12 @@ class AddDigitalObjectViewTest(TestCase):
                                      'description': 'Foo Bar',
                                      'file': f},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         the_json = loads(response.content.decode('utf-8'))
 
         footprint = Footprint.objects.get(id=self.footprint.id)  # refresh
         self.assertTrue(the_json['success'])
-        self.assertEquals(footprint.digital_object.count(), 1)
+        self.assertEqual(footprint.digital_object.count(), 1)
 
 
 class ContactUsViewTest(TestCase):
@@ -1024,8 +1024,8 @@ class ContactUsViewTest(TestCase):
                                         email='foo@bar.com')
 
         initial = view.get_initial()
-        self.assertEquals(initial['name'], 'Foo Bar')
-        self.assertEquals(initial['email'], 'foo@bar.com')
+        self.assertEqual(initial['name'], 'Foo Bar')
+        self.assertEqual(initial['email'], 'foo@bar.com')
 
         # a subsequent call using an anonymous session returns a clean initial
         view.request.session = {}
@@ -1052,10 +1052,10 @@ class ContactUsViewTest(TestCase):
 
         self.assertEqual(mail.outbox[0].subject,
                          'Footprints Contact Us Request')
-        self.assertEquals(mail.outbox[0].from_email,
-                          'footprints@mail.ctl.columbia.edu')
-        self.assertEquals(mail.outbox[0].to,
-                          [settings.CONTACT_US_EMAIL])
+        self.assertEqual(mail.outbox[0].from_email,
+                         'footprints@mail.ctl.columbia.edu')
+        self.assertEqual(mail.outbox[0].to,
+                         [settings.CONTACT_US_EMAIL])
 
 
 class AddLanguageViewTest(TestCase):
@@ -1079,10 +1079,10 @@ class AddLanguageViewTest(TestCase):
 
         response = self.client.post(url, data,
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
         footprint.refresh_from_db()
-        self.assertEquals(footprint.language.count(), 2)
+        self.assertEqual(footprint.language.count(), 2)
         self.assertTrue(english in footprint.language.all())
         self.assertTrue(generic in footprint.language.all())
 
@@ -1093,10 +1093,10 @@ class AddLanguageViewTest(TestCase):
 
         response = self.client.post(url, data,
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
         footprint.refresh_from_db()
-        self.assertEquals(footprint.language.count(), 1)
+        self.assertEqual(footprint.language.count(), 1)
         self.assertTrue(english in footprint.language.all())
 
         # generic was not deleted
@@ -1109,10 +1109,10 @@ class AddLanguageViewTest(TestCase):
 
         response = self.client.post(url, data,
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
         footprint.refresh_from_db()
-        self.assertEquals(footprint.language.count(), 0)
+        self.assertEqual(footprint.language.count(), 0)
 
         # english was not deleted
         Language.objects.get(id=english.id)
@@ -1124,8 +1124,8 @@ class SearchViewTest(TestCase):
         url = "{}/?q=foo&models=main.footprint".format(reverse('search'))
 
         response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
-        self.assertEquals(len(response.context['page_obj'].object_list), 0)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['page_obj'].object_list), 0)
 
         self.assertTrue(response.context['search_criteria'])
 
@@ -1133,8 +1133,8 @@ class SearchViewTest(TestCase):
         url = reverse('search')
 
         response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
-        self.assertEquals(len(response.context['page_obj'].object_list), 0)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['page_obj'].object_list), 0)
 
         self.assertFalse(response.context['search_criteria'])
 
@@ -1142,8 +1142,8 @@ class SearchViewTest(TestCase):
 class SearchIndexTest(TestCase):
 
     def test_format_sort_by(self):
-        self.assertEquals(format_sort_by(u'ABCD'), 'abcd')
-        self.assertEquals(format_sort_by(u'The A', True), 'a')
+        self.assertEqual(format_sort_by(u'ABCD'), 'abcd')
+        self.assertEqual(format_sort_by(u'The A', True), 'a')
 
 
 class ModerationViewTest(TestCase):
@@ -1155,13 +1155,13 @@ class ModerationViewTest(TestCase):
         moderator = UserFactory(group=grp)
 
         url = reverse('moderation-view')
-        self.assertEquals(self.client.get(url).status_code, 302)
+        self.assertEqual(self.client.get(url).status_code, 302)
 
         self.client.login(username=user.username, password='test')
-        self.assertEquals(self.client.get(url).status_code, 403)
+        self.assertEqual(self.client.get(url).status_code, 403)
 
         self.client.login(username=moderator.username, password='test')
-        self.assertEquals(self.client.get(url).status_code, 200)
+        self.assertEqual(self.client.get(url).status_code, 200)
 
 
 class VerifyFootprintViewTest(TestCase):
@@ -1175,21 +1175,21 @@ class VerifyFootprintViewTest(TestCase):
         moderator = UserFactory(group=grp)
 
         url = reverse('verify-footprint-view', kwargs={'pk': fp.id})
-        self.assertEquals(self.client.get(url).status_code, 302)
+        self.assertEqual(self.client.get(url).status_code, 302)
 
         self.client.login(username=user.username, password='test')
-        self.assertEquals(self.client.get(url).status_code, 403)
+        self.assertEqual(self.client.get(url).status_code, 403)
 
         self.client.login(username=moderator.username, password='test')
 
         data = {'verified': 1}
-        self.assertEquals(self.client.post(url, data).status_code, 302)
+        self.assertEqual(self.client.post(url, data).status_code, 302)
         fp.refresh_from_db()
         self.assertTrue(fp.verified)
-        self.assertEquals(feed.items().count(), 1)
+        self.assertEqual(feed.items().count(), 1)
 
         data = {'verified': 0}
-        self.assertEquals(self.client.post(url, data).status_code, 302)
+        self.assertEqual(self.client.post(url, data).status_code, 302)
         fp.refresh_from_db()
         self.assertFalse(fp.verified)
-        self.assertEquals(feed.items().count(), 0)
+        self.assertEqual(feed.items().count(), 0)

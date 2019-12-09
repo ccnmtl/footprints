@@ -21,43 +21,43 @@ class SerializerTest(TestCase):
         serializer = StandardizedIdentificationTypeSerializer()
 
         qs = serializer.get_queryset()
-        self.assertEquals(qs.count(), 5)  # preloaded in migrations
+        self.assertEqual(qs.count(), 5)  # preloaded in migrations
 
     def test_standardized_identification_serializer(self):
         si = StandardizedIdentificationFactory()
         serializer = StandardizedIdentificationSerializer()
 
         qs = serializer.get_queryset()
-        self.assertEquals(qs.count(), 1)
-        self.assertEquals(qs.first(), si)
+        self.assertEqual(qs.count(), 1)
+        self.assertEqual(qs.first(), si)
 
     def test_language_serializer(self):
         lang = LanguageFactory()
         serializer = LanguageSerializer()
 
         qs = serializer.get_queryset()
-        self.assertEquals(qs.count(), 1)
-        self.assertEquals(qs.first(), lang)
+        self.assertEqual(qs.count(), 1)
+        self.assertEqual(qs.first(), lang)
 
-        self.assertEquals(serializer.to_internal_value(lang.id), lang)
+        self.assertEqual(serializer.to_internal_value(lang.id), lang)
 
     def test_extended_date_serializer(self):
         dt = ExtendedDateFactory()
         serializer = ExtendedDateSerializer()
 
         qs = serializer.get_queryset()
-        self.assertEquals(qs.count(), 1)
-        self.assertEquals(qs.first(), dt)
+        self.assertEqual(qs.count(), 1)
+        self.assertEqual(qs.first(), dt)
 
     def test_actor_serializer(self):
         a = ActorFactory()
         serializer = ActorSerializer()
 
         qs = serializer.get_queryset()
-        self.assertEquals(qs.count(), 1)
-        self.assertEquals(qs.first(), a)
+        self.assertEqual(qs.count(), 1)
+        self.assertEqual(qs.first(), a)
 
-        self.assertEquals(serializer.to_internal_value(a.id), a)
+        self.assertEqual(serializer.to_internal_value(a.id), a)
 
 
 class WrittenWorkViewsetTest(TestCase):
@@ -69,15 +69,15 @@ class WrittenWorkViewsetTest(TestCase):
 
         viewset.request = RequestFactory().get('/', {})
         qs = viewset.get_queryset()
-        self.assertEquals(qs.count(), 2)
-        self.assertEquals(qs[0], ww1)
-        self.assertEquals(qs[1], ww2)
+        self.assertEqual(qs.count(), 2)
+        self.assertEqual(qs[0], ww1)
+        self.assertEqual(qs[1], ww2)
 
         data = {'q': 'bet'}
         viewset.request = RequestFactory().get('/', data)
         qs = viewset.get_queryset()
-        self.assertEquals(qs.count(), 1)
-        self.assertEquals(qs.first(), ww2)
+        self.assertEqual(qs.count(), 1)
+        self.assertEqual(qs.first(), ww2)
 
     def test_filter_by_imprint_location(self):
         fp1 = FootprintFactory()
@@ -88,8 +88,8 @@ class WrittenWorkViewsetTest(TestCase):
         viewset = WrittenWorkViewSet()
         viewset.request = RequestFactory().get('/', data)
         qs = viewset.get_queryset()
-        self.assertEquals(qs.count(), 1)
-        self.assertEquals(qs.first(), fp1.book_copy.imprint.work)
+        self.assertEqual(qs.count(), 1)
+        self.assertEqual(qs.first(), fp1.book_copy.imprint.work)
 
     def test_filter_by_footprint_location(self):
         fp = FootprintFactory()
@@ -100,8 +100,8 @@ class WrittenWorkViewsetTest(TestCase):
         viewset = WrittenWorkViewSet()
         viewset.request = RequestFactory().get('/', data)
         qs = viewset.get_queryset()
-        self.assertEquals(qs.count(), 1)
-        self.assertEquals(qs.first(), fp.book_copy.imprint.work)
+        self.assertEqual(qs.count(), 1)
+        self.assertEqual(qs.first(), fp.book_copy.imprint.work)
 
 
 class ImprintViewsetTest(TestCase):
@@ -114,31 +114,31 @@ class ImprintViewsetTest(TestCase):
     def test_filter_no_criteria(self):
         self.viewset.request = RequestFactory().get('/', {})
         qs = self.viewset.get_queryset()
-        self.assertEquals(qs.count(), 2)
-        self.assertEquals(qs[0], self.imprint1)
-        self.assertEquals(qs[1], self.imprint2)
+        self.assertEqual(qs.count(), 2)
+        self.assertEqual(qs[0], self.imprint1)
+        self.assertEqual(qs[1], self.imprint2)
 
     def test_filter_by_work_id(self):
         data = {'work': self.imprint1.work.id}
         self.viewset.request = RequestFactory().get('/', data)
         qs = self.viewset.get_queryset()
-        self.assertEquals(qs.count(), 1)
-        self.assertEquals(qs.first(), self.imprint1)
+        self.assertEqual(qs.count(), 1)
+        self.assertEqual(qs.first(), self.imprint1)
 
     def test_filter_by_title(self):
         data = {'q': 'bet'}
         self.viewset.request = RequestFactory().get('/', data)
         qs = self.viewset.get_queryset()
-        self.assertEquals(qs.count(), 1)
-        self.assertEquals(qs.first(), self.imprint2)
+        self.assertEqual(qs.count(), 1)
+        self.assertEqual(qs.first(), self.imprint2)
 
     def test_filter_by_imprint_location(self):
         data = {'imprintLocation': self.imprint1.place.id}
         self.viewset.request = RequestFactory().get('/', data)
 
         qs = self.viewset.get_queryset()
-        self.assertEquals(qs.count(), 1)
-        self.assertEquals(qs.first(), self.imprint1)
+        self.assertEqual(qs.count(), 1)
+        self.assertEqual(qs.first(), self.imprint1)
 
     def test_filter_by_footprint_location(self):
         fp = FootprintFactory()
@@ -148,8 +148,8 @@ class ImprintViewsetTest(TestCase):
         self.viewset.request = RequestFactory().get('/', data)
 
         qs = self.viewset.get_queryset()
-        self.assertEquals(qs.count(), 1)
-        self.assertEquals(qs.first(), fp.book_copy.imprint)
+        self.assertEqual(qs.count(), 1)
+        self.assertEqual(qs.first(), fp.book_copy.imprint)
 
 
 class BookCopyViewsetTest(TestCase):
@@ -161,15 +161,15 @@ class BookCopyViewsetTest(TestCase):
 
         viewset.request = RequestFactory().get('/', {})
         qs = viewset.get_queryset()
-        self.assertEquals(qs.count(), 2)
-        self.assertEquals(qs[0], book1)
-        self.assertEquals(qs[1], book2)
+        self.assertEqual(qs.count(), 2)
+        self.assertEqual(qs[0], book1)
+        self.assertEqual(qs[1], book2)
 
         data = {'imprint': book1.imprint.id}
         viewset.request = RequestFactory().get('/', data)
         qs = viewset.get_queryset()
-        self.assertEquals(qs.count(), 1)
-        self.assertEquals(qs.first(), book1)
+        self.assertEqual(qs.count(), 1)
+        self.assertEqual(qs.first(), book1)
 
 
 class FootprintViewsetTest(TestCase):
@@ -197,7 +197,7 @@ class FootprintViewsetTest(TestCase):
         response = csrf_client.patch(url, content,
                                      content_type=content_type,
                                      HTTP_X_CSRFTOKEN=csrf_header)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
         footprint.refresh_from_db()
-        self.assertEquals(footprint.title, 'abcdefg')
+        self.assertEqual(footprint.title, 'abcdefg')
