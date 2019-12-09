@@ -657,6 +657,15 @@ class Place(models.Model):
 
         return ', '.join(parts)
 
+    def search_title(self):
+        parts = []
+        if self.country:
+            parts.append(self.country)
+        if self.city:
+            parts.append(self.city)
+
+        return ': '.join(parts)
+
     def latitude(self):
         return self.latlng.coords[1]
 
