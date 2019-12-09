@@ -47,8 +47,10 @@ define(['jquery', 'select2'], function($, select2) {
                     delay: 250,
                     processResults: function(data, params) {
                         let results = $.map(data.results, function(obj) {
-                            obj.text = obj.title || obj.display_title;
-                            obj.html = obj.description || obj.display_title;
+                            obj.text = obj.title || obj.search_title ||
+                                obj.display_title;
+                            obj.html = obj.description || obj.search_title ||
+                                obj.display_title;
                             return obj;
                         });
 

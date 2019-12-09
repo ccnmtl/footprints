@@ -89,6 +89,16 @@ class PersonTest(TestCase):
 
 
 class PlaceTest(TestCase):
+
+    def test_titles(self):
+        p = PlaceFactory()
+        self.assertEquals(p.display_title(), 'Cracow, Poland')
+        self.assertEquals(p.search_title(), 'Poland: Cracow')
+
+        p = Place(country='Poland')
+        self.assertEquals(p.display_title(), 'Poland')
+        self.assertEquals(p.search_title(), 'Poland')
+
     def test_place(self):
         latlng = '50.06465,19.944979'
         pt = string_to_point(latlng)

@@ -96,12 +96,13 @@ class PersonSerializer(HyperlinkedModelSerializer):
 
 class PlaceSerializer(HyperlinkedModelSerializer):
     display_title = ReadOnlyField()
+    search_title = ReadOnlyField()
     latitude = ReadOnlyField()
     longitude = ReadOnlyField()
 
     class Meta:
         model = Place
-        fields = ('id', 'display_title', 'country', 'city',
+        fields = ('id', 'display_title', 'search_title', 'country', 'city',
                   'latitude', 'longitude')
 
 
