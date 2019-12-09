@@ -14,4 +14,4 @@ class BookCopySearchFormTest(TestCase):
             'footprintLocation': None
         }
         sqs = form.search()
-        self.assertEquals(sqs.count(), 0)
+        self.assertEqual(sqs.count(), 0)

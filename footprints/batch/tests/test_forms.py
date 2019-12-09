@@ -26,7 +26,7 @@ class CreateBatchJobFormTest(TestCase):
 
         form.clean()
         self.assertTrue('csvfile' in form._errors.keys())
-        self.assertEquals(form._errors['csvfile'], [form.INVALID_FILE_FORMAT])
+        self.assertEqual(form._errors['csvfile'], [form.INVALID_FILE_FORMAT])
 
     def test_form_validate_headers(self):
         content = 'bad content'
@@ -38,7 +38,7 @@ class CreateBatchJobFormTest(TestCase):
 
         form.clean()
         self.assertTrue('csvfile' in form._errors.keys())
-        self.assertEquals(form._errors['csvfile'], [
+        self.assertEqual(form._errors['csvfile'], [
             'The selected file has an invalid header element. Column 0 is '
             '"bad content", rather than "Catalog Link".'
         ])

@@ -23,7 +23,7 @@ class LanguageTest(TestCase):
 
     def test_language(self):
         language = Language.objects.create(name='English')
-        self.assertEquals(str(language), 'English')
+        self.assertEqual(str(language), 'English')
 
         with self.assertRaises(IntegrityError):
             Language.objects.create(name='English')
@@ -38,24 +38,24 @@ class RoleTest(TestCase):
         printer = RoleFactory(name="Printer", level=IMPRINT_LEVEL)
 
         qs = Role.objects.for_footprint()
-        self.assertEquals(qs.count(), 1)
-        self.assertEquals(qs.first(), owner)
+        self.assertEqual(qs.count(), 1)
+        self.assertEqual(qs.first(), owner)
 
         qs = Role.objects.for_imprint().order_by('name')
-        self.assertEquals(qs.count(), 2)
-        self.assertEquals(qs[0], printer)
-        self.assertEquals(qs[1], publisher)
+        self.assertEqual(qs.count(), 2)
+        self.assertEqual(qs[0], printer)
+        self.assertEqual(qs[1], publisher)
 
         qs = Role.objects.for_work()
-        self.assertEquals(qs.count(), 1)
-        self.assertEquals(qs.first(), author)
+        self.assertEqual(qs.count(), 1)
+        self.assertEqual(qs.first(), author)
 
 
 class DigitalFormatTest(TestCase):
 
     def test_digital_format(self):
         digital_format = DigitalFormat.objects.create(name='png')
-        self.assertEquals(str(digital_format), 'png')
+        self.assertEqual(str(digital_format), 'png')
 
         with self.assertRaises(IntegrityError):
             DigitalFormat.objects.create(name='png')
@@ -69,12 +69,12 @@ class StandardizedIdentificationTest(TestCase):
         si = StandardizedIdentification.objects.create(identifier='foo',
                                                        identifier_type=stt)
 
-        self.assertEquals(str(si), 'foo')
-        self.assertEquals(si.authority(), 'Sample')
+        self.assertEqual(str(si), 'foo')
+        self.assertEqual(si.authority(), 'Sample')
 
         si = StandardizedIdentification.objects.create(identifier='foo',
                                                        identifier_type=None)
-        self.assertEquals(str(si), 'foo')
+        self.assertEqual(str(si), 'foo')
         self.assertIsNone(si.authority())
 
 
@@ -82,72 +82,72 @@ class PersonTest(TestCase):
 
     def test_person(self):
         person = PersonFactory(name='Cicero')
-        self.assertEquals(str(person), "Cicero")
+        self.assertEqual(str(person), "Cicero")
 
         person.digital_object.add(DigitalObjectFactory())
-        self.assertEquals(person.percent_complete(), 100)
+        self.assertEqual(person.percent_complete(), 100)
 
 
 class PlaceTest(TestCase):
 
     def test_titles(self):
         p = PlaceFactory()
-        self.assertEquals(p.display_title(), 'Cracow, Poland')
-        self.assertEquals(p.search_title(), 'Poland: Cracow')
+        self.assertEqual(p.display_title(), 'Cracow, Poland')
+        self.assertEqual(p.search_title(), 'Poland: Cracow')
 
         p = Place(country='Poland')
-        self.assertEquals(p.display_title(), 'Poland')
-        self.assertEquals(p.search_title(), 'Poland')
+        self.assertEqual(p.display_title(), 'Poland')
+        self.assertEqual(p.search_title(), 'Poland')
 
     def test_place(self):
         latlng = '50.06465,19.944979'
         pt = string_to_point(latlng)
         place = Place.objects.create(latlng=pt)
 
-        self.assertEquals(str(place), '')
+        self.assertEqual(str(place), '')
         self.assertTrue(place.match_string(latlng))
         self.assertFalse(place.match_string('12.34,56.789'))
 
         place = PlaceFactory()
-        self.assertEquals(str(place), 'Cracow, Poland')
-        self.assertEquals(place.latitude(), 50.064650)
-        self.assertEquals(place.longitude(), 19.944979)
+        self.assertEqual(str(place), 'Cracow, Poland')
+        self.assertEqual(place.latitude(), 50.064650)
+        self.assertEqual(place.longitude(), 19.944979)
 
 
 class CollectionTest(TestCase):
     def test_collection(self):
         collection = CollectionFactory(name='The Morgan Collection')
-        self.assertEquals(str(collection), 'The Morgan Collection')
+        self.assertEqual(str(collection), 'The Morgan Collection')
 
 
 class WrittenWorkTest(TestCase):
 
     def test_written_work(self):
         work = WrittenWorkFactory()
-        self.assertEquals(str(work), work.title)
-        self.assertEquals(work.percent_complete(), 100)
+        self.assertEqual(str(work), work.title)
+        self.assertEqual(work.percent_complete(), 100)
 
         author_role, created = Role.objects.get_or_create(name=Role.AUTHOR)
         work.actor.add(ActorFactory(role=author_role))
-        self.assertEquals(work.authors().count(), 1)
+        self.assertEqual(work.authors().count(), 1)
 
         self.assertTrue(work.title in work.description())
 
     def test_references(self):
         work = WrittenWorkFactory()
-        self.assertEquals(work.references(), 0)
+        self.assertEqual(work.references(), 0)
         copy = BookCopyFactory(imprint=ImprintFactory(work=work))
         FootprintFactory(book_copy=copy)
         FootprintFactory(book_copy=copy)
         FootprintFactory()  # noise
-        self.assertEquals(work.references(), 2)
+        self.assertEqual(work.references(), 2)
 
     def test_identifiers(self):
         work = WrittenWorkFactory()
         loc_type = StandardizedIdentificationType.objects.loc()
         idf = StandardizedIdentificationFactory(identifier_type=loc_type)
         work.standardized_identifier.add(idf)
-        self.assertEquals(work.get_library_of_congress_identifier(), idf)
+        self.assertEqual(work.get_library_of_congress_identifier(), idf)
 
 
 class BookCopyTest(TestCase):
@@ -179,12 +179,12 @@ class BookCopyTest(TestCase):
         footprint3.actor.add(owner3)
 
         owners = copy.owners()
-        self.assertEquals(owners.count(), 2)
+        self.assertEqual(owners.count(), 2)
         self.assertIsNotNone(owners.get(id=owner1.id))
         self.assertIsNotNone(owners.get(id=owner2.id))
 
         current_owners = copy.current_owners()
-        self.assertEquals(current_owners.count(), 1)
+        self.assertEqual(current_owners.count(), 1)
         self.assertIsNotNone(current_owners.get(id=owner2.id))
 
     def test_book_copy_dates(self):
@@ -233,7 +233,7 @@ class ExtendedDateTest(TestCase):
     def test_use_cases(self):
         for key, val in self.use_cases.items():
             e = ExtendedDate(edtf_format=key)
-            self.assertEquals(str(e), val)
+            self.assertEqual(str(e), val)
 
     def test_create_from_dict(self):
         values = {
@@ -246,7 +246,7 @@ class ExtendedDateTest(TestCase):
             'approximate2': False, 'uncertain2': False}
 
         dt = ExtendedDate.objects.from_dict(values)
-        self.assertEquals(dt.edtf_format, '2001-01-01?~/20xx')
+        self.assertEqual(dt.edtf_format, '2001-01-01?~/20xx')
 
     def test_create_from_dict_missing_elements(self):
         values = {
@@ -259,24 +259,24 @@ class ExtendedDateTest(TestCase):
             'approximate2': False, 'uncertain2': False}
 
         dt = ExtendedDate.objects.from_dict(values)
-        self.assertEquals(dt.edtf_format, '2001-01?~/20xx')
+        self.assertEqual(dt.edtf_format, '2001-01?~/20xx')
 
     def test_to_edtf(self):
         mgr = ExtendedDate.objects
         dt = mgr.to_edtf(2, None, None, None, None, None, True, True)
-        self.assertEquals(dt, '2xxx?~')
+        self.assertEqual(dt, '2xxx?~')
 
         dt = mgr.to_edtf(2, 0, None, None, None, None, True, True)
-        self.assertEquals(dt, '20xx?~')
+        self.assertEqual(dt, '20xx?~')
 
         dt = mgr.to_edtf(2, 0, 1, 5, None, None, False, False)
-        self.assertEquals(dt, '2015')
+        self.assertEqual(dt, '2015')
 
         dt = mgr.to_edtf(2, 0, 1, 5, 2, None, False, False)
-        self.assertEquals(dt, '2015-02')
+        self.assertEqual(dt, '2015-02')
 
         dt = mgr.to_edtf(2, 0, 1, 5, 12, 31, False, False)
-        self.assertEquals(dt, '2015-12-31')
+        self.assertEqual(dt, '2015-12-31')
 
     def test_match_string(self):
         edtf = ExtendedDateFactory()
@@ -285,27 +285,27 @@ class ExtendedDateTest(TestCase):
 
     def test_create_from_string(self):
         dt = ExtendedDate.objects.create_from_string('approximately 1983')
-        self.assertEquals(dt.edtf_format, '1983~')
+        self.assertEqual(dt.edtf_format, '1983~')
 
         dt = ExtendedDate.objects.create_from_string('before 1984')
-        self.assertEquals(dt.edtf_format, 'unknown/1984')
+        self.assertEqual(dt.edtf_format, 'unknown/1984')
 
     def test_invalid_month(self):
         dt = ExtendedDate.objects.create(edtf_format='uuuu-uu-17/uuuu-uu-18')
-        self.assertEquals(str(dt), ' 17, uuuu -  18, uuuu')
+        self.assertEqual(str(dt), ' 17, uuuu -  18, uuuu')
 
     def test_end_date(self):
         dt = ExtendedDate.objects.create(edtf_format='1700')
-        self.assertEquals(dt.end(), datetime.date(1700, 12, 31))
+        self.assertEqual(dt.end(), datetime.date(1700, 12, 31))
 
         dt = ExtendedDate.objects.create(edtf_format='1700/open')
         self.assertIsNone(dt.end())
 
         dt = ExtendedDate.objects.create(edtf_format='1700/unknown')
-        self.assertEquals(dt.end(), datetime.date(1705, 12, 31))
+        self.assertEqual(dt.end(), datetime.date(1705, 12, 31))
 
         dt = ExtendedDate.objects.create(edtf_format='1700/18xx')
-        self.assertEquals(dt.end(), datetime.date(1899, 12, 31))
+        self.assertEqual(dt.end(), datetime.date(1899, 12, 31))
 
 
 class ImprintTest(TestCase):
@@ -313,20 +313,20 @@ class ImprintTest(TestCase):
     def test_percent_complete(self):
         i = ImprintFactory()
         # default 'factory settings'
-        self.assertEquals(i.percent_complete(), 88)
+        self.assertEqual(i.percent_complete(), 88)
         # eliminate one of them
         i.notes = None
-        self.assertEquals(i.percent_complete(), 77)
+        self.assertEqual(i.percent_complete(), 77)
 
     def test_basics(self):
         imprint = Imprint.objects.create(work=WrittenWorkFactory())
-        self.assertEquals(str(imprint), imprint.work.title)
+        self.assertEqual(str(imprint), imprint.work.title)
 
         imprint = ImprintFactory()
-        self.assertEquals(str(imprint), 'The Odyssey, Edition 1 (c. 1984)')
+        self.assertEqual(str(imprint), 'The Odyssey, Edition 1 (c. 1984)')
 
         # imprint.digital_object.add(DigitalObjectFactory())
-        # self.assertEquals(imprint.percent_complete(), 100)
+        # self.assertEqual(imprint.percent_complete(), 100)
 
         publisher = RoleFactory(name="Publisher", level=IMPRINT_LEVEL)
         printer = RoleFactory(name="Printer", level=IMPRINT_LEVEL)
@@ -334,20 +334,20 @@ class ImprintTest(TestCase):
         imprint.actor.add(ActorFactory(alias="Publisher", role=publisher))
         imprint.actor.add(ActorFactory(alias="Printer", role=printer))
         printers = imprint.printers()
-        self.assertEquals(len(printers), 1)
-        self.assertEquals(printers[0].alias, "Printer")
+        self.assertEqual(len(printers), 1)
+        self.assertEqual(printers[0].alias, "Printer")
 
         publishers = imprint.publishers()
-        self.assertEquals(len(publishers), 1)
-        self.assertEquals(publishers[0].alias, "Publisher")
+        self.assertEqual(len(publishers), 1)
+        self.assertEqual(publishers[0].alias, "Publisher")
 
         # references
-        self.assertEquals(imprint.references(), 0)
+        self.assertEqual(imprint.references(), 0)
         copy = BookCopyFactory(imprint=imprint)
         FootprintFactory(book_copy=copy)
         FootprintFactory(book_copy=copy)
         FootprintFactory()  # noise
-        self.assertEquals(imprint.references(), 2)
+        self.assertEqual(imprint.references(), 2)
 
         self.assertTrue(imprint.title in imprint.description())
 
@@ -358,9 +358,9 @@ class ImprintTest(TestCase):
             bhb_number, 'The Odyssey', 'The Odyssey, Edition 1',
             'approximately 1984')
 
-        self.assertEquals(imprint.title, 'The Odyssey, Edition 1')
-        self.assertEquals(imprint.work.title, 'The Odyssey')
-        self.assertEquals(imprint.publication_date.edtf_format, '1984~')
+        self.assertEqual(imprint.title, 'The Odyssey, Edition 1')
+        self.assertEqual(imprint.work.title, 'The Odyssey')
+        self.assertEqual(imprint.publication_date.edtf_format, '1984~')
 
         bhb_type = StandardizedIdentificationType.objects.bhb()
         q = imprint.standardized_identifier.filter(
@@ -411,8 +411,8 @@ class ImprintTest(TestCase):
         idf = StandardizedIdentificationFactory(identifier_type=oclc_type)
         imprint.standardized_identifier.add(idf)
 
-        self.assertEquals(imprint.get_oclc_number(), idf)
-        self.assertEquals(imprint2.get_oclc_number(), None)
+        self.assertEqual(imprint.get_oclc_number(), idf)
+        self.assertEqual(imprint2.get_oclc_number(), None)
 
 
 class ActorTest(TestCase):
@@ -423,13 +423,13 @@ class ActorTest(TestCase):
         actor = Actor.objects.create(person=person, role=role)
 
         # No Alternate Name
-        self.assertEquals(
+        self.assertEqual(
             str(actor),
             '%s (%s)' % (actor.person.name, role.name))
 
         # With Alternate Name
         actor = ActorFactory(role=role)
-        self.assertEquals(
+        self.assertEqual(
             str(actor),
             '%s as %s (%s)' % (actor.person.name, actor.alias, role.name))
 
@@ -439,8 +439,8 @@ class ActorTest(TestCase):
 
         actor, created = Actor.objects.get_or_create_by_attributes(
             'Grace Hopper', None, role, None, None)
-        self.assertEquals(actor.person.name, 'Grace Hopper')
-        self.assertEquals(actor.role, role)
+        self.assertEqual(actor.person.name, 'Grace Hopper')
+        self.assertEqual(actor.role, role)
         self.assertIsNone(actor.alias)
         self.assertIsNone(actor.person.birth_date)
         self.assertIsNone(actor.person.death_date)
@@ -451,25 +451,25 @@ class ActorTest(TestCase):
         Actor.objects.get_or_create_by_attributes(
             'Grace Hopper', viaf, role, 'December 9, 1906', 'January 1, 1992')
         actor.person.refresh_from_db()
-        self.assertEquals(actor.person.birth_date.edtf_format, '1906-12-09')
-        self.assertEquals(actor.person.death_date.edtf_format, '1992-01-01')
-        self.assertEquals(
+        self.assertEqual(actor.person.birth_date.edtf_format, '1906-12-09')
+        self.assertEqual(actor.person.death_date.edtf_format, '1992-01-01')
+        self.assertEqual(
             actor.person.standardized_identifier.identifier, viaf)
 
         # same viaf and role results in the same object
         actor2, created = Actor.objects.get_or_create_by_attributes(
             'Grace Hopper', viaf, role, None, None)
-        self.assertEquals(actor, actor2)
+        self.assertEqual(actor, actor2)
 
         # same name and role results in the same object
         # attributes are not updated if they already exist
         actor2, created = Actor.objects.get_or_create_by_attributes(
             'Grace Hopper', None, role, None, None)
-        self.assertEquals(actor, actor2)
+        self.assertEqual(actor, actor2)
         actor.person.refresh_from_db()
-        self.assertEquals(actor.person.birth_date.edtf_format, '1906-12-09')
-        self.assertEquals(actor.person.death_date.edtf_format, '1992-01-01')
-        self.assertEquals(
+        self.assertEqual(actor.person.birth_date.edtf_format, '1906-12-09')
+        self.assertEqual(actor.person.death_date.edtf_format, '1992-01-01')
+        self.assertEqual(
             actor.person.standardized_identifier.identifier, viaf)
 
         # same name/viaf and different role results in same person, diff actor
@@ -477,32 +477,32 @@ class ActorTest(TestCase):
         actor2, created = Actor.objects.get_or_create_by_attributes(
             'Grace Hopper', None, role2, None, None)
         self.assertNotEquals(actor, actor2)
-        self.assertEquals(actor.person, actor2.person)
+        self.assertEqual(actor.person, actor2.person)
 
         # same viaf diff name results in same person, diff actor w/alias
         role2 = RoleFactory()
         actor2, created = Actor.objects.get_or_create_by_attributes(
             'Amazing Grace', viaf, role2, None, None)
         self.assertNotEquals(actor, actor2)
-        self.assertEquals(actor2.alias, 'Amazing Grace')
-        self.assertEquals(actor.person, actor2.person)
+        self.assertEqual(actor2.alias, 'Amazing Grace')
+        self.assertEqual(actor.person, actor2.person)
 
 
 class FootprintTest(TestCase):
 
     def test_footprint(self):
         footprint = FootprintFactory()
-        self.assertEquals(str(footprint), 'Provenance')
+        self.assertEqual(str(footprint), 'Provenance')
         self.assertFalse(footprint.is_bare())
 
         footprint.digital_object.add(DigitalObjectFactory())
-        self.assertEquals(footprint.calculate_percent_complete(), 100)
+        self.assertEqual(footprint.calculate_percent_complete(), 100)
 
         self.assertTrue(footprint.display_title().startswith('The Odyssey'))
 
         owner_role, created = Role.objects.get_or_create(name=Role.OWNER)
         footprint.actor.add(ActorFactory(role=owner_role))
-        self.assertEquals(footprint.owners().count(), 1)
+        self.assertEqual(footprint.owners().count(), 1)
 
         work = WrittenWork.objects.create()
         imprint = Imprint.objects.create(work=work)
@@ -522,7 +522,7 @@ class FootprintTest(TestCase):
         self.assertTrue(flag_empty_bhb_number(f1))
 
         a = moderation_flags(f1)
-        self.assertEquals(len(a), 4)
+        self.assertEqual(len(a), 4)
 
 
 class FootprintModerationTest(TestCase):
@@ -559,7 +559,7 @@ class FootprintModerationTest(TestCase):
         f6 = FootprintFactory(created_by=creator)
 
         qs = moderation_footprints()
-        self.assertEquals(qs.count(), 4)
+        self.assertEqual(qs.count(), 4)
 
         self.assertTrue(f1 in qs)
         self.assertTrue(f2 in qs)
