@@ -85,11 +85,11 @@ class BookCopyIndex(CelerySearchIndex, Indexable):
     def prepare_object_type(self, obj):
         return type(obj).__name__
 
-    def prepare_footprints_end_date(self, obj):
-        return obj.footprint_end_date()
+    def prepare_footprint_end_date(self, obj):
+        return obj.footprints_end_date()
 
-    def prepare_footprints_start_date(self, obj):
-        return obj.footprint_start_date()
+    def prepare_footprint_start_date(self, obj):
+        return obj.footprints_start_date()
 
     def prepare_pub_end_date(self, obj):
         return obj.imprint.end_date()
