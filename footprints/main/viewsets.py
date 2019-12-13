@@ -12,6 +12,8 @@ from footprints.main.serializers import (
     BookCopySerializer, StandardizedIdentificationSerializer,
     DigitalFormatSerializer, DigitalObjectSerializer,
     StandardizedIdentificationTypeSerializer)
+from footprints.pathmapper.forms import (
+    ImprintSearchForm, WrittenWorkSearchForm)
 
 
 class FootprintViewSet(viewsets.ModelViewSet):
@@ -91,67 +93,36 @@ class WrittenWorkViewSet(viewsets.ModelViewSet):
     model = WrittenWork
     serializer_class = WrittenWorkSerializer
 
-    def filter_by_title(self, qs):
-        title = self.request.GET.get('q', None)
-        if title is not None and len(title) > 0:
-            qs = qs.filter(title__istartswith=title)
-        return qs
-
-    def filter_by_imprint_location(self, qs):
-        location = self.request.GET.get('imprintLocation', None)
-        if location:
-            qs = qs.filter(imprint__place=location)
-        return qs
-
-    def filter_by_footprint_location(self, qs):
-        location = self.request.GET.get('footprintLocation', None)
-        if location:
-            qs = qs.filter(imprint__bookcopy__footprint__place=location)
-        return qs
-
     def get_queryset(self):
-        qs = WrittenWork.objects.all()
-        qs = self.filter_by_imprint_location(qs)
-        qs = self.filter_by_footprint_location(qs)
-        qs = self.filter_by_title(qs)
-        return qs
+        form = WrittenWorkSearchForm(self.request.GET)
+        if form.is_valid():
+            sqs = form.search()
+
+            # this translation from haystack search results
+            # to serializable Django set is slow
+            # @todo - consider making two views, one for search results
+            # and one for full editing
+            ids = sqs.values_list('object_id', flat=True)
+            return WrittenWork.objects.filter(id__in=ids)
+        return WrittenWork.objects.none()
 
 
 class ImprintViewSet(viewsets.ModelViewSet):
     model = Imprint
     serializer_class = ImprintSerializer
 
-    def filter_by_title(self, qs):
-        title = self.request.GET.get('q', None)
-        if title is not None and len(title) > 0:
-            qs = qs.filter(title__istartswith=title)
-        return qs
-
-    def filter_by_work(self, qs):
-        work_id = self.request.GET.get('work', None)
-        if work_id:
-            qs = qs.filter(work__id=work_id)
-        return qs
-
-    def filter_by_imprint_location(self, qs):
-        location = self.request.GET.get('imprintLocation', None)
-        if location:
-            qs = qs.filter(place=location)
-        return qs
-
-    def filter_by_footprint_location(self, qs):
-        location = self.request.GET.get('footprintLocation', None)
-        if location:
-            qs = qs.filter(bookcopy__footprint__place=location)
-        return qs
-
     def get_queryset(self):
-        qs = Imprint.objects.all()
-        qs = self.filter_by_work(qs)
-        qs = self.filter_by_imprint_location(qs)
-        qs = self.filter_by_footprint_location(qs)
-        qs = self.filter_by_title(qs)
-        return qs
+        form = ImprintSearchForm(self.request.GET)
+        if form.is_valid():
+            sqs = form.search()
+
+            # this translation from haystack search results
+            # to serializable Django set is slow
+            # @todo - consider making two views, one for search results
+            # and one for full editing
+            ids = sqs.values_list('object_id', flat=True)
+            return Imprint.objects.filter(id__in=ids)
+        return Imprint.objects.none()
 
 
 class BookCopyViewSet(viewsets.ModelViewSet):

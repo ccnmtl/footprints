@@ -193,6 +193,10 @@
 
     <field name="footprint_locations_exact" type="string" indexed="true" stored="true" multiValued="true" />
 
+    <field name="imprint_locations" type="text_en" indexed="true" stored="true" multiValued="true" />
+
+    <field name="imprint_locations_exact" type="string" indexed="true" stored="true" multiValued="true" />
+
     <field name="work_id" type="text_en" indexed="true" stored="true" multiValued="false" />
 
     <field name="imprint_id" type="text_en" indexed="true" stored="true" multiValued="false" />
