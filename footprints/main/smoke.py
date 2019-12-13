@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.models import User
 from smoketest import SmokeTest
 
@@ -15,7 +16,8 @@ class DBConnectivity(SmokeTest):
 class SolrConnectivity(SmokeTest):
 
     def test_retrieve(self):
-        form = BookCopySearchForm({})
-        if form.is_valid():
-            sqs = form.search()
-            self.assertTrue(sqs.count() > 1000)
+        if not settings.DEBUG and not settings.STAGING_ENV:
+            form = BookCopySearchForm({})
+            if form.is_valid():
+                sqs = form.search()
+                self.assertTrue(sqs.count() > 1000)
