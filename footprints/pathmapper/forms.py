@@ -153,7 +153,7 @@ class BookCopySearchForm(ModelSearchFormEx):
 
         footprint_loc = self.cleaned_data.get('footprint_location')
         if footprint_loc:
-            kwargs['footprint_location'] = footprint_loc
+            kwargs['footprint_locations'] = footprint_loc
 
         kwargs.update(self.handle_pub_year())
         kwargs.update(self.handle_footprint_year())
@@ -201,7 +201,7 @@ class ImprintSearchForm(ModelSearchFormEx):
 
         footprint_loc = self.cleaned_data.get('footprint_location')
         if footprint_loc:
-            kwargs['footprint_location'] = footprint_loc
+            kwargs['footprint_locations'] = footprint_loc
 
         kwargs.update(self.handle_pub_year())
         kwargs.update(self.handle_footprint_year())
@@ -240,11 +240,11 @@ class WrittenWorkSearchForm(ModelSearchFormEx):
 
         imprint_loc = self.cleaned_data.get('imprint_location')
         if imprint_loc:
-            kwargs['imprint_location'] = imprint_loc
+            kwargs['imprint_locations'] = imprint_loc
 
         footprint_loc = self.cleaned_data.get('footprint_location')
         if footprint_loc:
-            kwargs['footprint_location'] = footprint_loc
+            kwargs['footprint_locations'] = footprint_loc
 
         kwargs.update(self.handle_pub_year())
         kwargs.update(self.handle_footprint_year())
