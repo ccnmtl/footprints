@@ -1,8 +1,11 @@
+import re
+
 from django.contrib.gis.geos.point import Point
+from django.utils.encoding import smart_text
+from rest_framework.renderers import BrowsableAPIRenderer
+
 from footprints.mixins import BatchAccessMixin, ModerationAccessMixin, \
     AddChangeAccessMixin
-from rest_framework.renderers import BrowsableAPIRenderer
-from django.utils.encoding import smart_text
 
 
 def permissions(request):
@@ -82,3 +85,16 @@ class BrowsableAPIRendererNoForms(BrowsableAPIRenderer):
 def string_to_point(str):
     a = str.split(',')
     return Point(float(a[1].strip()), float(a[0].strip()))
+
+
+# https://stackoverflow.com/questions/1175208/
+# elegant-python-function-to-convert-camelcase-to-snake-case
+def camel_to_snake(s):
+    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', s)
+    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
+
+
+# https://stackoverflow.com/questions/4303492/
+# how-can-i-simplify-this-conversion-from-underscore-to-camelcase-in-python
+def snake_to_camel(s):
+    return re.sub(r'(?!^)_([a-zA-Z])', lambda m: m.group(1).upper(), s)
