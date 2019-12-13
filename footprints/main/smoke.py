@@ -16,7 +16,7 @@ class DBConnectivity(SmokeTest):
 class SolrConnectivity(SmokeTest):
 
     def test_retrieve(self):
-        if not settings.DEBUG and not settings.STAGING_ENV:
+        if not settings.DEBUG and not hasattr(settings, 'STAGING_ENV'):
             form = BookCopySearchForm({})
             if form.is_valid():
                 sqs = form.search()
