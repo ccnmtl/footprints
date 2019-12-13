@@ -758,6 +758,25 @@ class WrittenWork(models.Model):
         return self.standardized_identifier.filter(
             identifier_type=loc_type).first()
 
+    def footprints(self):
+        return Footprint.objects.filter(book_copy__imprint__work=self)
+
+    def footprints_start_date(self):
+        qs = Footprint.objects.filter(book_copy__imprint__work=self)
+        return Footprint.objects.get_start_date(qs)
+
+    def footprints_end_date(self):
+        qs = Footprint.objects.filter(book_copy__imprint__work=self)
+        return Footprint.objects.get_end_date(qs)
+
+    def pub_start_date(self):
+        qs = Imprint.objects.filter(work=self)
+        return Imprint.objects.get_start_date(qs)
+
+    def pub_end_date(self):
+        qs = Imprint.objects.filter(work=self)
+        return Imprint.objects.get_end_date(qs)
+
 
 class ImprintManager(models.Manager):
 
@@ -797,6 +816,22 @@ class ImprintManager(models.Manager):
             imprint.save()
 
         return imprint, created
+
+    def get_start_date(self, imprints):
+        the_date = date.max
+        for imprint in imprints.select_related('publication_date'):
+            start_date = imprint.start_date()
+            if start_date and start_date != date.min and start_date < the_date:
+                the_date = start_date
+        return None if the_date == date.max else the_date
+
+    def get_end_date(self, imprints):
+        the_date = date.min
+        for imprint in imprints.select_related('publication_date'):
+            end_date = imprint.end_date()
+            if end_date and end_date != date.max and end_date > the_date:
+                the_date = end_date
+        return None if the_date == date.min else the_date
 
 
 @python_2_unicode_compatible
@@ -857,6 +892,14 @@ class Imprint(models.Model):
                  (obj.book_copy.id,
                   obj.sort_date()))
         return lst
+
+    def footprints_start_date(self):
+        qs = Footprint.objects.filter(book_copy__imprint=self)
+        return Footprint.objects.get_start_date(qs)
+
+    def footprints_end_date(self):
+        qs = Footprint.objects.filter(book_copy__imprint=self)
+        return Footprint.objects.get_end_date(qs)
 
     def photos(self):
         return DigitalObject.objects.filter(
@@ -1022,16 +1065,27 @@ class BookCopy(models.Model):
         return lst
 
     def footprints_start_date(self):
+        qs = self.footprint_set.select_related('associated_date')
+        return Footprint.objects.get_start_date(qs)
+
+    def footprints_end_date(self):
+        qs = self.footprint_set.select_related('associated_date')
+        return Footprint.objects.get_end_date(qs)
+
+
+class FootprintManager(models.Manager):
+
+    def get_start_date(self, footprints):
         the_date = date.max
-        for fp in self.footprint_set.select_related('associated_date'):
+        for fp in footprints.select_related('associated_date'):
             start_date = fp.start_date()
             if start_date and start_date != date.min and start_date < the_date:
                 the_date = start_date
         return None if the_date == date.max else the_date
 
-    def footprints_end_date(self):
+    def get_end_date(self, footprints):
         the_date = date.min
-        for fp in self.footprint_set.select_related('associated_date'):
+        for fp in footprints.select_related('associated_date'):
             end_date = fp.end_date()
             if end_date and end_date != date.max and end_date > the_date:
                 the_date = end_date
@@ -1040,6 +1094,7 @@ class BookCopy(models.Model):
 
 @python_2_unicode_compatible
 class Footprint(models.Model):
+    objects = FootprintManager()
     book_copy = models.ForeignKey(BookCopy)
     medium = models.CharField(
         "Evidence Type", max_length=256,
