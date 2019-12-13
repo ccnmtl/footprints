@@ -69,6 +69,7 @@
 
             <section aria-labelledby="region4">
                 <h2 id="region4">Years</h2>
+
                 <div class="form-group row mb-1">
                     <div class="col-8 d-flex offset-4"><small>{{displayPubMinMax()}}</small></div>
                 </div>
@@ -85,10 +86,14 @@
                             id="criteriaPubYearEnd">
                     </div>
                 </div>
+                <div class="form-group row mb-2">
+                    <div class="col-8 d-flex offset-4"><small>{{displayPubYearStatus()}}</small></div>
+                </div>
+
                 <div class="form-group row mb-1">
                     <div class="col-8 d-flex offset-4"><small>{{displayFootprintMinMax()}}</small></div>
                 </div>
-                <div class="form-group mb-0 row">
+                <div class="form-group mb-1 row">
                     <label for="criteriaFootprintYearBegin" class="col-4 col-form-label">Footprint:</label>
                     <div class="col-8 d-flex">
                         <input v-model="layer.footprintStart" type="text" class="form-control"
@@ -101,6 +106,10 @@
                             id="criteriaFootprintYearEnd">
                     </div>
                 </div>
+                <div class="form-group row">
+                    <div class="col-8 d-flex offset-4"><small>{{displayFootprintYearStatus()}}</small></div>
+                </div>
+
             </section><!-- /#criteria-years -->
 
             <section aria-labelledby="region5">

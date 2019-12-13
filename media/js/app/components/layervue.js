@@ -57,6 +57,34 @@ define(['jquery', 'selectWidget'], function($, select) {
             displayPubMinMax: function() {
                 return this.displayMinMax(this.pubMin, this.pubMax);
             },
+            displayYearStatus: function(lbl) {
+                var start = this.layer[lbl + 'Start'];
+                var end = this.layer[lbl + 'End'];
+                var range = this.layer[lbl + 'Range'];
+
+                if (range) {
+                    if (start && !end) {
+                        return start + ' to present';
+                    }
+
+                    if (start && end) {
+                        return start + ' to ' + end;
+                    }
+
+                    if (!start && end) {
+                        return 'Up to ' + end;
+                    }
+                } else if (start) {
+                    return start;
+                }
+                return 'All years';
+            },
+            displayFootprintYearStatus: function() {
+                return this.displayYearStatus('footprint');
+            },
+            displayPubYearStatus: function() {
+                return this.displayYearStatus('pub');
+            },
             workChanged: function() {
                 // the imprint is always cleared when the work changes
                 this.layer.imprint = null;
