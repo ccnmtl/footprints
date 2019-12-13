@@ -1,7 +1,8 @@
 from django.test.testcases import TestCase
 
-from footprints.main.utils import interpolate_role_actors
 from footprints.main.models import Actor, Role
+from footprints.main.utils import interpolate_role_actors, snake_to_camel, \
+    camel_to_snake
 
 
 class CustomUtilsTest(TestCase):
@@ -44,3 +45,13 @@ class CustomUtilsTest(TestCase):
         self.assertTrue(array[0].count(b'Nick (Author)') == 2)
         self.assertTrue(array[2].count(b'Nick (Printer)') == 1)
         self.assertTrue(array[4].count(b'Nick (Censor)') == 1)
+
+    def test_snake_to_camel(self):
+        self.assertEqual(snake_to_camel(''), '')
+        self.assertEqual(snake_to_camel('footprint'), 'footprint')
+        self.assertEqual(snake_to_camel('footprint_start'), 'footprintStart')
+
+    def test_camel_to_snake(self):
+        self.assertEqual(camel_to_snake(''), '')
+        self.assertEqual(camel_to_snake('footprint'), 'footprint')
+        self.assertEqual(camel_to_snake('footprintStart'), 'footprint_start')
