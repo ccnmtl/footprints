@@ -15,23 +15,48 @@ define(['jquery', 'selectWidget'], function($, select) {
                     'person': null,
                     'pubStart': null,
                     'pubEnd': null,
+                    'pubRange': false,
                     'footprintStart': null,
                     'footprintEnd': null,
+                    'footprintRange': false,
                     'censored': null,
                     'expurgated': null
                 },
-                total: null
+                total: null,
+                pubMin: null,
+                pubMax: null,
+                footprintMin: null,
+                footprintMax: null
             };
         },
         computed: {
             displayCriteria: function() {
                 return '';
-            }
+            },
         },
         components: {
             'select-widget': select.SelectWidget
         },
         methods: {
+            displayMinMax: function(start, end) {
+                start = start > this.dateMin ? start : null;
+                end = end < this.dateMax ? end : null;
+                if (start && !end) {
+                    return start + ' to present';
+                } else if (!start && end) {
+                    return 'Up to ' + end;
+                } else if (start && end) {
+                    return start + ' to ' + end;
+                } else {
+                    return '';
+                }
+            },
+            displayFootprintMinMax: function() {
+                return this.displayMinMax(this.footprintMin, this.footprintMax);
+            },
+            displayPubMinMax: function() {
+                return this.displayMinMax(this.pubMin, this.pubMax);
+            },
             workChanged: function() {
                 // the imprint is always cleared when the work changes
                 this.layer.imprint = null;
@@ -62,6 +87,10 @@ define(['jquery', 'selectWidget'], function($, select) {
                 }).done((results) => {
                     this.state = JSON.stringify(this.layer);
                     this.total = results.total;
+                    this.pubMin = results.pubMin;
+                    this.pubMax = results.pubMax;
+                    this.footprintMin = results.footprintMin;
+                    this.footprintMax = results.footprintMax;
                     $('html').removeClass('busy');
                 });
             },
@@ -79,10 +108,24 @@ define(['jquery', 'selectWidget'], function($, select) {
                     $('#container-pane').addClass('widget-pane-expanded');
                     $('#container-pane').removeClass('widget-pane-collapsed');
                 }
+            },
+            togglePubRange: function() {
+                this.layer.pubRange = !this.layer.pubRange;
+                if (!this.layer.pubRange) {
+                    this.layer.pubEnd = null;
+                }
+            },
+            toggleFootprintRange: function() {
+                this.layer.footprintRange = !this.layer.footprintRange;
+                if (!this.layer.footprintRange) {
+                    this.layer.footprintEnd = null;
+                }
             }
         },
         created: function() {
             this.searchUrl = Footprints.baseUrl + 'search/book/';
+            this.dateMin = 1000;
+            this.dateMax = 9999;
 
             // @todo - how is this handled when the list updates the model?
 
@@ -91,6 +134,13 @@ define(['jquery', 'selectWidget'], function($, select) {
             this.$watch('layer.imprint', this.search);
             this.$watch('layer.imprintLocation', this.search);
             this.$watch('layer.footprintLocation', this.search);
+            this.$watch('layer.footprintStart', this.search);
+            this.$watch('layer.footprintEnd', this.search);
+            this.$watch('layer.pubStart', this.search);
+            this.$watch('layer.pubEnd', this.search);
+        },
+        mounted: function() {
+            this.search();
         }
     };
     return {
