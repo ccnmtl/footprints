@@ -216,7 +216,7 @@ class ExtendedDate(models.Model):
         # the python-edtf library returns "date.max" on a ValueError
         # and, if approximate or uncertain are set, the day/month are adjusted
         # just compare the year 9999 to the returned year
-        return None if dt.year == date.max.year else dt
+        return None if not dt or dt.year == date.max.year else dt
 
     def start(self):
         edtf = self.as_edtf()
@@ -1021,27 +1021,21 @@ class BookCopy(models.Model):
         lst.sort(key=lambda obj: obj.sort_date())
         return lst
 
-    def footprints_with_valid_dates(self):
-        return self.footprint_set.filter(
-            associated_date__isnull=False).exclude(
-                associated_date__edtf_format__exact='').select_related(
-                    'associated_date')
-
     def footprints_start_date(self):
-        try:
-            lst = list(self.footprints_with_valid_dates())
-            lst.sort(key=lambda obj: obj.start_date())
-            return lst[0].start_date()
-        except IndexError:
-            None
+        the_date = date.max
+        for fp in self.footprint_set.select_related('associated_date'):
+            start_date = fp.start_date()
+            if start_date and start_date != date.min and start_date < the_date:
+                the_date = start_date
+        return None if the_date == date.max else the_date
 
     def footprints_end_date(self):
-        try:
-            lst = list(self.footprints_with_valid_dates())
-            lst.sort(key=lambda obj: obj.end_date())
-            return lst[-1].end_date()
-        except IndexError:
-            return None
+        the_date = date.min
+        for fp in self.footprint_set.select_related('associated_date'):
+            end_date = fp.end_date()
+            if end_date and end_date != date.max and end_date > the_date:
+                the_date = end_date
+        return None if the_date == date.min else the_date
 
 
 @python_2_unicode_compatible
