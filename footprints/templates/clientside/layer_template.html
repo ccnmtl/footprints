@@ -69,19 +69,36 @@
 
             <section aria-labelledby="region4">
                 <h2 id="region4">Years</h2>
-                <div class="form-group row">
+                <div class="form-group row mb-1">
+                    <div class="col-8 d-flex offset-4"><small>{{displayPubMinMax()}}</small></div>
+                </div>
+                <div class="form-group row mb-1">
                     <label for="criteriaPubYearBegin" class="col-4 col-form-label">Publication:</label>
                     <div class="col-8 d-flex">
-                        <input type="text" class="form-control" id="criteriaPubYearBegin" >
-                        <button type="button" class="btn btn-outline-secondary criteria-range range-on">to</button>
-                        <input type="text" class="form-control" id="criteriaPubYearEnd">
+                        <input v-model="layer.pubStart" type="text" class="form-control"
+                            id="criteriaPubYearBegin">
+                        <button type="button" v-on:click="togglePubRange"
+                            :class="['btn', 'btn-outline-secondary', 'criteria-range', {'range-on': layer.pubRange}]">
+                            <span v-if="layer.pubRange">to</span><span v-else>add range</span>
+                        </button>
+                        <input v-if="layer.pubRange" v-model="layer.pubEnd" type="text" class="form-control"
+                            id="criteriaPubYearEnd">
                     </div>
+                </div>
+                <div class="form-group row mb-1">
+                    <div class="col-8 d-flex offset-4"><small>{{displayFootprintMinMax()}}</small></div>
                 </div>
                 <div class="form-group mb-0 row">
                     <label for="criteriaFootprintYearBegin" class="col-4 col-form-label">Footprint:</label>
                     <div class="col-8 d-flex">
-                        <input type="text" class="form-control" id="criteriaFootprintYearBegin" >
-                        <button type="button" class="btn btn-outline-secondary criteria-range">add range</button>
+                        <input v-model="layer.footprintStart" type="text" class="form-control"
+                            id="criteriaFootprintYearBegin">
+                        <button type="button" v-on:click="toggleFootprintRange"
+                            :class="['btn', 'btn-outline-secondary', 'criteria-range', {'range-on': layer.footprintRange}]">
+                            <span v-if="layer.footprintRange">to</span><span v-else>add range</span>
+                        </button>
+                        <input v-if="layer.footprintRange" v-model="layer.footprintEnd" type="text" class="form-control"
+                            id="criteriaFootprintYearEnd">
                     </div>
                 </div>
             </section><!-- /#criteria-years -->
