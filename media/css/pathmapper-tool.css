@@ -12,6 +12,15 @@
     z-index: 1;
 }
 
+#table-container {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    z-index: 1;
+    overflow: auto;
+}
+
 #the-map {
     position: absolute;
     top: 0;
@@ -416,6 +425,29 @@ header .btn-priority-hi {
     color: #97421b;
     background-color: #f8f5f4;
 }
+
+/* Table view */
+
+.table-pathmapper {
+    margin: 5rem auto;
+    padding: 0;
+    width: calc(100% - 2rem);
+}
+
+.table-pathmapper tr {
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    border-collapse: collapse;
+}
+
+.table-pathmapper th, td {
+    padding: 0.5rem;
+}
+.table-pathmapper th {
+}
+.table-pathmapper tbody tr:nth-child(even) {background-color: #edeae6;}
+
+.table-pathmapper tbody tr:nth-child(odd) {background: #fafafa}
 
 /*
  *  STYLE 3
