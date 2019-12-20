@@ -168,6 +168,10 @@ urlpatterns = [
     # Visualizations for grant application
     url(r'^pathmapper/',
         TemplateView.as_view(template_name='design/pathmapper.html')),
+
+    # Temporary table view template for pathmapper
+    url(r'^tableview/',
+        TemplateView.as_view(template_name='pathmapper/table.html')),
 ]
 
 if settings.DEBUG:
