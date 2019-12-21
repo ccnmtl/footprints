@@ -1,7 +1,8 @@
 requirejs(['./common'], function(common) {
-    const libs = ['jquery', 'Vue', 'mapVue', 'layerListVue', 'utils'];
+    const libs = ['jquery', 'Vue', 'mapVue', 'layerListVue',
+        'pathmapperTableVue', 'utils'];
     requirejs(libs,
-        function($, Vue, map, layers, utils) {
+        function($, Vue, map, layers, table, utils) {
             new Vue({
                 el: '#pathmapper-container',
                 data: function() {
@@ -9,14 +10,22 @@ requirejs(['./common'], function(common) {
                         collection: {
                             id: null,
                             layers: []
-                        }
+                        },
+                        showMap: true
                     };
                 },
                 components: {
                     'layer-list': layers.LayerListVue,
-                    'google-map': map.GoogleMapVue
+                    'google-map': map.GoogleMapVue,
+                    'pathmapper-table': table.PathmapperTableVue
                 },
                 methods: {
+                    switchToTable: function() {
+                        this.showMap = false;
+                    },
+                    switchToMap: function() {
+                        this.showMap = true;
+                    }
                 },
                 created: function() {
                     // Setup CSRF configuration and busy states
@@ -25,7 +34,7 @@ requirejs(['./common'], function(common) {
                     // eslint-disable-next-line
                     window.addEventListener('beforeunload', this.beforeUnload);
 
-                    // @todo - initialize layers via template data
+                    // @todo - initialize layers via stored data
                     // if accessing through a saved permalink
                 }
             });
