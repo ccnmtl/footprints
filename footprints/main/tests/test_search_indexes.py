@@ -70,6 +70,13 @@ class TestImprintIndex(TestCase):
         self.assertTrue(smart_text(fp.book_copy.imprint.actor.first())
                         in actors)
 
+    def test_prepare_actor_title(self):
+        fp = FootprintFactory()
+
+        actors = ImprintIndex().prepare_actor_title(fp.book_copy.imprint)
+        self.assertTrue(smart_text(fp.book_copy.imprint.actor.first())
+                        in actors)
+
 
 class TestWrittenWorkIndex(TestCase):
 
