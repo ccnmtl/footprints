@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='footprint',
             name='book_copy',
-            field=models.ForeignKey(default=1, to='main.BookCopy'),
+            field=models.ForeignKey(default=1, to='main.BookCopy', on_delete=models.CASCADE),
             preserve_default=False,
         ),
     ]

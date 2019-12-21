@@ -51,7 +51,7 @@ class Migration(migrations.Migration):
                 ('footprint_location', models.TextField(null=True, blank=True)),
                 ('footprint_date', models.TextField(null=True, blank=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('job', models.ForeignKey(to='batch.BatchJob')),
+                ('job', models.ForeignKey(to='batch.BatchJob', on_delete=models.CASCADE)),
             ],
         ),
     ]

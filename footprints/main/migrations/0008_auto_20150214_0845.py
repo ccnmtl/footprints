@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
             model_name='digitalobject',
             name='digital_format',
             field=models.ForeignKey(blank=True,
-                                    to='main.DigitalFormat', null=True),
+                                    to='main.DigitalFormat', null=True, on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AlterField(

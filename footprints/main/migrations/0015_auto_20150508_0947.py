@@ -36,7 +36,7 @@ class Migration(migrations.Migration):
             name='new_identifier_type',
             field=models.ForeignKey(blank=True,
                                     to='main.StandardizedIdentificationType',
-                                    null=True),
+                                    null=True, on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AddField(

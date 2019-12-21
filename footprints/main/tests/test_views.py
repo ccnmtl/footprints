@@ -1,14 +1,11 @@
-from json import loads
-
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser, Group, Permission
 from django.core import mail
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.test.client import RequestFactory
+from django.urls.base import reverse
 from django.utils.encoding import smart_text
-
 from footprints.main.forms import ContactUsForm
 from footprints.main.models import Footprint, Actor, Imprint, \
     StandardizedIdentificationType, ExtendedDate, Language, \
@@ -23,6 +20,7 @@ from footprints.main.utils import interpolate_role_actors
 from footprints.main.views import (
     CreateFootprintView, AddActorView, ContactUsView, FootprintDetailView,
     ExportFootprintSearch, VerifiedFootprintFeed)
+from json import loads
 
 
 class BasicTest(TestCase):

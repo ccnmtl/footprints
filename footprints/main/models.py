@@ -333,7 +333,8 @@ class DigitalObject(models.Model):
     url = models.TextField(blank=True)
     description = models.TextField(null=True, blank=True)
 
-    digital_format = models.ForeignKey(DigitalFormat, null=True, blank=True)
+    digital_format = models.ForeignKey(
+        DigitalFormat, null=True, blank=True, on_delete=models.CASCADE)
     source_url = models.URLField(null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -428,7 +429,8 @@ class StandardizedIdentificationType(models.Model):
 class StandardizedIdentification(models.Model):
     identifier = models.CharField(max_length=512)
     identifier_type = models.ForeignKey(StandardizedIdentificationType,
-                                        null=True, blank=True)
+                                        null=True, blank=True,
+                                        on_delete=models.CASCADE)
     permalink = models.URLField(null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -494,13 +496,16 @@ class Person(models.Model):
 
     birth_date = models.OneToOneField(ExtendedDate,
                                       null=True, blank=True,
-                                      related_name="birth_date")
+                                      related_name="birth_date",
+                                      on_delete=models.CASCADE)
     death_date = models.OneToOneField(ExtendedDate,
                                       null=True, blank=True,
-                                      related_name="death_date")
+                                      related_name="death_date",
+                                      on_delete=models.CASCADE)
 
     standardized_identifier = models.ForeignKey(StandardizedIdentification,
-                                                null=True, blank=True)
+                                                null=True, blank=True,
+                                                on_delete=models.CASCADE)
     digital_object = models.ManyToManyField(
         DigitalObject, blank=True)
 
@@ -576,8 +581,8 @@ class ActorManager(models.Manager):
 class Actor(models.Model):
     objects = ActorManager()
 
-    person = models.ForeignKey(Person)
-    role = models.ForeignKey(Role)
+    person = models.ForeignKey(Person, on_delete=models.CASCADE)
+    role = models.ForeignKey(Role, on_delete=models.CASCADE)
     alias = models.TextField(null=True, blank=True)
     notes = models.TextField(null=True, blank=True)
 
@@ -633,7 +638,8 @@ class Place(models.Model):
     notes = models.TextField(null=True, blank=True)
 
     standardized_identification = models.ForeignKey(StandardizedIdentification,
-                                                    null=True, blank=True)
+                                                    null=True, blank=True,
+                                                    on_delete=models.CASCADE)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
@@ -838,14 +844,16 @@ class ImprintManager(models.Manager):
 class Imprint(models.Model):
     objects = ImprintManager()
 
-    work = models.ForeignKey(WrittenWork)
+    work = models.ForeignKey(WrittenWork, on_delete=models.CASCADE)
 
     title = models.TextField(null=True, blank=True,
                              verbose_name="Imprint Title")
     language = models.ManyToManyField(Language, blank=True)
     publication_date = models.OneToOneField(ExtendedDate,
-                                            null=True, blank=True)
-    place = models.ForeignKey(Place, null=True, blank=True)
+                                            null=True, blank=True,
+                                            on_delete=models.CASCADE)
+    place = models.ForeignKey(
+        Place, null=True, blank=True, on_delete=models.CASCADE)
 
     actor = models.ManyToManyField(Actor, blank=True)
 
@@ -999,7 +1007,7 @@ class Imprint(models.Model):
 
 @python_2_unicode_compatible
 class BookCopy(models.Model):
-    imprint = models.ForeignKey(Imprint)
+    imprint = models.ForeignKey(Imprint, on_delete=models.CASCADE)
     call_number = models.CharField(max_length=256, null=True, blank=True)
 
     digital_object = models.ManyToManyField(
@@ -1095,7 +1103,7 @@ class FootprintManager(models.Manager):
 @python_2_unicode_compatible
 class Footprint(models.Model):
     objects = FootprintManager()
-    book_copy = models.ForeignKey(BookCopy)
+    book_copy = models.ForeignKey(BookCopy, on_delete=models.CASCADE)
     medium = models.CharField(
         "Evidence Type", max_length=256,
         help_text='''Where the footprint is derived or deduced from, e.g.
@@ -1110,14 +1118,17 @@ class Footprint(models.Model):
                              verbose_name='Footprint Title')
     language = models.ManyToManyField(Language, blank=True)
     place = models.ForeignKey(Place, null=True, blank=True,
-                              verbose_name='Footprint Location')
+                              verbose_name='Footprint Location',
+                              on_delete=models.CASCADE)
 
     associated_date = models.OneToOneField(ExtendedDate,
                                            null=True, blank=True,
-                                           verbose_name='Footprint Date')
+                                           verbose_name='Footprint Date',
+                                           on_delete=models.CASCADE)
 
     call_number = models.CharField(max_length=256, null=True, blank=True)
-    collection = models.ForeignKey(Collection, null=True, blank=True)
+    collection = models.ForeignKey(
+        Collection, null=True, blank=True, on_delete=models.CASCADE)
 
     digital_object = models.ManyToManyField(
         DigitalObject, blank=True)

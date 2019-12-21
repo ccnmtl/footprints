@@ -1,4 +1,4 @@
-Django==1.11.27 # pyup: <2.0
+Django==2.2.9 # pyup: <3
 
 feedparser==5.2.1
 
@@ -19,29 +19,11 @@ pyparsing==2.4.5
 pycodestyle==2.5.0
 configparser==4.0.2
 flake8==3.7.9
-tornado==4.5.3 # pyup: <5.0
+tornado==6.0.3
 cssselect==1.1.0
-lxml==4.3.5 # pyup: <4.4
+lxml==4.4.2
 fuzzywuzzy==0.17.0
 sure==1.4.11
-
-# IPython
-decorator==4.4.1
-traitlets==4.3.3
-ipython_genutils==0.2.0
-ptyprocess==0.6.0
-pexpect==4.7.0
-pickleshare==0.7.5
-simplegeneric==0.8.1
-path.py==11.5.2 # pyup: <12
-wcwidth==0.1.7
-prompt_toolkit==2.0.10 # pyup: <3.0.0
-scandir==1.10.0
-
-pygments==2.5.2
-
-ipython==5.8.0 # pyup: <6.0.0
-ipdb==0.12.3
 
 coverage==4.5.4
 pyasn1==0.4.8
@@ -58,9 +40,9 @@ logilab-astng==0.24.3
 lazy-object-proxy==1.4.3
 wrapt==1.11.2
 
-pylint==1.9.5 # pyup: <2.0.0
+pylint==2.4.4
 
-astroid==1.6.6 # pyup: <2.0.0
+astroid==2.3.3
 
 six==1.13.0
 ipaddress==1.0.23
@@ -95,7 +77,7 @@ django-statsd-mozilla==0.4.0
 raven==6.10.0
 sentry-sdk==0.13.5
 django-bootstrap-form==3.4
-django-debug-toolbar==1.11 # pyup: <2.0
+django-debug-toolbar==2.1
 django-waffle==0.18.0
 django-jenkins==0.110.0
 django-smoketest==1.1.0
@@ -106,7 +88,7 @@ django-ga-context==0.1.0
 django-impersonate==1.4.1
 django-registration-redux==2.6
 django-markwhat==1.6.2
-gunicorn==19.10.0  # pyup: <20.0.0
+gunicorn==20.0.4
 future==0.17.1;
 s3transfer==0.2.1
 jmespath==0.9.4
@@ -119,7 +101,7 @@ certifi==2019.11.28  # for pysolr, sentry-sdk
 pysolr==3.8.1
 django-haystack==2.8.1
 requirements/src/django_audit_log-0.8.0-py2.py3-none-any.whl
-djangorestframework==3.9.4 # pyup: < 3.10
+djangorestframework==3.11.0
 djangorestframework-jsonp==1.0.2
 django-celery==3.2.2 # pyup: <3.3.0
 Unidecode==1.1.1

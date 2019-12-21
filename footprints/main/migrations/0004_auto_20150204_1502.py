@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='imprint',
             name='work',
-            field=models.ForeignKey(default=1, to='main.WrittenWork'),
+            field=models.ForeignKey(default=1, to='main.WrittenWork', on_delete=models.CASCADE),
             preserve_default=False,
         ),
         migrations.AlterField(
