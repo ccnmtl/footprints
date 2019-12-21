@@ -35,13 +35,15 @@ class WrittenWorkIndex(CelerySearchIndex, Indexable):
     title = NgramField(model_attr='title', null=True)
     sort_by = CharField()
 
-    imprint_locations = MultiValueField()
+    imprint_location = MultiValueField(faceted=True)
+    imprint_location_title = MultiValueField(faceted=True)
     pub_start_date = DateTimeField()
     pub_end_date = DateTimeField()
 
+    footprint_location = MultiValueField(faceted=True)
+    footprint_location_title = MultiValueField(faceted=True)
     footprint_start_date = DateTimeField()
     footprint_end_date = DateTimeField()
-    footprint_locations = MultiValueField()
 
     actor = MultiValueField(faceted=True)
 
@@ -66,14 +68,14 @@ class WrittenWorkIndex(CelerySearchIndex, Indexable):
     def prepare_pub_start_date(self, obj):
         return obj.pub_start_date()
 
-    def prepare_footprint_locations(self, obj):
+    def prepare_footprint_location(self, obj):
         places = []
         for f in obj.footprints():
             if f.place:
                 places.append(f.place.id)
         return places
 
-    def prepare_imprint_locations(self, obj):
+    def prepare_imprint_location(self, obj):
         places = []
         for imprint in obj.imprints():
             if imprint.place:
@@ -82,7 +84,7 @@ class WrittenWorkIndex(CelerySearchIndex, Indexable):
 
     def prepare_actor(self, obj):
         qs = Actor.objects.filter(writtenwork=obj).distinct()
-        return qs.values_list('id', flat=True)
+        return [smart_text(actor) for actor in qs]
 
 
 class ImprintIndex(CelerySearchIndex, Indexable):
@@ -93,13 +95,15 @@ class ImprintIndex(CelerySearchIndex, Indexable):
 
     work_id = CharField(model_attr='work__id')
 
-    imprint_location = CharField(model_attr='place__id')
+    imprint_location = MultiValueField(faceted=True)
+    imprint_location_title = MultiValueField(faceted=True)
     pub_start_date = DateTimeField()
     pub_end_date = DateTimeField()
 
+    footprint_location = MultiValueField(faceted=True)
+    footprint_location_title = MultiValueField(faceted=True)
     footprint_start_date = DateTimeField()
     footprint_end_date = DateTimeField()
-    footprint_locations = MultiValueField()
 
     actor = MultiValueField(faceted=True)
 
@@ -121,16 +125,33 @@ class ImprintIndex(CelerySearchIndex, Indexable):
     def prepare_pub_start_date(self, obj):
         return obj.start_date()
 
-    def prepare_footprint_locations(self, obj):
+    def prepare_imprint_location(self, obj):
+        if obj.place:
+            return [obj.place.id]
+        return []
+
+    def prepare_imprint_location_title(self, obj):
+        if obj.place:
+            return [smart_text(obj.place)]
+        return []
+
+    def prepare_footprint_location(self, obj):
         places = []
         for f in obj.footprints():
             if f.place:
                 places.append(f.place.id)
         return places
 
+    def prepare_footprint_location_title(self, obj):
+        places = []
+        for f in obj.footprints():
+            if f.place:
+                places.append(smart_text(f.place))
+        return places
+
     def prepare_actor(self, obj):
         qs = Actor.objects.filter(imprint=obj).distinct()
-        return qs.values_list('id', flat=True)
+        return [smart_text(actor) for actor in qs]
 
 
 class BookCopyIndex(CelerySearchIndex, Indexable):
@@ -141,13 +162,15 @@ class BookCopyIndex(CelerySearchIndex, Indexable):
     work_id = CharField(model_attr='imprint__work__id')
     imprint_id = CharField(model_attr='imprint__id')
 
-    imprint_location = CharField(model_attr='imprint__place__id')
+    imprint_location = MultiValueField(faceted=True)
+    imprint_location_title = MultiValueField(faceted=True)
     pub_start_date = DateTimeField()
     pub_end_date = DateTimeField()
 
+    footprint_location = MultiValueField(faceted=True)
+    footprint_location_title = MultiValueField(faceted=True)
     footprint_start_date = DateTimeField()
     footprint_end_date = DateTimeField()
-    footprint_locations = MultiValueField()
 
     actor = MultiValueField(faceted=True)
 
@@ -169,20 +192,38 @@ class BookCopyIndex(CelerySearchIndex, Indexable):
     def prepare_pub_start_date(self, obj):
         return obj.imprint.start_date()
 
-    def prepare_footprint_locations(self, obj):
+    def prepare_imprint_location(self, obj):
+        if obj.imprint.place:
+            return [obj.imprint.place.id]
+        return []
+
+    def prepare_imprint_location_title(self, obj):
+        if obj.imprint.place:
+            return [smart_text(obj.imprint.place)]
+        return []
+
+    def prepare_footprint_location(self, obj):
         places = []
         for f in obj.footprints():
             if f.place:
                 places.append(f.place.id)
         return places
 
+    def prepare_footprint_location_title(self, obj):
+        places = []
+        for f in obj.footprints():
+            if f.place:
+                places.append(smart_text(f.place))
+        return places
+
     def prepare_actor(self, obj):
+        footprints = obj.footprint_set.all().values_list('id', flat=True)
         qs = Actor.objects.filter(
             Q(writtenwork=obj.imprint.work) |
             Q(imprint=obj.imprint) |
-            Q(footprint__book_copy=obj)).distinct()
+            Q(footprint__in=footprints)).distinct()
 
-        return qs.values_list('id', flat=True)
+        return [smart_text(actor) for actor in qs]
 
 
 class FootprintIndex(CelerySearchIndex, Indexable):
@@ -192,14 +233,18 @@ class FootprintIndex(CelerySearchIndex, Indexable):
     title = NgramField(model_attr='title')
     sort_by = CharField()
 
-    footprint_start_date = DateTimeField()
-    footprint_end_date = DateTimeField()
+    work_id = CharField(model_attr='book_copy__imprint__work__id')
+    imprint_id = CharField(model_attr='book_copy__imprint__id')
 
+    imprint_location = MultiValueField(faceted=True)
+    imprint_location_title = MultiValueField(faceted=True)
     pub_start_date = DateTimeField()
     pub_end_date = DateTimeField()
 
-    footprint_location = CharField(faceted=True)
-    imprint_location = CharField(faceted=True)
+    footprint_location = MultiValueField(faceted=True)
+    footprint_location_title = MultiValueField(faceted=True)
+    footprint_start_date = DateTimeField()
+    footprint_end_date = DateTimeField()
 
     actor = MultiValueField(faceted=True)
 
@@ -259,15 +304,27 @@ class FootprintIndex(CelerySearchIndex, Indexable):
 
     def prepare_footprint_location(self, obj):
         if obj.place:
-            return smart_text(obj.place)
+            return [obj.place.id]
 
-        return ''
+        return []
+
+    def prepare_footprint_location_title(self, obj):
+        if obj.place:
+            return [smart_text(obj.place)]
+
+        return []
 
     def prepare_imprint_location(self, obj):
         if obj.book_copy.imprint.place:
-            return smart_text(obj.book_copy.imprint.place)
+            return [obj.book_copy.imprint.place.id]
 
-        return ''
+        return []
+
+    def prepare_imprint_location_title(self, obj):
+        if obj.book_copy.imprint.place:
+            return [smart_text(obj.book_copy.imprint.place)]
+
+        return []
 
     def prepare_actor(self, obj):
         qs = Actor.objects.filter(
@@ -281,6 +338,7 @@ class FootprintIndex(CelerySearchIndex, Indexable):
         return obj.has_at_least_one_digital_object()
 
 
+# PersonIndex is used by the NameListView to create an autocomplete field
 class PersonIndex(CelerySearchIndex, Indexable):
     object_id = CharField(model_attr='id')
     object_type = CharField()
@@ -298,6 +356,7 @@ class PersonIndex(CelerySearchIndex, Indexable):
         return format_sort_by(obj.name, remove_articles=True)
 
 
+#  @todo: Is this in use?
 class PlaceIndex(CelerySearchIndex, Indexable):
     object_id = CharField(model_attr='id')
     object_type = CharField()

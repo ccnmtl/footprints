@@ -155,8 +155,6 @@
 
     <field name="actor_exact" type="string" indexed="true" stored="true" multiValued="true" />
 
-    <field name="footprint_location_exact" type="string" indexed="true" stored="true" multiValued="false" />
-
     <field name="has_image" type="boolean" indexed="true" stored="true" multiValued="false" />
 
     <field name="footprint_start_date" type="date" indexed="true" stored="true" multiValued="false" />
@@ -175,8 +173,6 @@
 
     <field name="owners" type="text_en" indexed="true" stored="true" multiValued="false" />
 
-    <field name="imprint_location_exact" type="string" indexed="true" stored="true" multiValued="false" />
-
     <field name="title" type="ngram" indexed="true" stored="true" multiValued="false" />
 
     <field name="pub_end_date" type="date" indexed="true" stored="true" multiValued="false" />
@@ -189,25 +185,29 @@
 
     <field name="fdate" type="date" indexed="true" stored="true" multiValued="false" />
 
-    <field name="footprint_location" type="text_en" indexed="true" stored="true" multiValued="false" />
+    <field name="footprint_location" type="text_en" indexed="true" stored="true" multiValued="true" />
+
+    <field name="footprint_location_exact" type="text_en" indexed="true" stored="true" multiValued="true" />
 
     <field name="wtitle" type="text_en" indexed="true" stored="true" multiValued="false" />
 
-    <field name="imprint_location" type="text_en" indexed="true" stored="true" multiValued="false" />
+    <field name="imprint_location" type="text_en" indexed="true" stored="true" multiValued="true" />
+
+    <field name="imprint_location_exact" type="text_en" indexed="true" stored="true" multiValued="true" />
 
     <field name="name" type="ngram" indexed="true" stored="true" multiValued="false" />
-
-    <field name="footprint_locations" type="text_en" indexed="true" stored="true" multiValued="true" />
-
-    <field name="footprint_locations_exact" type="string" indexed="true" stored="true" multiValued="true" />
-
-    <field name="imprint_locations" type="text_en" indexed="true" stored="true" multiValued="true" />
-
-    <field name="imprint_locations_exact" type="string" indexed="true" stored="true" multiValued="true" />
 
     <field name="work_id" type="text_en" indexed="true" stored="true" multiValued="false" />
 
     <field name="imprint_id" type="text_en" indexed="true" stored="true" multiValued="false" />
+
+    <field name="footprint_location_title" type="text_en" indexed="true" stored="true" multiValued="true" />
+
+    <field name="footprint_location_title_exact" type="string" indexed="true" stored="true" multiValued="true" />
+
+    <field name="imprint_location_title" type="text_en" indexed="true" stored="true" multiValued="true" />
+
+    <field name="imprint_location_title_exact" type="string" indexed="true" stored="true" multiValued="true" />
 
   </fields>
 

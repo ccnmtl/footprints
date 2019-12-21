@@ -198,7 +198,7 @@
                     <h3>Imprint Location:</h3>
                     <div class="row">
                         <div class="col-xs-12 filter-col">
-                            {% for loc in imprint_location|slice:"4" %}
+                            {% for loc in imprint_location_title|slice:"4" %}
                                 <div class="checkbox highlighted">
                                     <label {% if loc.1 == 0 %}class="disabled"{% endif %}>
                                         <input name="imprint_location" type="checkbox" value="{{loc.0}}"
@@ -219,7 +219,7 @@
                                     <h4 class="modal-title">Imprint Locations</h4>
                                   </div>
                                   <div class="modal-body column-count-3">
-                                    {% for loc in imprint_location %}
+                                    {% for loc in imprint_location_title %}
                                     <div class="checkbox">
                                         <label {% if loc.1 == 0 %}class="disabled"{% endif %}>
                                             <input name="imprint_location" type="checkbox" value="{{loc.0}}"
@@ -244,7 +244,7 @@
                     <h3>Footprint Location:</h3>
                     <div class="row">
                         <div class="col-xs-12 filter-col">
-                            {% for loc in footprint_location|slice:"4" %}
+                            {% for loc in footprint_location_title|slice:"4" %}
                                 <div class="checkbox highlighted">
                                     <label {% if loc.1 == 0 %}class="disabled"{% endif %}>
                                         <input name="footprint_location" type="checkbox" value="{{loc.0}}"
@@ -265,7 +265,7 @@
                                     <h4 class="modal-title">Footprint Locations</h4>
                                   </div>
                                   <div class="modal-body column-count-3">
-                                    {% for loc in footprint_location %}
+                                    {% for loc in footprint_location_title %}
                                     <div class="checkbox">
                                         <label {% if loc.1 == 0 %}class="disabled"{% endif %}>
                                             <input name="footprint_location" type="checkbox" value="{{loc.0}}"

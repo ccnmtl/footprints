@@ -1,6 +1,3 @@
-from django.db.models.query_utils import Q
-from rest_framework import viewsets
-
 from footprints.main.models import (
     Footprint, Actor, Person, Role, WrittenWork, Language, ExtendedDate,
     Place, Imprint, BookCopy, StandardizedIdentification, DigitalFormat,
@@ -13,7 +10,8 @@ from footprints.main.serializers import (
     DigitalFormatSerializer, DigitalObjectSerializer,
     StandardizedIdentificationTypeSerializer)
 from footprints.pathmapper.forms import (
-    ImprintSearchForm, WrittenWorkSearchForm)
+    ImprintSearchForm, WrittenWorkSearchForm, PlaceSearchForm)
+from rest_framework import viewsets
 
 
 class FootprintViewSet(viewsets.ModelViewSet):
@@ -45,43 +43,12 @@ class PlaceViewSet(viewsets.ModelViewSet):
     model = Place
     serializer_class = PlaceSerializer
 
-    def filter_imprint_location(self, qs, work_id, imprint_id):
-        if imprint_id:
-            qs = qs.filter(imprint__id=imprint_id)
-        elif work_id:
-            qs = qs.filter(imprint__work__id=work_id)
-        else:
-            qs = qs.exclude(imprint=None)
-
-        return qs
-
-    def filter_footprint_location(self, qs, work_id, imprint_id):
-        if imprint_id:
-            qs = qs.filter(footprint__book_copy__imprint__id=imprint_id)
-        elif work_id:
-            qs = qs.filter(footprint__book_copy__imprint__work__id=work_id)
-        else:
-            qs = qs.exclude(footprint=None)
-
-        return qs
-
     def get_queryset(self):
-        qs = Place.objects.all()
-
-        imprint_id = self.request.GET.get('imprint', None)
-        work_id = self.request.GET.get('work', None)
-        search_by = self.request.GET.get('name', None)
-        if search_by == 'imprint-location':
-            qs = self.filter_imprint_location(qs, work_id, imprint_id)
-        elif search_by == 'footprint-location':
-            qs = self.filter_footprint_location(qs, work_id, imprint_id)
-
-        term = self.request.GET.get('q', None)
-        if term is not None and len(term) > 0:
-            qs = qs.filter(
-                Q(city__istartswith=term) | Q(country__istartswith=term))
-
-        return qs
+        form = PlaceSearchForm(self.request.GET)
+        if form.is_valid():
+            ids = form.search()
+            return Place.objects.filter(id__in=ids)
+        return Place.objects.none()
 
 
 class ActorViewSet(viewsets.ModelViewSet):
