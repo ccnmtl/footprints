@@ -117,12 +117,12 @@
                 <div class="form-group mb-0 row">
                     <label for="criteriaPerson" class="col-4 col-form-label">Person:</label>
                     <div class="col-8">
-                        <select-widget v-model="layer.person" id="criteriaPerson"
-                            :criteria="layer" data-url="api/person/">
+                        <select-widget v-model="layer.actor" id="criteriaActor" v-bind:minimum-input="0"
+                            :criteria="layer" data-url="api/actor/">
                         </select-widget>
                     </div>
                 </div>
-            </section><!-- /#criteria-person -->
+            </section><!-- /#criteria-actor -->
 
             <section aria-labelledby="region6">
                 <h2 id="region6">Censored</h2>

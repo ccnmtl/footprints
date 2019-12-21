@@ -6,7 +6,7 @@ from django.utils.encoding import smart_text
 from haystack.forms import ModelSearchForm
 
 from footprints.main.models import (
-    BookCopy, Imprint, WrittenWork, Place)
+    BookCopy, Imprint, WrittenWork, Place, Actor)
 from footprints.main.utils import camel_to_snake, snake_to_camel
 
 
@@ -28,6 +28,8 @@ class ModelSearchFormEx(ModelSearchForm):
 
     imprint_location = forms.IntegerField(required=False)
     footprint_location = forms.IntegerField(required=False)
+
+    actor = forms.CharField(required=False)
 
     def transform_data(self):
         for key, value in self.data.items():
@@ -142,6 +144,15 @@ class ModelSearchFormEx(ModelSearchForm):
                 Q(footprint_location_title_exact__in=[smart_text(place)]))
         return args
 
+    def handle_actor(self):
+        args = []
+        # narrow by imprint locqtions, if selected
+        actor_id = self.cleaned_data.get('actor')
+        if actor_id:
+            # @todo - this glosses over place data integrity issues
+            args.append(Q(actor_exact__in=[actor_id]))
+        return args
+
     def clean(self):
         self.transform_data()
         cleaned_data = super().clean()
@@ -173,7 +184,7 @@ class BookCopySearchForm(ModelSearchFormEx):
     class Meta:
         model = BookCopy
 
-    def search(self):
+    def arguments(self):
         args = []
         kwargs = {
             'django_ct': 'main.bookcopy',
@@ -189,10 +200,14 @@ class BookCopySearchForm(ModelSearchFormEx):
 
         args += self.handle_imprint_location()
         args += self.handle_footprint_location()
+        args += self.handle_actor()
 
         kwargs.update(self.handle_pub_year())
         kwargs.update(self.handle_footprint_year())
+        return args, kwargs
 
+    def search(self):
+        args, kwargs = self.arguments()
         return self.searchqueryset.filter(*args, **kwargs)
 
 
@@ -200,7 +215,7 @@ class ImprintSearchForm(ModelSearchFormEx):
     class Meta:
         model = Imprint
 
-    def search(self):
+    def arguments(self):
         args = []
         kwargs = {
             'django_ct': 'main.imprint',
@@ -216,10 +231,14 @@ class ImprintSearchForm(ModelSearchFormEx):
 
         args += self.handle_imprint_location()
         args += self.handle_footprint_location()
+        args += self.handle_actor()
 
         kwargs.update(self.handle_pub_year())
         kwargs.update(self.handle_footprint_year())
+        return args, kwargs
 
+    def search(self):
+        args, kwargs = self.search()
         return self.searchqueryset.filter(*args, **kwargs)
 
 
@@ -228,7 +247,7 @@ class WrittenWorkSearchForm(ModelSearchFormEx):
     class Meta:
         model = WrittenWork
 
-    def search(self):
+    def arguments(self):
         args = []
         kwargs = {
             'django_ct': 'main.writtenwork',
@@ -240,10 +259,14 @@ class WrittenWorkSearchForm(ModelSearchFormEx):
 
         args += self.handle_imprint_location()
         args += self.handle_footprint_location()
+        args += self.handle_actor()
 
         kwargs.update(self.handle_pub_year())
         kwargs.update(self.handle_footprint_year())
+        return args, kwargs
 
+    def search(self):
+        args, kwargs = self.arguments()
         return self.searchqueryset.filter(*args, **kwargs)
 
 
@@ -272,6 +295,10 @@ class PlaceSearchForm(ModelSearchFormEx):
 
         args += self.handle_imprint_location_title()
 
+        q = self.cleaned_data.get('q', '')
+        if q:
+            args.append(Q(footprint_location_title__contains=q))
+
         sqs = self.searchqueryset.filter(*args, **kwargs)
         counts = sqs.facet('footprint_location').facet_counts()
         return [c[0] for c in counts['fields']['footprint_location']
@@ -286,6 +313,10 @@ class PlaceSearchForm(ModelSearchFormEx):
 
         args += self.handle_footprint_location_title()
 
+        q = self.cleaned_data.get('q', '')
+        if q:
+            args.append(Q(imprint_location_title__contains=q))
+
         sqs = self.searchqueryset.filter(*args, **kwargs)
         counts = sqs.facet('imprint_location').facet_counts()
         return [c[0] for c in counts['fields']['imprint_location'] if c[1] > 0]
@@ -294,19 +325,52 @@ class PlaceSearchForm(ModelSearchFormEx):
         args = []
         kwargs = {}
 
-        q = self.cleaned_data.get('q', '')
-        if q:
-            kwargs['content'] = q
-
         work_id = self.cleaned_data.get('work')
         if work_id:
             kwargs['work_id'] = work_id
 
         kwargs.update(self.handle_pub_year())
         kwargs.update(self.handle_footprint_year())
+        args += self.handle_actor()
 
         search_for = self.cleaned_data.get('search_for', '')
         if search_for == SEARCH_FOR_FOOTPRINT_LOCATION:
             return self.search_for_footprint_locations(args, kwargs)
         else:
             return self.search_for_imprint_locations(args, kwargs)
+
+
+class ActorSearchForm(ModelSearchFormEx):
+
+    class Meta:
+        model = Actor
+
+    def arguments(self):
+        types = ['main.writtenwork', 'main.footprint', 'main.imprint']
+        args = [Q(django_ct__in=types)]
+        kwargs = {}
+
+        q = self.cleaned_data.get('q', '')
+        if q:
+            args.append(Q(actor_title_exact__contains=q))
+
+        work_id = self.cleaned_data.get('work')
+        if work_id:
+            kwargs['work_id'] = work_id
+
+        imprint_id = self.cleaned_data.get('imprint')
+        if imprint_id:
+            kwargs['imprint_id'] = imprint_id
+
+        args += self.handle_imprint_location()
+        args += self.handle_footprint_location()
+
+        kwargs.update(self.handle_pub_year())
+        kwargs.update(self.handle_footprint_year())
+        return args, kwargs
+
+    def search(self):
+        args, kwargs = self.arguments()
+        sqs = self.searchqueryset.filter(*args, **kwargs)
+        counts = sqs.facet('actor').facet_counts()
+        return [c[0] for c in counts['fields']['actor'] if c[1] > 0]

@@ -49,7 +49,7 @@ define(['jquery', 'select2'], function($, select2) {
                     processResults: function(data, params) {
                         let results = $.map(data.results, function(obj) {
                             obj.text = obj.title || obj.search_title ||
-                                obj.display_title;
+                                obj.display_title || obj.display_name;
                             obj.html = obj.description || obj.search_title ||
                                 obj.display_title;
                             return obj;
