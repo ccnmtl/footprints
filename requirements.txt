@@ -8,14 +8,14 @@ smartypants==2.0.1
 psycopg2==2.8.4
 olefile==0.46
 
-Pillow==6.2.1
+Pillow==7.0.0
 
 versiontools==1.9.1
 statsd==3.3.0
 pep8==1.7.1
 pyflakes==2.1.1
 mccabe==0.6.1
-pyparsing==2.4.5
+pyparsing==2.4.6
 pycodestyle==2.5.0
 configparser==4.0.2
 flake8==3.7.9
@@ -72,7 +72,7 @@ django-indexer==0.3.0
 django-templatetag-sugar==1.0
 django-paging==0.2.5
 django-appconf==1.0.3
-django-compressor==2.3
+django-compressor==2.4
 django-statsd-mozilla==0.4.0
 raven==6.10.0
 sentry-sdk==0.13.5
