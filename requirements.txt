@@ -34,7 +34,7 @@ pexpect==4.7.0
 pickleshare==0.7.5
 simplegeneric==0.8.1
 path.py==11.5.2 # pyup: <12
-wcwidth==0.1.7
+wcwidth==0.1.8
 prompt_toolkit==2.0.10 # pyup: <3.0.0
 scandir==1.10.0
 
