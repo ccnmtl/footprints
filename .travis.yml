@@ -5,18 +5,18 @@ services:
 sudo: true
 python:
   - "3.6"
+before_install:
+  - sudo apt-get install --yes postgresql-9.6-postgis-2.4
 install:
   - pip install -U pip wheel
   - pip install -U setuptools
   - pip install -r requirements.txt
 before_script:
   - psql -c 'create database test_footprints;' -U postgres
+  - psql -U postgres -c 'CREATE EXTENSION postgis;' -d test_footprints
 script:
   - make
 notifications:
   slack: ccnmtl:GizSNscLWJLldjQrffB8mwgm
 addons:
   postgresql: "9.6"
-  apt:
-    packages:
-      - postgresql-9.6-postgis-2.3
