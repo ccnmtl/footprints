@@ -73,7 +73,7 @@ class BatchRow(models.Model):
     FOOTPRINT_ACTOR_HELP_TEXT = (
         "An actor name is required when a role is specified.")
 
-    job = models.ForeignKey(BatchJob)
+    job = models.ForeignKey(BatchJob, on_delete=models.CASCADE)
 
     catalog_url = models.TextField(
         null=True, blank=True, verbose_name='Catalog Link',

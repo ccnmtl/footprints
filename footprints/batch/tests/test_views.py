@@ -1,13 +1,7 @@
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.core.urlresolvers import reverse
 from django.test.client import RequestFactory
 from django.test.testcases import TestCase
-
-try:
-    from unittest import mock
-except ImportError:
-    import mock
-
+from django.urls.base import reverse
 from footprints.batch.forms import CreateBatchJobForm
 from footprints.batch.models import BatchRow, BatchJob
 from footprints.batch.tests.factories import BatchJobFactory, BatchRowFactory
@@ -16,6 +10,12 @@ from footprints.main.models import Footprint
 from footprints.main.tests.factories import UserFactory, WrittenWorkFactory, \
     ImprintFactory, FootprintFactory, RoleFactory, BookCopyFactory, \
     PlaceFactory, GroupFactory, BATCH_PERMISSIONS
+
+
+try:
+    from unittest import mock
+except ImportError:
+    import mock
 
 
 class BatchJobListViewTest(TestCase):

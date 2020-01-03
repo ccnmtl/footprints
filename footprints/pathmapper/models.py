@@ -6,7 +6,8 @@ from django.db import models
 
 
 class MapLayerCollection(models.Model):
-    author = models.ForeignKey(User, null=True, blank=True)
+    author = models.ForeignKey(
+        User, null=True, blank=True, on_delete=models.CASCADE)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
@@ -14,4 +15,5 @@ class MapLayerCollection(models.Model):
 
 class MapLayer(models.Model):
     title = models.TextField()
-    collection = models.ForeignKey(MapLayerCollection)
+    collection = models.ForeignKey(
+        MapLayerCollection, on_delete=models.CASCADE)

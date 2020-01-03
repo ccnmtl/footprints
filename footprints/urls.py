@@ -1,12 +1,10 @@
 from django.conf import settings
-from django.contrib.auth.views import password_change, password_change_done, \
-    password_reset_done, password_reset_confirm, password_reset_complete, \
-    password_reset
-from rest_framework import routers
-
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import (
+    PasswordChangeDoneView, PasswordResetDoneView, PasswordResetConfirmView,
+    PasswordResetCompleteView, PasswordChangeView, PasswordResetView)
 from django.views.generic import TemplateView
 from django.views.static import serve
 from footprints.main import views
@@ -25,8 +23,9 @@ from footprints.main.viewsets import (
     PersonViewSet, PlaceViewSet, RoleViewSet, WrittenWorkViewSet,
     StandardizedIdentificationViewSet, DigitalFormatViewSet,
     DigitalObjectViewSet, StandardizedIdentificationTypeViewSet)
-from registration.backends.default.views import RegistrationView
 from footprints.pathmapper.views import MapView, BookCopySearchView
+from registration.backends.default.views import RegistrationView
+from rest_framework import routers
 
 
 admin.autodiscover()
@@ -37,19 +36,19 @@ if hasattr(settings, 'CAS_BASE'):
 
 router = routers.DefaultRouter()
 router.register(r'actor', ActorViewSet)
-router.register(r'book', BookCopyViewSet, base_name='book')
+router.register(r'book', BookCopyViewSet, basename='book')
 router.register(r'digitalformat', DigitalFormatViewSet)
 router.register(r'digitalobject', DigitalObjectViewSet)
 router.register(r'edtf', ExtendedDateViewSet)
-router.register(r'footprint', FootprintViewSet, base_name='footprint')
+router.register(r'footprint', FootprintViewSet, basename='footprint')
 router.register(r'identifiertype', StandardizedIdentificationTypeViewSet)
 router.register(r'identifier', StandardizedIdentificationViewSet)
-router.register(r'imprint', ImprintViewSet, base_name='imprint')
+router.register(r'imprint', ImprintViewSet, basename='imprint')
 router.register(r'language', LanguageViewSet)
 router.register(r'person', PersonViewSet)
-router.register(r'place', PlaceViewSet, base_name='place')
+router.register(r'place', PlaceViewSet, basename='place')
 router.register(r'role', RoleViewSet)
-router.register(r'writtenwork', WrittenWorkViewSet, base_name='writtenwork')
+router.register(r'writtenwork', WrittenWorkViewSet, basename='writtenwork')
 
 
 urlpatterns = [
@@ -60,21 +59,21 @@ urlpatterns = [
 
     # password change & reset. overriding to gate them.
     url(r'^accounts/password_change/$',
-        login_required(password_change),
+        login_required(PasswordChangeView.as_view()),
         name='password_change'),
     url(r'^accounts/password_change/done/$',
-        login_required(password_change_done),
+        login_required(PasswordChangeDoneView.as_view()),
         name='password_change_done'),
     url(r'^password/reset/$',
-        password_reset,
+        PasswordResetView.as_view(),
         name='password_reset'),
-    url(r'^password/reset/done/$', password_reset_done,
+    url(r'^password/reset/done/$', PasswordResetDoneView.as_view(),
         name='password_reset_done'),
     url(r'^password/reset/confirm/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$',
-        password_reset_confirm,
+        PasswordResetConfirmView.as_view(),
         name='password_reset_confirm'),
     url(r'^password/reset/complete/$',
-        password_reset_complete, name='password_reset_complete'),
+        PasswordResetCompleteView.as_view(), name='password_reset_complete'),
 
     url(r'^accounts/register/$',
         RegistrationView.as_view(form_class=CustomRegistrationForm),
@@ -156,7 +155,7 @@ urlpatterns = [
     # Rss Feeds
     url(r'^feed/verified/$', VerifiedFootprintFeed()),
 
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', admin.site.urls),
     url(r'^_impersonate/', include('impersonate.urls')),
     url(r'^stats/$', TemplateView.as_view(template_name="stats.html")),
     url(r'smoketest/', include('smoketest.urls')),

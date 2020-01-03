@@ -1,26 +1,25 @@
-from json import loads
-
-try:
-    from urllib.request import urlopen
-except ImportError:
-    from urllib2 import urlopen
-
 from django.conf import settings
 from django.contrib import messages
-from django.core.urlresolvers import reverse, reverse_lazy
 from django.db import transaction
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
+from django.urls.base import reverse, reverse_lazy
 from django.views.generic.base import View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView, DeleteView
-
 from footprints.batch.forms import CreateBatchJobForm
 from footprints.batch.models import BatchJob, BatchRow
 from footprints.batch.templatetags.batchrowtags import validate_field_value
 from footprints.main.models import Imprint, BookCopy, Footprint, \
     Role, ExtendedDate, Actor, Place
 from footprints.mixins import (LoggedInMixin, BatchAccessMixin)
+from json import loads
+
+
+try:
+    from urllib.request import urlopen
+except ImportError:
+    from urllib2 import urlopen
 
 
 class BatchJobListView(LoggedInMixin, BatchAccessMixin, FormView):

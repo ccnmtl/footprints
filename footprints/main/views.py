@@ -1,31 +1,24 @@
 import csv
-
 from django.apps import apps
 from django.conf import settings
 from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.views import logout as auth_logout_view
+from django.contrib.auth.views import (
+    LogoutView as DjangoLogoutView
+)
 from django.contrib.syndication.views import Feed
 from django.core.mail import send_mail
-from django.core.urlresolvers import reverse
 from django.db.models.fields import FieldDoesNotExist
 from django.db.models.fields.related import ManyToManyField
 from django.http.response import HttpResponseRedirect, StreamingHttpResponse
 from django.shortcuts import get_object_or_404
 from django.template import loader
+from django.urls.base import reverse
 from django.utils.encoding import smart_text
 from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
 from djangowind.views import logout as wind_logout_view
-from haystack.generic_views import SearchView
-from haystack.query import SearchQuerySet
-from rest_framework.permissions import AllowAny
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework_jsonp.renderers import JSONPRenderer
-from s3sign.views import SignS3View as BaseSignS3View
-
 from footprints.main.forms import DigitalObjectForm, ContactUsForm, \
     SUBJECT_CHOICES, ExtendedDateForm, FootprintSearchForm
 from footprints.main.models import (
@@ -39,6 +32,13 @@ from footprints.main.utils import interpolate_role_actors, string_to_point
 from footprints.mixins import (
     JSONResponseMixin, LoggedInMixin, ModerationAccessMixin,
     AddChangeAccessMixin)
+from haystack.generic_views import SearchView
+from haystack.query import SearchQuerySet
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework_jsonp.renderers import JSONPRenderer
+from s3sign.views import SignS3View as BaseSignS3View
 
 
 # returns important setting information for all web pages.
@@ -77,7 +77,7 @@ class LogoutView(LoggedInMixin, View):
         if hasattr(settings, 'CAS_BASE'):
             return wind_logout_view(request, next_page="/")
         else:
-            return auth_logout_view(request, "/")
+            return DjangoLogoutView.as_view()(request, "/")
 
 
 class FootprintDetailView(DetailView):
@@ -523,7 +523,7 @@ class RemoveRelatedView(LoggedInMixin, AddChangeAccessMixin,
             attr = self.request.POST.get('attr', None)
             field = the_model._meta.get_field(attr)
 
-            model_name = field.rel.to._meta.model_name
+            model_name = field.remote_field.model._meta.object_name
             the_model = apps.get_model(app_label='main', model_name=model_name)
             the_child = get_object_or_404(
                 the_model, pk=self.request.POST.get('child_id', None))
@@ -739,7 +739,7 @@ class ContactUsView(FormView):
 
     def get_initial(self):
         initial = super(ContactUsView, self).get_initial()
-        if not self.request.user.is_anonymous():
+        if not self.request.user.is_anonymous:
             initial['name'] = self.request.user.get_full_name()
             initial['email'] = self.request.user.email
         initial['subject'] = '-----'
@@ -750,7 +750,7 @@ class ContactUsView(FormView):
         subject = "Footprints Contact Us Request"
         form_data = form.cleaned_data
 
-        if not self.request.user.is_anonymous():
+        if not self.request.user.is_anonymous:
             form_data['username'] = self.request.user.username
 
         form_data['subject'] = dict(SUBJECT_CHOICES)[form_data['subject']]

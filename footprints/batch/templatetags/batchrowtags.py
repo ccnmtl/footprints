@@ -3,7 +3,7 @@ from django import template
 register = template.Library()
 
 
-@register.assignment_tag
+@register.simple_tag
 def field_value(batch_row, field):
     return getattr(batch_row, field.name)
 

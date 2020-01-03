@@ -86,7 +86,7 @@ class Migration(migrations.Migration):
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('modified_at', models.DateTimeField(auto_now=True)),
                 ('created_by', audit_log.models.fields.CreatingUserField(related_name='digitalobject_created_by', editable=False, to=settings.AUTH_USER_MODEL, null=True)),
-                ('digital_format', models.ForeignKey(to='main.DigitalFormat')),
+                ('digital_format', models.ForeignKey(to='main.DigitalFormat', on_delete=models.CASCADE)),
                 ('last_modified_by', audit_log.models.fields.LastUserField(related_name='digitalobject_last_modified_by', editable=False, to=settings.AUTH_USER_MODEL, null=True)),
             ],
             options={
@@ -120,9 +120,9 @@ class Migration(migrations.Migration):
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('modified_at', models.DateTimeField(auto_now=True)),
                 ('actor', models.ManyToManyField(help_text=b'An owner or other person related to this footprint. ', to='main.Actor', null=True, blank=True)),
-                ('associated_date', models.OneToOneField(null=True, blank=True, to='main.ExtendedDateFormat', verbose_name=b'Footprint Date')),
-                ('book_copy', models.ForeignKey(blank=True, to='main.BookCopy', null=True)),
-                ('collection', models.ForeignKey(blank=True, to='main.Collection', null=True)),
+                ('associated_date', models.OneToOneField(null=True, blank=True, to='main.ExtendedDateFormat', verbose_name=b'Footprint Date', on_delete=models.CASCADE)),
+                ('book_copy', models.ForeignKey(blank=True, to='main.BookCopy', null=True, on_delete=models.CASCADE)),
+                ('collection', models.ForeignKey(blank=True, to='main.Collection', null=True, on_delete=models.CASCADE)),
                 ('created_by', audit_log.models.fields.CreatingUserField(related_name='footprint_created_by', editable=False, to=settings.AUTH_USER_MODEL, null=True)),
                 ('digital_object', models.ManyToManyField(to='main.DigitalObject', null=True, blank=True)),
             ],
@@ -142,7 +142,7 @@ class Migration(migrations.Migration):
                 ('modified_at', models.DateTimeField(auto_now=True)),
                 ('actor', models.ManyToManyField(to='main.Actor', null=True, blank=True)),
                 ('created_by', audit_log.models.fields.CreatingUserField(related_name='imprint_created_by', editable=False, to=settings.AUTH_USER_MODEL, null=True)),
-                ('date_of_publication', models.OneToOneField(null=True, blank=True, to='main.ExtendedDateFormat')),
+                ('date_of_publication', models.OneToOneField(null=True, blank=True, to='main.ExtendedDateFormat', on_delete=models.CASCADE)),
                 ('digital_object', models.ManyToManyField(to='main.DigitalObject', null=True, blank=True)),
             ],
             options={
@@ -186,9 +186,9 @@ class Migration(migrations.Migration):
                 ('notes', models.TextField(null=True, blank=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('modified_at', models.DateTimeField(auto_now=True)),
-                ('birth_date', models.OneToOneField(related_name='birth_date', null=True, blank=True, to='main.ExtendedDateFormat')),
+                ('birth_date', models.OneToOneField(related_name='birth_date', null=True, blank=True, to='main.ExtendedDateFormat', on_delete=models.CASCADE)),
                 ('created_by', audit_log.models.fields.CreatingUserField(related_name='person_created_by', editable=False, to=settings.AUTH_USER_MODEL, null=True)),
-                ('death_date', models.OneToOneField(related_name='death_date', null=True, blank=True, to='main.ExtendedDateFormat')),
+                ('death_date', models.OneToOneField(related_name='death_date', null=True, blank=True, to='main.ExtendedDateFormat', on_delete=models.CASCADE)),
                 ('digital_object', models.ManyToManyField(to='main.DigitalObject', null=True, blank=True)),
                 ('last_modified_by', audit_log.models.fields.LastUserField(related_name='person_last_modified_by', editable=False, to=settings.AUTH_USER_MODEL, null=True)),
             ],
@@ -271,13 +271,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='place',
             name='standardized_identification',
-            field=models.ForeignKey(blank=True, to='main.StandardizedIdentification', null=True),
+            field=models.ForeignKey(blank=True, to='main.StandardizedIdentification', null=True, on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='person',
             name='standardized_identifier',
-            field=models.ForeignKey(blank=True, to='main.StandardizedIdentification', null=True),
+            field=models.ForeignKey(blank=True, to='main.StandardizedIdentification', null=True, on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AddField(
@@ -295,7 +295,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='imprint',
             name='place',
-            field=models.ForeignKey(blank=True, to='main.Place', null=True),
+            field=models.ForeignKey(blank=True, to='main.Place', null=True, on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AddField(
@@ -307,7 +307,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='imprint',
             name='work',
-            field=models.ForeignKey(blank=True, to='main.WrittenWork', null=True),
+            field=models.ForeignKey(blank=True, to='main.WrittenWork', null=True, on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AddField(
@@ -325,7 +325,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='footprint',
             name='place',
-            field=models.ForeignKey(verbose_name=b'Footprint Location', blank=True, to='main.Place', null=True),
+            field=models.ForeignKey(verbose_name=b'Footprint Location', blank=True, to='main.Place', null=True, on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AddField(
@@ -337,7 +337,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='bookcopy',
             name='imprint',
-            field=models.ForeignKey(to='main.Imprint'),
+            field=models.ForeignKey(to='main.Imprint', on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AddField(
@@ -349,13 +349,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='actor',
             name='person',
-            field=models.ForeignKey(to='main.Person'),
+            field=models.ForeignKey(to='main.Person', on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='actor',
             name='role',
-            field=models.ForeignKey(to='main.Role'),
+            field=models.ForeignKey(to='main.Role', on_delete=models.CASCADE),
             preserve_default=True,
         ),
     ]
