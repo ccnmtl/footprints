@@ -1,6 +1,5 @@
 language: python
 dist: xenial
-sudo: true
 python:
   - "3.6"
 install:
@@ -16,4 +15,3 @@ addons:
     packages:
       - libgdal-dev
       - libsqlite3-mod-spatialite
-
