@@ -30,7 +30,8 @@ if 'ubuntu' in distro.linux_distribution()[0].lower():
         # this issue with Django.
         SPATIALITE_LIBRARY_PATH = '/usr/lib/x86_64-linux-gnu/mod_spatialite.so'
 elif 'debian' in distro.linux_distribution()[0].lower():
-    SPATIALITE_LIBRARY_PATH = '/usr/lib/x86_64-linux-gnu/mod_spatialite.so'
+        SPATIALITE_LIBRARY_PATH = '/usr/lib/x86_64-linux-gnu/mod_spatialite.so'
+
 
 DATABASES = {
     'default': {
