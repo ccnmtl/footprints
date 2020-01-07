@@ -96,7 +96,7 @@ class Migration(migrations.Migration):
             bases=(models.Model,),
         ),
         migrations.CreateModel(
-            name='ExtendedDateFormat',
+            name='ExtendedDate',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('edtf_format', models.CharField(max_length=256)),
@@ -120,7 +120,7 @@ class Migration(migrations.Migration):
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('modified_at', models.DateTimeField(auto_now=True)),
                 ('actor', models.ManyToManyField(help_text=b'An owner or other person related to this footprint. ', to='main.Actor', null=True, blank=True)),
-                ('associated_date', models.OneToOneField(null=True, blank=True, to='main.ExtendedDateFormat', verbose_name=b'Footprint Date', on_delete=models.CASCADE)),
+                ('associated_date', models.OneToOneField(null=True, blank=True, to='main.ExtendedDate', verbose_name=b'Footprint Date', on_delete=models.CASCADE)),
                 ('book_copy', models.ForeignKey(blank=True, to='main.BookCopy', null=True, on_delete=models.CASCADE)),
                 ('collection', models.ForeignKey(blank=True, to='main.Collection', null=True, on_delete=models.CASCADE)),
                 ('created_by', audit_log.models.fields.CreatingUserField(related_name='footprint_created_by', editable=False, to=settings.AUTH_USER_MODEL, null=True)),
@@ -142,7 +142,7 @@ class Migration(migrations.Migration):
                 ('modified_at', models.DateTimeField(auto_now=True)),
                 ('actor', models.ManyToManyField(to='main.Actor', null=True, blank=True)),
                 ('created_by', audit_log.models.fields.CreatingUserField(related_name='imprint_created_by', editable=False, to=settings.AUTH_USER_MODEL, null=True)),
-                ('date_of_publication', models.OneToOneField(null=True, blank=True, to='main.ExtendedDateFormat', on_delete=models.CASCADE)),
+                ('date_of_publication', models.OneToOneField(null=True, blank=True, to='main.ExtendedDate', on_delete=models.CASCADE)),
                 ('digital_object', models.ManyToManyField(to='main.DigitalObject', null=True, blank=True)),
             ],
             options={
@@ -186,9 +186,9 @@ class Migration(migrations.Migration):
                 ('notes', models.TextField(null=True, blank=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('modified_at', models.DateTimeField(auto_now=True)),
-                ('birth_date', models.OneToOneField(related_name='birth_date', null=True, blank=True, to='main.ExtendedDateFormat', on_delete=models.CASCADE)),
+                ('birth_date', models.OneToOneField(related_name='birth_date', null=True, blank=True, to='main.ExtendedDate', on_delete=models.CASCADE)),
                 ('created_by', audit_log.models.fields.CreatingUserField(related_name='person_created_by', editable=False, to=settings.AUTH_USER_MODEL, null=True)),
-                ('death_date', models.OneToOneField(related_name='death_date', null=True, blank=True, to='main.ExtendedDateFormat', on_delete=models.CASCADE)),
+                ('death_date', models.OneToOneField(related_name='death_date', null=True, blank=True, to='main.ExtendedDate', on_delete=models.CASCADE)),
                 ('digital_object', models.ManyToManyField(to='main.DigitalObject', null=True, blank=True)),
                 ('last_modified_by', audit_log.models.fields.LastUserField(related_name='person_last_modified_by', editable=False, to=settings.AUTH_USER_MODEL, null=True)),
             ],
