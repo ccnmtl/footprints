@@ -2,7 +2,7 @@ from django.test.testcases import TestCase
 from django.utils.encoding import smart_text
 
 from footprints.main.search_indexes import FootprintIndex, BookCopyIndex, \
-    WrittenWorkIndex, ImprintIndex
+    WrittenWorkIndex, ImprintIndex, format_sort_by
 from footprints.main.tests.factories import FootprintFactory
 
 
@@ -66,3 +66,10 @@ class TestWrittenWorkIndex(TestCase):
 
         actors = WrittenWorkIndex().prepare_actor(fp.book_copy.imprint.work)
         self.assertTrue(fp.book_copy.imprint.work.actor.first().id in actors)
+
+
+class SearchIndexTest(TestCase):
+
+    def test_format_sort_by(self):
+        self.assertEqual(format_sort_by(u'ABCD'), 'abcd')
+        self.assertEqual(format_sort_by(u'The A', True), 'a')

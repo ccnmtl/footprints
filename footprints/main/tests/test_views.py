@@ -10,7 +10,6 @@ from footprints.main.forms import ContactUsForm
 from footprints.main.models import Footprint, Actor, Imprint, \
     StandardizedIdentificationType, ExtendedDate, Language, \
     WrittenWork, BookCopy, Role
-from footprints.main.search_indexes import format_sort_by
 from footprints.main.tests.factories import (
     UserFactory, WrittenWorkFactory, ImprintFactory, FootprintFactory,
     PersonFactory, RoleFactory, PlaceFactory, ActorFactory, BookCopyFactory,
@@ -347,57 +346,6 @@ class ExportFootprintSearchTest(TestCase):
 
         with self.assertRaises(StopIteration):
             next(response.streaming_content)
-
-
-class ApiViewTests(TestCase):
-
-    def setUp(self):
-        self.user = UserFactory()
-
-    def test_anonymous(self):
-        response = self.client.get('/api/title/', {'q': 'Foo'},
-                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEqual(response.status_code, 302)
-
-        response = self.client.get('/api/name/', {'q': 'Foo'},
-                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEqual(response.status_code, 302)
-
-    def test_title_listview(self):
-        self.client.login(username=self.user.username, password="test")
-
-        WrittenWorkFactory(title='Alpha')
-        ImprintFactory(title='Beta')
-        FootprintFactory(title='Gamma')
-
-        response = self.client.get('/api/title/', {'q': 'Foo'},
-                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEqual(response.status_code, 200)
-        the_json = loads(response.content.decode('utf-8'))
-        self.assertEqual(len(the_json), 0)
-
-        response = self.client.get('/api/title/', {'q': 'Alp'},
-                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEqual(response.status_code, 200)
-        the_json = loads(response.content.decode('utf-8'))
-        self.assertEqual(len(the_json), 1)
-        self.assertEqual(the_json[0], 'Alpha')
-
-    def test_name_listview(self):
-        self.client.login(username=self.user.username, password="test")
-
-        PersonFactory(name='Alpha')
-
-        response = self.client.get('/api/name/', {'q': 'Foo'},
-                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 0)
-
-        response = self.client.get('/api/name/', {'q': 'Alp'},
-                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 1)
-        self.assertEqual(response.data[0]['name'], 'Alpha')
 
 
 class ConnectFootprintViewTest(TestCase):
@@ -1151,13 +1099,6 @@ class SearchViewTest(TestCase):
         self.assertEqual(len(response.context['page_obj'].object_list), 0)
 
         self.assertFalse(response.context['search_criteria'])
-
-
-class SearchIndexTest(TestCase):
-
-    def test_format_sort_by(self):
-        self.assertEqual(format_sort_by(u'ABCD'), 'abcd')
-        self.assertEqual(format_sort_by(u'The A', True), 'a')
 
 
 class ModerationViewTest(TestCase):
