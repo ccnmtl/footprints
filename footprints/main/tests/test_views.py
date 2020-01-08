@@ -748,33 +748,37 @@ class AddDateViewTest(TestCase):
         self.user = UserFactory()
         self.url = reverse('add-date-view')
 
-    def test_post(self):
+        # success
+        grp = GroupFactory(permissions=ADD_CHANGE_PERMISSIONS)
+        self.contributor = UserFactory(group=grp)
+        
+    def test_post_not_logged_in(self):
         # not logged in
         self.assertEqual(self.client.post(self.url).status_code, 302)
 
+    def test_post_no_ajax(self):
         # no ajax
         self.client.login(username=self.user.username, password="test")
         self.assertEqual(self.client.post(self.url).status_code, 403)
 
-        # success
-        grp = GroupFactory(permissions=ADD_CHANGE_PERMISSIONS)
-        self.contributor = UserFactory(group=grp)
-
-        self.footprint = FootprintFactory(title="Custom", associated_date=None)
+    def test_post_success_no_data(self):
+        footprint = FootprintFactory(title="Custom", associated_date=None)
 
         # no data
         self.client.login(username=self.contributor.username, password="test")
         response = self.client.post(self.url,
-                                    {'parent_id': self.footprint.id,
+                                    {'parent_id': footprint.id,
                                      'parent_model': 'footprint'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEqual(response.status_code, 200)
         the_json = loads(response.content.decode('utf-8'))
         self.assertFalse(the_json['success'])
 
+    def test_post_success_with_data(self):
+        footprint = FootprintFactory(title="Custom", associated_date=None)
         self.client.login(username=self.contributor.username, password="test")
         response = self.client.post(self.url,
-                                    {'parent_id': self.footprint.id,
+                                    {'parent_id': footprint.id,
                                      'parent_model': 'footprint',
                                      'attr': 'associated_date',
                                      'millenium1': '1', 'century1': '6',
@@ -787,9 +791,9 @@ class AddDateViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         the_json = loads(response.content.decode('utf-8'))
 
-        self.footprint.refresh_from_db()
+        footprint.refresh_from_db()
         self.assertTrue(the_json['success'])
-        self.assertEqual(self.footprint.associated_date.edtf_format, '1673')
+        self.assertEqual(footprint.associated_date.edtf_format, '1673')
 
 
 class DisplayDateViewTest(TestCase):
