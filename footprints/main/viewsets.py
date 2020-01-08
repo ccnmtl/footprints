@@ -1,3 +1,6 @@
+from django.db.models.query_utils import Q
+from rest_framework import viewsets
+
 from footprints.main.models import (
     Footprint, Actor, Person, Role, WrittenWork, Language, ExtendedDate,
     Place, Imprint, BookCopy, StandardizedIdentification, DigitalFormat,
@@ -10,8 +13,8 @@ from footprints.main.serializers import (
     DigitalFormatSerializer, DigitalObjectSerializer,
     StandardizedIdentificationTypeSerializer)
 from footprints.pathmapper.forms import (
+    ActorSearchForm,
     ImprintSearchForm, WrittenWorkSearchForm, PlaceSearchForm)
-from rest_framework import viewsets
 
 
 class FootprintViewSet(viewsets.ModelViewSet):
@@ -47,13 +50,33 @@ class PlaceViewSet(viewsets.ModelViewSet):
         form = PlaceSearchForm(self.request.GET)
         if form.is_valid():
             ids = form.search()
-            return Place.objects.filter(id__in=ids)
+
+            qs = Place.objects.filter(id__in=ids)
+
+            q = form.cleaned_data.get('q', '')
+            if q:
+                qs = qs.filter(Q(city__contains=q) | Q(country__contains=q))
+
+            return qs
         return Place.objects.none()
 
 
 class ActorViewSet(viewsets.ModelViewSet):
     queryset = Actor.objects.all()
     serializer_class = ActorSerializer
+
+    def get_queryset(self):
+        form = ActorSearchForm(self.request.GET)
+        if form.is_valid():
+            ids = form.search()
+
+            qs = Actor.objects.filter(id__in=ids).distinct()
+            q = form.cleaned_data.get('q', '')
+            if q:
+                qs = qs.filter(person__name__contains=q)
+            return qs.order_by('person__name')
+
+        return Actor.objects.none()
 
 
 class WrittenWorkViewSet(viewsets.ModelViewSet):

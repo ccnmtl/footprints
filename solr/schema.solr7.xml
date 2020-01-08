@@ -153,8 +153,6 @@
 
     <field name="added" type="date" indexed="true" stored="true" multiValued="false" />
 
-    <field name="actor_exact" type="string" indexed="true" stored="true" multiValued="true" />
-
     <field name="has_image" type="boolean" indexed="true" stored="true" multiValued="false" />
 
     <field name="footprint_start_date" type="date" indexed="true" stored="true" multiValued="false" />
@@ -168,6 +166,12 @@
     <field name="footprint_end_date" type="date" indexed="true" stored="true" multiValued="false" />
 
     <field name="actor" type="text_en" indexed="true" stored="true" multiValued="true" />
+
+    <field name="actor_exact" type="string" indexed="true" stored="true" multiValued="true" />
+
+    <field name="actor_title" type="text_en" indexed="true" stored="true" multiValued="true" />
+
+    <field name="actor_title_exact" type="string" indexed="true" stored="true" multiValued="true" />
 
     <field name="complete" type="long" indexed="true" stored="true" multiValued="false" />
 

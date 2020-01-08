@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
+from django.utils.encoding import smart_text
 from rest_framework import serializers
 from rest_framework.fields import CharField, ReadOnlyField
 from rest_framework.serializers import Serializer, HyperlinkedModelSerializer
@@ -115,13 +116,17 @@ class DigitalObjectSerializer(HyperlinkedModelSerializer):
 class ActorSerializer(HyperlinkedModelSerializer):
     person = PersonSerializer()
     role = RoleSerializer()
+    display_title = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Actor
-        fields = ('id', 'alias', 'person', 'role')
+        fields = ('id', 'alias', 'person', 'role', 'display_title')
 
     def get_queryset(self):
         return Actor.objects.all()
+
+    def get_display_title(self, obj):
+        return smart_text(obj)
 
     def to_internal_value(self, data):
         try:

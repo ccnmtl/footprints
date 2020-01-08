@@ -12,7 +12,7 @@ define(['jquery', 'selectWidget'], function($, select) {
                     'imprintLocation': null,
                     'footprintLocation': null,
                     'footprintLocationFinal': null,
-                    'person': null,
+                    'actor': null,
                     'pubStart': null,
                     'pubEnd': null,
                     'pubRange': false,
@@ -166,6 +166,7 @@ define(['jquery', 'selectWidget'], function($, select) {
             this.$watch('layer.footprintEnd', this.search);
             this.$watch('layer.pubStart', this.search);
             this.$watch('layer.pubEnd', this.search);
+            this.$watch('layer.actor', this.search);
         },
         mounted: function() {
             this.search();

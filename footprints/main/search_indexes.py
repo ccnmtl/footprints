@@ -46,6 +46,7 @@ class WrittenWorkIndex(CelerySearchIndex, Indexable):
     footprint_end_date = DateTimeField()
 
     actor = MultiValueField(faceted=True)
+    actor_title = MultiValueField(faceted=True)
 
     def get_model(self):
         return WrittenWork
@@ -82,9 +83,21 @@ class WrittenWorkIndex(CelerySearchIndex, Indexable):
                 places.append(imprint.place.id)
         return places
 
+    def _actors(self, obj):
+        footprints = obj.footprints().values_list('id', flat=True)
+        imprints = obj.imprint_set.all().values_list('id', flat=True)
+        return Actor.objects.filter(
+            Q(writtenwork=obj) |
+            Q(imprint__in=imprints) |
+            Q(footprint__in=footprints)).distinct()
+
     def prepare_actor(self, obj):
-        qs = Actor.objects.filter(writtenwork=obj).distinct()
-        return [smart_text(actor) for actor in qs]
+        # prepare all actors associated with this work
+        return [actor.id for actor in self._actors(obj)]
+
+    def prepare_actor_title(self, obj):
+        # prepare all actors associated with this work
+        return [smart_text(actor) for actor in self._actors(obj)]
 
 
 class ImprintIndex(CelerySearchIndex, Indexable):
@@ -106,6 +119,7 @@ class ImprintIndex(CelerySearchIndex, Indexable):
     footprint_end_date = DateTimeField()
 
     actor = MultiValueField(faceted=True)
+    actor_title = MultiValueField(faceted=True)
 
     def get_model(self):
         return Imprint
@@ -149,9 +163,18 @@ class ImprintIndex(CelerySearchIndex, Indexable):
                 places.append(smart_text(f.place))
         return places
 
+    def _actors(self, obj):
+        qs = Footprint.objects.filter(book_copy__imprint=obj)
+        footprints = qs.values_list('id', flat=True)
+        return Actor.objects.filter(
+            Q(imprint=obj) |
+            Q(footprint__in=footprints)).distinct()
+
     def prepare_actor(self, obj):
-        qs = Actor.objects.filter(imprint=obj).distinct()
-        return [smart_text(actor) for actor in qs]
+        return [actor.id for actor in self._actors(obj)]
+
+    def prepare_actor_title(self, obj):
+        return [smart_text(actor) for actor in self._actors(obj)]
 
 
 class BookCopyIndex(CelerySearchIndex, Indexable):
@@ -173,6 +196,7 @@ class BookCopyIndex(CelerySearchIndex, Indexable):
     footprint_end_date = DateTimeField()
 
     actor = MultiValueField(faceted=True)
+    actor_title = MultiValueField(faceted=True)
 
     def get_model(self):
         return BookCopy
@@ -223,6 +247,15 @@ class BookCopyIndex(CelerySearchIndex, Indexable):
             Q(imprint=obj.imprint) |
             Q(footprint__in=footprints)).distinct()
 
+        return [actor.id for actor in qs]
+
+    def prepare_actor_title(self, obj):
+        footprints = obj.footprint_set.all().values_list('id', flat=True)
+        qs = Actor.objects.filter(
+            Q(writtenwork=obj.imprint.work) |
+            Q(imprint=obj.imprint) |
+            Q(footprint__in=footprints)).distinct()
+
         return [smart_text(actor) for actor in qs]
 
 
@@ -247,6 +280,7 @@ class FootprintIndex(CelerySearchIndex, Indexable):
     footprint_end_date = DateTimeField()
 
     actor = MultiValueField(faceted=True)
+    actor_title = MultiValueField(faceted=True)
 
     has_image = BooleanField()
 
@@ -327,6 +361,14 @@ class FootprintIndex(CelerySearchIndex, Indexable):
         return []
 
     def prepare_actor(self, obj):
+        qs = Actor.objects.filter(
+            Q(writtenwork=obj.book_copy.imprint.work) |
+            Q(imprint=obj.book_copy.imprint) |
+            Q(footprint=obj)).distinct()
+
+        return [actor.id for actor in qs]
+
+    def prepare_actor_title(self, obj):
         qs = Actor.objects.filter(
             Q(writtenwork=obj.book_copy.imprint.work) |
             Q(imprint=obj.book_copy.imprint) |

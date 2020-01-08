@@ -1,12 +1,146 @@
+from datetime import date
+
+from django.db.models.query_utils import Q
 from django.test.testcases import TestCase
+from django.utils.encoding import smart_text
 
-from footprints.pathmapper.forms import BookCopySearchForm
+from footprints.main.tests.factories import PlaceFactory
+from footprints.pathmapper.forms import (
+    ActorSearchForm, BookCopySearchForm, ModelSearchFormEx, ImprintSearchForm,
+    WrittenWorkSearchForm)
 
 
-class BookCopySearchFormTest(TestCase):
+class ModelSearchFormExTest(TestCase):
+
+    def test_transform_data(self):
+        form = ModelSearchFormEx()
+        form.cleaned_data = {}
+        form.data = {
+            'work': None,
+            'imprint': None,
+            'imprintLocation': None,
+        }
+        form.transform_data()
+        self.assertTrue('work' in form.cleaned_data)
+        self.assertTrue('imprint' in form.cleaned_data)
+        self.assertTrue('imprint_location' in form.cleaned_data)
+
+    def test_transform_errors(self):
+        form = ModelSearchFormEx()
+        form._errors = {
+            'work': 'an error',
+            'imprint_location': 'another error'
+        }
+        form.transform_errors()
+        self.assertEqual(form._errors['work'], 'an error')
+        self.assertEqual(form._errors['imprintLocation'], 'another error')
+
+    def test_handle_single_year(self):
+        field_name = 'pub_start'
+        start_year = 1850
+        form = ModelSearchFormEx()
+        kwargs = form.handle_single_year(field_name, start_year)
+        self.assertEqual(kwargs['pub_start__gte'], date(1850, 1, 1))
+        self.assertEqual(kwargs['pub_start__lte'], date(1850, 12, 31))
+
+    def test_handle_range(self):
+        field_name1 = 'pub_start'
+        field_name2 = 'pub_end'
+        start_year = 1850
+        end_year = 1886
+
+        form = ModelSearchFormEx()
+        kwargs = form.handle_range(
+            field_name1, field_name2, start_year, end_year)
+        self.assertEqual(kwargs['pub_start__gte'], date(1850, 1, 1))
+        self.assertEqual(kwargs['pub_end__lte'], date(1886, 12, 31))
+
+    def test_handle_footprint_year(self):
+        form = ModelSearchFormEx()
+        form.cleaned_data = {
+            'footprint_start': 1850,
+            'footprint_end': 1886
+        }
+
+        kwargs = form.handle_footprint_year()
+        self.assertEqual(kwargs['footprint_start_date__gte'], date(1850, 1, 1))
+        self.assertEqual(
+            kwargs['footprint_start_date__lte'], date(1850, 12, 31))
+
+        form.cleaned_data['footprint_range'] = 'true'
+        kwargs = form.handle_footprint_year()
+        self.assertEqual(kwargs['footprint_start_date__gte'], date(1850, 1, 1))
+        self.assertEqual(
+            kwargs['footprint_end_date__lte'], date(1886, 12, 31))
+
+    def test_handle_pub_year(self):
+        form = ModelSearchFormEx()
+        form.cleaned_data = {
+            'pub_start': 1850,
+            'pub_end': 1886
+        }
+
+        kwargs = form.handle_pub_year()
+        self.assertEqual(kwargs['pub_start_date__gte'], date(1850, 1, 1))
+        self.assertEqual(
+            kwargs['pub_start_date__lte'], date(1850, 12, 31))
+
+        form.cleaned_data['pub_range'] = 'true'
+        kwargs = form.handle_pub_year()
+        self.assertEqual(kwargs['pub_start_date__gte'], date(1850, 1, 1))
+        self.assertEqual(
+            kwargs['pub_end_date__lte'], date(1886, 12, 31))
+
+    def test_handle_imprint_location(self):
+        form = ModelSearchFormEx()
+        form.cleaned_data = {
+            'imprint_location': 1
+        }
+
+        args = form.handle_imprint_location()
+        self.assertEqual(args[0], Q(imprint_location_exact__in=[1]))
+
+    def test_handle_imprint_location_title(self):
+        place = PlaceFactory()
+        form = ModelSearchFormEx()
+        form.cleaned_data = {
+            'imprint_location': place.id
+        }
+
+        args = form.handle_imprint_location_title()
+        self.assertEqual(
+            args[0], Q(imprint_location_title_exact__in=[smart_text(place)]))
+
+    def test_handle_footprint_location(self):
+        form = ModelSearchFormEx()
+        form.cleaned_data = {
+            'footprint_location': 1
+        }
+
+        args = form.handle_footprint_location()
+        self.assertEqual(args[0], Q(footprint_location_exact__in=[1]))
+
+    def test_handle_footprint_location_title(self):
+        place = PlaceFactory()
+        form = ModelSearchFormEx()
+        form.cleaned_data = {
+            'footprint_location': place.id
+        }
+
+        args = form.handle_footprint_location_title()
+        self.assertEqual(
+            args[0], Q(footprint_location_title_exact__in=[smart_text(place)]))
+
+    def test_handle_actor(self):
+        form = ModelSearchFormEx()
+        form.cleaned_data = {
+            'actor': 1
+        }
+        args = form.handle_actor()
+        self.assertEqual(args[0], Q(actor_exact__in=[1]))
 
     def test_empty_search(self):
-        form = BookCopySearchForm()
+        form = ModelSearchFormEx()
         form.cleaned_data = {}
         form.data = {
             'work': None,
@@ -22,7 +156,7 @@ class BookCopySearchFormTest(TestCase):
         self.assertEqual(sqs.count(), 0)
 
     def test_form_clean_errors_future_date(self):
-        form = BookCopySearchForm()
+        form = ModelSearchFormEx()
         form._errors = {}
         form.cleaned_data = {}
         form.data = {
@@ -38,7 +172,7 @@ class BookCopySearchFormTest(TestCase):
         self.assertTrue(form._errors['footprintEnd'], ['No future year'])
 
     def test_form_clean_errors_past_date(self):
-        form = BookCopySearchForm()
+        form = ModelSearchFormEx()
         form._errors = {}
         form.cleaned_data = {}
         form.data = {
@@ -60,7 +194,7 @@ class BookCopySearchFormTest(TestCase):
                         ['Year must be greater than 1000'])
 
     def test_form_clean_range(self):
-        form = BookCopySearchForm()
+        form = ModelSearchFormEx()
         form._errors = {}
         form.cleaned_data = {}
         form.data = {
@@ -77,7 +211,7 @@ class BookCopySearchFormTest(TestCase):
                         ['Start year must be less than end year'])
 
     def test_form_clean_single_year_valid(self):
-        form = BookCopySearchForm()
+        form = ModelSearchFormEx()
         form._errors = {}
         form.cleaned_data = {}
         form.data = {
@@ -93,7 +227,7 @@ class BookCopySearchFormTest(TestCase):
         self.assertEqual(len(form._errors.keys()), 0)
 
     def test_form_clean_range_valid(self):
-        form = BookCopySearchForm()
+        form = ModelSearchFormEx()
         form._errors = {}
         form.cleaned_data = {}
         form.data = {
@@ -107,3 +241,108 @@ class BookCopySearchFormTest(TestCase):
 
         form.clean()
         self.assertEqual(len(form._errors.keys()), 0)
+
+
+SAMPLE_CLEANED_DATA = {
+    'q': 'Foo',
+    'work': 12,
+    'imprint': 13,
+    'footprint_range': 'true',
+    'footprint_start': 1910,
+    'footprint_end': 1940,
+    'pub_start': 1800,
+    'pub_end': 1820,
+    'pub_range': 'false',
+    'imprint_location': 14,
+    'footprint_location': 15,
+    'actor': 16
+}
+
+
+class BookCopySearchFormTest(TestCase):
+
+    def test_arguments(self):
+        form = BookCopySearchForm()
+        form.cleaned_data = SAMPLE_CLEANED_DATA
+
+        args, kwargs = form.arguments()
+        self.assertEqual(kwargs['django_ct'], 'main.bookcopy')
+        self.assertEqual(kwargs['work_id'], 12)
+        self.assertEqual(kwargs['imprint_id'], 13)
+        self.assertEqual(args[0], Q(imprint_location_exact__in=[14]))
+        self.assertEqual(args[1], Q(footprint_location_exact__in=[15]))
+        self.assertEqual(args[2], Q(actor_exact__in=[16]))
+        self.assertEqual(kwargs['footprint_start_date__gte'], date(1910, 1, 1))
+        self.assertEqual(
+            kwargs['footprint_end_date__lte'], date(1940, 12, 31))
+        self.assertEqual(kwargs['pub_start_date__gte'], date(1800, 1, 1))
+        self.assertEqual(
+            kwargs['pub_start_date__lte'], date(1800, 12, 31))
+
+
+class ImprintSearchFormTest(TestCase):
+
+    def test_arguments(self):
+        form = ImprintSearchForm()
+        form.cleaned_data = SAMPLE_CLEANED_DATA
+
+        args, kwargs = form.arguments()
+        self.assertEqual(kwargs['django_ct'], 'main.imprint')
+        self.assertEqual(kwargs['content'], 'Foo')
+        self.assertEqual(kwargs['work_id'], 12)
+        self.assertFalse('imprint_id' in kwargs)
+        self.assertEqual(args[0], Q(imprint_location_exact__in=[14]))
+        self.assertEqual(args[1], Q(footprint_location_exact__in=[15]))
+        self.assertEqual(args[2], Q(actor_exact__in=[16]))
+        self.assertEqual(kwargs['footprint_start_date__gte'], date(1910, 1, 1))
+        self.assertEqual(
+            kwargs['footprint_end_date__lte'], date(1940, 12, 31))
+        self.assertEqual(kwargs['pub_start_date__gte'], date(1800, 1, 1))
+        self.assertEqual(
+            kwargs['pub_start_date__lte'], date(1800, 12, 31))
+
+
+class WrittenWorkSearchFormTest(TestCase):
+
+    def test_arguments(self):
+        form = WrittenWorkSearchForm()
+        form.cleaned_data = SAMPLE_CLEANED_DATA
+
+        args, kwargs = form.arguments()
+        self.assertEqual(kwargs['django_ct'], 'main.writtenwork')
+        self.assertEqual(kwargs['content'], 'Foo')
+        self.assertFalse('work_id' in kwargs)
+        self.assertFalse('imprint_id' in kwargs)
+        self.assertEqual(args[0], Q(imprint_location_exact__in=[14]))
+        self.assertEqual(args[1], Q(footprint_location_exact__in=[15]))
+        self.assertEqual(args[2], Q(actor_exact__in=[16]))
+        self.assertEqual(kwargs['footprint_start_date__gte'], date(1910, 1, 1))
+        self.assertEqual(
+            kwargs['footprint_end_date__lte'], date(1940, 12, 31))
+        self.assertEqual(kwargs['pub_start_date__gte'], date(1800, 1, 1))
+        self.assertEqual(
+            kwargs['pub_start_date__lte'], date(1800, 12, 31))
+
+
+class ActorSearchFormTest(TestCase):
+
+    def test_arguments(self):
+        form = ActorSearchForm()
+        form.cleaned_data = SAMPLE_CLEANED_DATA
+
+        args, kwargs = form.arguments()
+        self.assertEqual(args[0], Q(django_ct__in=['main.writtenwork',
+                                                   'main.footprint',
+                                                   'main.imprint']))
+        self.assertFalse('content' in kwargs)
+        self.assertEqual(args[1], Q(actor_title_exact__contains='Foo'))
+        self.assertEqual(kwargs['work_id'], 12)
+        self.assertEqual(kwargs['imprint_id'], 13)
+        self.assertEqual(args[2], Q(imprint_location_exact__in=[14]))
+        self.assertEqual(args[3], Q(footprint_location_exact__in=[15]))
+        self.assertEqual(kwargs['footprint_start_date__gte'], date(1910, 1, 1))
+        self.assertEqual(
+            kwargs['footprint_end_date__lte'], date(1940, 12, 31))
+        self.assertEqual(kwargs['pub_start_date__gte'], date(1800, 1, 1))
+        self.assertEqual(
+            kwargs['pub_start_date__lte'], date(1800, 12, 31))
