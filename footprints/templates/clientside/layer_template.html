@@ -45,7 +45,7 @@
                     <div class="col-8">
                         <select-widget v-model="layer.imprintLocation" id="criteriaImprintLoc"
                             name="imprint-location" :criteria="layer" v-bind:minimum-input="0"
-                            data-url="api/place/">
+                            data-url="api/place/" search-for="imprint">
                         </select-widget>
                     </div>
                 </div>
@@ -54,7 +54,7 @@
                     <div class="col-8">
                         <select-widget v-model="layer.footprintLocation" id="criteriaFootprintLoc"
                             name="footprint-location" :criteria="layer" v-bind:minimum-input="0"
-                            data-url="api/place/">
+                            data-url="api/place/" search-for="footprint">
                         </select-widget>
                         <div class="form-check mt-1">
                             <input v-model="layer.footprintLocationFinal" class="form-check-input"

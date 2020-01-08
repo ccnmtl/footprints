@@ -2,7 +2,7 @@ define(['jquery', 'select2'], function($, select2) {
     const SelectWidget = {
         name: 'select-widget',
         props: ['id', 'name', 'value', 'dataUrl', 'disabled',
-            'minimumInput', 'criteria'],
+            'minimumInput', 'criteria', 'searchFor'],
         template: '#select2-template',
         methods: {
             context: function(params) {
@@ -10,6 +10,7 @@ define(['jquery', 'select2'], function($, select2) {
                 ctx.q = params.term;
                 ctx.name = this.name;
                 ctx.page = params.page || 1;
+                ctx.searchFor = this.searchFor;
                 return ctx;
             },
             url: function() {

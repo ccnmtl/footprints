@@ -184,7 +184,7 @@ class FootprintSearchView(BaseSearchView):
     template_name = 'main/footprint_advanced_search.html'
     paginate_by = 15
     facet_fields = [
-        'footprint_location', 'imprint_location', 'actor']
+        'footprint_location_title', 'imprint_location_title', 'actor']
 
     def get_context_data(self, **kwargs):
         context = super(FootprintSearchView, self).get_context_data(**kwargs)
