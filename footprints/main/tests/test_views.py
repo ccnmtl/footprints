@@ -519,7 +519,7 @@ class CreateFootprintViewTest(TestCase):
         self.assertIsNotNone(fp.book_copy.imprint.work)
 
 
-class AddActorViewTest(TestCase):
+class AddActorViewCreateTest(TestCase):
     def setUp(self):
         self.user = UserFactory()
 
@@ -560,6 +560,19 @@ class AddActorViewTest(TestCase):
 
         Actor.objects.get(person__name='Alpha Beta',
                           role=self.role, alias='Alf')
+
+
+class AddActorViewPostTest(TestCase):
+    def setUp(self):
+        self.user = UserFactory()
+
+        grp = GroupFactory(permissions=ADD_CHANGE_PERMISSIONS)
+        self.contributor = UserFactory(group=grp)
+
+        self.footprint = FootprintFactory()
+
+        self.add_url = reverse('add-actor-view')
+        self.role = RoleFactory()
 
     def test_post_expected_errors(self):
         # not logged in
