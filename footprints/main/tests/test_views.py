@@ -751,7 +751,7 @@ class AddDateViewTest(TestCase):
         # success
         grp = GroupFactory(permissions=ADD_CHANGE_PERMISSIONS)
         self.contributor = UserFactory(group=grp)
-        
+
     def test_post_not_logged_in(self):
         # not logged in
         self.assertEqual(self.client.post(self.url).status_code, 302)
