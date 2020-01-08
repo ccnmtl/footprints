@@ -1,4 +1,4 @@
-define(['jquery', 'layerVue'], function($, layer) {
+define(['jquery', 'layerVue', 'utils'], function($, layer, utils) {
     const LayerListVue = {
         props: ['value'],
         template: '#layer-list-template',
@@ -24,18 +24,43 @@ define(['jquery', 'layerVue'], function($, layer) {
             deleteLayer: function(evt) {
                 const idx = $(evt.currentTarget).data('idx');
                 this.layers.splice(idx, 1);
+                this.saveSession();
             },
             cancelLayer: function() {
                 this.selectedLayer = null;
             },
             saveLayer: function(layer) {
-                if (!this.selectedLayerIdx) {
-                    this.layers.push(layer);
+                if (this.selectedLayerIdx === null) {
+                    const idx = this.layers.push(layer);
+                    this.layers[idx-1].id = idx - 1;
                 } else {
                     this.layers[this.selectedLayerIdx] =
                         $.extend(true, {}, layer);
                 }
                 this.selectedLayer = null;
+                this.saveSession();
+            },
+            readSession: function() {
+                /* eslint-disable scanjs-rules/identifier_sessionStorage */
+                if (utils.storageAvailable('sessionStorage')) {
+                    const str = sessionStorage.getItem('pathmapper');
+                    if (str && str.length > 0) {
+                        this.layers = JSON.parse(str);
+                        return true;
+                    }
+                }
+                /* eslint-enable scanjs-rules/identifier_sessionStorage */
+                return false;
+            },
+            saveSession: function() {
+                /* eslint-disable scanjs-rules/identifier_sessionStorage */
+                /* eslint-disable scanjs-rules/property_sessionStorage */
+                if (utils.storageAvailable('sessionStorage')) {
+                    const str = JSON.stringify(this.layers);
+                    window.sessionStorage.setItem('pathmapper', str);
+                }
+                /* eslint-enable scanjs-rules/identifier_sessionStorage */
+                /* eslint-enable scanjs-rules/property_sessionStorage */
             },
             togglePane: function() {
                 if ($('#container-pane').hasClass('widget-pane-expanded')) {
@@ -50,7 +75,7 @@ define(['jquery', 'layerVue'], function($, layer) {
         created: function() {
             if (this.value && this.value.length > 0) {
                 this.layers = $.extend(true, [], this.value);
-            } else {
+            } else if (!this.readSession()) {
                 this.createLayer();
             }
         }

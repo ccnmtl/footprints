@@ -49,7 +49,11 @@ class PlaceViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         form = PlaceSearchForm(self.request.GET)
         if form.is_valid():
-            ids = form.search()
+            loc_id = form.cleaned_data.get('selected', '')
+            if loc_id:
+                ids = [loc_id]
+            else:
+                ids = form.search()
 
             qs = Place.objects.filter(id__in=ids)
 
@@ -68,7 +72,11 @@ class ActorViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         form = ActorSearchForm(self.request.GET)
         if form.is_valid():
-            ids = form.search()
+            actor_id = form.cleaned_data.get('selected', '')
+            if actor_id:
+                ids = [actor_id]
+            else:
+                ids = form.search()
 
             qs = Actor.objects.filter(id__in=ids).distinct()
             q = form.cleaned_data.get('q', '')

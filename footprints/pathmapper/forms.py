@@ -14,6 +14,7 @@ class ModelSearchFormEx(ModelSearchForm):
     q = forms.CharField(required=False)
 
     work = forms.IntegerField(required=False)
+    work = forms.IntegerField(required=False)
     imprint = forms.IntegerField(required=False)
 
     footprint_start = forms.IntegerField(required=False, min_value=1000)
@@ -229,6 +230,10 @@ class ImprintSearchForm(ModelSearchFormEx):
         if work_id:
             kwargs['work_id'] = work_id
 
+        imprint_id = self.cleaned_data.get('selected')
+        if imprint_id:
+            kwargs['object_id'] = imprint_id
+
         args += self.handle_imprint_location()
         args += self.handle_footprint_location()
         args += self.handle_actor()
@@ -238,7 +243,7 @@ class ImprintSearchForm(ModelSearchFormEx):
         return args, kwargs
 
     def search(self):
-        args, kwargs = self.search()
+        args, kwargs = self.arguments()
         return self.searchqueryset.filter(*args, **kwargs)
 
 
@@ -256,6 +261,10 @@ class WrittenWorkSearchForm(ModelSearchFormEx):
         q = self.cleaned_data.get('q', '')
         if q:
             kwargs['content'] = q
+
+        work_id = self.cleaned_data.get('selected')
+        if work_id:
+            kwargs['object_id'] = work_id
 
         args += self.handle_imprint_location()
         args += self.handle_footprint_location()
