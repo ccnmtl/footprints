@@ -9,7 +9,7 @@ all: jenkins
 include *.mk
 
 test-travis: $(PY_SENTINAL)
-    $(MANAGE) jenkins --pep8-exclude=migrations --enable-coverage --coverage-rcfile=.coveragerc --settings=$(APP).settings_travis
+	$(MANAGE) jenkins --pep8-exclude=migrations --enable-coverage --coverage-rcfile=.coveragerc --settings=$(APP).settings_travis
 
 travis: check flake8 test-travis eslint bandit
 
