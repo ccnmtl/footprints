@@ -10,8 +10,4 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RenameModel(
-            old_name='ExtendedDateFormat',
-            new_name='ExtendedDate',
-        ),
     ]
