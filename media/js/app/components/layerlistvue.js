@@ -42,6 +42,7 @@ define(['jquery', 'layerVue', 'utils'], function($, layer, utils) {
             },
             readSession: function() {
                 /* eslint-disable scanjs-rules/identifier_localStorage */
+                /* eslint-disable scanjs-rules/property_localStorage */
                 if (utils.storageAvailable('localStorage')) {
                     const str = window.localStorage.getItem('pathmapper');
                     if (str && str.length > 0) {
@@ -49,6 +50,7 @@ define(['jquery', 'layerVue', 'utils'], function($, layer, utils) {
                         return true;
                     }
                 }
+                /* eslint-enable scanjs-rules/property_localStorage */
                 /* eslint-enable scanjs-rules/identifier_localStorage */
                 return false;
             },
@@ -59,8 +61,8 @@ define(['jquery', 'layerVue', 'utils'], function($, layer, utils) {
                     const str = JSON.stringify(this.layers);
                     window.localStorage.setItem('pathmapper', str);
                 }
-                /* eslint-enable scanjs-rules/identifier_localStorage */
                 /* eslint-enable scanjs-rules/property_localStorage */
+                /* eslint-enable scanjs-rules/identifier_localStorage */
             },
             togglePane: function() {
                 if ($('#container-pane').hasClass('widget-pane-expanded')) {
