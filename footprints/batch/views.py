@@ -135,8 +135,7 @@ class BatchJobUpdateView(LoggedInMixin, BatchAccessMixin, View):
 
         return imprint
 
-    def get_or_create_copy(self, evidence_call_number,
-                           imprint, book_call_number):
+    def get_or_create_copy(self, imprint, book_call_number):
 
         if book_call_number:
             try:
@@ -146,13 +145,9 @@ class BatchJobUpdateView(LoggedInMixin, BatchAccessMixin, View):
             except BookCopy.DoesNotExist:
                 pass  # not unexpected
 
-        q = {'call_number': evidence_call_number,
-             'book_copy__imprint': imprint}
-        footprint = Footprint.objects.filter(**q).first()
-        if footprint:
-            copy = footprint.book_copy
-        else:
-            copy = BookCopy.objects.create(imprint=imprint)
+        # If there is no matching BookCopy for the imprint/book_call_number
+        # Create a new book copy for this imprint
+        copy = BookCopy.objects.create(imprint=imprint)
 
         if book_call_number:
             copy.call_number = book_call_number
@@ -192,7 +187,7 @@ class BatchJobUpdateView(LoggedInMixin, BatchAccessMixin, View):
         for record in job.batchrow_set.all():
             imprint = self.get_or_create_imprint(record)
             copy = self.get_or_create_copy(
-                record.call_number, imprint, record.book_copy_call_number)
+                imprint, record.book_copy_call_number)
             footprint = self.create_footprint(record, copy)
             record.footprint = footprint
             record.save()
