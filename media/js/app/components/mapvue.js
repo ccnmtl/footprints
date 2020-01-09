@@ -7,10 +7,16 @@ define(['jquery'], function($) {
                 mapName: 'the-map'
             };
         },
+        methods: {
+            updateLayers: function() {
+                console.log('updateLayers');
+            }
+        },
         created: function() {
             this.bounds = null;
             this.zoom = 5;
             this.center = new google.maps.LatLng(37.0902, -95.7129);
+            this.$watch('value', this.updateLayers);
         },
         mounted: function() {
             let elt = document.getElementById(this.mapName);
@@ -27,6 +33,7 @@ define(['jquery'], function($) {
         },
         updated: function() {
             // @todo - map the paths
+            console.log('Layers were updated');
         }
     };
     return {

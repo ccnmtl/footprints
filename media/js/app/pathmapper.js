@@ -1,6 +1,6 @@
 requirejs(['./common'], function(common) {
     const libs = ['jquery', 'Vue', 'mapVue', 'layerListVue',
-        'pathmapperTableVue', 'utils'];
+        'tableVue', 'utils'];
     requirejs(libs,
         function($, Vue, map, layers, table, utils) {
             new Vue({
