@@ -75,7 +75,7 @@ django-appconf==1.0.3
 django-compressor==2.4
 django-statsd-mozilla==0.4.0
 raven==6.10.0
-sentry-sdk==0.13.5
+sentry-sdk==0.14.0
 django-bootstrap-form==3.4
 django-debug-toolbar==2.1
 django-waffle==0.18.0
