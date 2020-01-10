@@ -1,5 +1,6 @@
 {% verbatim %}
 <script type="text/x-template" id="pathmapper-table-template">
+<div>
     <table class="table-pathmapper">
         <thead>
             <tr>
@@ -14,167 +15,65 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-            </tr>
-            <tr>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-            </tr>
-            <tr>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-            </tr>
-            <tr>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-            </tr>
-            <tr>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-            </tr>
-            <tr>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-            </tr>
-            <tr>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-            </tr>
-            <tr>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-            </tr>
-            <tr>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-            </tr>
-            <tr>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-            </tr>
-            <tr>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-            </tr>
-            <tr>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-            </tr>
-            <tr>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-            </tr>
-            <tr>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-            </tr>
-            <tr>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-            </tr>
-            <tr>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
-                <td>The table body</td>
-                <td>with two columns</td>
+            <tr v-for="(f, index) in footprints" :key="index">
+                <td>Layer Name</td>
+                <td>{{f.work_title}}<br />{{f.imprint_title}}</td>
+                <td>{{f.book_copy_identifier}}</td>
+                <td>
+                    <span v-if="f.place">
+                        {{f.place.display_title}}
+                    </span>
+                </td>
+                <td>
+                    <span v-if="f.associated_date">
+                        {{f.associated_date.display}}
+                    </span>
+                </td>
+                <td>{{f.title}}</td>
+                <td>Censor?</td>
+                <td>Expurgator</td>
             </tr>
         </tbody>
     </table>
+
+    <div v-if="totalPages > 1" class="row tools">
+        <div class="col-md-12">
+        <div class="float-right mr-2">
+            <a class="btn btn-default btn-paginate mx-1" :disabled="!page.hasNext"
+                :href="baseUrl + page.nextPageNumber + '/'"
+                :data-page-number="page.nextPageNumber"
+                v-on:click.stop.prevent="changePage(page.nextPageNumber)">
+                Next <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
+            </a>
+            <a class="btn btn-default btn-paginate mx-1" :disabled="!page.hasNext"
+                :href="baseUrl + totalPages + '/'"
+                :data-page-number="totalPages"
+                v-on:click.stop.prevent="changePage(totalPages)">
+                 Last <span class="glyphicon glyphicon-fast-forward" aria-hidden="true"></span>
+            </a>
+        </div>
+        <div class="float-right page-count mx-2">
+            Page <input class="form-control page-number" type="text"
+                    :value="page.number"> of <span class="max-page">{{totalPages}}</span>
+            <p class="error-block small">
+                Invalid page number
+            </p>
+        </div>
+        <div class="float-right">
+            <a class="btn btn-default btn-paginate mx-1" :disabled="!page.hasPrev"
+                data-page-number="1" :href="baseUrl + '1/'"
+                v-on:click.stop.prevent="changePage(1)">
+                <span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span> First
+            </a>
+            <a class="btn btn-default btn-paginate mx-1" :disabled="!page.hasPrev"
+               :href="baseUrl + page.prevPageNumber + '/'"
+               :data-page-number="page.prevPageNumber"
+                v-on:click.stop.prevent="changePage(prev.pageNumber)">
+                <span class="glyphicon glyphicon-backward" aria-hidden="true"></span> Previous
+            </a>
+        </div>
+        </div>
+    </div>
+</div>
 </script>
 {% endverbatim %}

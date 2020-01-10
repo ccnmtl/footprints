@@ -7,6 +7,9 @@ from django.contrib.auth.views import (
     PasswordResetCompleteView, PasswordChangeView, PasswordResetView)
 from django.views.generic import TemplateView
 from django.views.static import serve
+from registration.backends.default.views import RegistrationView
+from rest_framework import routers
+
 from footprints.main import views
 from footprints.main.forms import CustomRegistrationForm
 from footprints.main.views import (
@@ -23,9 +26,8 @@ from footprints.main.viewsets import (
     PersonViewSet, PlaceViewSet, RoleViewSet, WrittenWorkViewSet,
     StandardizedIdentificationViewSet, DigitalFormatViewSet,
     DigitalObjectViewSet, StandardizedIdentificationTypeViewSet)
-from footprints.pathmapper.views import MapView, BookCopySearchView
-from registration.backends.default.views import RegistrationView
-from rest_framework import routers
+from footprints.pathmapper.views import (
+    PathmapperView, BookCopySearchView, PathmapperTableView)
 
 
 admin.autodiscover()
@@ -122,7 +124,7 @@ urlpatterns = [
     url(r'^writtenwork/(?P<pk>\d+)/$',
         WrittenWorkDetailView.as_view(), name='writtenwork-detail-view'),
 
-    url(r'^map/', MapView.as_view(), name='map-view'),
+    url(r'^map/', PathmapperView.as_view(), name='map-view'),
 
     url(r'^export/footprints/$',
         ExportFootprintSearch.as_view(),
@@ -163,6 +165,9 @@ urlpatterns = [
     url(r'^uploads/(?P<path>.*)$',
         serve, {'document_root': settings.MEDIA_ROOT}),
     url(r'^sign_s3/$', SignS3View.as_view()),
+
+    url(r'^pathmapper/table/',
+        PathmapperTableView.as_view(), name='pathmapper-table-view'),
 
     # Visualizations for grant application
     url(r'^pathmapper/',
