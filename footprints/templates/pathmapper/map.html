@@ -37,6 +37,11 @@
         </div><!-- /.widget-share-map-table -->
     </div>
 
+    <!--
+        Using the v-if syntax here results in these components being
+        created and destroyed as they are shown and hidden. This may impact
+        performance in both positive and negative ways. To be monitored.
+    -->
     <div v-if="!showMap" id="table-container">
         <pathmapper-table v-model="collection.layers" />
     </div>

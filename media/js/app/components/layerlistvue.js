@@ -24,7 +24,7 @@ define(['jquery', 'layerVue', 'utils'], function($, layer, utils) {
             deleteLayer: function(evt) {
                 const idx = $(evt.currentTarget).data('idx');
                 this.layers.splice(idx, 1);
-                this.saveSession();
+                this.$emit('input', this.layers);
             },
             cancelLayer: function() {
                 this.selectedLayer = null;
@@ -38,29 +38,7 @@ define(['jquery', 'layerVue', 'utils'], function($, layer, utils) {
                         $.extend(true, {}, layer);
                 }
                 this.selectedLayer = null;
-                this.saveSession();
-            },
-            readSession: function() {
-                /* eslint-disable scanjs-rules/identifier_localStorage */
-                if (utils.storageAvailable('localStorage')) {
-                    const str = window.localStorage.getItem('pathmapper');
-                    if (str && str.length > 0) {
-                        this.layers = JSON.parse(str);
-                        return true;
-                    }
-                }
-                /* eslint-enable scanjs-rules/identifier_localStorage */
-                return false;
-            },
-            saveSession: function() {
-                /* eslint-disable scanjs-rules/identifier_localStorage */
-                /* eslint-disable scanjs-rules/property_localStorage */
-                if (utils.storageAvailable('localStorage')) {
-                    const str = JSON.stringify(this.layers);
-                    window.localStorage.setItem('pathmapper', str);
-                }
-                /* eslint-enable scanjs-rules/identifier_localStorage */
-                /* eslint-enable scanjs-rules/property_localStorage */
+                this.$emit('input', this.layers);
             },
             togglePane: function() {
                 if ($('#container-pane').hasClass('widget-pane-expanded')) {
@@ -75,7 +53,7 @@ define(['jquery', 'layerVue', 'utils'], function($, layer, utils) {
         created: function() {
             if (this.value && this.value.length > 0) {
                 this.layers = $.extend(true, [], this.value);
-            } else if (!this.readSession()) {
+            } else {
                 this.createLayer();
             }
         }
