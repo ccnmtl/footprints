@@ -25,6 +25,31 @@ requirejs(['./common'], function(common) {
                     },
                     switchToMap: function() {
                         this.showMap = true;
+                    },
+                    readSession: function() {
+                        /*eslint-disable scanjs-rules/identifier_localStorage*/
+                        /*eslint-disable scanjs-rules/property_localStorage*/
+                        if (utils.storageAvailable('localStorage')) {
+                            const str =
+                                window.localStorage.getItem('pathmapper');
+                            if (str && str.length > 0) {
+                                this.collection.layers = JSON.parse(str);
+                                return true;
+                            }
+                        }
+                        /*eslint-enable scanjs-rules/property_localStorage*/
+                        /*eslint-enable scanjs-rules/identifier_localStorage*/
+                        return false;
+                    },
+                    saveSession: function() {
+                        /*eslint-disable scanjs-rules/identifier_localStorage*/
+                        /*eslint-disable scanjs-rules/property_localStorage*/
+                        if (utils.storageAvailable('localStorage')) {
+                            const str = JSON.stringify(this.collection.layers);
+                            window.localStorage.setItem('pathmapper', str);
+                        }
+                        /*eslint-enable scanjs-rules/property_localStorage*/
+                        /*eslint-enable scanjs-rules/identifier_localStorage*/
                     }
                 },
                 created: function() {
@@ -34,8 +59,13 @@ requirejs(['./common'], function(common) {
                     // eslint-disable-next-line
                     window.addEventListener('beforeunload', this.beforeUnload);
 
-                    // @todo - initialize layers via stored data
-                    // if accessing through a saved permalink
+                    // @todo accessing through a permalink
+
+                    // initialize layers via stored data
+                    this.readSession();
+                },
+                updated: function() {
+                    this.saveSession();
                 }
             });
         }
