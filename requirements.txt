@@ -25,7 +25,7 @@ lxml==4.4.2
 fuzzywuzzy==0.17.0
 sure==1.4.11
 
-coverage==4.5.4
+coverage==5.0.3
 pyasn1==0.4.8
 cryptography==2.8  # pyOpenSSL
 
