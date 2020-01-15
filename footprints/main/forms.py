@@ -134,7 +134,7 @@ class FootprintSearchForm(ModelSearchForm):
 
         if self.cleaned_data['actor']:
             for a in self.cleaned_data['actor']:
-                args.append(Q(actor_exact__in=[a]))
+                args.append(Q(actor_title_exact__in=[a]))
 
         kwargs.update(self.handle_footprint_year())
         kwargs.update(self.handle_pub_year())
@@ -202,14 +202,14 @@ class FootprintSearchForm(ModelSearchForm):
         args = []
         if self.cleaned_data['footprint_location']:
             lst = self.cleaned_data['footprint_location']
-            args.append(Q(footprint_location_exact__in=lst))
+            args.append(Q(footprint_location_title_exact__in=lst))
         return args
 
     def handle_imprint_location(self):
         args = []
         if self.cleaned_data['imprint_location']:
             lst = self.cleaned_data['imprint_location']
-            args.append(Q(imprint_location_exact__in=lst))
+            args.append(Q(imprint_location_title_exact__in=lst))
         return args
 
     def get_query_params(self):

@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
+from django.utils.encoding import smart_text
 from rest_framework import serializers
 from rest_framework.fields import CharField, ReadOnlyField
 from rest_framework.serializers import Serializer, HyperlinkedModelSerializer
@@ -115,13 +116,17 @@ class DigitalObjectSerializer(HyperlinkedModelSerializer):
 class ActorSerializer(HyperlinkedModelSerializer):
     person = PersonSerializer()
     role = RoleSerializer()
+    display_title = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Actor
-        fields = ('id', 'alias', 'person', 'role')
+        fields = ('id', 'alias', 'person', 'role', 'display_title')
 
     def get_queryset(self):
         return Actor.objects.all()
+
+    def get_display_title(self, obj):
+        return smart_text(obj)
 
     def to_internal_value(self, data):
         try:
@@ -190,15 +195,29 @@ class FootprintSerializer(HyperlinkedModelSerializer):
     modified_at = DateTimeZoneField(format='%m/%d/%y %I:%M %p')
     verified_modified_at = DateTimeZoneField(format='%m/%d/%y %I:%M %p')
 
+    work_title = serializers.SerializerMethodField(read_only=True)
+    imprint_title = serializers.SerializerMethodField(read_only=True)
+    book_copy_identifier = serializers.SerializerMethodField(read_only=True)
+
     class Meta:
         model = Footprint
         fields = ('id', 'medium', 'medium_description',
                   'provenance', 'title', 'language', 'actor', 'call_number',
                   'notes', 'associated_date', 'place', 'narrative',
                   'percent_complete', 'digital_object',
+                  'work_title', 'imprint_title', 'book_copy_identifier',
                   'flags', 'verified', 'verified_modified_at',
                   'created_at', 'modified_at',
                   'created_by', 'last_modified_by')
+
+    def get_work_title(self, obj):
+        return smart_text(obj.book_copy.imprint.work.title)
+
+    def get_imprint_title(self, obj):
+        return smart_text(obj.book_copy.imprint.title)
+
+    def get_book_copy_identifier(self, obj):
+        return smart_text(obj.book_copy.identifier())
 
 
 class WrittenWorkPathSerializer(HyperlinkedModelSerializer):

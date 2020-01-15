@@ -220,25 +220,13 @@ class BatchJobUpdateViewTest(TestCase):
 
         # match copy via book call number
         existing_copy = BookCopyFactory(call_number='123456')
-        copy = view.get_or_create_copy('12345',
-                                       existing_copy.imprint,
+        copy = view.get_or_create_copy(existing_copy.imprint,
                                        existing_copy.call_number)
         self.assertEqual(existing_copy, copy)
 
-        # match copy via footprint call number
-        # book copy's call number will be updated
-        fp = FootprintFactory()
-        fp.book_copy.call_number = None
-        fp.book_copy.save()
-
-        copy = view.get_or_create_copy(
-            fp.call_number, fp.book_copy.imprint, 'efgh')
-        self.assertEqual(fp.book_copy, copy)
-        self.assertEqual(copy.call_number, 'efgh')
-
         # get a new copy. no footprint found to match
         imprint = ImprintFactory()
-        copy = view.get_or_create_copy('45678', imprint, 'abcd')
+        copy = view.get_or_create_copy(imprint, 'abcd')
         self.assertEqual(copy.call_number, 'abcd')
 
     def test_create_footprint(self):

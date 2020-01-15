@@ -13,7 +13,8 @@ from footprints.main.serializers import (
     DigitalFormatSerializer, DigitalObjectSerializer,
     StandardizedIdentificationTypeSerializer)
 from footprints.pathmapper.forms import (
-    ImprintSearchForm, WrittenWorkSearchForm)
+    ActorSearchForm,
+    ImprintSearchForm, WrittenWorkSearchForm, PlaceSearchForm)
 
 
 class FootprintViewSet(viewsets.ModelViewSet):
@@ -45,48 +46,45 @@ class PlaceViewSet(viewsets.ModelViewSet):
     model = Place
     serializer_class = PlaceSerializer
 
-    def filter_imprint_location(self, qs, work_id, imprint_id):
-        if imprint_id:
-            qs = qs.filter(imprint__id=imprint_id)
-        elif work_id:
-            qs = qs.filter(imprint__work__id=work_id)
-        else:
-            qs = qs.exclude(imprint=None)
-
-        return qs
-
-    def filter_footprint_location(self, qs, work_id, imprint_id):
-        if imprint_id:
-            qs = qs.filter(footprint__book_copy__imprint__id=imprint_id)
-        elif work_id:
-            qs = qs.filter(footprint__book_copy__imprint__work__id=work_id)
-        else:
-            qs = qs.exclude(footprint=None)
-
-        return qs
-
     def get_queryset(self):
-        qs = Place.objects.all()
+        form = PlaceSearchForm(self.request.GET)
+        if form.is_valid():
+            loc_id = form.cleaned_data.get('selected', '')
+            if loc_id:
+                ids = [loc_id]
+            else:
+                ids = form.search()
 
-        imprint_id = self.request.GET.get('imprint', None)
-        work_id = self.request.GET.get('work', None)
-        search_by = self.request.GET.get('name', None)
-        if search_by == 'imprint-location':
-            qs = self.filter_imprint_location(qs, work_id, imprint_id)
-        elif search_by == 'footprint-location':
-            qs = self.filter_footprint_location(qs, work_id, imprint_id)
+            qs = Place.objects.filter(id__in=ids)
 
-        term = self.request.GET.get('q', None)
-        if term is not None and len(term) > 0:
-            qs = qs.filter(
-                Q(city__istartswith=term) | Q(country__istartswith=term))
+            q = form.cleaned_data.get('q', '')
+            if q:
+                qs = qs.filter(Q(city__contains=q) | Q(country__contains=q))
 
-        return qs
+            return qs
+        return Place.objects.none()
 
 
 class ActorViewSet(viewsets.ModelViewSet):
     queryset = Actor.objects.all()
     serializer_class = ActorSerializer
+
+    def get_queryset(self):
+        form = ActorSearchForm(self.request.GET)
+        if form.is_valid():
+            actor_id = form.cleaned_data.get('selected', '')
+            if actor_id:
+                ids = [actor_id]
+            else:
+                ids = form.search()
+
+            qs = Actor.objects.filter(id__in=ids).distinct()
+            q = form.cleaned_data.get('q', '')
+            if q:
+                qs = qs.filter(person__name__contains=q)
+            return qs.order_by('person__name')
+
+        return Actor.objects.none()
 
 
 class WrittenWorkViewSet(viewsets.ModelViewSet):

@@ -2,14 +2,14 @@ define(['jquery', 'select2'], function($, select2) {
     const SelectWidget = {
         name: 'select-widget',
         props: ['id', 'name', 'value', 'dataUrl', 'disabled',
-            'minimumInput', 'criteria'],
+            'minimumInput', 'criteria', 'searchFor'],
         template: '#select2-template',
         methods: {
             context: function(params) {
                 let ctx = $.extend(true, params, this.criteria);
                 ctx.q = params.term;
-                ctx.name = this.name;
                 ctx.page = params.page || 1;
+                ctx.searchFor = this.searchFor;
                 return ctx;
             },
             url: function() {
@@ -44,11 +44,11 @@ define(['jquery', 'select2'], function($, select2) {
                     url: this.url,
                     dataType: 'json',
                     data: this.context,
-                    delay: 250,
+                    // delay: 250,
                     processResults: function(data, params) {
                         let results = $.map(data.results, function(obj) {
                             obj.text = obj.title || obj.search_title ||
-                                obj.display_title;
+                                obj.display_title || obj.display_name;
                             obj.html = obj.description || obj.search_title ||
                                 obj.display_title;
                             return obj;
@@ -64,12 +64,29 @@ define(['jquery', 'select2'], function($, select2) {
                 },
                 minimumInputLength:
                     (this.minimumInput === undefined ? 1 : this.minimumInput)
-            })
-                .val(this.value)
-                .trigger('change')
-                .on('change', () => {
-                    this.$emit('input', $(this.$el).val());
+            }).on('change', () => {
+                this.$emit('input', $(this.$el).val());
+            });
+
+            if (this.value) {
+                const ctx = {searchFor: this.searchFor};
+                ctx['selected'] = this.value;
+                $.ajax({
+                    type: 'GET',
+                    url: this.url(),
+                    dataType: 'json',
+                    data: ctx
+                }).done((data) => {
+                    if (data.results.length > 0) {
+                        const item = data.results[0];
+                        const title = item.title || item.display_title;
+                        const value = item.id;
+                        const option = new Option(title, value, true, true);
+                        $(this.$el).append(option).trigger('change');
+                        $(this.$el).val(value);
+                    }
                 });
+            }
         },
         destroyed: function() {
             $(this.$el).off().select2('destroy');

@@ -75,10 +75,10 @@ django-appconf==1.0.3
 django-compressor==2.4
 django-statsd-mozilla==0.4.0
 raven==6.10.0
-sentry-sdk==0.13.5
+sentry-sdk==0.14.0
 django-bootstrap-form==3.4
 django-debug-toolbar==2.1
-django-waffle==0.18.0
+django-waffle==0.19.0
 django-jenkins==0.110.0
 django-smoketest==1.1.0
 django-extensions==2.2.5
@@ -86,15 +86,15 @@ django-extensions==2.2.5
 django-stagingcontext==0.1.0
 django-ga-context==0.1.0
 django-impersonate==1.4.1
-django-registration-redux==2.6
+django-registration-redux==2.7
 django-markwhat==1.6.2
 gunicorn==20.0.4
 future==0.17.1;
-s3transfer==0.2.1
+s3transfer==0.3.0
 jmespath==0.9.4
 
 botocore>=1.13.0,<1.14.0
-boto3>=1.10.0,<1.11.0
+boto3>=1.11.0,<1.12.0
 
 django-infranil==1.1.0
 certifi==2019.11.28  # for pysolr, sentry-sdk

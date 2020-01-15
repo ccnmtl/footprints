@@ -12,6 +12,7 @@ requirejs.config({
         'layerListVue': 'js/app/components/layerlistvue',
         'layerVue': 'js/app/components/layervue',
         'mapVue': 'js/app/components/mapvue',
+        'tableVue': 'js/app/components/tableVue',
         'select2': 'js/lib/select2-4.0.10/js/select2.full',
         'selectWidget': 'js/app/components/select-widget',
         'utils': 'js/app/utils',

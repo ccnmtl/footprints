@@ -13,6 +13,7 @@
 
 {% block client_templates %}
     <meta name="csrf-token" content="{{csrf_token}}">
+    {% include "clientside/pathmapper_table.html" %}
     {% include "clientside/google_map_template.html" %}
     {% include "clientside/layer_list_template.html" %}
     {% include "clientside/layer_template.html" %}
@@ -27,12 +28,25 @@
     <div id="share-view-container">
         <div class="widget-share-map-table">
             <button type="button" class="btn btn-share" title="Share results"><i class="fas fa-share-alt"></i></i></button>
-            <button type="button" class="btn btn-view active">Map view</button>
-            <button type="button" class="btn btn-view">Table view</button>
+            <button v-on:click="switchToMap"  type="button" :class="['btn', 'btn-view', {'active': showMap}]">
+                Map view
+            </button>
+            <button v-on:click="switchToTable" type="button" :class="['btn', 'btn-view', {'active': !showMap}]">
+                Table view
+            </button>
         </div><!-- /.widget-share-map-table -->
     </div>
 
-    <div id="map-container">
+    <!--
+        Using the v-if syntax here results in these components being
+        created and destroyed as they are shown and hidden. This may impact
+        performance in both positive and negative ways. To be monitored.
+    -->
+    <div v-if="!showMap" id="table-container">
+        <pathmapper-table v-model="collection.layers" />
+    </div>
+
+    <div v-if="showMap" id="map-container">
         <google-map v-model="collection.layers" />
     </div>
 

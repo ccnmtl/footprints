@@ -3,10 +3,11 @@
     <div class="pane-content" id="create-layer-init">
         <header class="d-flex flex-row">
             <h1><i class="fas fa-layer-group mr-2" aria-hidden="true"></i>
-                <span v-if="layer.id">Edit Layer</span>
+                <span v-if="layer.id !== null">Edit Layer</span>
                 <span v-else>New layer</span>
             </h1>
-            <label for="layerTitle" class="sr-only">New layer title</label>
+            <label v-if="layer.id !== null" for="layerTitle" class="sr-only">Edit layer title</label>
+            <label v-else for="layerTitle" class="sr-only">New layer title</label>
             <input type="text" class="form-control criteria-form-field" id="layerTitle" v-model="layer.title">
         </header>
         <div class="pane-content-container" id="style-3">
@@ -45,7 +46,7 @@
                     <div class="col-8">
                         <select-widget v-model="layer.imprintLocation" id="criteriaImprintLoc"
                             name="imprint-location" :criteria="layer" v-bind:minimum-input="0"
-                            data-url="api/place/">
+                            data-url="api/place/" search-for="imprint">
                         </select-widget>
                     </div>
                 </div>
@@ -54,7 +55,7 @@
                     <div class="col-8">
                         <select-widget v-model="layer.footprintLocation" id="criteriaFootprintLoc"
                             name="footprint-location" :criteria="layer" v-bind:minimum-input="0"
-                            data-url="api/place/">
+                            data-url="api/place/" search-for="footprint">
                         </select-widget>
                         <div class="form-check mt-1">
                             <input v-model="layer.footprintLocationFinal" class="form-check-input"
@@ -117,12 +118,13 @@
                 <div class="form-group mb-0 row">
                     <label for="criteriaPerson" class="col-4 col-form-label">Person:</label>
                     <div class="col-8">
-                        <select-widget v-model="layer.person" id="criteriaPerson"
-                            :criteria="layer" data-url="api/person/">
+                        <select-widget v-model="layer.actor"
+                            name="actor" id="criteriaActor" v-bind:minimum-input="0"
+                            :criteria="layer" data-url="api/actor/">
                         </select-widget>
                     </div>
                 </div>
-            </section><!-- /#criteria-person -->
+            </section><!-- /#criteria-actor -->
 
             <section aria-labelledby="region6">
                 <h2 id="region6">Censored</h2>
@@ -150,7 +152,8 @@
 
             <div class="layer-actions">
                 <button v-on:click="cancel" type="button" class="btn btn-priority-low">Cancel</button>
-                <button v-on:click="save" type="button" class="btn btn-priority-mid">Create layer</button>
+                <button v-if="layer.id !== null" v-on:click="save" type="button" class="btn btn-priority-mid">Save layer</button>
+                <button v-else v-on:click="save" type="button" class="btn btn-priority-mid">Create layer</button>
             </div><!-- /.layer actions -->
 
         </div><!-- /.pane-content-container -->

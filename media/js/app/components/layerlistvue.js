@@ -1,4 +1,4 @@
-define(['jquery', 'layerVue'], function($, layer) {
+define(['jquery', 'layerVue', 'utils'], function($, layer, utils) {
     const LayerListVue = {
         props: ['value'],
         template: '#layer-list-template',
@@ -24,18 +24,21 @@ define(['jquery', 'layerVue'], function($, layer) {
             deleteLayer: function(evt) {
                 const idx = $(evt.currentTarget).data('idx');
                 this.layers.splice(idx, 1);
+                this.$emit('input', this.layers);
             },
             cancelLayer: function() {
                 this.selectedLayer = null;
             },
             saveLayer: function(layer) {
-                if (!this.selectedLayerIdx) {
-                    this.layers.push(layer);
+                if (this.selectedLayerIdx === null) {
+                    const idx = this.layers.push(layer);
+                    this.layers[idx-1].id = idx - 1;
                 } else {
                     this.layers[this.selectedLayerIdx] =
                         $.extend(true, {}, layer);
                 }
                 this.selectedLayer = null;
+                this.$emit('input', this.layers);
             },
             togglePane: function() {
                 if ($('#container-pane').hasClass('widget-pane-expanded')) {
