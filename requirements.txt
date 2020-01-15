@@ -90,11 +90,11 @@ django-registration-redux==2.7
 django-markwhat==1.6.2
 gunicorn==20.0.4
 future==0.17.1;
-s3transfer==0.2.1
+s3transfer==0.3.0
 jmespath==0.9.4
 
 botocore>=1.14.0,<1.15.0
-boto3>=1.10.0,<1.11.0
+boto3>=1.11.0,<1.12.0
 
 django-infranil==1.1.0
 certifi==2019.11.28  # for pysolr, sentry-sdk

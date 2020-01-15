@@ -195,15 +195,29 @@ class FootprintSerializer(HyperlinkedModelSerializer):
     modified_at = DateTimeZoneField(format='%m/%d/%y %I:%M %p')
     verified_modified_at = DateTimeZoneField(format='%m/%d/%y %I:%M %p')
 
+    work_title = serializers.SerializerMethodField(read_only=True)
+    imprint_title = serializers.SerializerMethodField(read_only=True)
+    book_copy_identifier = serializers.SerializerMethodField(read_only=True)
+
     class Meta:
         model = Footprint
         fields = ('id', 'medium', 'medium_description',
                   'provenance', 'title', 'language', 'actor', 'call_number',
                   'notes', 'associated_date', 'place', 'narrative',
                   'percent_complete', 'digital_object',
+                  'work_title', 'imprint_title', 'book_copy_identifier',
                   'flags', 'verified', 'verified_modified_at',
                   'created_at', 'modified_at',
                   'created_by', 'last_modified_by')
+
+    def get_work_title(self, obj):
+        return smart_text(obj.book_copy.imprint.work.title)
+
+    def get_imprint_title(self, obj):
+        return smart_text(obj.book_copy.imprint.title)
+
+    def get_book_copy_identifier(self, obj):
+        return smart_text(obj.book_copy.identifier())
 
 
 class WrittenWorkPathSerializer(HyperlinkedModelSerializer):
