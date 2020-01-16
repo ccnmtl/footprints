@@ -19,15 +19,13 @@ define(['jquery', 'utils'], function($, layer, utils) {
                 return this.page.prevPage;
             },
             parsePageNumber: function(str) {
-                let pageNumber = 1;
-                try {
+                if (str && str.length > 0) {
                     let result = str.matchAll(/page=(\d+)/);
                     if (result) {
-                        pageNumber = parseInt(result.next().value[1], 10);
+                        return parseInt(result.next().value[1], 10);
                     }
-                } catch (TypeError) {
                 }
-                return pageNumber;
+                return 1;
             },
             changePage: function(pg) {
                 this.page.number = pg;
