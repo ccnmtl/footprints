@@ -4,19 +4,36 @@ define(['jquery', 'utils'], function($, layer, utils) {
         template: '#pathmapper-table-template',
         data: function() {
             return {
-                'page': {'number': 1},
+                'page': {'number': 1, 'nextPage': null, 'prevPage': null},
                 'totalPages': 0,
                 'footprints': [],
-                'baseUrl': Footprints.baseUrl
+                'baseUrl': Footprints.baseUrl,
+                'pageSize': 15
             };
         },
         methods: {
+            hasNext: function() {
+                return this.page.nextPage;
+            },
+            hasPrev: function() {
+                return this.page.prevPage;
+            },
+            parsePageNumber: function(str) {
+                if (str && str.length > 0) {
+                    let result = str.matchAll(/page=(\d+)/);
+                    if (result) {
+                        return parseInt(result.next().value[1], 10);
+                    }
+                }
+                return 1;
+            },
             changePage: function(pg) {
                 this.page.number = pg;
                 this.updateLayers();
             },
-            url: function() {
-                return Footprints.baseUrl + 'pathmapper/table/';
+            url: function(pageNumber) {
+                return Footprints.baseUrl +
+                    'pathmapper/table/?page=' + pageNumber;
             },
             updateLayers: function() {
                 const ctx = {
@@ -25,14 +42,14 @@ define(['jquery', 'utils'], function($, layer, utils) {
 
                 $.ajax({
                     type: 'POST',
-                    url: this.url() + '?page=' + this.page.number,
+                    url: this.url(this.page.number),
                     dataType: 'json',
                     data: ctx
                 }).done((data) => {
-                    this.page = data.page;
-                    this.totalPages = data.num_pages;
-                    this.footprints = $.extend(true, [], data.footprints);
-                    console.log(this.footprints);
+                    this.page.nextPage = this.parsePageNumber(data.next);
+                    this.page.prevPage = this.parsePageNumber(data.previous);
+                    this.totalPages = Math.ceil(data.count / this.pageSize);
+                    this.footprints = $.extend(true, [], data.results);
                 });
             }
         },
