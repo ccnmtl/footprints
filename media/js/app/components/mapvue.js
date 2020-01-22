@@ -139,6 +139,7 @@ define(['jquery', 'utils'], function($, utils) {
                 }
             });
             this.refreshRoutes();
+            this.$watch('value', this.refreshRoutes, {deep: true});
         }
     };
     return {
