@@ -1,4 +1,4 @@
-define(['jquery', 'utils'], function($, layer, utils) {
+define(['jquery', 'utils'], function($, utils) {
     const PathmapperTableVue = {
         props: ['value'],
         template: '#pathmapper-table-template',
