@@ -44,6 +44,17 @@ define(function() {
         });
     }
 
+    function parsePageNumber(str) {
+        let pageNumber = 1;
+        try {
+            let result = str.matchAll(/page=(\d+)/);
+            pageNumber = parseInt(result.next().value[1], 10);
+        } catch (err) {
+            // continue with default page number
+        }
+        return pageNumber;
+    }
+
     function sanitize(s) {
         // http://shebang.brandonmintern.com/foolproof-html-escaping-in-javascript/
         var div = document.createElement('div');
@@ -82,6 +93,7 @@ define(function() {
         AsyncQueue: AsyncQueue,
         ajaxSetup: ajaxSetup,
         csrfSafeMethod: csrfSafeMethod,
+        parsePageNumber: parsePageNumber,
         sanitize: sanitize,
         storageAvailable: storageAvailable
     };
