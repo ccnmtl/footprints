@@ -27,7 +27,8 @@ from footprints.main.viewsets import (
     StandardizedIdentificationViewSet, DigitalFormatViewSet,
     DigitalObjectViewSet, StandardizedIdentificationTypeViewSet)
 from footprints.pathmapper.views import (
-    PathmapperView, BookCopySearchView, PathmapperTableView)
+    PathmapperView, BookCopySearchView, PathmapperTableView,
+    PathmapperRouteView)
 
 
 admin.autodiscover()
@@ -168,6 +169,8 @@ urlpatterns = [
 
     url(r'^pathmapper/table/',
         PathmapperTableView.as_view(), name='pathmapper-table-view'),
+    url(r'^pathmapper/route/',
+        PathmapperRouteView.as_view(), name='pathmapper-route-view'),
 
     # Visualizations for grant application
     url(r'^pathmapper/',

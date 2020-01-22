@@ -5,11 +5,11 @@ from datetime import datetime, date
 from json import loads
 
 from django.views.generic.base import TemplateView, View
-from django.views.generic.list import ListView
 from rest_framework.generics import ListAPIView
 
-from footprints.main.models import Footprint
-from footprints.main.serializers import FootprintSerializer
+from footprints.main.models import Footprint, BookCopy
+from footprints.main.serializers import (
+    BookCopyRouteSerializer, FootprintSerializer)
 from footprints.mixins import JSONResponseMixin
 from footprints.pathmapper.forms import BookCopySearchForm
 
@@ -49,14 +49,27 @@ class BookCopySearchView(JSONResponseMixin, View):
         return self.render_to_json_response({'errors': form.errors})
 
 
-class PathMapperRouteView(JSONResponseMixin, ListView):
+class PathmapperRouteView(ListAPIView):
 
-    model = Footprint
-    http_method_names = ['get']
-    paginate_by = 15
+    model = BookCopy
+    serializer_class = BookCopyRouteSerializer
+    authentication_classes = []
+    permission_classes = []
+    page_size = 15
+
+    def get_book_copies(self, layer):
+        form = BookCopySearchForm(layer)
+        if form.is_valid():
+            sqs = form.search()
+            return sqs.values_list('object_id', flat=True)
 
     def get_queryset(self):
-        return Footprint.objects.none()
+        layer = loads(self.request.POST.get('layer'))
+        ids = self.get_book_copies(layer)
+        return BookCopy.objects.filter(id__in=ids)
+
+    def post(self, request, *args, **kwargs):
+        return self.get(request, *args, **kwargs)
 
 
 class PathmapperTableView(ListAPIView):

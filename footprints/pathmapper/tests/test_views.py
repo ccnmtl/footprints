@@ -27,3 +27,17 @@ class PathmapperTableViewTest(TestCase):
         self.assertEqual(the_json['next'], None)
         self.assertEqual(the_json['previous'], None)
         self.assertEqual(the_json['results'], [])
+
+
+class PathmapperRouteViewTest(TestCase):
+
+    def test_post(self):
+        url = reverse('pathmapper-route-view')
+        response = self.client.post(url, {'layer': '{}'},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEqual(response.status_code, 200)
+        the_json = loads(response.content.decode('utf-8'))
+        self.assertEqual(the_json['count'], 0)
+        self.assertEqual(the_json['next'], None)
+        self.assertEqual(the_json['previous'], None)
+        self.assertEqual(the_json['results'], [])
