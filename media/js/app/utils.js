@@ -1,4 +1,23 @@
 define(function() {
+    // Simplifying this approach
+    // https://stackoverflow.com/questions/50498666/nodejs-async-promise-queue
+    class AsyncQueue {
+        constructor() {
+            this.queue = [];
+            // eslint-disable-next-line scanjs-rules/call_setInterval
+            setInterval(this.resolveNext.bind(this), 100);
+        }
+        add(fn, cb, params) {
+            this.queue.push({fn, cb, params});
+        }
+        resolveNext() {
+            if (!this.queue.length) {
+                return;
+            }
+            const {fn, cb, params} = this.queue.shift();
+            fn(params).then(cb);
+        }
+    }
 
     function csrfSafeMethod(method) {
         // these HTTP methods do not require CSRF protection
@@ -60,6 +79,7 @@ define(function() {
     }
 
     return {
+        AsyncQueue: AsyncQueue,
         ajaxSetup: ajaxSetup,
         csrfSafeMethod: csrfSafeMethod,
         sanitize: sanitize,

@@ -21,7 +21,8 @@ module.exports = {
         "Backbone": true,
         "google": true,
         "Footprints": true,
-        "requirejs": true
+        "requirejs": true,
+        "Promise": true
     },
     "rules": {
         "indent": [
