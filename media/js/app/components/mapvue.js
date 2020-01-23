@@ -13,9 +13,84 @@ define(['jquery', 'utils'], function($, utils) {
                 return Footprints.baseUrl +
                     'pathmapper/route/?page=' + pageNumber;
             },
+            clearRoutes: function() {
+                for (let layer of this.routes) {
+                    for (let route of layer.lines) {
+                        route.setMap(null);
+                        route = null;
+                    }
+                    for (let marker of layer.markers) {
+                        marker.setMap(null);
+                        marker = null;
+                    }
+                }
+                this.routes = [];
+            },
+            refreshRoutes: function() {
+                this.clearRoutes();
+                for (let layer of this.value) {
+                    let idx = this.routes.push({'lines': [], 'markers': []});
+                    this.q.add(this.getData, this.mapData,
+                        {'layer': layer, 'layerIdx': idx - 1, 'page': 1});
+                }
+            },
+            addMarker: function(latlng, iconType) {
+                let icon = {
+                    fillOpacity: .6,
+                    anchor: new google.maps.Point(0,0),
+                    strokeWeight: 0,
+                    scale: 1
+                };
+                if (iconType === 'Imprint') {
+                    icon.path = 'M-5,0a5,5 0 1,0 10,0a5,5 0 1,0 -10,0';
+                    icon.fillColor = '#628395';
+                } else if (iconType === 'Footprint') {
+                    icon.fillColor = '#cb8d78';
+                    icon.path = 'M-5,0a5,5 0 1,0 10,0a5,5 0 1,0 -10,0';
+                }
+                return new google.maps.Marker({
+                    position: latlng,
+                    map: this.map,
+                    icon: icon
+                });
+            },
             mapData: function(data) {
-                // @todo - map the data here.
-                console.log(data);
+                let bounds = new google.maps.LatLngBounds();
+                for (let bookcopy of data.results) {
+                    let coords = [];
+                    if (bookcopy.imprint && bookcopy.imprint.place) {
+                        let latlng = {
+                            lat: bookcopy.imprint.place.latitude,
+                            lng: bookcopy.imprint.place.longitude,
+                        };
+                        coords.push(latlng);
+                        let marker = this.addMarker(latlng, 'Imprint');
+                        this.routes[data.layerIdx].markers.push(marker);
+                        bounds.extend(marker.position);
+                    }
+                    for (let fp of bookcopy.footprints) {
+                        if (fp.place) {
+                            let latlng = {
+                                lat: fp.place.latitude,
+                                lng: fp.place.longitude,
+                            };
+                            coords.push(latlng);
+                            let marker = this.addMarker(latlng, 'Footprint');
+                            this.routes[data.layerIdx].markers.push(marker);
+                            bounds.extend(marker.position);
+                        }
+                    }
+                    let path = new google.maps.Polyline({
+                        path: coords,
+                        geodesic: true,
+                        strokeColor: '#cb8d78',
+                        strokeOpacity: .6,
+                        strokeWeight: 1
+                    });
+                    path.setMap(this.map);
+                    this.routes[data.layerIdx].lines.push(path);
+                    this.map.fitBounds(bounds);
+                }
             },
             getData: function(params) {
                 const ctx = {
@@ -28,6 +103,7 @@ define(['jquery', 'utils'], function($, utils) {
                         dataType: 'json',
                         data: ctx,
                         success: (data) => {
+                            data.layerIdx = params.layerIdx;
                             resolve(data);
                         },
                         error: (error) => {
@@ -36,12 +112,6 @@ define(['jquery', 'utils'], function($, utils) {
                     });
                 });
             },
-            updateRoutes: function() {
-                for (let layer of this.value) {
-                    const ctx = {'layer': layer, 'page': 1};
-                    this.q.add(this.getData, this.mapData, ctx);
-                }
-            }
         },
         created: function() {
             this.q = new utils.AsyncQueue();
@@ -61,7 +131,7 @@ define(['jquery', 'utils'], function($, utils) {
                     position: google.maps.ControlPosition.RIGHT_BOTTOM,
                 }
             });
-            this.updateRoutes();
+            this.refreshRoutes();
         }
     };
     return {
