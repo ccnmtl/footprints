@@ -1,6 +1,8 @@
 # VERSION=1.8.0
 
 # CHANGES:
+# 1.9.0              - Use coverage tool directly to generate coverage
+#                      reports.
 # 1.8.0 - 2019-10-21 - Don't run flake8 on local_settings.py
 # 1.7.0 - 2018-05-31 - Now using python 3 by default
 #                    - Removed virtualenv.py in favor of python 3's
@@ -31,10 +33,12 @@ ifeq ($(TRAVIS),true)
 	BANDIT ?= bandit
 	FLAKE8 ?= flake8
 	PIP ?= pip
+	COVERAGE ?= coverage
 else
 	BANDIT ?= $(VE)/bin/bandit
 	FLAKE8 ?= $(VE)/bin/flake8
 	PIP ?= $(VE)/bin/pip
+	COVERAGE ?= $(VE)/bin/coverage
 endif
 
 jenkins: check flake8 test eslint bandit
@@ -49,7 +53,8 @@ $(PY_SENTINAL): $(REQUIREMENTS)
 	touch $@
 
 test: $(PY_SENTINAL)
-	$(MANAGE) jenkins --pep8-exclude=migrations --enable-coverage --coverage-rcfile=.coveragerc
+	$(COVERAGE) run --source='.' --omit=$(VE)/* $(MANAGE) test $(APP)
+	$(COVERAGE) xml -o reports/coverage.xml
 
 parallel-tests: $(PY_SENTINAL)
 	$(MANAGE) test --parallel
