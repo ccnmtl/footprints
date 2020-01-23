@@ -40,6 +40,10 @@ define(['jquery', 'layerVue', 'utils'], function($, layer, utils) {
                 this.selectedLayer = null;
                 this.$emit('input', $.extend(true, [], this.layers));
             },
+            toggleLayer: function(layerIdx) {
+                this.layers[layerIdx].visible = !this.layers[layerIdx].visible;
+                this.$emit('input', $.extend(true, [], this.layers));
+            },
             togglePane: function() {
                 if ($('#container-pane').hasClass('widget-pane-expanded')) {
                     $('#container-pane').removeClass('widget-pane-expanded');

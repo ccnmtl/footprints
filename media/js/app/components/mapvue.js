@@ -29,9 +29,11 @@ define(['jquery', 'utils'], function($, utils) {
             refreshRoutes: function() {
                 this.clearRoutes();
                 for (let layer of this.value) {
-                    let idx = this.routes.push({'lines': [], 'markers': []});
-                    this.q.add(this.getData, this.mapData,
-                        {'layer': layer, 'layerIdx': idx - 1, 'page': 1});
+                    if (layer.visible) {
+                        let i = this.routes.push({'lines': [], 'markers': []});
+                        this.q.add(this.getData, this.mapData,
+                            {'layer': layer, 'layerIdx': i - 1, 'page': 1});
+                    }
                 }
             },
             addMarker: function(latlng, iconType) {
