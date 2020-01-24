@@ -55,7 +55,6 @@ define(['jquery', 'utils'], function($, utils) {
                 });
             },
             mapData: function(data) {
-                let bounds = new google.maps.LatLngBounds();
                 for (let bookcopy of data.results) {
                     let coords = [];
                     if (bookcopy.imprint && bookcopy.imprint.place) {
@@ -66,7 +65,6 @@ define(['jquery', 'utils'], function($, utils) {
                         coords.push(latlng);
                         let marker = this.addMarker(latlng, 'Imprint');
                         this.routes[data.layerIdx].markers.push(marker);
-                        bounds.extend(marker.position);
                     }
                     for (let fp of bookcopy.footprints) {
                         if (fp.place) {
@@ -77,7 +75,6 @@ define(['jquery', 'utils'], function($, utils) {
                             coords.push(latlng);
                             let marker = this.addMarker(latlng, 'Footprint');
                             this.routes[data.layerIdx].markers.push(marker);
-                            bounds.extend(marker.position);
                         }
                     }
                     let path = new google.maps.Polyline({
@@ -89,7 +86,16 @@ define(['jquery', 'utils'], function($, utils) {
                     });
                     path.setMap(this.map);
                     this.routes[data.layerIdx].lines.push(path);
-                    this.map.fitBounds(bounds);
+                }
+
+                let nextPage = utils.parsePageNumber(data.next);
+                if (nextPage > 1) {
+                    let ctx = {
+                        'layer': data.layer,
+                        'layerIdx': data.layerIdx,
+                        'page': nextPage
+                    };
+                    this.q.add(this.getData, this.mapData, ctx);
                 }
             },
             getData: function(params) {
@@ -103,6 +109,7 @@ define(['jquery', 'utils'], function($, utils) {
                         dataType: 'json',
                         data: ctx,
                         success: (data) => {
+                            data.layer = params.layer;
                             data.layerIdx = params.layerIdx;
                             resolve(data);
                         },
@@ -116,8 +123,8 @@ define(['jquery', 'utils'], function($, utils) {
         created: function() {
             this.q = new utils.AsyncQueue();
             this.bounds = null;
-            this.zoom = 5;
-            this.center = new google.maps.LatLng(37.0902, -95.7129);
+            this.zoom = 3;
+            this.center = new google.maps.LatLng(35.408632, -41.164887);
         },
         mounted: function() {
             let elt = document.getElementById(this.mapName);
