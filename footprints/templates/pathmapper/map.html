@@ -26,15 +26,39 @@
     </div>
 
     <div id="share-view-container">
-        <div class="widget-share-map-table">
-            <button type="button" class="btn btn-share" title="Share results"><i class="fas fa-share-alt"></i></i></button>
-            <button v-on:click="switchToMap"  type="button" :class="['btn', 'btn-view', {'active': showMap}]">
+        <div class="widget-share-map-table d-flex flex-row">
+            <button v-on:click="switchToMap"  type="button" :class="['btn', 'btn-view', 'order-2', {'active': showMap}]">
                 Map view
             </button>
-            <button v-on:click="switchToTable" type="button" :class="['btn', 'btn-view', {'active': !showMap}]">
+            <button v-on:click="switchToTable" type="button" :class="['btn', 'btn-view', 'order-3', {'active': !showMap}]">
                 Table view
             </button>
+            <button type="button" class="btn btn-share order-1" title="Share results" v-on:click="shareResults"><i class="fas fa-share-alt"></i></i></button>
         </div><!-- /.widget-share-map-table -->
+        <div class="widget-share-panel share-panel-collapsed" id="share-panel-focus">
+            <div class="share-panel-content">
+                <div class="share-panel-header d-flex justify-content-between">
+                    <h2>Share results</h2>
+                </div><!-- /.share-panel-header -->
+                <div class="share-panel-copylink form-group">
+                            <label for="shareCopyLink">Link to share:</label>
+                            <input type="text" class="form-control" id="shareCopyLink" value="pathmapperly link">
+                </div><!-- /.share-panel-copylink -->
+                <div class="share-panel-socmedia d-flex justify-content-center">
+                    <button class="share-panel-facebook" value="Facebook">
+                        <i class="fab fa-facebook-square fa-3x"></i>
+                        <span>Facebook</span>
+                    </button>
+                    <button class="share-panel-twitter">
+                        <i class="fab fa-twitter-square fa-3x"></i>
+                        <span>Twitter</span>
+                    </button>
+                </div><!-- /.share-panel-socmedia -->
+                <button type="button" class="btn share-panel-close" aria-label="Close" v-on:click="closeShareResults">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </button>
+            </div><!-- /.share-panel-content -->
+        </div><!-- /.widget-share-panel -->
     </div>
 
     <!--
