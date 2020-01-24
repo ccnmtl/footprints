@@ -308,6 +308,10 @@ header .btn-priority-hi {
     color: #97421b;
 }
 
+.btn-layer-action.btn-layer-off {
+    color: gray;
+}
+
 .btn-layer-action:hover {
     color: #82320d;
     background-color: #efefef;
