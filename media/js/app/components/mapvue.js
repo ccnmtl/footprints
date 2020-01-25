@@ -28,8 +28,13 @@ define(['jquery', 'layerMapVue', 'utils'], function($, layermap, utils) {
                 center: this.center,
                 fullscreenControlOptions: {
                     position: google.maps.ControlPosition.RIGHT_BOTTOM,
+                },
+                mapTypeControlOptions: {
+                    mapTypeIds: ['styled_map']
                 }
             });
+            this.map.mapTypes.set('styled_map', utils.lightGrayStyle);
+            this.map.setMapTypeId('styled_map');
         }
     };
     return {
