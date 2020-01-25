@@ -2,6 +2,9 @@
 <script type="text/x-template" id="pathmapper-map-template">
     <div class="pathmapper-container">
         <div class="google-map d-print-none" :id="mapName"></div>
+        <div  v-for="(layer, idx) in layers">
+            <layer-map :layer="layers[idx]" :queue="queue" :map="map" />
+        </div>
     </div>
 </script>
 {% endverbatim %}
