@@ -14,9 +14,9 @@
 {% block client_templates %}
     <meta name="csrf-token" content="{{csrf_token}}">
     {% include "clientside/pathmapper_table.html" %}
-    {% include "clientside/google_map_template.html" %}
+    {% include "clientside/pathmapper_map.html" %}
     {% include "clientside/layer_list_template.html" %}
-    {% include "clientside/layer_template.html" %}
+    {% include "clientside/layer_form_template.html" %}
     {% include "clientside/select_widget_template.html" %}
 {% endblock %}
 
@@ -47,7 +47,7 @@
     </div>
 
     <div v-if="showMap" id="map-container">
-        <google-map v-model="collection.layers" />
+        <pathmapper-map v-model="collection.layers" />
     </div>
 
 {% endblock %}

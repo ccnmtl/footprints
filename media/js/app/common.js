@@ -10,7 +10,8 @@ requirejs.config({
     paths: {
         'jquery': 'jquery/js/jquery-3.4.1.min',
         'layerListVue': 'js/app/components/layerlistvue',
-        'layerVue': 'js/app/components/layervue',
+        'layerFormVue': 'js/app/components/layerformvue',
+        'layerMapVue': 'js/app/components/layermapvue',
         'mapVue': 'js/app/components/mapvue',
         'select2': 'js/lib/select2-4.0.10/js/select2.full',
         'selectWidget': 'js/app/components/select-widget',

@@ -16,7 +16,7 @@ requirejs(['./common'], function(common) {
                 },
                 components: {
                     'layer-list': layers.LayerListVue,
-                    'google-map': map.GoogleMapVue,
+                    'pathmapper-map': map.PathmapperMapVue,
                     'pathmapper-table': table.PathmapperTableVue
                 },
                 methods: {
