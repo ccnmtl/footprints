@@ -25,7 +25,6 @@ define(['jquery', 'utils'], function($, utils) {
                 this.markers = [];
             },
             refresh: function() {
-                console.log('refresh');
                 this.clear(); // clear the routes
                 this.getPage(1); // get the data again
             },
@@ -115,7 +114,6 @@ define(['jquery', 'utils'], function($, utils) {
                     return;
                 }
 
-                console.log('visibilityChanged');
                 const map = newVal ? this.map : null;
                 for (let route of this.lines) {
                     route.setMap(map);
