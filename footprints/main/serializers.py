@@ -220,9 +220,25 @@ class FootprintSerializer(HyperlinkedModelSerializer):
         return smart_text(obj.book_copy.identifier())
 
 
-class BookCopyRouteSerializer(HyperlinkedModelSerializer):
-    imprint = ImprintSerializer(read_only=True)
-    footprints = FootprintSerializer(many=True, read_only=True)
+class PathmapperImprintSerializer(HyperlinkedModelSerializer):
+    place = PlaceSerializer()
+
+    class Meta:
+        model = Imprint
+        fields = ('id', 'place')
+
+
+class PathmapperFootprintSerializer(HyperlinkedModelSerializer):
+    place = PlaceSerializer()
+
+    class Meta:
+        model = Footprint
+        fields = ('id', 'place')
+
+
+class PathmapperRouteSerializer(HyperlinkedModelSerializer):
+    imprint = PathmapperImprintSerializer(read_only=True)
+    footprints = PathmapperFootprintSerializer(many=True, read_only=True)
 
     class Meta:
         model = BookCopy
