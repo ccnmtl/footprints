@@ -64,8 +64,7 @@ class PathmapperRouteView(ListAPIView):
             return sqs.values_list('object_id', flat=True)
 
     def get_queryset(self):
-        layer = self.request.POST.get('layer', '{"work":"12"}')
-        layer = loads(layer)
+        layer = loads(self.request.POST.get('layer'))
         ids = self.get_book_copies(layer)
         return BookCopy.objects.filter(id__in=ids).select_related(
             'imprint__place')
