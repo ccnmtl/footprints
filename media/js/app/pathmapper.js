@@ -11,7 +11,9 @@ requirejs(['./common'], function(common) {
                             id: null,
                             layers: []
                         },
-                        showMap: true
+                        showMap: true,
+                        showShare: false,
+                        shareUrl: ''
                     };
                 },
                 components: {
@@ -51,26 +53,30 @@ requirejs(['./common'], function(common) {
                         /*eslint-enable scanjs-rules/property_localStorage*/
                         /*eslint-enable scanjs-rules/identifier_localStorage*/
                     },
+                    shareSession: function() {
+                        const ctx = {
+                            layers: JSON.stringify(this.collection.layers)
+                        };
+
+                        return new Promise((resolve, reject) => {
+                            $.ajax({
+                                type: 'POST',
+                                url: this.shareUrl,
+                                dataType: 'json',
+                                data: ctx
+                            }).done((data) => {
+                                this.shareUrl = data.url;
+                            });
+                        });
+                    },
                     shareResults: function() {
-                        if ($('#share-panel-focus')
-                            .hasClass('share-panel-collapsed')) {
-                            $('#share-panel-focus')
-                                .removeClass('share-panel-collapsed');
-                            $('#share-panel-focus')
-                                .addClass('share-panel-expanded');
-                        } else {
-                            $('#share-panel-focus')
-                                .removeClass('share-panel-expanded');
-                            $('#share-panel-focus')
-                                .addClass('share-panel-collapsed');
-                        }
-                        $('#shareCopyLink').focus().select();
+                        this.shareSession().then(function() {
+                            this.showShare = !this.showShare;
+                            $('#shareCopyLink').focus().select();
+                        });
                     },
                     closeShareResults: function() {
-                        $('#share-panel-focus')
-                            .removeClass('share-panel-expanded');
-                        $('#share-panel-focus')
-                            .addClass('share-panel-collapsed');
+                        this.showShare = false;
                     }
                 },
                 created: function() {
@@ -84,6 +90,9 @@ requirejs(['./common'], function(common) {
 
                     // initialize layers via stored data
                     this.readSession();
+                },
+                mounted: function() {
+                    jQuery('#share-view-container').fadeIn();
                 },
                 updated: function() {
                     this.saveSession();
