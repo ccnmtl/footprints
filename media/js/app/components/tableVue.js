@@ -1,4 +1,4 @@
-define(['jquery', 'utils'], function($, layer, utils) {
+define(['jquery', 'utils'], function($, utils) {
     const PathmapperTableVue = {
         props: ['value'],
         template: '#pathmapper-table-template',
@@ -17,16 +17,6 @@ define(['jquery', 'utils'], function($, layer, utils) {
             },
             hasPrev: function() {
                 return this.page.prevPage;
-            },
-            parsePageNumber: function(str) {
-                let pageNumber = 1;
-                try {
-                    let result = str.matchAll(/page=(\d+)/);
-                    pageNumber = parseInt(result.next().value[1], 10);
-                } catch (err) {
-                    // continue with default page number
-                }
-                return pageNumber;
             },
             changePage: function(pg) {
                 this.page.number = pg;
@@ -47,8 +37,8 @@ define(['jquery', 'utils'], function($, layer, utils) {
                     dataType: 'json',
                     data: ctx
                 }).done((data) => {
-                    this.page.nextPage = this.parsePageNumber(data.next);
-                    this.page.prevPage = this.parsePageNumber(data.previous);
+                    this.page.nextPage = utils.parsePageNumber(data.next);
+                    this.page.prevPage = utils.parsePageNumber(data.previous);
                     this.totalPages = Math.ceil(data.count / this.pageSize);
                     this.footprints = $.extend(true, [], data.results);
                 });

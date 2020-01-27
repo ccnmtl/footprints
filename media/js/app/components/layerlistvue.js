@@ -24,7 +24,7 @@ define(['jquery', 'layerVue', 'utils'], function($, layer, utils) {
             deleteLayer: function(evt) {
                 const idx = $(evt.currentTarget).data('idx');
                 this.layers.splice(idx, 1);
-                this.$emit('input', this.layers);
+                this.$emit('input', $.extend(true, [], this.layers));
             },
             cancelLayer: function() {
                 this.selectedLayer = null;
@@ -38,7 +38,11 @@ define(['jquery', 'layerVue', 'utils'], function($, layer, utils) {
                         $.extend(true, {}, layer);
                 }
                 this.selectedLayer = null;
-                this.$emit('input', this.layers);
+                this.$emit('input', $.extend(true, [], this.layers));
+            },
+            toggleLayer: function(layerIdx) {
+                this.layers[layerIdx].visible = !this.layers[layerIdx].visible;
+                this.$emit('input', $.extend(true, [], this.layers));
             },
             togglePane: function() {
                 if ($('#container-pane').hasClass('widget-pane-expanded')) {

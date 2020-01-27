@@ -22,7 +22,13 @@
                         <h2 :id="'layer-' + idx">{{layer.title}}</h2>
                         <ul class="indiv-layer-actions d-flex">
                             <li><button :data-idx="idx" v-on:click="editLayer" type="button" class="btn btn-layer-action"><i class="fas fa-pencil-alt"></i></button></li>
-                            <li><button :data-idx="idx" type="button" class="btn btn-layer-action"><i class="fas fa-eye"></i></button></li>
+                            <li>
+                                <button :data-idx="idx" v-on:click.stop.prevent="toggleLayer(idx)"
+                                    type="button" class="btn btn-layer-action"
+                                   :class="['btn', 'btn-layer-action', {'btn-layer-off': !layer.visible}]">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </li>
                             <li><button :data-idx="idx" v-on:click="deleteLayer" type="button" class="btn btn-layer-action"><i class="fas fa-trash-alt"></i></button></li>
                         </ul>
                     </section>

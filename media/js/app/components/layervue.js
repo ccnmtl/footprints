@@ -20,7 +20,8 @@ define(['jquery', 'selectWidget'], function($, select) {
                     'footprintEnd': null,
                     'footprintRange': false,
                     'censored': null,
-                    'expurgated': null
+                    'expurgated': null,
+                    'visible': true
                 },
                 total: null,
                 pubMin: null,
