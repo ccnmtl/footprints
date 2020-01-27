@@ -1,4 +1,4 @@
-define(['jquery', 'layerVue', 'utils'], function($, layer, utils) {
+define(['jquery', 'layerFormVue', 'utils'], function($, layerForm, utils) {
     const LayerListVue = {
         props: ['value'],
         template: '#layer-list-template',
@@ -9,7 +9,7 @@ define(['jquery', 'layerVue', 'utils'], function($, layer, utils) {
             };
         },
         components: {
-            'layer-form': layer.LayerVue
+            'layer-form': layerForm.LayerVue
         },
         methods: {
             createLayer: function() {

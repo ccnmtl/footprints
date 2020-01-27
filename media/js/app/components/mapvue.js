@@ -1,12 +1,15 @@
-define(['jquery', 'utils'], function($, utils) {
-    const GoogleMapVue = {
+define(['jquery', 'layerMapVue', 'utils'], function($, layermap, utils) {
+    const PathmapperMapVue = {
         props: ['value'],
-        template: '#google-map-template',
+        template: '#pathmapper-map-template',
         data: function() {
             return {
                 mapName: 'the-map',
                 routes: []
             };
+        },
+        components: {
+            'layer-map': layermap.LayerMapVue
         },
         methods: {
             url: function(pageNumber) {
@@ -145,6 +148,6 @@ define(['jquery', 'utils'], function($, utils) {
         }
     };
     return {
-        GoogleMapVue: GoogleMapVue
+        PathmapperMapVue: PathmapperMapVue
     };
 });
