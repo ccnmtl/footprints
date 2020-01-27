@@ -71,7 +71,7 @@
     </div>
 
     <div v-if="showMap" id="map-container">
-        <pathmapper-map v-model="collection.layers" />
+        <pathmapper-map :layers="collection.layers" />
     </div>
 
 {% endblock %}
