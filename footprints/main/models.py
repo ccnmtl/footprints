@@ -1068,7 +1068,8 @@ class BookCopy(models.Model):
         return qs
 
     def footprints(self):
-        lst = list(self.footprint_set.all())
+        q = self.footprint_set.all().select_related('associated_date', 'place')
+        lst = list(q)
         lst.sort(key=lambda obj: obj.sort_date())
         return lst
 
