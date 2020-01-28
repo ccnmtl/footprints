@@ -22,14 +22,14 @@ class BookCopySearchView(JSONResponseMixin, View):
 
     def min_year(self, sqs, key):
         stats = sqs.stats(key).stats_results()
-        if not stats or not stats[key]['min']:
+        if not stats or not stats[key] or not stats[key]['min']:
             return date.min.year
 
         return datetime.strptime(stats[key]['min'], '%Y-%m-%dT%H:%M:%SZ').year
 
     def max_year(self, sqs, key):
         stats = sqs.stats(key).stats_results()
-        if not stats or not stats[key]['min']:
+        if not stats or not stats[key] or not stats[key]['max']:
             return date.max.year
         return datetime.strptime(stats[key]['max'], '%Y-%m-%dT%H:%M:%SZ').year
 
