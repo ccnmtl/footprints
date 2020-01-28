@@ -33,8 +33,8 @@ class BookCopySearchView(JSONResponseMixin, View):
             return date.max.year
         return datetime.strptime(stats[key]['max'], '%Y-%m-%dT%H:%M:%SZ').year
 
-    def post(self, request):
-        form = BookCopySearchForm(request.POST)
+    def get(self, request):
+        form = BookCopySearchForm(request.GET)
         if form.is_valid():
             sqs = form.search()
             ctx = {
@@ -57,20 +57,16 @@ class PathmapperRouteView(ListAPIView):
     permission_classes = []
     page_size = 15
 
-    def get_book_copies(self, layer):
-        form = BookCopySearchForm(layer)
+    def get_book_copies(self):
+        form = BookCopySearchForm(self.request.GET)
         if form.is_valid():
             sqs = form.search()
             return sqs.values_list('object_id', flat=True)
 
     def get_queryset(self):
-        layer = loads(self.request.POST.get('layer'))
-        ids = self.get_book_copies(layer)
+        ids = self.get_book_copies()
         return BookCopy.objects.filter(id__in=ids).select_related(
             'imprint__place')
-
-    def post(self, request, *args, **kwargs):
-        return self.get(request, *args, **kwargs)
 
 
 class PathmapperTableView(ListAPIView):
@@ -88,10 +84,7 @@ class PathmapperTableView(ListAPIView):
 
     def get_queryset(self):
         ids = []
-        layers = loads(self.request.POST.get('layers'))
+        layers = loads(self.request.GET.get('layers'))
         for layer in layers:
             ids += self.get_book_copies(layer)
         return Footprint.objects.filter(book_copy__id__in=ids)
-
-    def post(self, request, *args, **kwargs):
-        return self.get(request, *args, **kwargs)

@@ -32,7 +32,7 @@ define(['jquery', 'utils'], function($, utils) {
                 };
 
                 $.ajax({
-                    type: 'POST',
+                    type: 'GET',
                     url: this.url(this.page.number),
                     dataType: 'json',
                     data: ctx

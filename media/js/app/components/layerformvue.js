@@ -112,7 +112,7 @@ define(['jquery', 'selectWidget'], function($, select) {
                 $.ajax({
                     url: this.searchUrl,
                     data: this.layer,
-                    type: 'post'
+                    type: 'get'
                 }).done((results) => {
                     this.state = JSON.stringify(this.layer);
                     this.total = results.total;

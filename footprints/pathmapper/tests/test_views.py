@@ -6,10 +6,10 @@ from django.urls.base import reverse
 
 class BookCopySearchViewTest(TestCase):
 
-    def test_post(self):
+    def test_get(self):
         url = reverse('bookcopy-search-view')
-        response = self.client.post(url, {},
-                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        response = self.client.get(url, {},
+                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEqual(response.status_code, 200)
         the_json = loads(response.content.decode('utf-8'))
         self.assertEqual(the_json['total'], 0)
@@ -17,10 +17,10 @@ class BookCopySearchViewTest(TestCase):
 
 class PathmapperTableViewTest(TestCase):
 
-    def test_post(self):
+    def test_get(self):
         url = reverse('pathmapper-table-view')
-        response = self.client.post(url, {'layers': '{}'},
-                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        response = self.client.get(url, {'layers': '{}'},
+                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEqual(response.status_code, 200)
         the_json = loads(response.content.decode('utf-8'))
         self.assertEqual(the_json['count'], 0)
@@ -31,10 +31,10 @@ class PathmapperTableViewTest(TestCase):
 
 class PathmapperRouteViewTest(TestCase):
 
-    def test_post(self):
+    def test_get(self):
         url = reverse('pathmapper-route-view')
-        response = self.client.post(url, {'layer': '{}'},
-                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        response = self.client.get(url, {'layer': '{}'},
+                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEqual(response.status_code, 200)
         the_json = loads(response.content.decode('utf-8'))
         self.assertEqual(the_json['count'], 0)

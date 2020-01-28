@@ -8,9 +8,10 @@ define(['jquery', 'utils'], function($, utils) {
             };
         },
         methods: {
-            url: function(pageNumber) {
+            url: function(params) {
                 return Footprints.baseUrl +
-                    'pathmapper/route/?page=' + pageNumber;
+                    'pathmapper/route/?page=' + params.page + '&' +
+                    $.param(params.layer);
             },
             clear: function() {
                 for (let route of this.lines) {
@@ -33,15 +34,10 @@ define(['jquery', 'utils'], function($, utils) {
                 this.queue.add(this.getData, this.mapData, ctx);
             },
             getData: function(params) {
-                const ctx = {
-                    layer: JSON.stringify(params.layer)
-                };
                 return new Promise((resolve, reject) => {
                     $.ajax({
-                        type: 'POST',
-                        url: this.url(params.page),
-                        dataType: 'json',
-                        data: ctx,
+                        type: 'GET',
+                        url: this.url(params),
                         success: (data) => {
                             resolve(data);
                         },
