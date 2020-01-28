@@ -50,6 +50,27 @@ requirejs(['./common'], function(common) {
                         }
                         /*eslint-enable scanjs-rules/property_localStorage*/
                         /*eslint-enable scanjs-rules/identifier_localStorage*/
+                    },
+                    shareResults: function() {
+                        if ($('#share-panel-focus')
+                            .hasClass('share-panel-collapsed')) {
+                            $('#share-panel-focus')
+                                .removeClass('share-panel-collapsed');
+                            $('#share-panel-focus')
+                                .addClass('share-panel-expanded');
+                        } else {
+                            $('#share-panel-focus')
+                                .removeClass('share-panel-expanded');
+                            $('#share-panel-focus')
+                                .addClass('share-panel-collapsed');
+                        }
+                        $('#shareCopyLink').focus().select();
+                    },
+                    closeShareResults: function() {
+                        $('#share-panel-focus')
+                            .removeClass('share-panel-expanded');
+                        $('#share-panel-focus')
+                            .addClass('share-panel-collapsed');
                     }
                 },
                 created: function() {

@@ -9,7 +9,7 @@ from rest_framework.generics import ListAPIView
 
 from footprints.main.models import Footprint, BookCopy
 from footprints.main.serializers import (
-    BookCopyRouteSerializer, FootprintSerializer)
+    PathmapperRouteSerializer, FootprintSerializer)
 from footprints.mixins import JSONResponseMixin
 from footprints.pathmapper.forms import BookCopySearchForm
 
@@ -22,14 +22,14 @@ class BookCopySearchView(JSONResponseMixin, View):
 
     def min_year(self, sqs, key):
         stats = sqs.stats(key).stats_results()
-        if not stats or not stats[key]['min']:
+        if not stats or not stats[key] or not stats[key]['min']:
             return date.min.year
 
         return datetime.strptime(stats[key]['min'], '%Y-%m-%dT%H:%M:%SZ').year
 
     def max_year(self, sqs, key):
         stats = sqs.stats(key).stats_results()
-        if not stats or not stats[key]['min']:
+        if not stats or not stats[key] or not stats[key]['max']:
             return date.max.year
         return datetime.strptime(stats[key]['max'], '%Y-%m-%dT%H:%M:%SZ').year
 
@@ -52,7 +52,7 @@ class BookCopySearchView(JSONResponseMixin, View):
 class PathmapperRouteView(ListAPIView):
 
     model = BookCopy
-    serializer_class = BookCopyRouteSerializer
+    serializer_class = PathmapperRouteSerializer
     authentication_classes = []
     permission_classes = []
     page_size = 15
@@ -66,7 +66,8 @@ class PathmapperRouteView(ListAPIView):
     def get_queryset(self):
         layer = loads(self.request.POST.get('layer'))
         ids = self.get_book_copies(layer)
-        return BookCopy.objects.filter(id__in=ids)
+        return BookCopy.objects.filter(id__in=ids).select_related(
+            'imprint__place')
 
     def post(self, request, *args, **kwargs):
         return self.get(request, *args, **kwargs)
