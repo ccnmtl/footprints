@@ -125,8 +125,6 @@ urlpatterns = [
     url(r'^writtenwork/(?P<pk>\d+)/$',
         WrittenWorkDetailView.as_view(), name='writtenwork-detail-view'),
 
-    url(r'^map/', PathmapperView.as_view(), name='map-view'),
-
     url(r'^export/footprints/$',
         ExportFootprintSearch.as_view(),
         name='export-footprint-list'),
@@ -167,14 +165,16 @@ urlpatterns = [
         serve, {'document_root': settings.MEDIA_ROOT}),
     url(r'^sign_s3/$', SignS3View.as_view()),
 
-    url(r'^pathmapper/table/',
-        PathmapperTableView.as_view(), name='pathmapper-table-view'),
     url(r'^pathmapper/route/',
         PathmapperRouteView.as_view(), name='pathmapper-route-view'),
-
-    # Visualizations for grant application
-    url(r'^pathmapper/',
+    url(r'^pathmapper/table/',
+        PathmapperTableView.as_view(), name='pathmapper-table-view'),
+    url(r'^pathmapper/vision/',
         TemplateView.as_view(template_name='design/pathmapper.html')),
+    url(r'^pathmapper/(?P<uuid>[0-9A-Za-z-]+)',
+        PathmapperView.as_view(),
+        name='pathmapper-share-view'),
+    url(r'^pathmapper/', PathmapperView.as_view(), name='pathmapper-view'),
 
     # Temporary table view template for pathmapper
     url(r'^tableview/',

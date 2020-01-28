@@ -1,0 +1,142 @@
+{% load compress %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Footprints: PathMapper</title>
+    
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Footprints">
+    <meta name="author" content="CTL">
+    <meta name="robots" content="noindex">
+    <meta name="googlebot" content="noindex">
+  
+    <!-- Bootstrap CSS: -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    {% compress css %}
+        <!-- Application CSS: -->
+        <link href="{{STATIC_URL}}css/main.css" rel="stylesheet">
+        <link href="{{STATIC_URL}}css/custom-responsive.css" rel="stylesheet">
+        <link href="{{STATIC_URL}}css/print-pathmapper.css" rel="stylesheet" media="print">
+    {% endcompress %}
+    <link rel="shortcut icon" href="{{STATIC_URL}}img/favicon.ico" type="image/x-icon" /> 
+  
+    <script src="{{STATIC_URL}}jquery/js/jquery-1.10.1.min.js"></script>
+    <link href="//fonts.googleapis.com/css?family=Asap:400,700,400italic" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Arvo:400,700' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Raleway:200' rel='stylesheet' type='text/css'>
+
+</head>
+
+<body class="pathmapper">
+<div id="wrap">
+<div class="header hidden-print">
+    <img src="{{STATIC_URL}}img/pathmapper-web-cover.png" class="print-inline">
+    <div class="container">
+        <div class="logo"><a href="/"></a></div>
+        <div class="brand">PATHMAPPER</div>
+    </div>
+</div><!-- /.header -->
+<div class="cover">
+    <img src="{{STATIC_URL}}img/pathmapper-web-cover.png">
+</div><!-- /.cover -->
+
+<div class="container banner">
+    <div class="intro">
+    <h1>Pathmapper is a web-based application for charting the historical journey of Jewish books across the world, and through time.</h1>
+    <p class="more_intro">Using the Footprints database, Pathmapper traces the movements of these literary works on a map. These paths reveal compelling narratives and dissemination patterns of knowledge, faith, and culture in the global Diaspora.</p>
+    <a href="https://ccnmtl-footprints-static-prod.s3.amazonaws.com/design/pathmapper.pdf" target="_blank" class="download hidden-print"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> Download PDF</a>
+    </div>
+</div>
+
+<div class="container slidebox clearfix odd">
+    <div class="visual">
+    <h3 class="visible-xs visible-sm print-block">Mapping Footprints</h3>
+    <img src="https://ccnmtl-footprints-static-prod.s3.amazonaws.com/design/pathmapper_map.jpg">
+    </div>
+    <div class="text">
+        <h3 class="visible-lg visible-md print-block">Mapping Footprints</h3>
+        <p>Users will be able to select a footprint location and see all of the books known to have resided in that location, including where they came from, and in some cases where they went. In this example, users can see the paths of books in the Oppenheim collection presently at the Bodleian Library in Oxford, UK.</p>
+        <p>The timespan parameter allows users to focus the visualization on a certain period.  The size of points on the map represents the number of books at the location within the specified time. The visualization can be further refined using other parameters in the filtering tool, such as imprints and ownership. Users can select one path on the map to view the movement and historical details of a any book across its footprint locations.</p>
+    </div>
+</div>
+
+<div class="container slidebox clearfix even">
+    <div class="visual">
+    <h3 class="visible-xs visible-sm print-block">Comparing Timelines</h3>
+    <img src="https://ccnmtl-footprints-static-prod.s3.amazonaws.com/design/pathmapper_timeline.jpg">
+    </div>
+    <div class="text">
+        <h3 class="visible-lg visible-md print-block">Comparing Timelines</h3>
+        <p>The Pathmapper Timeline offers users a way to analyze the paths of two or more books in the Footprints database. Users can select multiple paths of books on the map and see their representation over a particular time and place in the Timeline window. These comparative timelines offer a composite view of ownership and transmission of ideas in the books’ travel history.</p>
+    </div>
+</div>
+
+<div class="container slidebox clearfix odd">
+    <div class="visual">
+    <h3 class="visible-xs visible-sm print-block">Literary Overview</h3>
+    <img src="https://ccnmtl-footprints-static-prod.s3.amazonaws.com/design/pathmapper_tabledata.jpg">
+    </div>
+    <div class="text">
+        <h3 class="visible-lg visible-md print-block">Literary Overview</h3>
+        <p>Pathmapper can also condense the paths all of the books in a particular place within a slice of time in tabular form. Here, users can also peruse any existing readership trends within a community of Jews.</p>
+    </div>
+</div>
+
+<div class="container foot">
+<footer class="footer">
+    <ul class="footer-navigation hidden-print">
+        <li><a href="/credits/">Credits</a></li>
+        <li><a href="/credits/contributors/">Contributors</a></li>
+        <li><a href="/contact/">Contact</a></li>
+        <li><a href="/faq/">FAQ</a></li>
+        <li><a href="/glossary/">Glossary</a></li>
+        {% if user.has_usable_password %}
+        <li><a href="/accounts/password_change/">Password</a></li>
+        {% endif %}
+        <li class="fp_socialmedia"><a href="https://www.facebook.com/footprintsHeb/" target="_blank" title="Footprints on Facebook"><img src="{{STATIC_URL}}img/footer_fb_logo.png" target="_blank" alt="Footprints on Facebook"></a></li>
+        <li class="fp_socialmedia"><a href="https://twitter.com/Footprints_Heb" target="_blank" title="Footprints on Twitter"><img src="{{STATIC_URL}}img/footer_twitter_logo.png" target="_blank" alt="Footprints on Twitter"></a></li>
+    </ul>                    
+    
+    <div class="footer-branding">
+        <p class="description1">Footprints grew out of the Scholars Working Group on the Jewish Book at the Center for Jewish History and was developed as a collaboration of educators and researchers from the following institutions:</p>
+        
+        <div class="institutions-research clearfix">
+            <div class="footer-line1">
+            <div class="logos-ir"><a href="http://www.jtsa.edu/" class="hidden-print" /><img src="{{STATIC_URL}}img/fp_jts_logo.png" target="_blank" alt="Jewish Theological Seminary" class="hidden-print" /></a>
+            <img src="{{STATIC_URL}}img/fp_jts_logo_bw.png" target="_blank" alt="Jewish Theological Seminary" class="print-inline" />
+            </div>
+            <div class="logos-ir"><a href="http://library.columbia.edu" class="hidden-print" /><img src="{{STATIC_URL}}img/fp_cul_logo.png" target="_blank" alt="Columbia University Libraries" class="hidden-print" /></a>
+            <img src="{{STATIC_URL}}img/fp_cul_logo_bw.png" target="_blank" alt="Columbia University Libraries" class="print-inline" />
+            </div>
+            </div>
+            <div class="footer-line2">
+            <div class="logos-ir"><a href="http://www.pitt.edu/" class="hidden-print" /><img src="{{STATIC_URL}}img/fp_pitt2_logo.png" target="_blank" alt="University of Pittsburgh" class="hidden-print" /></a>
+            <img src="{{STATIC_URL}}img/fp_pitt_logo_bw.png" target="_blank" alt="University of Pittsburgh" class="print-inline" />
+            </div>
+            <div class="logos-ir"><a href="http://www.stonybrook.edu/" class="hidden-print" /><img src="{{STATIC_URL}}img/fp_stonybrook_logo.png" target="_blank" alt="Stony Brook University" class="hidden-print" /></a>
+            <img src="{{STATIC_URL}}img/fp_stonybrook_logo_bw.png" target="_blank" alt="Stony Brook University" class="print-inline" />
+            </div>
+            </div>
+        </div>
+        
+        <p class="description2">This project was made possible by generous support from:</p>
+
+        <ul class="footer-logos footer-line3">
+        <li><a href="http://www.cjh.org" class="hidden-print" /><img src="{{STATIC_URL}}img/fp_cjh_logo.png" target="_blank" alt="Center for Jewish History" class="hidden-print" /></a>
+        <img src="{{STATIC_URL}}img/fp_cjh_logo_bw.png" target="_blank" alt="Center for Jewish History" class="print-inline" />
+        </li>
+        <li><a href="http://ctl.columbia.edu" class="hidden-print" /><img src="{{STATIC_URL}}img/fp_ctl_logo.png" target="_blank" alt="Columbia University's Center for Teaching and Learning" class="hidden-print" /></a>
+        <img src="{{STATIC_URL}}img/fp_ctl_logo_bw.png" target="_blank" alt="Columbia University's Center for Teaching and Learning" class="print-inline" />
+        </li>
+        </ul>
+    </div>
+</footer>
+</div>
+
+
+</div><!-- /#wrap -->
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</body>
+</html>
