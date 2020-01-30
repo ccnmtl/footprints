@@ -171,9 +171,6 @@ urlpatterns = [
         PathmapperTableView.as_view(), name='pathmapper-table-view'),
     url(r'^pathmapper/vision/',
         TemplateView.as_view(template_name='design/pathmapper.html')),
-    url(r'^pathmapper/(?P<uuid>[0-9A-Za-z-]+)',
-        PathmapperView.as_view(),
-        name='pathmapper-share-view'),
     url(r'^pathmapper/', PathmapperView.as_view(), name='pathmapper-view'),
 
     # Temporary table view template for pathmapper

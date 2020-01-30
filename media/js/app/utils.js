@@ -1,4 +1,13 @@
 define(function() {
+    // Given a camel case string, return a string of upper-case letters
+    // :footprintStartDate" returns "fsd"
+    function abbreviate(str) {
+        return str
+            .split(/(?=[A-Z])/)
+            .map(word => word.charAt(0).toLowerCase())
+            .join('');
+    }
+
     // Simplifying this approach
     // https://stackoverflow.com/questions/50498666/nodejs-async-promise-queue
     class AsyncQueue {
@@ -271,6 +280,7 @@ define(function() {
     ]);
 
     return {
+        abbreviate: abbreviate,
         AsyncQueue: AsyncQueue,
         ajaxSetup: ajaxSetup,
         csrfSafeMethod: csrfSafeMethod,

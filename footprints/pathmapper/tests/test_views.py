@@ -1,7 +1,59 @@
 from json import loads
 
+from django.test.client import RequestFactory
 from django.test.testcases import TestCase
 from django.urls.base import reverse
+
+from footprints.pathmapper.views import PathmapperView
+
+
+class PathmapperViewTest(TestCase):
+
+    def test_parse_layer_no_layers(self):
+        view = PathmapperView()
+        view.request = RequestFactory().get('/')
+        self.assertIsNone(view.parse_layer(0))
+
+    def test_parse_layer_invalid_layer(self):
+        q = 'foo:bar,baz:q'
+        view = PathmapperView()
+        view.request = RequestFactory().get('/', {'l0': q})
+        self.assertIsNone(view.parse_layer(0))
+
+    def test_parse_layer_valid_layer(self):
+        q = ('i:,t:Kuzari,w:12,i:,il:,fl:,flf:,a:,ps:'
+             ',pe:,pr:,fs:,fe:,fr:,c:,e:,v:true')
+        view = PathmapperView()
+        view.request = RequestFactory().get('/', {'l0': q})
+        layer = view.parse_layer(0)
+        self.assertEqual(layer['title'], 'Kuzari')
+        self.assertEqual(layer['work'], '12')
+        self.assertEqual(layer['visible'], 'true')
+
+    def test_get_layers_invalid_count(self):
+        view = PathmapperView()
+
+        view.request = RequestFactory().get('/')
+        self.assertEqual(view.get_layers(), [])
+
+        view.request = RequestFactory().get('/', {'n': '0'})
+        self.assertEqual(view.get_layers(), [])
+
+        view.request = RequestFactory().get('/', {'n': '10'})
+        self.assertEqual(view.get_layers(), [])
+
+    def test_get_layers(self):
+        q0 = ('i:,t:Kuzari,w:12,i:,il:,fl:,flf:,a:,ps:'
+              ',pe:,pr:,fs:,fe:,fr:,c:,e:,v:true')
+        q1 = ('i:,t:Shehitot,w:13,i:,il:,fl:,flf:,a:,ps:'
+              ',pe:,pr:,fs:,fe:,fr:,c:,e:,v:false')
+
+        view = PathmapperView()
+        view.request = RequestFactory().get('/', {'n': 2, 'l0': q0, 'l1': q1})
+        layers = view.get_layers()
+        self.assertEqual(len(layers), 2)
+        self.assertEqual(layers[0]['title'], 'Kuzari')
+        self.assertEqual(layers[1]['title'], 'Shehitot')
 
 
 class BookCopySearchViewTest(TestCase):

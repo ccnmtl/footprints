@@ -2,7 +2,9 @@
 from __future__ import unicode_literals
 
 from datetime import datetime, date
+import html
 from json import loads
+import re
 
 from django.views.generic.base import TemplateView, View
 from rest_framework.generics import ListAPIView
@@ -16,6 +18,67 @@ from footprints.pathmapper.forms import BookCopySearchForm
 
 class PathmapperView(TemplateView):
     template_name = 'pathmapper/map.html'
+
+    valid_keys = {
+        't': 'title',
+        'w': 'work',
+        'i': 'imprint',
+        'il': 'imprintLocation',
+        'fl': 'footprintLocation',
+        'flf': 'footprintLocationFinal',
+        'a': 'actor',
+        'ps': 'pubStart',
+        'pe': 'pubEnd',
+        'pr': 'pubRange',
+        'fs': 'footprintStart',
+        'fe': 'footprintEnd',
+        'fr': 'footprintRange',
+        'c': 'censored',
+        'e': 'expurgated',
+        'v': 'visible'
+    }
+
+    def expand_key(self, key):
+        if key in self.valid_keys:
+            return self.valid_keys[key]
+        return None
+
+    def parse_layer(self, idx):
+        data = self.request.GET.get('l{}'.format(idx), None)
+        if not data:
+            return None
+
+        layer = {}
+        args = re.split(':|,', data)  # string of parameters like so: w:1,i:2
+        for idx in range(0, len(args), 2):
+            key = self.expand_key(args[idx])
+            if key:
+                layer[key] = html.escape(args[idx + 1])
+
+        # validate the layer has the expected parameters
+        if len(layer.keys()) != len(self.valid_keys.keys()):
+            return None
+
+        return layer
+
+    def get_layers(self):
+        # The "Share" url crunches an array of layers into GET query params
+        # if layer args exist, parse them into a dict and place in view context
+        layers = []
+        n = int(self.request.GET.get('n', '0'))
+        if n < 1 or n > 9:
+            return layers
+
+        for idx in range(0, n):
+            layer = self.parse_layer(idx)
+            if layer:
+                layers.append(layer)
+        return layers
+
+    def get_context_data(self, **kwargs):
+        ctx = TemplateView.get_context_data(self, **kwargs)
+        ctx['layers'] = self.get_layers()
+        return ctx
 
 
 class BookCopySearchView(JSONResponseMixin, View):
