@@ -1657,11 +1657,11 @@ body.affix-container {
 }
 
 .object-detail.writtenwork .imprint-list-container dl dt {
-    width: 50px;
+    width: 100px;
 }
 
 .object-detail.writtenwork .imprint-list-container dl dd {
-    padding-left: 60px;
+    padding-left: 0px;
 }
 
 .object-detail.writtenwork .writtenwork-title.infocus,
@@ -1733,6 +1733,10 @@ body.affix-container {
 
 .object-detail.writtenwork .imprint-list-item-header {
     margin-bottom: 8px;
+}
+
+.object-detail.writtenwork .imprint-list .breadcrumb .badge {
+    color: #836737;
 }
 
 .object-detail.writtenwork .imprint-list-item.infocus .imprint-list-item-header .share-link {
@@ -2879,6 +2883,10 @@ p.decoy {
         padding-left: 0px;
         padding-right: 15px;
         width: 369px;
+    }
+
+    .object-detail.writtenwork .imprint-list-container dl dd {
+        padding-left: 120px;
     }
 }
 
