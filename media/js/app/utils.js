@@ -99,7 +99,7 @@ define(function() {
             'elementType': 'geometry',
             'stylers': [
                 {
-                    'color': '#e9e9e9'
+                    'color': '#cccccc'
                 },
                 {
                     'lightness': 17
@@ -111,7 +111,7 @@ define(function() {
             'elementType': 'geometry',
             'stylers': [
                 {
-                    'color': '#f5f5f5'
+                    'color': '#e8e8e8'
                 },
                 {
                     'lightness': 20
@@ -217,7 +217,7 @@ define(function() {
                     'color': '#333333'
                 },
                 {
-                    'lightness': 40
+                    'lightness': 20
                 }
             ]
         },
