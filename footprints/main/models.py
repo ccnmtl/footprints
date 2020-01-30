@@ -755,7 +755,11 @@ class WrittenWork(models.Model):
         return Footprint.objects.filter(book_copy__imprint__work=self).count()
 
     def imprints(self):
-        lst = list(self.imprint_set.all())
+        qs = self.imprint_set.all().select_related(
+            'publication_date', 'place').prefetch_related(
+                'bookcopy_set__footprint_set__place',
+                'bookcopy_set__footprint_set__associated_date')
+        lst = list(qs)
         lst.sort(key=lambda obj: obj.sort_date())
         return lst
 
