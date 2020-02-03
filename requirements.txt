@@ -1,4 +1,4 @@
-Django==2.2.9 # pyup: <3
+Django==2.2.10 # pyup: <3
 
 feedparser==5.2.1
 
@@ -63,7 +63,7 @@ kombu==3.0.37 # pyup: <4.0.0
 librabbitmq==2.0.0
 celery==3.1.26.post2 # pyup: <4.0.0
 anyjson==0.3.3
-billiard==3.6.1.0
+billiard==3.6.2.0
 pytz==2019.2
 
 djangowind==1.2.3
@@ -77,7 +77,7 @@ django-statsd-mozilla==0.4.0
 raven==6.10.0
 sentry-sdk==0.14.1
 django-bootstrap-form==3.4
-django-debug-toolbar==1.9.1
+django-debug-toolbar==2.2
 django-waffle==0.19.0
 django-smoketest==1.1.0
 django-extensions==2.2.6
@@ -108,7 +108,7 @@ django-reversion==3.0.5
 python-dateutil==2.8.1
 requirements/src/edtf-0.9.3ctl-py2.py3-none-any.whl
 
-django-storages==1.8
+django-storages==1.9
 django-cacheds3storage==0.2.1
 ccnmtlsettings==1.8.0
 funcsigs==1.0.2

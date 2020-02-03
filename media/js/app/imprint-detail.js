@@ -61,7 +61,7 @@
             /* eslint-enable security/detect-object-injection */
 
             var markers = this.spiderfier.markersNearAnyOtherMarker();
-            markers.forEach(function(m) {
+            markers.forEach((m) => {
                 m.setIcon(this.spiderIcon);
             });
         },
