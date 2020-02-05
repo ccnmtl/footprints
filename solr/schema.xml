@@ -205,6 +205,13 @@
 
     <field name="imprint_location_title_exact" type="string" indexed="true" stored="true" multiValued="true" />
 
+    <field name="censored" type="boolean" indexed="true" stored="true" multiValued="false" />
+
+    <field name="expurgated" type="boolean" indexed="true" stored="true" multiValued="false" />
+
+    <field name="book_copy_id" type="text_en" indexed="true" stored="true" multiValued="false" />
+
+    <field name="book_copy_identifier" type="text_en" indexed="true" stored="true" multiValued="false" />
   </fields>
 
   <!-- field to use to determine and enforce document uniqueness. -->

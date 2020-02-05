@@ -288,6 +288,8 @@ class Role(models.Model):
     AUTHOR = 'Author'
     PUBLISHER = 'Publisher'
     PRINTER = 'Printer'
+    EXPURGATOR = 'Expurgator'
+    CENSOR = 'Censor'
 
     objects = RoleManager()
 
@@ -1049,6 +1051,16 @@ class BookCopy(models.Model):
     def description(self):
         template = loader.get_template('main/book_description.html')
         return template.render({'book': self})
+
+    def has_censor(self):
+        return Actor.objects.filter(
+            role__name=Role.CENSOR,
+            imprint=self.imprint).exists()
+
+    def has_expurgator(self):
+        return Actor.objects.filter(
+            role__name=Role.EXPURGATOR,
+            footprint__book_copy=self).exists()
 
     def owners(self):
         footprints = Footprint.objects.filter(book_copy=self)

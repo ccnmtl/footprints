@@ -19,8 +19,8 @@ define(['jquery', 'selectWidget'], function($, select) {
                     'footprintStart': null,
                     'footprintEnd': null,
                     'footprintRange': false,
-                    'censored': null,
-                    'expurgated': null,
+                    'censored': '',
+                    'expurgated': '',
                     'visible': true
                 },
                 total: null,
@@ -168,6 +168,8 @@ define(['jquery', 'selectWidget'], function($, select) {
             this.$watch('layer.pubStart', this.search);
             this.$watch('layer.pubEnd', this.search);
             this.$watch('layer.actor', this.search);
+            this.$watch('layer.censored', this.search);
+            this.$watch('layer.expurgated', this.search);
         },
         mounted: function() {
             this.search();

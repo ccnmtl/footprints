@@ -198,6 +198,9 @@ class BookCopyIndex(CelerySearchIndex, Indexable):
     actor = MultiValueField(faceted=True)
     actor_title = MultiValueField(faceted=True)
 
+    censored = BooleanField()
+    expurgated = BooleanField()
+
     def get_model(self):
         return BookCopy
 
@@ -258,6 +261,12 @@ class BookCopyIndex(CelerySearchIndex, Indexable):
 
         return [smart_text(actor) for actor in qs]
 
+    def prepare_censored(self, obj):
+        return obj.has_censor()
+
+    def prepare_expurgated(self, obj):
+        return obj.has_expurgator()
+
 
 class FootprintIndex(CelerySearchIndex, Indexable):
     object_id = CharField(model_attr='id')
@@ -268,6 +277,8 @@ class FootprintIndex(CelerySearchIndex, Indexable):
 
     work_id = CharField(model_attr='book_copy__imprint__work__id')
     imprint_id = CharField(model_attr='book_copy__imprint__id')
+    book_copy_id = CharField(model_attr='book_copy__id')
+    book_copy_identifier = CharField()
 
     imprint_location = MultiValueField(faceted=True)
     imprint_location_title = MultiValueField(faceted=True)
@@ -378,6 +389,9 @@ class FootprintIndex(CelerySearchIndex, Indexable):
 
     def prepare_has_image(self, obj):
         return obj.has_at_least_one_digital_object()
+
+    def prepare_book_copy_identifier(self, obj):
+        return obj.book_copy.identifier()
 
 
 # PersonIndex is used by the NameListView to create an autocomplete field

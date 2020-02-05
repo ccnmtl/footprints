@@ -137,6 +137,8 @@ define(['jquery', 'utils'], function($, utils) {
             this.$watch('layer.pubStart', this.refresh);
             this.$watch('layer.pubEnd', this.refresh);
             this.$watch('layer.actor', this.refresh);
+            this.$watch('layer.censored', this.refresh);
+            this.$watch('layer.expurgated', this.refresh);
 
             this.getPage(1);
         },
