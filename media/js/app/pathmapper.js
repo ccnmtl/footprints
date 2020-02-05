@@ -96,7 +96,7 @@ requirejs(['./common'], function(common) {
                             // @todo - JSON.stringify layer here?
                             url += 'l' + idx + '=';
                             for (let [key, value] of Object.entries(layer)) {
-                                url += '"' + utils.abbreviate(key) + '":' +
+                                url += utils.abbreviate(key) + ':' +
                                     (value || '') + ',';
                             }
                             url += '&';
