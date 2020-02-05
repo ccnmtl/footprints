@@ -11,7 +11,8 @@ requirejs(['./common'], function(common) {
                             id: null,
                             layers: []
                         },
-                        showMap: true
+                        showMap: true,
+                        shareUrl: Footprints.baseUrl + 'pathmapper/'
                     };
                 },
                 components: {
@@ -71,6 +72,36 @@ requirejs(['./common'], function(common) {
                             .removeClass('share-panel-expanded');
                         $('#share-panel-focus')
                             .addClass('share-panel-collapsed');
+                    },
+                    readShareData: function() {
+                        const j = document.getElementById('layers').textContent;
+                        const layers = JSON.parse(j);
+                        if (layers.length < 1) {
+                            return false;
+                        }
+                        // clear out the query parameters
+                        window.history.replaceState(
+                            {}, [], Footprints.baseUrl + 'pathmapper/');
+                        this.collection.layers = layers;
+                        return true;
+                    },
+                    updateShareUrl: function() {
+                        let url = Footprints.baseUrl + 'pathmapper/?';
+                        if (this.collection.layers.length < 1) {
+                            return url;
+                        }
+
+                        url += 'n=' + this.collection.layers.length + '&';
+                        this.collection.layers.forEach((layer, idx) => {
+                            // @todo - JSON.stringify layer here?
+                            url += 'l' + idx + '=';
+                            for (let [key, value] of Object.entries(layer)) {
+                                url += utils.abbreviate(key) + ':' +
+                                    (value || '') + ',';
+                            }
+                            url += '&';
+                        });
+                        this.shareUrl = url;
                     }
                 },
                 created: function() {
@@ -80,13 +111,16 @@ requirejs(['./common'], function(common) {
                     // eslint-disable-next-line
                     window.addEventListener('beforeunload', this.beforeUnload);
 
-                    // @todo accessing through a permalink
-
-                    // initialize layers via stored data
-                    this.readSession();
+                    // Accessing through a permalink?
+                    if (!this.readShareData()) {
+                        // otherwise, check to see if there is a saved
+                        // session. initialize layers via stored data
+                        this.readSession();
+                    }
                 },
                 updated: function() {
                     this.saveSession();
+                    this.updateShareUrl();
                 }
             });
         }

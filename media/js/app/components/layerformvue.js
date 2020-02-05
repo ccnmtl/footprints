@@ -5,7 +5,7 @@ define(['jquery', 'selectWidget'], function($, select) {
         data: function() {
             return {
                 layer: {
-                    'id': null,
+                    'layerId': null,
                     'title': '',
                     'work': null,
                     'imprint': null,

@@ -41,8 +41,8 @@
                     <h2>Share results</h2>
                 </div><!-- /.share-panel-header -->
                 <div class="share-panel-copylink form-group">
-                            <label for="shareCopyLink">Link to share:</label>
-                            <input type="text" class="form-control" id="shareCopyLink" value="pathmapperly link">
+                    <label for="shareCopyLink">Link to share:</label>
+                    <input type="text" class="form-control" id="shareCopyLink" :value="shareUrl">
                 </div><!-- /.share-panel-copylink -->
                 <div class="share-panel-socmedia d-flex justify-content-center">
                     <button class="share-panel-facebook" value="Facebook">
@@ -77,6 +77,8 @@
 {% endblock %}
 
 {% block js %}
+    {{ layers|json_script:"layers" }}
+
     <script type="text/javascript"
         src="//maps.google.com/maps/api/js?key={{settings.GOOGLE_MAP_API}}&libraries=places"></script>
 

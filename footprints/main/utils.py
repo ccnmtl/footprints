@@ -82,8 +82,8 @@ class BrowsableAPIRendererNoForms(BrowsableAPIRenderer):
         return ""
 
 
-def string_to_point(str):
-    a = str.split(',')
+def string_to_point(s):
+    a = s.split(',')
     return Point(float(a[1].strip()), float(a[0].strip()))
 
 
