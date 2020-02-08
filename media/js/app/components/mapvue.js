@@ -1,6 +1,6 @@
 define(['jquery', 'layerMapVue', 'utils'], function($, layermap, utils) {
     const PathmapperMapVue = {
-        props: ['layers'],
+        props: ['value', 'layers'],
         template: '#pathmapper-map-template',
         data: function() {
             return {
@@ -11,6 +11,11 @@ define(['jquery', 'layerMapVue', 'utils'], function($, layermap, utils) {
         },
         components: {
             'layer-map': layermap.LayerMapVue
+        },
+        methods: {
+            setLocation: function(latlng) {
+                this.$emit('input', latlng);
+            }
         },
         created: function() {
             this.queue = new utils.AsyncQueue();

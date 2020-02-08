@@ -1,6 +1,7 @@
-define(['jquery', 'layerFormVue', 'utils'], function($, layerForm, utils) {
+const listLibs = ['jquery', 'layerFormVue', 'locationVue', 'utils'];
+define(listLibs, function($, form, loc, utils) {
     const LayerListVue = {
-        props: ['value'],
+        props: ['value', 'selectedLocation'],
         template: '#layer-list-template',
         data: function() {
             return {
@@ -9,9 +10,13 @@ define(['jquery', 'layerFormVue', 'utils'], function($, layerForm, utils) {
             };
         },
         components: {
-            'layer-form': layerForm.LayerVue
+            'pathmapper-location': loc.PathmapperLocationVue,
+            'layer-form': form.LayerVue
         },
         methods: {
+            clearLocation: function() {
+                this.$emit('clearlocation', null);
+            },
             createLayer: function() {
                 this.selectedLayer = {};
                 this.selectedLayerIdx = null;

@@ -2,39 +2,42 @@
 <script type="text/x-template" id="layer-list-template">
     <div class="widget-pane widget-pane-expanded" id="container-pane">
         <div class="widget-pane-content">
+            <!-- Info Window -->
+            <pathmapper-location v-model="selectedLocation"
+                v-on:clearlocation="clearLocation"
+                :class="[{'d-none': !selectedLocation}]"/>
+
             <!-- Initial Create Layer pane -->
-            <form class="criteria-set-pane"><!-- Begin form -->
+            <form class="criteria-set-pane" :class="[{'d-none': selectedLocation}]"><!-- Begin form -->
+                <!-- Layer Create / Edit form -->
+                <layer-form v-if="selectedLayer" v-model="selectedLayer"
+                    @save="saveLayer" @cancel="cancelLayer" 
+                />
 
-            <!-- Layer Create / Edit form -->
-            <layer-form v-if="selectedLayer" v-model="selectedLayer"
-                @save="saveLayer" @cancel="cancelLayer" 
-            />
-
-            <!-- Begin #layer-list pane -->
-            <div v-if="!selectedLayer" class="pane-content" id="layer-list-pane">
-                <header class="d-flex flex-row">
-                    <h1><i class="fas fa-layer-group mr-2" aria-hidden="true"></i>
-                    Layer list ({{layers.length}})</h1>
-                    <button v-on:click="createLayer" type="button" class="btn btn-priority-hi">Create layer</button>
-                </header>
-                <div class="pane-content-container" id="style-3">
-                    <section v-for="(layer, idx) in layers" :aria-labelledby="'layer-' + idx" class="d-flex">
-                        <h2 :id="'layer-' + idx">{{layer.title}}</h2>
-                        <ul class="indiv-layer-actions d-flex">
-                            <li><button :data-idx="idx" v-on:click="editLayer" type="button" class="btn btn-layer-action"><i class="fas fa-pencil-alt"></i></button></li>
-                            <li>
-                                <button :data-idx="idx" v-on:click.stop.prevent="toggleLayer(idx)"
-                                    type="button" class="btn btn-layer-action"
-                                   :class="['btn', 'btn-layer-action', {'btn-layer-off': !layer.visible}]">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                            </li>
-                            <li><button :data-idx="idx" v-on:click="deleteLayer" type="button" class="btn btn-layer-action"><i class="fas fa-trash-alt"></i></button></li>
-                        </ul>
-                    </section>
-                </div><!-- /.pane-content-container -->
-            </div><!-- /End #layer-list pane -->
-
+                <!-- Begin #layer-list pane -->
+                <div v-if="!selectedLayer" class="pane-content" id="layer-list-pane">
+                    <header class="d-flex flex-row">
+                        <h1><i class="fas fa-layer-group mr-2" aria-hidden="true"></i>
+                        Layer list ({{layers.length}})</h1>
+                        <button v-on:click="createLayer" type="button" class="btn btn-priority-hi">Create layer</button>
+                    </header>
+                    <div class="pane-content-container" id="style-3">
+                        <section v-for="(layer, idx) in layers" :aria-labelledby="'layer-' + idx" class="d-flex">
+                            <h2 :id="'layer-' + idx">{{layer.title}}</h2>
+                            <ul class="indiv-layer-actions d-flex">
+                                <li><button :data-idx="idx" v-on:click="editLayer" type="button" class="btn btn-layer-action"><i class="fas fa-pencil-alt"></i></button></li>
+                                <li>
+                                    <button :data-idx="idx" v-on:click.stop.prevent="toggleLayer(idx)"
+                                        type="button" class="btn btn-layer-action"
+                                       :class="['btn', 'btn-layer-action', {'btn-layer-off': !layer.visible}]">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </li>
+                                <li><button :data-idx="idx" v-on:click="deleteLayer" type="button" class="btn btn-layer-action"><i class="fas fa-trash-alt"></i></button></li>
+                            </ul>
+                        </section>
+                    </div><!-- /.pane-content-container -->
+                </div><!-- /End #layer-list pane -->
             </form><!-- Closing the form -->
         </div><!-- /.widget-pane-content -->
 

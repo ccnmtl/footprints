@@ -5,6 +5,10 @@ a {
     text-decoration: none;
 }
 
+hidden {
+    display: none;
+}
+
 .pathmapper-tool .content {
     margin: 0;
 }
