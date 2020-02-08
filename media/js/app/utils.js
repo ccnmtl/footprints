@@ -56,8 +56,8 @@ define(function() {
     function parsePageNumber(str) {
         let pageNumber = 1;
         try {
-            let result = str.matchAll(/page=(\d+)/);
-            pageNumber = parseInt(result.next().value[1], 10);
+            let result = str.match(/page=(\d+)/);
+            pageNumber = parseInt(result[1], 10);
         } catch (err) {
             // continue with default page number
         }

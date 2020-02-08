@@ -243,3 +243,31 @@ class PathmapperRouteSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = BookCopy
         fields = ('id', 'imprint', 'footprints')
+
+
+class PathmapperTableRowSerializer(Serializer):
+    work_id = serializers.CharField(read_only=True)
+    work_title = serializers.CharField(
+        source='object.book_copy.imprint.work.title', read_only=True)
+    imprint_id = serializers.CharField(read_only=True)
+    imprint_title = serializers.CharField(
+        source='object.book_copy.imprint.display_title', read_only=True)
+    pub_date = serializers.CharField(
+        source='object.book_copy.imprint.publication_date')
+    pub_location = serializers.CharField(
+        source='imprint_location_title')
+    book_copy_identifier = serializers.CharField(read_only=True)
+    footprint_id = serializers.CharField(source='object_id', read_only=True)
+    footprint_title = serializers.CharField(source='title', read_only=True)
+    footprint_date = serializers.CharField(
+        source='object.associated_date', read_only=True)
+    footprint_location = serializers.CharField(
+        source='footprint_location_title')
+
+    class Meta:
+        fields = (
+            'work_id', 'work_title',
+            'imprint_id', 'imprint_title', 'pub_date', 'pub_location',
+            'book_copy_identifier',
+            'footprint_id', 'footprint_title', 'footprint_date',
+            'footprint_location')

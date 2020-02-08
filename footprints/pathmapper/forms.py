@@ -6,14 +6,13 @@ from django.utils.encoding import smart_text
 from haystack.forms import ModelSearchForm
 
 from footprints.main.models import (
-    BookCopy, Imprint, WrittenWork, Place, Actor)
+    BookCopy, Imprint, WrittenWork, Place, Actor, Footprint)
 from footprints.main.utils import camel_to_snake, snake_to_camel
 
 
 class ModelSearchFormEx(ModelSearchForm):
     q = forms.CharField(required=False)
 
-    work = forms.IntegerField(required=False)
     work = forms.IntegerField(required=False)
     imprint = forms.IntegerField(required=False)
 
@@ -225,6 +224,20 @@ class BookCopySearchForm(ModelSearchFormEx):
     def search(self):
         args, kwargs = self.arguments()
         return self.searchqueryset.filter(*args, **kwargs)
+
+
+class BookCopyFootprintsForm(ModelSearchForm):
+    ''' Given a list of bookcopies, retrieve the associated footprints'''
+    class Meta:
+        model = Footprint
+
+    def search(self, copies):
+        args = [Q(book_copy_id__in=copies)]
+        kwargs = {
+            'django_ct': 'main.footprint',
+        }
+        sqs = self.searchqueryset.filter(*args, **kwargs)
+        return sqs
 
 
 class ImprintSearchForm(ModelSearchFormEx):
