@@ -2,7 +2,7 @@
 <script type="text/x-template" id="layer-list-template">
     <div class="widget-pane widget-pane-expanded" id="container-pane">
         <div class="widget-pane-content">
-            <!-- Info Window -->
+            <!-- Point of Interest Panel (LocationVue) -->
             <pathmapper-location v-model="selectedLocation"
                 v-on:clearlocation="clearLocation"
                 :class="[{'d-none': !selectedLocation}]"/>
