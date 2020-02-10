@@ -2496,8 +2496,7 @@ p.decoy {
     width: 100%;
 }
 .iw-container .iw-title.iw-footprint {
-    background-color: #f6f7f8;
-    border-top: 1px solid #ddd;
+    background-color: white;
     color: #333;
     font-size: 18px;
     padding: 10px 0 10px 10px;
@@ -2505,11 +2504,9 @@ p.decoy {
 }
 .iw-container .iw-title.iw-imprint {
     background: transparent;
-    color: #836737;
+    color: #333;
     font-size: 18px;
     padding: 10px 0 10px 10px;
-    background-image: url("../img/fp_section_bg.png");
-    background-repeat: repeat;
     margin-bottom: 5px;
 }
 .iw-container .iw-content {
