@@ -159,6 +159,27 @@ class BookCopyTest(TestCase):
 
         self.assertTrue(copy.identifier() in copy.description())
 
+    def test_has_expurgator(self):
+        copy = BookCopyFactory()
+        self.assertFalse(copy.has_expurgator())
+
+        role = RoleFactory(name=Role.EXPURGATOR, level=FOOTPRINT_LEVEL)
+        expurgator = ActorFactory(role=role)
+
+        fp = FootprintFactory(book_copy=copy)
+        fp.actor.add(expurgator)
+        self.assertTrue(copy.has_expurgator())
+
+    def test_has_censor(self):
+        copy = BookCopyFactory()
+        self.assertFalse(copy.has_censor())
+
+        role = RoleFactory(name=Role.CENSOR, level=IMPRINT_LEVEL)
+        censor = ActorFactory(role=role)
+
+        copy.imprint.actor.add(censor)
+        self.assertTrue(copy.has_censor())
+
     def test_book_copy_owners(self):
         copy = BookCopyFactory()
         owner = RoleFactory(name="Owner", level=FOOTPRINT_LEVEL)

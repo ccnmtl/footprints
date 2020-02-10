@@ -32,6 +32,9 @@ class ModelSearchFormEx(ModelSearchForm):
 
     actor = forms.CharField(required=False)
 
+    censored = forms.BooleanField(required=False)
+    expurgated = forms.BooleanField(required=False)
+
     def transform_data(self):
         for key, value in self.data.items():
             snake_key = camel_to_snake(key)
@@ -154,6 +157,15 @@ class ModelSearchFormEx(ModelSearchForm):
             args.append(Q(actor_exact__in=[actor_id]))
         return args
 
+    def handle_boolean(self, field_name):
+        d = {}
+        val = self.cleaned_data.get(field_name, '')
+        if val == 'yes':
+            d[field_name] = True
+        elif val == 'no':
+            d[field_name] = False
+        return d
+
     def clean(self):
         self.transform_data()
         cleaned_data = super().clean()
@@ -202,6 +214,9 @@ class BookCopySearchForm(ModelSearchFormEx):
         args += self.handle_imprint_location()
         args += self.handle_footprint_location()
         args += self.handle_actor()
+
+        kwargs.update(self.handle_boolean('censored'))
+        kwargs.update(self.handle_boolean('expurgated'))
 
         kwargs.update(self.handle_pub_year())
         kwargs.update(self.handle_footprint_year())
