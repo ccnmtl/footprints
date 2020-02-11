@@ -168,3 +168,47 @@ body  {
 .tools .page-count.has-error .error-block {
     display: block;
 }
+
+
+/* GDPR cookies notice */
+
+#cu-privacy-notice {
+    width: 100% !important;
+    padding: 1rem !important;
+}
+
+#cu-privacy-notice-text {
+    font-family: 'Asap', Helvetica, Arial, sans-serif !important;
+	font-size: 0.875rem;
+}
+
+#cu-privacy-notice button {
+    padding: 0.5rem !important;
+    border: 0.125rem solid transparent !important;
+    border-radius: 50%;
+}
+
+#cu-privacy-notice button:focus,
+#cu-privacy-notice button:active {
+    border-radius: 50% !important;
+    border: 0.125rem solid #39f !important;
+    outline: 0 !important;
+    box-shadow: none;
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+    #cu-privacy-notice {
+        padding: 1.5rem !important;
+    }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+    #cu-privacy-notice {
+        padding: 2rem !important;
+    }
+    #cu-privacy-notice-text {
+        font-size: 1.125rem;
+    }
+}
