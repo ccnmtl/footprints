@@ -21,7 +21,7 @@
                 <h2 id="region2" class="sr-only">Literary work and imprint criteria</h2>
                 <div class="form-group row">
                     <label for="criteriaLiteraryWork" class="col-4 col-form-label">Literary work:</label>
-                    <div class="col-8">
+                    <div class="col-8 listdown-selection">
                         <select-widget v-model="layer.work" id="criteriaLiteraryWork" 
                             :criteria="layer" data-url="api/writtenwork/"
                             v-bind:minimum-input="0">
@@ -30,7 +30,7 @@
                 </div>
                 <div class="form-group mb-0 row">
                     <label for="criteriaImprint" class="col-4 col-form-label">Imprint:</label>
-                    <div class="col-8">
+                    <div class="col-8 listdown-selection">
                         <select-widget v-model="layer.imprint" id="criteriaImprint"
                             :disabled="!layer.work" v-bind:minimum-input="0"
                             :criteria="layer" data-url="api/imprint/">
@@ -43,7 +43,7 @@
                 <h2 id="region3">Location</h2>
                 <div class="form-group row">
                     <label for="criteriaImprintLoc" class="col-4 col-form-label">Imprint:</label>
-                    <div class="col-8">
+                    <div class="col-8 listdown-selection">
                         <select-widget v-model="layer.imprintLocation" id="criteriaImprintLoc"
                             name="imprint-location" :criteria="layer" v-bind:minimum-input="0"
                             data-url="api/place/" search-for="imprint">
@@ -52,7 +52,7 @@
                 </div>
                 <div class="form-group mb-0 row">
                     <label for="criteriaFootprintLoc" class="col-4 col-form-label">Footprint:</label>
-                    <div class="col-8">
+                    <div class="col-8 listdown-selection">
                         <select-widget v-model="layer.footprintLocation" id="criteriaFootprintLoc"
                             name="footprint-location" :criteria="layer" v-bind:minimum-input="0"
                             data-url="api/place/" search-for="footprint">
@@ -117,7 +117,7 @@
                 <h2 id="region5" class="sr-only">Person</h2>
                 <div class="form-group mb-0 row">
                     <label for="criteriaPerson" class="col-4 col-form-label">Person:</label>
-                    <div class="col-8">
+                    <div class="col-8 listdown-selection">
                         <select-widget v-model="layer.actor"
                             name="actor" id="criteriaActor" v-bind:minimum-input="0"
                             :criteria="layer" data-url="api/actor/">
