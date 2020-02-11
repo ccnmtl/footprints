@@ -6,12 +6,16 @@ define(['jquery', 'utils'], function($, utils) {
             return {
                 'page': {'number': 1, 'nextPage': null, 'prevPage': null},
                 'totalPages': 0,
-                'footprints': [],
+                'rows': [],
                 'baseUrl': Footprints.baseUrl,
                 'pageSize': 15
             };
         },
         methods: {
+            parseArray: function(s) {
+                s = s.replace(/'/g, '"');
+                return JSON.parse(s);
+            },
             hasNext: function() {
                 return this.page.nextPage;
             },
@@ -40,7 +44,7 @@ define(['jquery', 'utils'], function($, utils) {
                     this.page.nextPage = utils.parsePageNumber(data.next);
                     this.page.prevPage = utils.parsePageNumber(data.previous);
                     this.totalPages = Math.ceil(data.count / this.pageSize);
-                    this.footprints = $.extend(true, [], data.results);
+                    this.rows = $.extend(true, [], data.results);
                 });
             }
         },

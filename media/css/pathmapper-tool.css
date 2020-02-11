@@ -1,5 +1,10 @@
 /* --- PATHMAPPER tool --*/
 
+a {
+    color: #2e5367;
+    text-decoration: none;
+}
+
 .pathmapper-tool .content {
     margin: 0;
 }
@@ -573,11 +578,17 @@ header .btn-priority-hi {
 .table-pathmapper th, td {
     padding: 0.5rem;
 }
-.table-pathmapper th {
+.table-pathmapper td {
+    vertical-align: top;
 }
+
 .table-pathmapper tbody tr:nth-child(even) {background-color: #edeae6;}
 
 .table-pathmapper tbody tr:nth-child(odd) {background: #fafafa}
+
+.table-pathmapper th.footprint-title {
+    width: 25%;
+}
 
 /*
  *  STYLE 3

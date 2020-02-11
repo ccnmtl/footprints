@@ -11,9 +11,10 @@ from rest_framework.generics import ListAPIView
 
 from footprints.main.models import Footprint, BookCopy
 from footprints.main.serializers import (
-    PathmapperRouteSerializer, FootprintSerializer)
+    PathmapperRouteSerializer, PathmapperTableRowSerializer)
 from footprints.mixins import JSONResponseMixin
-from footprints.pathmapper.forms import BookCopySearchForm
+from footprints.pathmapper.forms import BookCopySearchForm, \
+    BookCopyFootprintsForm
 
 
 class PathmapperView(TemplateView):
@@ -138,7 +139,7 @@ class PathmapperRouteView(ListAPIView):
 
 class PathmapperTableView(ListAPIView):
     model = Footprint
-    serializer_class = FootprintSerializer
+    serializer_class = PathmapperTableRowSerializer
     authentication_classes = []
     permission_classes = []
     page_size = 15
@@ -154,7 +155,10 @@ class PathmapperTableView(ListAPIView):
         layers = loads(self.request.POST.get('layers'))
         for layer in layers:
             ids += self.get_book_copies(layer)
-        return Footprint.objects.filter(book_copy__id__in=ids)
+
+        form = BookCopyFootprintsForm()
+        sqs = form.search(ids)
+        return sqs.order_by('wtitle', 'pub_start_date', 'book_copy_id')
 
     def post(self, request, *args, **kwargs):
         return self.get(request, *args, **kwargs)
