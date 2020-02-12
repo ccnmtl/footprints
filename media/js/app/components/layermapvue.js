@@ -104,10 +104,14 @@ define(['jquery', 'utils'], function($, utils) {
                     icon.fillColor = '#cb8d78';
                     icon.path = 'M-5,0a5,5 0 1,0 10,0a5,5 0 1,0 -10,0';
                 }
-                return new google.maps.Marker({
+                let marker = new google.maps.Marker({
                     position: latlng,
                     icon: icon
                 });
+                marker.addListener('click', () => {
+                    this.$emit('location', latlng);
+                });
+                return marker;
             },
             visibilityChanged: function(newVal, oldVal) {
                 if (oldVal === newVal) {

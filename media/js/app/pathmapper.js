@@ -11,6 +11,7 @@ requirejs(['./common'], function(common) {
                             id: null,
                             layers: []
                         },
+                        selectedLocation: null,
                         showMap: true,
                         shareUrl: Footprints.baseUrl + 'pathmapper/'
                     };
@@ -21,6 +22,9 @@ requirejs(['./common'], function(common) {
                     'pathmapper-table': table.PathmapperTableVue
                 },
                 methods: {
+                    clearLocation: function() {
+                        this.selectedLocation = null;
+                    },
                     switchToTable: function() {
                         this.showMap = false;
                     },

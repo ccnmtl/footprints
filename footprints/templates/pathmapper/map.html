@@ -14,16 +14,19 @@
 
 {% block client_templates %}
     <meta name="csrf-token" content="{{csrf_token}}">
-    {% include "clientside/pathmapper_table.html" %}
-    {% include "clientside/pathmapper_map.html" %}
-    {% include "clientside/layer_list_template.html" %}
     {% include "clientside/layer_form_template.html" %}
+    {% include "clientside/layer_list_template.html" %}
+    {% include "clientside/pathmapper_location.html" %}
+    {% include "clientside/pathmapper_map.html" %}
+    {% include "clientside/pathmapper_table.html" %}
     {% include "clientside/select_widget_template.html" %}
 {% endblock %}
 
 {% block content %}
     <div id="search-container">
-        <layer-list v-model="collection.layers" />
+        <layer-list v-model="collection.layers"
+            :selected-location="selectedLocation"
+            v-on:clearlocation="clearLocation" />
     </div>
 
     <div id="share-view-container">
@@ -72,12 +75,19 @@
     </div>
 
     <div v-if="showMap" id="map-container">
-        <pathmapper-map :layers="collection.layers" />
+        <pathmapper-map :layers="collection.layers" v-model="selectedLocation" />
     </div>
 
 {% endblock %}
 
 {% block js %}
+    <!--  
+        When accessed through a permalink, the backing view parses a set
+        of abbreviated GET parameters, then renders the expanded layer objects
+        out to the DOM. Taking this approach to: keep the url clean,
+        handle argument sanitizing on the server-side, reduce client-side code
+        load.
+    -->
     {{ layers|json_script:"layers" }}
 
     <script type="text/javascript"
