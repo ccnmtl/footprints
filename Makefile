@@ -12,3 +12,10 @@ test-travis: $(PY_SENTINAL)
 	$(MANAGE) test --settings=$(APP).settings_travis
 
 travis: check flake8 test-travis eslint bandit
+
+docker-solr:
+	docker run -d -v $(CURDIR)/solr/footprints:/opt/solr/server/solr/footprints -p 8983:8983 --name solr7 solr:7
+
+docker-solr-stop:
+	docker stop solr7
+	docker rm solr7

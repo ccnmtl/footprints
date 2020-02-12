@@ -27,3 +27,7 @@ wheelhouse/
 test*.txt
 package-lock.json
 local.mk
+solr/footprints/conf/data
+solr/footprints/data
+solr/footprints/logs
+solr/footprints/log4j2.xml
