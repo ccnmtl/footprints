@@ -915,6 +915,11 @@ class Imprint(models.Model):
         qs = Footprint.objects.filter(book_copy__imprint=self)
         return Footprint.objects.get_end_date(qs)
 
+    def has_censor(self):
+        return Actor.objects.filter(
+            role__name=Role.CENSOR,
+            imprint=self).exists()
+
     def photos(self):
         return DigitalObject.objects.filter(
             footprint__in=Footprint.objects.filter(book_copy__imprint=self))
@@ -1184,6 +1189,11 @@ class Footprint(models.Model):
 
     def has_call_number(self):
         return self.call_number is not None
+
+    def has_expurgator(self):
+        return Actor.objects.filter(
+            role__name=Role.EXPURGATOR,
+            footprint=self).exists()
 
     def has_place(self):
         return self.place is not None

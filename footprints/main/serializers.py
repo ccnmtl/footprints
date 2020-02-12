@@ -263,6 +263,10 @@ class PathmapperTableRowSerializer(Serializer):
         source='object.associated_date', read_only=True)
     footprint_location = serializers.CharField(
         source='footprint_location_title')
+    censored = serializers.CharField(
+        source='object.book_copy.imprint.has_censor')
+    expurgated = serializers.CharField(
+        source='object.has_expurgator')
 
     class Meta:
         fields = (
@@ -270,4 +274,4 @@ class PathmapperTableRowSerializer(Serializer):
             'imprint_id', 'imprint_title', 'pub_date', 'pub_location',
             'book_copy_identifier',
             'footprint_id', 'footprint_title', 'footprint_date',
-            'footprint_location')
+            'footprint_location', 'expurgated', 'censored')
