@@ -435,6 +435,16 @@ class ImprintTest(TestCase):
         self.assertEqual(imprint.get_oclc_number(), idf)
         self.assertEqual(imprint2.get_oclc_number(), None)
 
+    def test_has_censor(self):
+        imprint = ImprintFactory()
+        self.assertFalse(imprint.has_censor())
+
+        role = RoleFactory(name=Role.CENSOR, level=IMPRINT_LEVEL)
+        censor = ActorFactory(role=role)
+
+        imprint.actor.add(censor)
+        self.assertTrue(imprint.has_censor())
+
 
 class ActorTest(TestCase):
 
@@ -544,6 +554,15 @@ class FootprintTest(TestCase):
 
         a = moderation_flags(f1)
         self.assertEqual(len(a), 4)
+
+    def test_has_expurgator(self):
+        role = RoleFactory(name=Role.EXPURGATOR, level=FOOTPRINT_LEVEL)
+        expurgator = ActorFactory(role=role)
+
+        fp = FootprintFactory()
+        self.assertFalse(fp.has_expurgator())
+        fp.actor.add(expurgator)
+        self.assertTrue(fp.has_expurgator())
 
 
 class FootprintModerationTest(TestCase):

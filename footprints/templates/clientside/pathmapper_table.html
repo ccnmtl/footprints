@@ -10,6 +10,7 @@
                 <th class="footprint-title">Footprint Title</th>
                 <th>Footprint Date</th>
                 <th>Footprint Location</th>
+                <th>Expurgated</th>
             </tr>
         </thead>
         <tbody>
@@ -28,12 +29,13 @@
                         {{row.imprint_title}}
                     </a><br />
 
-                    <span v-if="row.pub_date">{{row.pub_date}}</span><span v-if="row.pub_date && row.pub_location">, </span>
-                    <span v-if="row.pub_location">
+                    <div v-if="row.pub_date">{{row.pub_date}}</div>
+                    <div v-if="row.pub_location">
                         <span v-for="loc in parseArray(row.pub_location)">
                             {{loc}}
                         </span>
-                    </span>
+                    </div>
+                    <div v-if="row.censored == 'True'">Censored</div>
                 </td>
                 <td>{{row.book_copy_identifier}}</td>
                 <td>
@@ -53,6 +55,9 @@
                             {{loc}}
                         </span>
                     </span>
+                </td>
+                <td>
+                    <span v-if="row.expurgated == 'True'">Expurgated</span>
                 </td>
             </tr>
         </tbody>
