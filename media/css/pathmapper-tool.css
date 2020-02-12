@@ -230,6 +230,10 @@ label.layer-title {
     background: #f8f5f4 url("../img/fp_section_bg.png") repeat;
 }
 
+.pane-content-container section .listdown-selection .select2-container {
+    width: 100% !important;
+}
+
 .layer-actions {
     margin: 1rem;
     padding: 1rem;
@@ -712,11 +716,6 @@ header .btn-priority-hi {
         height: 100%;
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
     }
-    .widget-pane-content {
-        top: 0;
-        height: 100%;
-    }
-
     .widget-pane-toggle {
         left: 100%;
         width: auto;
@@ -757,11 +756,4 @@ header .btn-priority-hi {
 
 /* Extra large devices (large desktops, 1200px and up) */
 @media (min-width: 1200px) {
-}
-
-
-/** Select2 Overrides **/
-.select2-container--default .select2-selection--single .select2-selection__clear {
-    color: gray;
-    margin-top: -2px/
 }
