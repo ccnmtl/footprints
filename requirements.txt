@@ -22,7 +22,7 @@ flake8==3.7.9
 tornado==6.0.3
 cssselect==1.1.0
 lxml==4.5.0
-fuzzywuzzy==0.17.0
+fuzzywuzzy==0.18.0
 sure==1.4.11
 
 coverage==5.0.3
