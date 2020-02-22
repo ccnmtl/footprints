@@ -4,7 +4,7 @@ define(['jquery', 'utils'], function($, utils) {
         data: function() {
             return {
                 lines: [],
-                markers: []
+                places: []
             };
         },
         methods: {
@@ -12,17 +12,58 @@ define(['jquery', 'utils'], function($, utils) {
                 return Footprints.baseUrl +
                     'pathmapper/route/?page=' + pageNumber;
             },
+            addLine: function(coords) {
+                return new google.maps.Polyline({
+                    path: coords,
+                    geodesic: true,
+                    strokeColor: '#cb8d78',
+                    strokeOpacity: .6,
+                    strokeWeight: 1
+                });
+            },
+            addPoint: function(placeId, title, type, copy, footprint, latlng) {
+                this.$emit('add-point', {
+                    placeId: placeId,
+                    placeTitle: title,
+                    latlng: latlng,
+                    point: {
+                        layer: {
+                            'id': this.layer.id,
+                            'visible': false
+                        },
+                        type: type,
+                        bookcopy: copy,
+                        footprint: footprint
+                    }
+                });
+                return latlng;
+            },
+            addImprint: function(bookcopy) {
+                const latlng = {
+                    lat: bookcopy.imprint.place.latitude,
+                    lng: bookcopy.imprint.place.longitude
+                };
+                return this.addPoint(
+                    bookcopy.imprint.place.id,
+                    bookcopy.imprint.place.display_title,
+                    'initial', bookcopy, null, latlng);
+            },
+            addFootprint: function(bookcopy, footprint) {
+                const latlng = {
+                    lat: footprint.place.latitude,
+                    lng: footprint.place.longitude
+                };
+                return this.addPoint(
+                    footprint.place.id, footprint.place.display_title,
+                    'interim', bookcopy, footprint, latlng);
+            },
             clear: function() {
                 for (let route of this.lines) {
                     route.setMap(null);
                     route = null;
                 }
                 this.lines = [];
-                for (let marker of this.markers) {
-                    marker.setMap(null);
-                    marker = null;
-                }
-                this.markers = [];
+                this.$emit('delete-layer', {id: this.layer.id});
             },
             refresh: function() {
                 this.clear(); // clear the routes
@@ -33,15 +74,12 @@ define(['jquery', 'utils'], function($, utils) {
                 this.queue.add(this.getData, this.mapData, ctx);
             },
             getData: function(params) {
-                const ctx = {
-                    layer: JSON.stringify(params.layer)
-                };
                 return new Promise((resolve, reject) => {
                     $.ajax({
                         type: 'POST',
                         url: this.url(params.page),
                         dataType: 'json',
-                        data: ctx,
+                        data: {layer: JSON.stringify(params.layer)},
                         success: (data) => {
                             resolve(data);
                         },
@@ -55,33 +93,14 @@ define(['jquery', 'utils'], function($, utils) {
                 for (let bookcopy of data.results) {
                     let coords = [];
                     if (bookcopy.imprint && bookcopy.imprint.place) {
-                        let latlng = {
-                            lat: bookcopy.imprint.place.latitude,
-                            lng: bookcopy.imprint.place.longitude,
-                        };
-                        coords.push(latlng);
-                        let marker = this.addMarker(latlng, 'Imprint');
-                        this.markers.push(marker);
+                        coords.push(this.addImprint(bookcopy));
                     }
                     for (let fp of bookcopy.footprints) {
                         if (fp.place) {
-                            let latlng = {
-                                lat: fp.place.latitude,
-                                lng: fp.place.longitude,
-                            };
-                            coords.push(latlng);
-                            let marker = this.addMarker(latlng, 'Footprint');
-                            this.markers.push(marker);
+                            coords.push(this.addFootprint(bookcopy, fp));
                         }
                     }
-                    let line = new google.maps.Polyline({
-                        path: coords,
-                        geodesic: true,
-                        strokeColor: '#cb8d78',
-                        strokeOpacity: .6,
-                        strokeWeight: 1
-                    });
-                    this.lines.push(line);
+                    this.lines.push(this.addLine(coords));
                 }
                 this.visibilityChanged(this.layer.visible, false);
 
@@ -90,41 +109,16 @@ define(['jquery', 'utils'], function($, utils) {
                     this.getPage(nextPage);
                 }
             },
-            addMarker: function(latlng, iconType) {
-                let icon = {
-                    fillOpacity: .6,
-                    anchor: new google.maps.Point(0,0),
-                    strokeWeight: 0,
-                    scale: 1
-                };
-                if (iconType === 'Imprint') {
-                    icon.path = 'M-5,0a5,5 0 1,0 10,0a5,5 0 1,0 -10,0';
-                    icon.fillColor = '#628395';
-                } else if (iconType === 'Footprint') {
-                    icon.fillColor = '#cb8d78';
-                    icon.path = 'M-5,0a5,5 0 1,0 10,0a5,5 0 1,0 -10,0';
-                }
-                let marker = new google.maps.Marker({
-                    position: latlng,
-                    icon: icon
-                });
-                marker.addListener('click', () => {
-                    this.$emit('location', latlng);
-                });
-                return marker;
-            },
             visibilityChanged: function(newVal, oldVal) {
                 if (oldVal === newVal) {
                     return;
                 }
-
                 const map = newVal ? this.map : null;
                 for (let route of this.lines) {
                     route.setMap(map);
                 }
-                for (let marker of this.markers) {
-                    marker.setMap(map);
-                }
+                this.$emit('update-layer',
+                    {id: this.layer.id, visible: newVal});
             }
         },
         beforeDestroy: function() {
