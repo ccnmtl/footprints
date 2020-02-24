@@ -2,13 +2,14 @@
 <script type="text/x-template" id="pathmapper-location-template">
     <div class="pane-content">
         <header class="d-flex flex-row">
-            <h1>Location View</h1>
+            <h1>{{value.title}}</h1>
         </header>
         <div class="pane-content-container p-2">
             <a href="#" title="Close the location view" v-on:click="clearLocation">
                 Back
             </a>
-            {{value}}
+            <div>{{value.id}}</div>
+            <div>{{value.latlng}}</div>
         </div><!-- /.pane-content-container -->
     </div>
 </script>

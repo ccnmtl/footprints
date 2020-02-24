@@ -37,7 +37,7 @@ define(listLibs, function($, form, loc, utils) {
             saveLayer: function(layer) {
                 if (this.selectedLayerIdx === null) {
                     const idx = this.layers.push(layer);
-                    this.layers[idx-1].layerId = idx - 1;
+                    this.layers[idx-1].id = idx - 1;
                 } else {
                     this.layers[this.selectedLayerIdx] =
                         $.extend(true, {}, layer);

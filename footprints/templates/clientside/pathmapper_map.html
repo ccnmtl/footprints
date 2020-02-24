@@ -3,8 +3,9 @@
     <div class="pathmapper-container">
         <div class="google-map d-print-none" :id="mapName"></div>
         <div  v-for="(layer, idx) in layers">
-            <layer-map :layer="layers[idx]" :queue="queue" :map="map" 
-                v-on:location="setLocation" />
+            <layer-map :map="map" :layer="layers[idx]" :queue="queue"
+                v-on:add-point="addPoint" v-on:update-layer="updateLayer" 
+                v-on:delete-layer="deleteLayer" />
         </div>
     </div>
 </script>
