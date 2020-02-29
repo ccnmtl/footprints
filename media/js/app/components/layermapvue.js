@@ -21,9 +21,9 @@ define(['jquery', 'utils'], function($, utils) {
                     strokeWeight: 1
                 });
             },
-            addPoint: function(placeId, title, type, copy, footprint, latlng) {
+            addPoint: function(id, title, type, copy, footprint, latlng, dt) {
                 this.$emit('add-point', {
-                    placeId: placeId,
+                    placeId: id,
                     placeTitle: title,
                     latlng: latlng,
                     point: {
@@ -33,7 +33,8 @@ define(['jquery', 'utils'], function($, utils) {
                         },
                         type: type,
                         bookcopy: copy,
-                        footprint: footprint
+                        footprint: footprint,
+                        sortBy: dt
                     }
                 });
                 return latlng;
@@ -46,7 +47,8 @@ define(['jquery', 'utils'], function($, utils) {
                 return this.addPoint(
                     bookcopy.imprint.place.id,
                     bookcopy.imprint.place.display_title,
-                    'initial', bookcopy, null, latlng);
+                    'initial', bookcopy, null, latlng,
+                    Date.parse(bookcopy.imprint.sort_date));
             },
             addFootprint: function(bookcopy, footprint) {
                 const latlng = {
@@ -55,7 +57,8 @@ define(['jquery', 'utils'], function($, utils) {
                 };
                 return this.addPoint(
                     footprint.place.id, footprint.place.display_title,
-                    'interim', bookcopy, footprint, latlng);
+                    'interim', bookcopy, footprint, latlng,
+                    Date.parse(footprint.sort_date));
             },
             clear: function() {
                 for (let route of this.lines) {

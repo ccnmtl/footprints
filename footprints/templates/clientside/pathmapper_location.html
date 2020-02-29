@@ -2,14 +2,62 @@
 <script type="text/x-template" id="pathmapper-location-template">
     <div class="pane-content">
         <header class="d-flex flex-row">
-            <h1>{{value.title}}</h1>
+            <h1 v-if="value">
+                {{value.title}}
+            </h1>
         </header>
         <div class="pane-content-container p-2">
             <a href="#" title="Close the location view" v-on:click="clearLocation">
-                Back
+                Close
             </a>
-            <div>{{value.id}}</div>
-            <div>{{value.latlng}}</div>
+            <hr />
+            <div>Initial: {{initial}}</div>
+            <div>Interim: {{interim}}</div>
+            <div>Terminal: {{terminal}}</div>
+            <hr />
+            <div v-for="item in items">
+                <div>Type: {{item.type}}</div>
+                <div>
+                    Book Copy:
+                    <a :href="copyUrl(item)" target="_blank" rel="noopener noreferrer">
+                        {{item.bookcopy.identifier}}
+                    </a>
+                </div>
+                <div v-if="item.footprint">
+                    {{item.footprint.narrative}}
+                </div>
+                <div v-else>
+                    In {{item.bookcopy.imprint.display_date}}, a copy of the 
+                    <a :href="workUrl(item)" target="_blank" rel="noopener noreferrer">
+                        {{item.bookcopy.imprint.work_title}}</a> was published
+                    <span v-if="item.bookcopy.imprint.work_titel !== item.bookcopy.imprint.title">
+                        as <a :href="imprintUrl(item)"
+                        target="_blank" rel="noopener noreferrer">
+                            {{item.bookcopy.imprint.title}}</a>
+                    </span> in {{item.bookcopy.imprint.place.display_title}}.
+                </div>
+                <div>
+                    Literary Work:
+                    <a :href="workUrl(item)"
+                        target="_blank" rel="noopener noreferrer">
+                        {{item.bookcopy.imprint.work_title}}
+                    </a><br />
+                </div>
+                <div>
+                    Imprint:
+                    <a :href="imprintUrl(item)"
+                        target="_blank" rel="noopener noreferrer">
+                        <span v-if="item.bookcopy.imprint.work_titel !== item.bookcopy.imprint.title">
+                            {{item.bookcopy.imprint.title}}
+                        </span>
+                        {{item.bookcopy.imprint.display_date}}, {{item.bookcopy.imprint.place.display_title}}
+                    </a>
+                </div>
+                <hr />
+            </div>
+            <small v-if="value">
+                 [Place Id: {{value.id}}] [{{value.latlng}}]
+            </small>
         </div><!-- /.pane-content-container -->
     </div>
 </script>
