@@ -19,7 +19,7 @@ pyparsing==2.4.6
 pycodestyle==2.5.0
 configparser==4.0.2
 flake8==3.7.9
-tornado==6.0.3
+tornado==6.0.4
 cssselect==1.1.0
 lxml==4.5.0
 fuzzywuzzy==0.18.0
