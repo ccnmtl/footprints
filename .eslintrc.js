@@ -22,7 +22,8 @@ module.exports = {
         "google": true,
         "Footprints": true,
         "requirejs": true,
-        "Promise": true
+        "Promise": true,
+        "MarkerClusterer": true
     },
     "rules": {
         "indent": [

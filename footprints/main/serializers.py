@@ -221,19 +221,28 @@ class FootprintSerializer(HyperlinkedModelSerializer):
 
 
 class PathmapperImprintSerializer(HyperlinkedModelSerializer):
+    work_id = serializers.CharField(source='work.id', read_only=True)
+    work_title = serializers.CharField(source='work.title', read_only=True)
     place = PlaceSerializer()
+    display_date = serializers.CharField(source='publication_date')
+    sort_date = serializers.DateField()
 
     class Meta:
         model = Imprint
-        fields = ('id', 'place')
+        fields = ('id', 'title', 'place', 'display_date', 'sort_date',
+                  'work_id', 'work_title')
 
 
 class PathmapperFootprintSerializer(HyperlinkedModelSerializer):
     place = PlaceSerializer()
+    display_date = serializers.CharField(source='associated_date')
+    narrative = serializers.CharField()
+    sort_date = serializers.DateField()
 
     class Meta:
         model = Footprint
-        fields = ('id', 'place')
+        fields = ('id', 'title', 'place', 'display_date', 'sort_date',
+                  'narrative')
 
 
 class PathmapperRouteSerializer(HyperlinkedModelSerializer):
@@ -242,7 +251,7 @@ class PathmapperRouteSerializer(HyperlinkedModelSerializer):
 
     class Meta:
         model = BookCopy
-        fields = ('id', 'imprint', 'footprints')
+        fields = ('id', 'identifier', 'imprint', 'footprints')
 
 
 class PathmapperTableRowSerializer(Serializer):

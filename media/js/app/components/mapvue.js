@@ -1,4 +1,5 @@
-define(['jquery', 'layerMapVue', 'utils'], function($, layermap, utils) {
+const maplibs = ['jquery', 'layerMapVue', 'markerclusterer', 'utils'];
+define(maplibs, function($, layermap, markerclusterer, utils) {
     const PathmapperMapVue = {
         props: ['value', 'layers'],
         template: '#pathmapper-map-template',
@@ -59,8 +60,10 @@ define(['jquery', 'layerMapVue', 'utils'], function($, layermap, utils) {
                         }
                     }
                     if (refs > 0) {
+                        this.clusterer.addMarker(place.marker);
                         place.marker.setMap(this.map);
                     } else {
+                        this.clusterer.removeMarker(place.marker);
                         place.marker.setMap(null);
                     }
                 }
@@ -75,6 +78,7 @@ define(['jquery', 'layerMapVue', 'utils'], function($, layermap, utils) {
                         }
                     }
                     if (place.points.length === 0) {
+                        this.clusterer.removeMarker(place.marker);
                         place.marker.setMap(null);
                         delete place.marker;
                         delete this.places[key];
@@ -100,11 +104,16 @@ define(['jquery', 'layerMapVue', 'utils'], function($, layermap, utils) {
                     position: google.maps.ControlPosition.RIGHT_BOTTOM,
                 },
                 mapTypeControlOptions: {
-                    mapTypeIds: ['styled_map']
+                    mapTypeIds: ['styled_map'],
+                    ignoreHidden: true
                 }
             });
             this.map.mapTypes.set('styled_map', utils.lightGrayStyle);
             this.map.setMapTypeId('styled_map');
+            const opts = {
+                imagePath: Footprints.staticUrl + 'img/cluster/'
+            };
+            this.clusterer = new MarkerClusterer(this.map, [], opts);
         }
     };
     return {
