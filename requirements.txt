@@ -17,7 +17,7 @@ pyflakes==2.1.1
 mccabe==0.6.1
 pyparsing==2.4.6
 pycodestyle==2.5.0
-configparser==4.0.2
+configparser==5.0.0
 flake8==3.7.9
 tornado==6.0.4
 cssselect==1.1.0
