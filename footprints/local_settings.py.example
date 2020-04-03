@@ -1,6 +1,6 @@
 # flake8: noqa
 
-from settings_shared import *  # noqa
+from footprints.settings_shared import *  # noqa
 
 
 DEBUG = True
@@ -12,17 +12,16 @@ STATIC_ROOT = "<development directory>/footprints/media/"
 STATICFILES_DIRS = ()
 
 
-if 'test' not in sys.argv and 'jenkins' not in sys.argv and 'validate' not in sys.argv:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.contrib.gis.db.backends.postgis',
-            'NAME': 'footprints',
-            'HOST': 'localhost',
-            'PORT': '5432',
-            'USER': '<username>',
-            'PASSWORD': '<password>',
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'footprints',
+        'HOST': 'localhost',
+        'PORT': '5432',
+        'USER': '<username>',
+        'PASSWORD': '<password>',
     }
+}
 
 # Send email to the console by default
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
