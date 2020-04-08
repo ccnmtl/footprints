@@ -100,7 +100,7 @@ Place editable input.
 
             self.$city =  self.$tpl.find('input[name="city"]').first();
             self.$country =  self.$tpl.find('input[name="country"]').first();
-            self.$address =  self.$tpl.find('input[name="address"]').first();
+            self.$address =  self.$tpl.find('input[name="place-name"]').first();
             self.mapContainer = self.$tpl.find('.map-container')[0];
 
             self.mapInstance = new google.maps.Map(
