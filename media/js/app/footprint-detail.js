@@ -34,7 +34,9 @@
                 position: google.maps.ControlPosition.RIGHT_BOTTOM
             },
             mapTypeControl: false,
-            streetViewControl: false
+            streetViewControl: false,
+            fullscreenControl: false,
+            controlSize: 28
         },
         initializeMap: function() {
             // Initialize display map

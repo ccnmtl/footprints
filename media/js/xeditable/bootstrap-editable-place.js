@@ -26,7 +26,9 @@ Place editable input.
                 position: google.maps.ControlPosition.RIGHT_BOTTOM
             },
             mapTypeControl: false,
-            streetViewControl: false
+            streetViewControl: false,
+            fullscreenControl: false,
+            controlSize: 28
         };
 
         this.geocoder = new google.maps.Geocoder();
