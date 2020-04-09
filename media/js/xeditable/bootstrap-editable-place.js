@@ -63,24 +63,6 @@ Place editable input.
                 }
             });
         },
-        dropMarker: function(latlng) {
-            var self = this;
-            if (self.marker) {
-                self.marker.setMap(null);
-            }
-            self.marker = new google.maps.Marker({
-                position: latlng,
-                map: self.mapInstance,
-                draggable: true,
-                animation: google.maps.Animation.DROP
-            });
-            self.mapInstance.setCenter(latlng);
-            self.geocodePosition();
-
-            google.maps.event.addListener(self.marker, 'dragend', function() {
-                self.geocodePosition();
-            });
-        },
         mapSearchResult: function() {
             var self = this;
             var places = self.searchBox.getPlaces();
@@ -97,13 +79,8 @@ Place editable input.
                     map: self.mapInstance,
                     title: self.place.name,
                     position: self.place.geometry.location,
-                    draggable: true,
                     animation: google.maps.Animation.DROP
                 });
-                google.maps.event
-                    .addListener(self.marker, 'dragend', function() {
-                        self.geocodePosition();
-                    });
 
                 bounds.extend(places[0].geometry.location);
                 self.mapInstance.fitBounds(bounds);
@@ -123,7 +100,7 @@ Place editable input.
 
             self.$city =  self.$tpl.find('input[name="city"]').first();
             self.$country =  self.$tpl.find('input[name="country"]').first();
-            self.$address =  self.$tpl.find('input[name="address"]').first();
+            self.$address =  self.$tpl.find('input[name="place-name"]').first();
             self.mapContainer = self.$tpl.find('.map-container')[0];
 
             self.mapInstance = new google.maps.Map(
@@ -131,12 +108,6 @@ Place editable input.
                 self.mapOptions);
             self.mapInstance.controls[google.maps.ControlPosition.TOP_LEFT]
                 .push(self.$address[0]);
-
-            // drop a marker on click
-            google.maps.event
-                .addListener(self.mapInstance, 'click', function(event) {
-                    self.dropMarker(event.latLng);
-                });
 
             self.searchBox = new google.maps.places.SearchBox(
                 /** @type {HTMLInputElement} */(self.$address[0]));
