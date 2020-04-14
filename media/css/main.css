@@ -1839,6 +1839,10 @@ body.affix-container {
     margin-top: 10px;
 }
 
+.editable-place .alert {
+    width: 100% !important;
+}
+
 .editable-place .map-container {
     width: 100%;
     height: 300px;
