@@ -12,6 +12,12 @@ Place editable input.
     var Place = function(options) {
         this.init('place', options, Place.defaults);
 
+        this.rows = 20;
+        this.searchUrl = 'https://secure.geonames.org/search?' +
+            'featureClass=P&featureClass=A&' +
+            'style=LONG&maxRows=' + this.rows + '&' +
+            'username=' + Footprints.geonamesKey + '&type=json';
+
         // Europe, @todo - allow this to be configurable
         this.defaultLatLng = new google.maps.LatLng(
             48.6908333333, 9.14055555556);
@@ -38,55 +44,54 @@ Place editable input.
     $.fn.editableutils.inherit(Place, $.fn.editabletypes.abstractinput);
 
     $.extend(Place.prototype, {
-        geocodePosition: function() {
-            var self = this;
-            self.geocoder.geocode({
-                latLng: self.marker.getPosition(),
-            }, function(responses) {
-                self.$city.val('');
-                self.$country.val('');
-                self.$address.val('');
-
-                if (responses && responses.length > 0) {
-                    var components = responses[0].address_components;
-                    components.forEach(function(component) {
-                        for (var i=0; i < component.types.length; i++) {
-                            var type = component.types[i];
-                            if (type === 'locality') {
-                                self.$city.val(component.long_name);
-                            }
-                            if (type === 'country') {
-                                self.$country.val(component.long_name);
-                            }
-                        }
-                    });
-                }
-            });
-        },
-        mapSearchResult: function() {
-            var self = this;
-            var places = self.searchBox.getPlaces();
-
-            if (places.length > 0) {
-                self.place = places[0];
-                var bounds = new google.maps.LatLngBounds();
-
-                // Create a marker for the place.
-                if (self.marker) {
-                    self.marker.setMap(null);
-                }
-                self.marker = new google.maps.Marker({
-                    map: self.mapInstance,
-                    title: self.place.name,
-                    position: self.place.geometry.location,
-                    animation: google.maps.Animation.DROP
-                });
-
-                bounds.extend(places[0].geometry.location);
-                self.mapInstance.fitBounds(bounds);
-                self.mapInstance.setZoom(10);
-                self.geocodePosition();
+        markupName: function(obj) {
+            let str = '<div class="separator"><div>' + obj.name;
+            if (obj.adminName1) {
+                str += ', ' + obj.adminName1;
             }
+            str += '</div><div>' + obj.countryName + '</div>';
+            return str;
+        },
+        selectName: function(obj) {
+            let str = obj.name;
+            if (obj.adminName1) {
+                str += ', ' + obj.adminName1;
+            }
+            str += ', ' + obj.countryName;
+            return str;
+        },
+        onPlaceClear: function() {
+            this.$country.val('');
+            this.$city.val('');
+            if (this.marker) {
+                this.marker.setMap(null);
+            }
+        },
+        onPlaceChange: function() {
+            const value = this.$geoName.select2('data')[0];
+
+            this.$country.val(value.countryName);
+            if (value.name !== value.countryName) {
+                this.$city.val(value.name);
+            }
+
+            let latlng = new google.maps.LatLng(value.lat, value.lng);
+
+            // Create a marker for the place.
+            if (this.marker) {
+                this.marker.setMap(null);
+            }
+            this.marker = new google.maps.Marker({
+                map: this.mapInstance,
+                title: value.text,
+                position: latlng,
+                animation: google.maps.Animation.DROP
+            });
+
+            let bounds = new google.maps.LatLngBounds();
+            bounds.extend(latlng);
+            this.mapInstance.fitBounds(bounds);
+            this.mapInstance.setZoom(10);
         },
         /**
            Renders input from tpl
@@ -96,34 +101,72 @@ Place editable input.
         render: function() {
             var self = this;
 
-            self.$tpl.parents('.editable-input').addClass('wide');
+            this.$tpl.parents('.editable-input').addClass('wide');
 
-            self.$city =  self.$tpl.find('input[name="city"]').first();
-            self.$country =  self.$tpl.find('input[name="country"]').first();
-            self.$address =  self.$tpl.find('input[name="place-name"]').first();
-            self.mapContainer = self.$tpl.find('.map-container')[0];
+            this.$city =
+                this.$tpl.find('input[name="city"]').first();
+            this.$country =
+                this.$tpl.find('input[name="country"]').first();
+            this.mapContainer =
+                this.$tpl.find('.map-container')[0];
 
-            self.mapInstance = new google.maps.Map(
-                self.mapContainer,
-                self.mapOptions);
-            self.mapInstance.controls[google.maps.ControlPosition.TOP_LEFT]
-                .push(self.$address[0]);
+            this.mapInstance = new google.maps.Map(
+                this.mapContainer,
+                this.mapOptions);
 
-            self.searchBox = new google.maps.places.SearchBox(
-                /** @type {HTMLInputElement} */(self.$address[0]));
+            this.$geoName = this.$tpl.find('[name="geoname"]').first();
+            this.$geoName.select2({
+                allowClear: true,
+                placeholder: 'Search for a place...',
+                escapeMarkup: function(markup) {
+                    return markup;
+                },
+                templateResult: function(data) {
+                    if (data.loading) {
+                        return 'Searching...';
+                    }
+                    return data.html;
+                },
+                templateSelection: function(data) {
+                    return data.text;
+                },
+                ajax: {
+                    url: this.searchUrl,
+                    dataType: 'json',
+                    data: function(params) {
+                        const page = (params.page - 1) || 0;
+                        return {
+                            q: params.term,
+                            startRow: page * self.rows
+                        };
+                    },
+                    processResults: function(data, params) {
+                        let results = $.map(data.geonames, function(obj) {
+                            obj.id = obj.geonameId;
+                            obj.text = self.selectName(obj);
+                            obj.html = self.markupName(obj);
+                            return obj;
+                        });
 
-            // Listen for the event fired when the user selects an item
-            // from the pick list. Retrieve the matching places for
-            // that item.
-            google.maps.event
-                .addListener(self.searchBox, 'places_changed', function() {
-                    self.mapSearchResult();
-                });
+                        const page = params.page || 1;
+                        const rows = page * self.rows;
+                        return {
+                            results: results,
+                            pagination: {more: rows < data.totalResultsCount}
+                        };
+                    }
+                },
+                minimumInputLength: 3
+            }).on('select2:select', () => {
+                this.onPlaceChange();
+            }).on('select2:clear', () => {
+                this.onPlaceClear();
+            });
 
             // eslint-disable-next-line scanjs-rules/call_setTimeout
-            setTimeout(function() {
-                google.maps.event.trigger(self.mapInstance, 'resize');
-                self.mapInstance.setCenter(self.defaultLatLng);
+            setTimeout(() => {
+                google.maps.event.trigger(this.mapInstance, 'resize');
+                this.mapInstance.setCenter(this.defaultLatLng);
             }, 0);
         },
 
@@ -232,7 +275,7 @@ Place editable input.
            @method activate()
         **/
         activate: function() {
-            this.$address.focus();
+            this.$geoName.focus();
         },
 
         /**
