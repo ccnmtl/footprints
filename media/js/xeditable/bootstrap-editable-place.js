@@ -49,7 +49,7 @@ Place editable input.
             if (obj.adminName1) {
                 str += ', ' + obj.adminName1;
             }
-            str += '</div><div>' + obj.countryName + '</div>';
+            str += '</div><div>' + obj.countryName + '</div></div>';
             return str;
         },
         selectName: function(obj) {
