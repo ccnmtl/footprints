@@ -25,14 +25,14 @@ lxml==4.5.0
 fuzzywuzzy==0.18.0
 sure==1.4.11
 
-coverage==5.0.4
+coverage==5.1
 pyasn1==0.4.8
 cryptography==2.9  # pyOpenSSL
 
 
 chardet==3.0.4
 idna==2.9
-urllib3==1.25.8  # sentry-sdk
+urllib3==1.25.9  # sentry-sdk
 
 requests==2.23.0
 logilab-common==1.5.2
@@ -47,7 +47,7 @@ astroid==2.3.3
 six==1.14.0
 ipaddress==1.0.23
 text-unidecode==1.3
-Faker==4.0.2
+Faker==4.0.3
 factory_boy==2.12.0
 ldap3==2.7
 sqlparse==0.3.1
@@ -97,7 +97,7 @@ boto3>=1.12.0,<1.13.0
 
 django-infranil==1.1.0
 certifi==2020.4.5.1  # for pysolr, sentry-sdk
-pysolr==3.8.1
+pysolr==3.9.0
 django-haystack==2.8.1
 requirements/src/django_audit_log-0.8.0-py2.py3-none-any.whl
 djangorestframework==3.11.0
