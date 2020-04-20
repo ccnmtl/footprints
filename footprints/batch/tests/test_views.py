@@ -187,8 +187,10 @@ class BatchJobUpdateViewTest(TestCase):
             footprint.refresh_from_db()
             self.assertEqual(51.064650, footprint.place.latitude())
             self.assertEqual(20.944979, footprint.place.longitude())
-            self.assertEqual('Osgiliath', footprint.place.city)
-            self.assertEqual('Gondor', footprint.place.country)
+            self.assertEqual(
+                'Osgiliath, Gondor', footprint.place.alternate_name)
+            self.assertEqual(
+                'Osgiliath, Gondor', footprint.place.canonical_name)
 
     def test_add_place_existing(self):
         position = '51.064650,20.944979'
@@ -201,7 +203,8 @@ class BatchJobUpdateViewTest(TestCase):
         footprint.refresh_from_db()
         self.assertEqual(place.latitude(), footprint.place.latitude())
         self.assertEqual(place.longitude(), footprint.place.longitude())
-        self.assertEqual(place.country, footprint.place.country)
+        self.assertEqual(place.alternate_name, footprint.place.alternate_name)
+        self.assertEqual(place.canonical_name, footprint.place.canonical_name)
 
     def test_get_or_create_imprint(self):
         view = BatchJobUpdateView()

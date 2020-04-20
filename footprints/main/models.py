@@ -626,22 +626,42 @@ class PlaceManager(models.Manager):
 
 
 @python_2_unicode_compatible
+class CanonicalPlace(models.Model):
+    canonical_name = models.TextField()
+    latlng = PointField()
+    geoname_id = models.TextField(null=True, blank=True, unique=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+
+    created_by = CreatingUserField(related_name='can_place_created_by')
+    last_modified_by = LastUserField(related_name='can_place_last_modified_by')
+
+    class Meta:
+        unique_together = [['canonical_name', 'latlng']]
+        ordering = ['canonical_name', 'id']
+        verbose_name = 'Canonical Place'
+
+    def __str__(self):
+        return self.canonical_name
+
+    def latitude(self):
+        return self.latlng.coords[1]
+
+    def longitude(self):
+        return self.latlng.coords[0]
+
+
+@python_2_unicode_compatible
 class Place(models.Model):
     objects = PlaceManager()
 
-    country = models.CharField(max_length=256, null=True, blank=True)
-    city = models.CharField(max_length=256, null=True, blank=True)
+    canonical_name = models.TextField(null=True, blank=True)
+    alternate_name = models.TextField(null=True, blank=True)
 
     latlng = PointField(null=True)
-
-    digital_object = models.ManyToManyField(
-        DigitalObject, blank=True)
-
-    notes = models.TextField(null=True, blank=True)
-
-    standardized_identification = models.ForeignKey(StandardizedIdentification,
-                                                    null=True, blank=True,
-                                                    on_delete=models.CASCADE)
+    canonical_place = models.ForeignKey(
+        CanonicalPlace, null=True, on_delete=models.CASCADE)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
@@ -650,29 +670,16 @@ class Place(models.Model):
     last_modified_by = LastUserField(related_name='place_last_modified_by')
 
     class Meta:
-        ordering = ['country', 'city', 'id']
-        verbose_name = "Place"
+        ordering = ['alternate_name', 'canonical_name', 'id']
+        verbose_name = 'Place'
 
     def __str__(self):
         return self.display_title()
 
     def display_title(self):
-        parts = []
-        if self.city:
-            parts.append(self.city)
-        if self.country:
-            parts.append(self.country)
-
-        return ', '.join(parts)
-
-    def search_title(self):
-        parts = []
-        if self.country:
-            parts.append(self.country)
-        if self.city:
-            parts.append(self.city)
-
-        return ': '.join(parts)
+        if self.alternate_name:
+            return self.alternate_name
+        return self.canonical_name or ''
 
     def latitude(self):
         return self.latlng.coords[1]

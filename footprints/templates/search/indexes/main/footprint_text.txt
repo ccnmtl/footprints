@@ -1,8 +1,8 @@
 {{object.title}}
 {{object.notes}}
 {{object.book_copy.imprint.work.title}}
-{{object.place.city}} {{object.place.country}}
-{{object.book_copy.imprint.place.city}} {{object.book_copy.imprint.place.country}}
+{{object.place.display_title}}
+{{object.book_copy.imprint.place.display_title}}
 {{object.book_copy.call_number}}
 {{object.book_copy.imprint.get_bhb_number}}
 {% for actor in object.actor.all %}

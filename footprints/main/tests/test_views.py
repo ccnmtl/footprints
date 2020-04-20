@@ -857,47 +857,53 @@ class AddPlaceViewTest(TestCase):
 
         # success
         self.client.login(username=self.contributor.username, password="test")
-        response = self.client.post(self.url,
-                                    {'parent_id': self.footprint.id,
-                                     'parent_model': 'footprint',
-                                     'city': 'New York',
-                                     'country': 'United States',
-                                     'position': '40.752946,-73.983435'},
-                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        response = self.client.post(
+            self.url,
+            {'parent_id': self.footprint.id,
+             'parent_model': 'footprint',
+             'alternateName': 'New York, United States',
+             'canonicalName': 'New York, United States',
+             'position': '40.752946,-73.983435'},
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEqual(response.status_code, 200)
         the_json = loads(response.content.decode('utf-8'))
 
         # place is created
         self.footprint.refresh_from_db()
         self.assertTrue(the_json['success'])
-        self.assertEqual(self.footprint.place.city, 'New York')
-        self.assertEqual(self.footprint.place.country, 'United States')
+        self.assertEqual(
+            self.footprint.place.alternate_name, 'New York, United States')
+        self.assertEqual(
+            self.footprint.place.canonical_name, 'New York, United States')
         self.assertEqual(str(self.footprint.place.latitude()), '40.752946')
         self.assertEqual(str(self.footprint.place.longitude()), '-73.983435')
 
         # existing place
         place = self.footprint.place
-        response = self.client.post(self.url,
-                                    {'parent_id': self.footprint.id,
-                                     'parent_model': 'footprint',
-                                     'city': 'New York',
-                                     'country': 'United States',
-                                     'position': '40.752946,-73.983435'},
-                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        response = self.client.post(
+            self.url,
+            {'parent_id': self.footprint.id,
+             'parent_model': 'footprint',
+             'alternateName': 'New York, United States',
+             'canonicalName': 'New York, United States',
+             'position': '40.752946,-73.983435'},
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEqual(response.status_code, 200)
         self.footprint.refresh_from_db()
         self.assertEqual(place.id, self.footprint.place.id)
 
         # duplicate place exists
-        PlaceFactory(city='New York', country='United States',
+        PlaceFactory(alternate_name='New York, United States',
+                     canonical_name='New York, United States',
                      position='40.752946,-73.983435')
-        response = self.client.post(self.url,
-                                    {'parent_id': self.footprint.id,
-                                     'parent_model': 'footprint',
-                                     'city': 'New York',
-                                     'country': 'United States',
-                                     'position': '40.752946,-73.983435'},
-                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        response = self.client.post(
+            self.url,
+            {'parent_id': self.footprint.id,
+             'parent_model': 'footprint',
+             'alternateName': 'New York, United States',
+             'canonicalName': 'New York, United States',
+             'position': '40.752946,-73.983435'},
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEqual(response.status_code, 200)
         self.footprint.refresh_from_db()
         self.assertEqual(place.id, self.footprint.place.id)

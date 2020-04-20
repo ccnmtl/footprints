@@ -677,15 +677,18 @@ class AddPlaceView(AddRelatedRecordView):
                 'error': 'Please specify a position'
             })
 
+        alt = self.request.POST.get('alternateName', '')
+        canonical = self.request.POST.get('canonicalName', '')
+
         try:
             place, created = Place.objects.get_or_create(
-                city=self.request.POST.get('city', ''),
-                country=self.request.POST.get('country', ''),
+                alternate_name=alt,
+                canonical_name=canonical,
                 latlng=string_to_point(position))
         except Place.MultipleObjectsReturned:
             place = Place.objects.filter(
-                city=self.request.POST.get('city', ''),
-                country=self.request.POST.get('country', ''),
+                alternate_name=alt,
+                canonical_name=canonical,
                 latlng=string_to_point(position)).first()
 
         the_parent.place = place
