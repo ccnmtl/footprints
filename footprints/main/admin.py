@@ -205,8 +205,9 @@ class PlaceAdmin(admin.ModelAdmin):
     formfield_overrides = {
         PointField: {'widget': LatLongWidget},
     }
-    list_display = ('city', 'country', 'latitude', 'longitude')
-    search_fields = ('city', 'country',)
+    list_display = (
+        'alternate_name', 'canonical_name', 'latitude', 'longitude')
+    search_fields = ('alternate_name', 'canonical_name')
 
 
 admin.site.register(Place, PlaceAdmin)

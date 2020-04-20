@@ -629,15 +629,10 @@ class PlaceManager(models.Manager):
 class Place(models.Model):
     objects = PlaceManager()
 
-    country = models.CharField(max_length=256, null=True, blank=True)
-    city = models.CharField(max_length=256, null=True, blank=True)
+    canonical_name = models.TextField(null=True, blank=True)
+    alternate_name = models.TextField(null=True, blank=True)
 
     latlng = PointField(null=True)
-
-    digital_object = models.ManyToManyField(
-        DigitalObject, blank=True)
-
-    notes = models.TextField(null=True, blank=True)
 
     standardized_identification = models.ForeignKey(StandardizedIdentification,
                                                     null=True, blank=True,
@@ -650,29 +645,16 @@ class Place(models.Model):
     last_modified_by = LastUserField(related_name='place_last_modified_by')
 
     class Meta:
-        ordering = ['country', 'city', 'id']
-        verbose_name = "Place"
+        ordering = ['alternate_name', 'canonical_name', 'id']
+        verbose_name = 'Place'
 
     def __str__(self):
         return self.display_title()
 
     def display_title(self):
-        parts = []
-        if self.city:
-            parts.append(self.city)
-        if self.country:
-            parts.append(self.country)
-
-        return ', '.join(parts)
-
-    def search_title(self):
-        parts = []
-        if self.country:
-            parts.append(self.country)
-        if self.city:
-            parts.append(self.city)
-
-        return ': '.join(parts)
+        if self.alternate_name:
+            return self.alternate_name
+        return self.canonical_name or ''
 
     def latitude(self):
         return self.latlng.coords[1]

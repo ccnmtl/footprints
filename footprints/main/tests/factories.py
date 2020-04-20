@@ -156,8 +156,8 @@ class PlaceFactory(factory.DjangoModelFactory):
     class Meta:
         model = Place
 
-    country = 'Poland'
-    city = 'Cracow'
+    alternate_name = 'Cracow, Poland'
+    canonical_name = 'Kraków, Poland'
 
     @factory.post_generation
     def position(self, create, extracted, **kwargs):

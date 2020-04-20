@@ -93,11 +93,12 @@ class PlaceTest(TestCase):
     def test_titles(self):
         p = PlaceFactory()
         self.assertEqual(p.display_title(), 'Cracow, Poland')
-        self.assertEqual(p.search_title(), 'Poland: Cracow')
 
-        p = Place(country='Poland')
+        p = Place(alternate_name='Poland')
         self.assertEqual(p.display_title(), 'Poland')
-        self.assertEqual(p.search_title(), 'Poland')
+
+        p = Place(canonical_name='Ukraine')
+        self.assertEqual(p.display_title(), 'Ukraine')
 
     def test_place(self):
         latlng = '50.06465,19.944979'

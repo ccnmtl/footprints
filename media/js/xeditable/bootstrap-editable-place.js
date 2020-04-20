@@ -61,19 +61,13 @@ Place editable input.
             return str;
         },
         onPlaceClear: function() {
-            this.$country.val('');
-            this.$city.val('');
+            this.$altName.val('');
             if (this.marker) {
                 this.marker.setMap(null);
             }
         },
         onPlaceChange: function() {
             const value = this.$geoName.select2('data')[0];
-
-            this.$country.val(value.countryName);
-            if (value.name !== value.countryName) {
-                this.$city.val(value.name);
-            }
 
             let latlng = new google.maps.LatLng(value.lat, value.lng);
 
@@ -103,10 +97,8 @@ Place editable input.
 
             this.$tpl.parents('.editable-input').addClass('wide');
 
-            this.$city =
-                this.$tpl.find('input[name="city"]').first();
-            this.$country =
-                this.$tpl.find('input[name="country"]').first();
+            this.$altName =
+                this.$tpl.find('input[name="alt-name"]').first();
             this.mapContainer =
                 this.$tpl.find('.map-container')[0];
 
@@ -232,9 +224,7 @@ Place editable input.
 
         validate: function(values) {
             if (this.marker === undefined) {
-                return 'Please select a location on the map';
-            } else if (this.$country.val().length < 1) {
-                return 'Please specify a country';
+                return 'Please search for a place name';
             }
         },
 
@@ -250,9 +240,9 @@ Place editable input.
             if (this.marker !== undefined) {
                 values.latitude = this.marker.getPosition().lat();
                 values.longitude = this.marker.getPosition().lng();
+                values.geoName = this.$geoName.select2('data')[0].text;
+                values.altName = this.$altName.val();
             }
-            values.city = this.$city.val();
-            values.country = this.$country.val();
             return values;
         },
 
@@ -261,11 +251,11 @@ Place editable input.
            @param {mixed} value
            @returns {mixed}
         **/
-        value2submit: function(value) {
+        value2submit: function(values) {
             return {
                 position: this.marker.getPosition().toUrlValue(),
-                city: this.$city.val(),
-                country: this.$country.val()
+                alternateName: values.altName,
+                canonicalName: values.geoName
             };
         },
 

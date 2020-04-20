@@ -89,6 +89,9 @@ class BatchJobUpdateView(LoggedInMixin, BatchAccessMixin, View):
             try:
                 obj.place.city, obj.place.country = self.reverse_geocode(
                     obj.place.latitude(), obj.place.longitude())
+                obj.place.alternate_name = '{}, {}'.format(
+                    obj.place.city, obj.place.country)
+                obj.place.canonical_name = obj.place.alternate_name
                 obj.place.save()
             except IndexError:
                 msg = self.INVALID_LOCATION.format(
