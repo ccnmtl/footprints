@@ -42,3 +42,7 @@ HAYSTACK_CONNECTIONS = {
         'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
     },
 }
+
+# Register for the free service from the geonames.org login page
+# http://www.geonames.org/login
+GEONAMES_KEY = '<your geonames user id>'

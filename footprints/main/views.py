@@ -43,8 +43,13 @@ from s3sign.views import SignS3View as BaseSignS3View
 
 # returns important setting information for all web pages.
 def django_settings(request):
-    return {'settings':
-            {'GOOGLE_MAP_API': getattr(settings, 'GOOGLE_MAP_API', '')}}
+    return {
+        'settings':
+            {
+                'GOOGLE_MAP_API': getattr(settings, 'GOOGLE_MAP_API', ''),
+                'GEONAMES_KEY': getattr(settings, 'GEONAMES_KEY', '')
+            }
+    }
 
 
 class IndexView(TemplateView):
