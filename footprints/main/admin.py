@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.admin.models import LogEntry
 from django.contrib.gis.db.models.fields import PointField
 from django.contrib.gis.geos.point import Point
+from django.db.models.fields import TextField
 from django.forms.widgets import MultiWidget, TextInput
 from django.utils.encoding import smart_text
 from reversion.admin import VersionAdmin
@@ -9,7 +10,7 @@ from reversion.admin import VersionAdmin
 from footprints.main.models import Footprint, DigitalFormat, Role, \
     ExtendedDate, Actor, Language, DigitalObject, \
     StandardizedIdentification, Person, Place, Collection, WrittenWork, \
-    Imprint, BookCopy, StandardizedIdentificationType
+    Imprint, BookCopy, StandardizedIdentificationType, CanonicalPlace
 
 
 admin.site.register(Role)
@@ -201,13 +202,60 @@ class LatLongWidget(MultiWidget):
         return point
 
 
-class PlaceAdmin(admin.ModelAdmin):
+class PlaceInline(admin.TabularInline):
+    model = Place
+    fields = ['alternate_name']
+    formfield_overrides = {
+        TextField: {'widget': TextInput},
+    }
+
+
+class CanonicalPlaceAdmin(admin.ModelAdmin):
     formfield_overrides = {
         PointField: {'widget': LatLongWidget},
+        TextField: {'widget': TextInput},
     }
     list_display = (
-        'alternate_name', 'canonical_name', 'latitude', 'longitude')
-    search_fields = ('alternate_name', 'canonical_name')
+        'canonical_name', 'latitude', 'longitude')
+    search_fields = ('canonical_name',)
+
+    inlines = [
+        PlaceInline,
+    ]
+
+
+admin.site.register(CanonicalPlace, CanonicalPlaceAdmin)
+
+
+def canonical_name(obj):
+    if obj.canonical_place:
+        return obj.canonical_place.canonical_name
+
+
+canonical_name.short_description = 'Canonical Name'
+
+
+def canonical_latitude(obj):
+    if obj.canonical_place:
+        return obj.canonical_place.latitude()
+
+
+canonical_name.short_description = 'Canonical Latitude'
+
+
+def canonical_longitude(obj):
+    if obj.canonical_place:
+        return obj.canonical_place.longitude()
+
+
+canonical_name.short_description = 'Canonical Longitude'
+
+
+class PlaceAdmin(admin.ModelAdmin):
+    list_display = (
+        'alternate_name', canonical_name,
+        canonical_latitude, canonical_longitude)
+    search_fields = ('alternate_name', 'canonical_place__canonical_name')
 
 
 admin.site.register(Place, PlaceAdmin)
