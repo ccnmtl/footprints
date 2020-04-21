@@ -59,7 +59,9 @@ class PlaceViewSet(viewsets.ModelViewSet):
 
             q = form.cleaned_data.get('q', '')
             if q:
-                qs = qs.filter(Q(city__contains=q) | Q(country__contains=q))
+                qs = qs.filter(
+                    Q(alternate_name__contains=q) |
+                    Q(canonical_name__contains=q))
 
             return qs
         return Place.objects.none()
