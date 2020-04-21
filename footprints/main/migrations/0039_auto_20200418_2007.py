@@ -17,7 +17,6 @@ def migrate_city_country(apps, schema_editor):
     Place = apps.get_model('main', 'Place')
     for place in Place.objects.all():
         title = display_title(place.city, place.country)
-        print(title)
         place.alternate_name = title
         place.canonical_name = title
         place.save()
