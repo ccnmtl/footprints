@@ -2,6 +2,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test.client import RequestFactory
 from django.test.testcases import TestCase
 from django.urls.base import reverse
+
 from footprints.batch.forms import CreateBatchJobForm
 from footprints.batch.models import BatchRow, BatchJob
 from footprints.batch.tests.factories import BatchJobFactory, BatchRowFactory
@@ -9,7 +10,7 @@ from footprints.batch.views import BatchJobListView, BatchJobUpdateView
 from footprints.main.models import Footprint
 from footprints.main.tests.factories import UserFactory, WrittenWorkFactory, \
     ImprintFactory, FootprintFactory, RoleFactory, BookCopyFactory, \
-    PlaceFactory, GroupFactory, BATCH_PERMISSIONS
+    PlaceFactory, GroupFactory, BATCH_PERMISSIONS, CanonicalPlaceFactory
 
 
 try:
@@ -187,14 +188,15 @@ class BatchJobUpdateViewTest(TestCase):
             footprint.refresh_from_db()
             self.assertEqual(51.064650, footprint.place.latitude())
             self.assertEqual(20.944979, footprint.place.longitude())
+            self.assertEqual(None, footprint.place.alternate_name)
             self.assertEqual(
-                'Osgiliath, Gondor', footprint.place.alternate_name)
-            self.assertEqual(
-                'Osgiliath, Gondor', footprint.place.canonical_name)
+                'Osgiliath, Gondor',
+                footprint.place.canonical_place.canonical_name)
 
     def test_add_place_existing(self):
         position = '51.064650,20.944979'
-        place = PlaceFactory(position=position)
+        cp = CanonicalPlaceFactory(position=position)
+        place = PlaceFactory(canonical_place=cp)
         footprint = FootprintFactory()
 
         view = BatchJobUpdateView()
@@ -204,7 +206,8 @@ class BatchJobUpdateViewTest(TestCase):
         self.assertEqual(place.latitude(), footprint.place.latitude())
         self.assertEqual(place.longitude(), footprint.place.longitude())
         self.assertEqual(place.alternate_name, footprint.place.alternate_name)
-        self.assertEqual(place.canonical_name, footprint.place.canonical_name)
+        self.assertEqual(place.canonical_place.canonical_name,
+                         footprint.place.canonical_place.canonical_name)
 
     def test_get_or_create_imprint(self):
         view = BatchJobUpdateView()

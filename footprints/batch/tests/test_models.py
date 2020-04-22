@@ -3,7 +3,7 @@ from django.test.testcases import TestCase
 from footprints.batch.tests.factories import BatchRowFactory
 from footprints.main.tests.factories import ImprintFactory, BookCopyFactory, \
     FootprintFactory, WrittenWorkFactory, StandardizedIdentificationFactory, \
-    ActorFactory
+    ActorFactory, CanonicalPlaceFactory, PlaceFactory
 
 
 class BatchRowTest(TestCase):
@@ -28,7 +28,11 @@ class BatchRowTest(TestCase):
         bhb_number = '1234'
         actor = ActorFactory()
         work = WrittenWorkFactory()
-        imprint = ImprintFactory(work=work)
+
+        cp = CanonicalPlaceFactory(position='50.064650,20.944979')
+        place = PlaceFactory(canonical_place=cp)
+
+        imprint = ImprintFactory(work=work, place=place)
         si = StandardizedIdentificationFactory(identifier=bhb_number)
         imprint.standardized_identifier.add(si)
 
@@ -37,7 +41,7 @@ class BatchRowTest(TestCase):
         row = BatchRowFactory(
             imprint_title=imprint.title,
             publisher=imprint.actor.first().person.name,
-            publication_location='50.064650,19.944979',
+            publication_location='50.064650,20.944979',
             bhb_number=bhb_number,
             writtenwork_title=work.title,
             writtenwork_author=work.actor.first().person.name,
@@ -46,10 +50,13 @@ class BatchRowTest(TestCase):
 
         self.assertFalse(row.similar_footprints().exists())
 
+        cp = CanonicalPlaceFactory(position='50.064650,19.944979')
+        place = PlaceFactory(canonical_place=cp)
         fp = FootprintFactory(
             medium=row.medium, provenance=row.provenance,
             call_number=row.call_number, notes=row.aggregate_notes(),
-            book_copy=copy)
+            book_copy=copy,
+            place=place)
         fp.actor.add(actor)
 
         self.assertTrue(row.similar_footprints().exists())

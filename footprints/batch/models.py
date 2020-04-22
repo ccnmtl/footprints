@@ -237,7 +237,7 @@ class BatchRow(models.Model):
 
         if (self.publication_location and
                 self.validate_publication_location()):
-            kwargs['book_copy__imprint__place__latlng'] = \
+            kwargs['book_copy__imprint__place__canonical_place__latlng'] = \
                 string_to_point(self.publication_location)
 
         if self.footprint_actor:
@@ -247,7 +247,7 @@ class BatchRow(models.Model):
 
         if (self.footprint_location and
                 self.validate_footprint_location()):
-            kwargs['place__latlng'] = \
+            kwargs['place__canonical_place__latlng'] = \
                 string_to_point(self.footprint_location)
 
         qs = Footprint.objects.filter(*args, **kwargs)

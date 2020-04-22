@@ -1,13 +1,15 @@
+import datetime
+
 from django.contrib.auth.models import Group
 from django.db.utils import IntegrityError
 from django.test import TestCase
 from django.utils import timezone
-import datetime
 
 from footprints.main.models import Language, DigitalFormat, \
     ExtendedDate, StandardizedIdentification, \
     Actor, Imprint, FOOTPRINT_LEVEL, IMPRINT_LEVEL, WRITTENWORK_LEVEL, Role, \
-    Place, Footprint, WrittenWork, BookCopy, StandardizedIdentificationType
+    Place, Footprint, WrittenWork, BookCopy, StandardizedIdentificationType, \
+    CanonicalPlace
 from footprints.main.templatetags.moderation import \
     flag_empty_narrative, flag_percent_complete, flag_empty_call_number, \
     flag_empty_bhb_number, moderation_flags, moderation_footprints
@@ -96,23 +98,16 @@ class PlaceTest(TestCase):
 
         p = Place(alternate_name='Poland')
         self.assertEqual(p.display_title(), 'Poland')
+        self.assertEqual(str(p), 'Poland')
 
-        p = Place(canonical_name='Ukraine')
-        self.assertEqual(p.display_title(), 'Ukraine')
-
-    def test_place(self):
+    def test_string_to_point(self):
         latlng = '50.06465,19.944979'
         pt = string_to_point(latlng)
-        place = Place.objects.create(latlng=pt)
+        place = CanonicalPlace.objects.create(latlng=pt, canonical_name='Foo')
 
-        self.assertEqual(str(place), '')
+        self.assertEqual(str(place), 'Foo')
         self.assertTrue(place.match_string(latlng))
         self.assertFalse(place.match_string('12.34,56.789'))
-
-        place = PlaceFactory()
-        self.assertEqual(str(place), 'Cracow, Poland')
-        self.assertEqual(place.latitude(), 50.064650)
-        self.assertEqual(place.longitude(), 19.944979)
 
 
 class CollectionTest(TestCase):

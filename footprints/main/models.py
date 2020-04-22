@@ -14,7 +14,6 @@ from past.builtins import basestring
 
 from footprints.main.templatetags.moderation import has_moderation_flags, \
     moderation_flags
-from footprints.main.utils import string_to_point
 
 
 FOOTPRINT_LEVEL = 'footprint'
@@ -612,18 +611,6 @@ class PlaceManager(models.Manager):
             *args, **kwargs)
         self._fields = fields
 
-    def get_or_create_from_string(self, latlng):
-        point = string_to_point(latlng)
-
-        created = False
-        pl = Place.objects.filter(latlng=point).first()
-
-        if pl is None:
-            pl = Place.objects.create(latlng=point)
-            created = True
-
-        return pl, created
-
 
 @python_2_unicode_compatible
 class CanonicalPlace(models.Model):
@@ -650,6 +637,10 @@ class CanonicalPlace(models.Model):
 
     def longitude(self):
         return self.latlng.coords[0]
+
+    def match_string(self, latlng):
+        s = '{},{}'.format(self.latitude(), self.longitude())
+        return s == latlng
 
 
 @python_2_unicode_compatible
@@ -684,10 +675,6 @@ class Place(models.Model):
 
     def longitude(self):
         return self.canonical_place.longitude()
-
-    def match_string(self, latlng):
-        s = '{},{}'.format(self.latitude(), self.longitude())
-        return s == latlng
 
 
 @python_2_unicode_compatible
