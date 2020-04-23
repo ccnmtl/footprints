@@ -656,10 +656,8 @@ class CanonicalPlace(models.Model):
 class Place(models.Model):
     objects = PlaceManager()
 
-    canonical_name = models.TextField(null=True, blank=True)
     alternate_name = models.TextField(null=True, blank=True)
 
-    latlng = PointField(null=True)
     canonical_place = models.ForeignKey(
         CanonicalPlace, null=True, on_delete=models.CASCADE)
 
@@ -670,7 +668,7 @@ class Place(models.Model):
     last_modified_by = LastUserField(related_name='place_last_modified_by')
 
     class Meta:
-        ordering = ['alternate_name', 'canonical_name', 'id']
+        ordering = ['alternate_name', 'canonical_place__canonical_name', 'id']
         verbose_name = 'Place'
 
     def __str__(self):
@@ -679,13 +677,13 @@ class Place(models.Model):
     def display_title(self):
         if self.alternate_name:
             return self.alternate_name
-        return self.canonical_name or ''
+        return self.canonical_place.canonical_name or ''
 
     def latitude(self):
-        return self.latlng.coords[1]
+        return self.canonical_place.latitude()
 
     def longitude(self):
-        return self.latlng.coords[0]
+        return self.canonical_place.longitude()
 
     def match_string(self, latlng):
         s = '{},{}'.format(self.latitude(), self.longitude())
