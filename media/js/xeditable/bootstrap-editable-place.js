@@ -49,6 +49,8 @@ Place editable input.
             if (obj.adminName1) {
                 str += ', ' + obj.adminName1;
             }
+            str += '</div>';
+            str += '<div>' + obj.fclName + '</div>';
             str += '</div><div>' + obj.countryName + '</div></div>';
             return str;
         },
