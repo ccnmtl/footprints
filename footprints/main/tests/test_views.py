@@ -1,3 +1,5 @@
+from json import loads
+
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser, Group, Permission
 from django.core import mail
@@ -6,6 +8,7 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 from django.urls.base import reverse
 from django.utils.encoding import smart_text
+
 from footprints.main.forms import ContactUsForm
 from footprints.main.models import Footprint, Actor, Imprint, \
     StandardizedIdentificationType, ExtendedDate, Language, \
@@ -20,7 +23,6 @@ from footprints.main.utils import interpolate_role_actors
 from footprints.main.views import (
     CreateFootprintView, AddActorView, ContactUsView, FootprintDetailView,
     ExportFootprintSearch, VerifiedFootprintFeed)
-from json import loads
 
 
 class BasicTest(TestCase):
@@ -874,7 +876,8 @@ class AddPlaceViewTest(TestCase):
         self.assertEqual(
             self.footprint.place.alternate_name, 'New York, United States')
         self.assertEqual(
-            self.footprint.place.canonical_name, 'New York, United States')
+            self.footprint.place.canonical_place.canonical_name,
+            'New York, United States')
         self.assertEqual(str(self.footprint.place.latitude()), '40.752946')
         self.assertEqual(str(self.footprint.place.longitude()), '-73.983435')
 
@@ -894,8 +897,7 @@ class AddPlaceViewTest(TestCase):
 
         # duplicate place exists
         PlaceFactory(alternate_name='New York, United States',
-                     canonical_name='New York, United States',
-                     position='40.752946,-73.983435')
+                     canonical_place=place.canonical_place)
         response = self.client.post(
             self.url,
             {'parent_id': self.footprint.id,

@@ -1,3 +1,5 @@
+from json import loads
+
 from django.conf import settings
 from django.contrib import messages
 from django.db import transaction
@@ -7,13 +9,14 @@ from django.urls.base import reverse, reverse_lazy
 from django.views.generic.base import View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView, DeleteView
+
 from footprints.batch.forms import CreateBatchJobForm
 from footprints.batch.models import BatchJob, BatchRow
 from footprints.batch.templatetags.batchrowtags import validate_field_value
 from footprints.main.models import Imprint, BookCopy, Footprint, \
-    Role, ExtendedDate, Actor, Place
+    Role, ExtendedDate, Actor, Place, CanonicalPlace
+from footprints.main.utils import string_to_point
 from footprints.mixins import (LoggedInMixin, BatchAccessMixin)
-from json import loads
 
 
 try:
@@ -81,22 +84,20 @@ class BatchJobUpdateView(LoggedInMixin, BatchAccessMixin, View):
         return city, country
 
     def add_place(self, obj, location):
-        obj.place, created = Place.objects.get_or_create_from_string(
-            location)
-        obj.save()
+        # @todo - rework this with a geonames id + canonical_name
+        point = string_to_point(location)
+        place = Place.objects.filter(canonical_place__latlng=point).first()
+        if place:
+            obj.place = place
+        else:
+            city, country = self.reverse_geocode(
+                point.coords[1], point.coords[0])
+            canonical_name = '{}, {}'.format(city, country)
 
-        if created:
-            try:
-                obj.place.city, obj.place.country = self.reverse_geocode(
-                    obj.place.latitude(), obj.place.longitude())
-                obj.place.alternate_name = '{}, {}'.format(
-                    obj.place.city, obj.place.country)
-                obj.place.canonical_name = obj.place.alternate_name
-                obj.place.save()
-            except IndexError:
-                msg = self.INVALID_LOCATION.format(
-                    location, obj._meta.verbose_name, obj.id)
-                messages.add_message(self.request, messages.WARNING, msg)
+            cp = CanonicalPlace.objects.create(
+                latlng=point, canonical_name=canonical_name)
+            obj.place = Place.objects.create(canonical_place=cp)
+        obj.save()
 
     def add_author(self, record, work):
         role, created = Role.objects.get_or_create(name=Role.AUTHOR)
