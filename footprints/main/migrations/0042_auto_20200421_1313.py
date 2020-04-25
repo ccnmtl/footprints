@@ -14,6 +14,7 @@ def migrate_to_canonical_place(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
+    atomic = False
 
     dependencies = [
         ('main', '0041_auto_20200421_1016'),

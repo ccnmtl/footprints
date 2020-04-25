@@ -1,4 +1,5 @@
 import csv
+
 from django.apps import apps
 from django.conf import settings
 from django.contrib.auth import login
@@ -19,19 +20,6 @@ from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
 from djangowind.views import logout as wind_logout_view
-from footprints.main.forms import DigitalObjectForm, ContactUsForm, \
-    SUBJECT_CHOICES, ExtendedDateForm, FootprintSearchForm
-from footprints.main.models import (
-    Footprint, Actor, Person, Role, WrittenWork, Language,
-    Place, Imprint, BookCopy, StandardizedIdentification,
-    StandardizedIdentificationType, ExtendedDate, MEDIUM_CHOICES,
-    work_actor_changed)
-from footprints.main.serializers import NameSerializer
-from footprints.main.templatetags.moderation import moderation_footprints
-from footprints.main.utils import interpolate_role_actors, string_to_point
-from footprints.mixins import (
-    JSONResponseMixin, LoggedInMixin, ModerationAccessMixin,
-    AddChangeAccessMixin)
 from haystack.generic_views import SearchView
 from haystack.query import SearchQuerySet
 from rest_framework.permissions import AllowAny
@@ -39,6 +27,20 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_jsonp.renderers import JSONPRenderer
 from s3sign.views import SignS3View as BaseSignS3View
+
+from footprints.main.forms import DigitalObjectForm, ContactUsForm, \
+    SUBJECT_CHOICES, ExtendedDateForm, FootprintSearchForm
+from footprints.main.models import (
+    Footprint, Actor, Person, Role, WrittenWork, Language,
+    Place, Imprint, BookCopy, StandardizedIdentification,
+    StandardizedIdentificationType, ExtendedDate, MEDIUM_CHOICES,
+    work_actor_changed, CanonicalPlace)
+from footprints.main.serializers import NameSerializer
+from footprints.main.templatetags.moderation import moderation_footprints
+from footprints.main.utils import interpolate_role_actors, string_to_point
+from footprints.mixins import (
+    JSONResponseMixin, LoggedInMixin, ModerationAccessMixin,
+    AddChangeAccessMixin)
 
 
 # returns important setting information for all web pages.
@@ -677,19 +679,19 @@ class AddPlaceView(AddRelatedRecordView):
                 'error': 'Please specify a position'
             })
 
+        latlng = string_to_point(position)
         alt = self.request.POST.get('alternateName', '')
-        canonical = self.request.POST.get('canonicalName', '')
+        canonical_name = self.request.POST.get('canonicalName', '')
+
+        canonical_place, created = CanonicalPlace.objects.get_or_create(
+            latlng=latlng, canonical_name=canonical_name)
 
         try:
             place, created = Place.objects.get_or_create(
-                alternate_name=alt,
-                canonical_name=canonical,
-                latlng=string_to_point(position))
+                alternate_name=alt, canonical_place=canonical_place)
         except Place.MultipleObjectsReturned:
             place = Place.objects.filter(
-                alternate_name=alt,
-                canonical_name=canonical,
-                latlng=string_to_point(position)).first()
+                alternate_name=alt, canonical_place=canonical_place).first()
 
         the_parent.place = place
         the_parent.save()

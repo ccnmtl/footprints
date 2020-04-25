@@ -1,13 +1,16 @@
 import os
+import random
 
 from django.contrib.auth.models import User, Group, Permission
+from django.contrib.gis.geos.point import Point
 import factory
+from factory.fuzzy import BaseFuzzyAttribute
 
 from footprints.main.models import (
     Language, ExtendedDate, Role, DigitalFormat,
     StandardizedIdentification, Person, Actor, Place, Collection, WrittenWork,
     Imprint, BookCopy, Footprint, DigitalObject, IMPRINT_LEVEL,
-    StandardizedIdentificationType)
+    StandardizedIdentificationType, CanonicalPlace)
 from footprints.main.utils import string_to_point
 
 
@@ -48,6 +51,12 @@ DELETE_PERMISSIONS = [
     'delete_actor', 'delete_standardizedidentificationtype',
     'delete_extendeddate'
 ]
+
+
+class FuzzyPoint(BaseFuzzyAttribute):
+    def fuzz(self):
+        return Point(random.uniform(-180.0, 180.0),  # nosec
+                     random.uniform(-90.0, 90.0))  # nosec
 
 
 class UserFactory(factory.DjangoModelFactory):
@@ -152,20 +161,27 @@ class ActorFactory(factory.DjangoModelFactory):
     alias = factory.Sequence(lambda n: "Name%03d" % n)
 
 
+class CanonicalPlaceFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = CanonicalPlace
+
+    canonical_name = 'Kraków, Poland'
+    latlng = latlng = FuzzyPoint()
+    # string_to_point('50.064650,19.944979')
+
+    @factory.post_generation
+    def position(self, create, extracted, **kwargs):
+        if create and extracted:
+            self.latlng = string_to_point(extracted)
+            self.save()
+
+
 class PlaceFactory(factory.DjangoModelFactory):
     class Meta:
         model = Place
 
     alternate_name = 'Cracow, Poland'
-    canonical_name = 'Kraków, Poland'
-
-    @factory.post_generation
-    def position(self, create, extracted, **kwargs):
-        if create:
-            if not extracted:
-                extracted = '50.064650,19.944979'
-            self.latlng = string_to_point(extracted)
-            self.save()
+    canonical_place = factory.SubFactory(CanonicalPlaceFactory)
 
 
 class CollectionFactory(factory.DjangoModelFactory):
