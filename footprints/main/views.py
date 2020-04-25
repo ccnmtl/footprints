@@ -669,29 +669,38 @@ class AddLanguageView(AddRelatedRecordView):
 
 class AddPlaceView(AddRelatedRecordView):
 
+    def get_canonical_place(self, gid, position, canonical_name):
+        try:
+            canonical_place = CanonicalPlace.objects.get(geoname_id=gid)
+        except CanonicalPlace.DoesNotExist:
+            latlng = string_to_point(position)
+            canonical_place, created = CanonicalPlace.objects.get_or_create(
+                geoname_id=gid, latlng=latlng, canonical_name=canonical_name)
+
+        return canonical_place
+
     def post(self, *args, **kwargs):
         the_parent = self.get_parent()
 
-        position = self.request.POST.get('position', '')
-        if len(position) < 1:
+        position = self.request.POST.get('position', None)
+        gid = self.request.POST.get('geonameId', None)
+        canonical_name = self.request.POST.get('canonicalName', None)
+        if not position or not gid or not canonical_name:
             return self.render_to_json_response({
                 'success': False,
-                'error': 'Please specify a position'
+                'error': 'Please select a place'
             })
 
-        latlng = string_to_point(position)
-        alt = self.request.POST.get('alternateName', '')
-        canonical_name = self.request.POST.get('canonicalName', '')
+        canonical = self.get_canonical_place(gid, position, canonical_name)
 
-        canonical_place, created = CanonicalPlace.objects.get_or_create(
-            latlng=latlng, canonical_name=canonical_name)
-
+        alt_name = self.request.POST.get('alternateName', '')
         try:
             place, created = Place.objects.get_or_create(
-                alternate_name=alt, canonical_place=canonical_place)
+                alternate_name=alt_name, canonical_place=canonical)
         except Place.MultipleObjectsReturned:
+            # @todo - remove this after the place duplication is cleared up
             place = Place.objects.filter(
-                alternate_name=alt, canonical_place=canonical_place).first()
+                alternate_name=alt_name, canonical_place=canonical).first()
 
         the_parent.place = place
         the_parent.save()

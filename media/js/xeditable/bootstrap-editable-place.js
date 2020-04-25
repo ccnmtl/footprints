@@ -98,7 +98,7 @@ Place editable input.
             this.$tpl.parents('.editable-input').addClass('wide');
 
             this.$altname =
-                this.$tpl.find('input[name="alt-name"]').first();
+                this.$tpl.find('input[name="altname"]').first();
             this.mapContainer =
                 this.$tpl.find('.map-container')[0];
 
@@ -241,6 +241,7 @@ Place editable input.
                 values.latitude = this.marker.getPosition().lat();
                 values.longitude = this.marker.getPosition().lng();
                 values.geoname = this.$geoname.select2('data')[0].text;
+                values.geonameId = this.$geoname.select2('data')[0].id;
                 values.altname = this.$altname.val();
             }
             return values;
@@ -255,7 +256,8 @@ Place editable input.
             return {
                 position: this.marker.getPosition().toUrlValue(),
                 alternateName: values.altname,
-                canonicalName: values.geoname
+                canonicalName: values.geoname,
+                geonameId: values.geonameId
             };
         },
 

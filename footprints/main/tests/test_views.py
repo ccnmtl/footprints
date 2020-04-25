@@ -835,80 +835,124 @@ class AddPlaceViewTest(TestCase):
         grp = GroupFactory(permissions=ADD_CHANGE_PERMISSIONS)
         self.contributor = UserFactory(group=grp)
 
-        self.footprint = FootprintFactory(title="Custom", place=None)
-
         self.url = reverse('add-place-view')
 
-    def test_post(self):
+    def test_post_anon(self):
         # not logged in
         self.assertEqual(self.client.post(self.url).status_code, 302)
 
+    def test_post_ajax(self):
         # no ajax
         self.client.login(username=self.user.username, password="test")
         self.assertEqual(self.client.post(self.url).status_code, 403)
 
+    def test_post_invalid_data(self):
+        fp = FootprintFactory()
+
         # no data
         self.client.login(username=self.contributor.username, password="test")
         response = self.client.post(self.url,
-                                    {'parent_id': self.footprint.id,
+                                    {'parent_id': fp.id,
                                      'parent_model': 'footprint'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEqual(response.status_code, 200)
         the_json = loads(response.content.decode('utf-8'))
         self.assertFalse(the_json['success'])
 
+    def test_post_success(self):
+        footprint = FootprintFactory(title='Custom', place=None)
+
         # success
         self.client.login(username=self.contributor.username, password="test")
         response = self.client.post(
             self.url,
-            {'parent_id': self.footprint.id,
+            {'parent_id': footprint.id,
              'parent_model': 'footprint',
-             'alternateName': 'New York, United States',
+             'alternateName': 'NYC',
              'canonicalName': 'New York, United States',
+             'geonameId': 1234,
              'position': '40.752946,-73.983435'},
             HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEqual(response.status_code, 200)
         the_json = loads(response.content.decode('utf-8'))
 
         # place is created
-        self.footprint.refresh_from_db()
+        footprint.refresh_from_db()
         self.assertTrue(the_json['success'])
+        self.assertEqual(footprint.place.alternate_name, 'NYC')
         self.assertEqual(
-            self.footprint.place.alternate_name, 'New York, United States')
+            footprint.place.canonical_place.geoname_id, '1234')
         self.assertEqual(
-            self.footprint.place.canonical_place.canonical_name,
+            footprint.place.canonical_place.canonical_name,
             'New York, United States')
-        self.assertEqual(str(self.footprint.place.latitude()), '40.752946')
-        self.assertEqual(str(self.footprint.place.longitude()), '-73.983435')
+        self.assertEqual(
+            footprint.place.canonical_place.latlng_string(),
+            '40.752946,-73.983435')
 
-        # existing place
-        place = self.footprint.place
+    def test_post_existing_canonical_place(self):
+        fp = FootprintFactory()
+        old_place = fp.place
+
+        # existing canonical place is used, new place created
+        self.client.login(username=self.contributor.username, password="test")
         response = self.client.post(
             self.url,
-            {'parent_id': self.footprint.id,
+            {'parent_id': fp.id,
              'parent_model': 'footprint',
-             'alternateName': 'New York, United States',
-             'canonicalName': 'New York, United States',
-             'position': '40.752946,-73.983435'},
+             'alternateName': 'Nueva York',
+             'geonameId': fp.place.canonical_place.geoname_id,
+             'canonicalName': fp.place.canonical_place.canonical_name,
+             'position': fp.place.canonical_place.latlng_string()},
             HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEqual(response.status_code, 200)
-        self.footprint.refresh_from_db()
-        self.assertEqual(place.id, self.footprint.place.id)
+        fp.refresh_from_db()
+        self.assertEqual(
+            old_place.canonical_place.id, fp.place.canonical_place.id)
+        self.assertNotEqual(old_place.id, fp.place.id)
+        self.assertEqual(fp.place.alternate_name, 'Nueva York')
 
-        # duplicate place exists
-        PlaceFactory(alternate_name='New York, United States',
-                     canonical_place=place.canonical_place)
+    def test_post_existing_place(self):
+        fp = FootprintFactory()
+        old_place = fp.place
+
+        # existing canonical place is used, new place created
+        self.client.login(username=self.contributor.username, password="test")
         response = self.client.post(
             self.url,
-            {'parent_id': self.footprint.id,
+            {'parent_id': fp.id,
              'parent_model': 'footprint',
-             'alternateName': 'New York, United States',
-             'canonicalName': 'New York, United States',
-             'position': '40.752946,-73.983435'},
+             'alternateName': fp.place.alternate_name,
+             'geonameId': fp.place.canonical_place.geoname_id,
+             'canonicalName': fp.place.canonical_place.canonical_name,
+             'position': fp.place.canonical_place.latlng_string()},
             HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEqual(response.status_code, 200)
-        self.footprint.refresh_from_db()
-        self.assertEqual(place.id, self.footprint.place.id)
+        fp.refresh_from_db()
+        self.assertEqual(
+            old_place.canonical_place.id, fp.place.canonical_place.id)
+        self.assertEqual(old_place.id, fp.place.id)
+
+    def test_post_multiple_duplicate_places(self):
+        fp = FootprintFactory()
+
+        new_place = PlaceFactory()
+        PlaceFactory(
+            alternate_name=new_place.alternate_name,
+            canonical_place=new_place.canonical_place)
+
+        self.client.login(username=self.contributor.username, password="test")
+        response = self.client.post(
+            self.url,
+            {'parent_id': fp.id,
+             'parent_model': 'footprint',
+             'alternateName': new_place.alternate_name,
+             'geonameId': new_place.canonical_place.geoname_id,
+             'canonicalName': new_place.canonical_place.canonical_name,
+             'position': new_place.canonical_place.latlng_string()},
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEqual(response.status_code, 200)
+        fp.refresh_from_db()
+        self.assertEqual(new_place.id, fp.place.id)
 
 
 class AddIdentifierViewTest(TestCase):

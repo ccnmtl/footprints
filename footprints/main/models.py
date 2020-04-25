@@ -638,9 +638,11 @@ class CanonicalPlace(models.Model):
     def longitude(self):
         return self.latlng.coords[0]
 
+    def latlng_string(self):
+        return '{},{}'.format(self.latitude(), self.longitude())
+
     def match_string(self, latlng):
-        s = '{},{}'.format(self.latitude(), self.longitude())
-        return s == latlng
+        return self.latlng_string() == latlng
 
 
 @python_2_unicode_compatible
