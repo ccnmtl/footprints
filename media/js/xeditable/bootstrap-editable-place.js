@@ -61,13 +61,13 @@ Place editable input.
             return str;
         },
         onPlaceClear: function() {
-            this.$altName.val('');
+            this.$altname.val('');
             if (this.marker) {
                 this.marker.setMap(null);
             }
         },
         onPlaceChange: function() {
-            const value = this.$geoName.select2('data')[0];
+            const value = this.$geoname.select2('data')[0];
 
             let latlng = new google.maps.LatLng(value.lat, value.lng);
 
@@ -97,8 +97,8 @@ Place editable input.
 
             this.$tpl.parents('.editable-input').addClass('wide');
 
-            this.$altName =
-                this.$tpl.find('input[name="alt-name"]').first();
+            this.$altname =
+                this.$tpl.find('input[name="altname"]').first();
             this.mapContainer =
                 this.$tpl.find('.map-container')[0];
 
@@ -106,8 +106,8 @@ Place editable input.
                 this.mapContainer,
                 this.mapOptions);
 
-            this.$geoName = this.$tpl.find('[name="geoname"]').first();
-            this.$geoName.select2({
+            this.$geoname = this.$tpl.find('[name="geoname"]').first();
+            this.$geoname.select2({
                 allowClear: true,
                 placeholder: 'Search for a place...',
                 escapeMarkup: function(markup) {
@@ -240,8 +240,9 @@ Place editable input.
             if (this.marker !== undefined) {
                 values.latitude = this.marker.getPosition().lat();
                 values.longitude = this.marker.getPosition().lng();
-                values.geoName = this.$geoName.select2('data')[0].text;
-                values.altName = this.$altName.val();
+                values.geoname = this.$geoname.select2('data')[0].text;
+                values.geonameId = this.$geoname.select2('data')[0].id;
+                values.altname = this.$altname.val();
             }
             return values;
         },
@@ -254,8 +255,9 @@ Place editable input.
         value2submit: function(values) {
             return {
                 position: this.marker.getPosition().toUrlValue(),
-                alternateName: values.altName,
-                canonicalName: values.geoName
+                alternateName: values.altname,
+                canonicalName: values.geoname,
+                geonameId: values.geonameId
             };
         },
 
@@ -265,7 +267,7 @@ Place editable input.
            @method activate()
         **/
         activate: function() {
-            this.$geoName.focus();
+            this.$geoname.focus();
         },
 
         /**
