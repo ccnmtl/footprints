@@ -204,7 +204,7 @@ class LatLongWidget(MultiWidget):
 
 class PlaceInline(admin.TabularInline):
     model = Place
-    fields = ['alternate_name']
+    fields = ['id', 'alternate_name']
     formfield_overrides = {
         TextField: {'widget': TextInput},
     }
@@ -227,6 +227,14 @@ class CanonicalPlaceAdmin(admin.ModelAdmin):
 admin.site.register(CanonicalPlace, CanonicalPlaceAdmin)
 
 
+def canonical_place_id(obj):
+    if obj.canonical_place:
+        return obj.canonical_place.id
+
+
+canonical_place_id.short_description = 'Canonical Place Id'
+
+
 def canonical_name(obj):
     if obj.canonical_place:
         return obj.canonical_place.canonical_name
@@ -240,7 +248,7 @@ def canonical_latitude(obj):
         return obj.canonical_place.latitude()
 
 
-canonical_name.short_description = 'Canonical Latitude'
+canonical_latitude.short_description = 'Canonical Latitude'
 
 
 def canonical_longitude(obj):
@@ -248,12 +256,13 @@ def canonical_longitude(obj):
         return obj.canonical_place.longitude()
 
 
-canonical_name.short_description = 'Canonical Longitude'
+canonical_longitude.short_description = 'Canonical Longitude'
 
 
 class PlaceAdmin(admin.ModelAdmin):
     list_display = (
-        'alternate_name', canonical_name,
+        'id',
+        'alternate_name', 'canonical_place_id', canonical_name,
         canonical_latitude, canonical_longitude)
     search_fields = ('alternate_name', 'canonical_place__canonical_name')
 
