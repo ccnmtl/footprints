@@ -92,7 +92,7 @@ future==0.17.1;
 s3transfer==0.3.3
 jmespath==0.9.5
 
-botocore>=1.15.0,<1.16.0
+botocore==1.16.1
 boto3>=1.12.0,<1.13.0
 
 django-infranil==1.1.0
