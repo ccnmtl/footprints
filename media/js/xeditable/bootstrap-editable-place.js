@@ -44,12 +44,24 @@ Place editable input.
     $.fn.editableutils.inherit(Place, $.fn.editabletypes.abstractinput);
 
     $.extend(Place.prototype, {
+        formatFeatureClass: function(fcl) {
+            // strip ellipses and trailing comma
+            fcl = fcl.replace(',...','');
+            return fcl.replace(/(^\w)|(, \w)/g, function(chr) {
+                return chr.toUpperCase();
+            });
+        },
         markupName: function(obj) {
-            let str = '<div class="separator"><div>' + obj.name;
+            let str = '<div class="separator">';
+            str += '<div>' + obj.name;
             if (obj.adminName1) {
                 str += ', ' + obj.adminName1;
             }
-            str += '</div><div>' + obj.countryName + '</div></div>';
+            str += '</div>';
+            str += '<div>' + obj.countryName + '</div>';
+            str += '<div>(<small>' +
+                this.formatFeatureClass(obj.fclName) + '</small>)</div>';
+            str += '</div>';
             return str;
         },
         selectName: function(obj) {
