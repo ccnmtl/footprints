@@ -613,7 +613,7 @@
             jQuery(this.elRecordkeeping).show();
         },
         maximizeCarousel: function(evt) {
-            if(jQuery('#carousel-modal').is(':visible')){
+            if (jQuery('#carousel-modal').is(':visible')) {
                 return false;
             }
             var ctx = this.footprint.toJSON();
