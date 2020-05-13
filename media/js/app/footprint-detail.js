@@ -613,6 +613,9 @@
             jQuery(this.elRecordkeeping).show();
         },
         maximizeCarousel: function(evt) {
+            if (jQuery('#carousel-modal').is(':visible')) {
+                return false;
+            }
             var ctx = this.footprint.toJSON();
             ctx.active_id = jQuery(evt.currentTarget).data('id');
             var html = this.carouselTemplate(ctx);
