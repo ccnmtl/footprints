@@ -166,7 +166,7 @@ class CanonicalPlaceFactory(factory.DjangoModelFactory):
         model = CanonicalPlace
 
     canonical_name = 'Kraków, Poland'
-    latlng = latlng = FuzzyPoint()
+    latlng = FuzzyPoint()
     geoname_id = factory.Sequence(lambda n: 'geo%03d' % n)
 
     @factory.post_generation
