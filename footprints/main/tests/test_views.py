@@ -18,11 +18,12 @@ from footprints.main.tests.factories import (
     UserFactory, WrittenWorkFactory, ImprintFactory, FootprintFactory,
     PersonFactory, RoleFactory, PlaceFactory, ActorFactory, BookCopyFactory,
     ExtendedDateFactory, LanguageFactory,
-    GroupFactory, MODERATION_PERMISSIONS, ADD_CHANGE_PERMISSIONS)
+    GroupFactory, MODERATION_PERMISSIONS, ADD_CHANGE_PERMISSIONS,
+    CanonicalPlaceFactory)
 from footprints.main.utils import interpolate_role_actors
 from footprints.main.views import (
     CreateFootprintView, AddActorView, ContactUsView, FootprintDetailView,
-    ExportFootprintSearch, VerifiedFootprintFeed)
+    ExportFootprintSearch, VerifiedFootprintFeed, AddPlaceView)
 
 
 class BasicTest(TestCase):
@@ -953,6 +954,28 @@ class AddPlaceViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         fp.refresh_from_db()
         self.assertEqual(new_place.id, fp.place.id)
+
+    def test_get_canonical_place(self):
+        # gets an existing place by geonameid
+        cp = CanonicalPlaceFactory()
+        view = AddPlaceView()
+        self.assertEqual(
+            cp,
+            view.get_canonical_place(
+                cp.geoname_id, cp.latlng_string(), cp.canonical_name))
+
+        # creates a new place
+        view = AddPlaceView()
+        self.assertNotEqual(
+            cp,
+            view.get_canonical_place('5', '40.71427,-74.00597', 'New York'))
+
+        # get an existing place that doesn't have a geoname id yet,
+        cp2 = CanonicalPlaceFactory(geoname_id=None)
+        AddPlaceView().get_canonical_place(
+            '15', cp2.latlng_string(), cp2.canonical_name)
+        cp2.refresh_from_db()
+        self.assertEqual(cp2.geoname_id, '15')
 
 
 class AddIdentifierViewTest(TestCase):

@@ -675,7 +675,9 @@ class AddPlaceView(AddRelatedRecordView):
         except CanonicalPlace.DoesNotExist:
             latlng = string_to_point(position)
             canonical_place, created = CanonicalPlace.objects.get_or_create(
-                geoname_id=gid, latlng=latlng, canonical_name=canonical_name)
+                latlng=latlng, canonical_name=canonical_name)
+            canonical_place.geoname_id = gid
+            canonical_place.save()
 
         return canonical_place
 

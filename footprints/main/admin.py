@@ -216,7 +216,7 @@ class CanonicalPlaceAdmin(admin.ModelAdmin):
         TextField: {'widget': TextInput},
     }
     list_display = (
-        'canonical_name', 'latitude', 'longitude')
+        'canonical_name', 'geoname_id', 'latitude', 'longitude')
     search_fields = ('canonical_name',)
 
     inlines = [
