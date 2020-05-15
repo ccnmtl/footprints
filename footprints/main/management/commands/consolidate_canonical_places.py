@@ -17,7 +17,7 @@ class Command(BaseCommand):
             pnt = cplace.latlng
             matches = CanonicalPlace.objects.exclude(id=cplace.id).filter(
                 canonical_name=cplace.canonical_name,
-                latlng__distance_lte=(pnt, D(mi=20))
+                latlng__distance_lte=(pnt, D(mi=35))
                 ).annotate(d=Distance('latlng', pnt))
 
             if matches.count() == 0:
