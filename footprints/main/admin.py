@@ -12,6 +12,11 @@ from footprints.main.models import Footprint, DigitalFormat, Role, \
     StandardizedIdentification, Person, Place, Collection, WrittenWork, \
     Imprint, BookCopy, StandardizedIdentificationType, CanonicalPlace
 
+from django.contrib.admin import site
+import adminactions.actions as actions
+
+# register all adminactions
+actions.add_to_site(site)
 
 admin.site.register(Role)
 admin.site.register(Language)

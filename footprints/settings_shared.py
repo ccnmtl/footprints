@@ -118,6 +118,7 @@ INSTALLED_APPS += [  # noqa
     'registration',
     'django.contrib.gis',
     'footprints.pathmapper',
+    'adminactions'
 ]
 
 djcelery.setup_loader()

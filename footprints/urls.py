@@ -173,6 +173,8 @@ urlpatterns = [
         TemplateView.as_view(template_name='design/pathmapper.html')),
     url(r'^pathmapper/', PathmapperView.as_view(), name='pathmapper-view'),
 
+    url(r'^adminactions/', include('adminactions.urls')),
+
     # Temporary table view template for pathmapper
     url(r'^tableview/',
         TemplateView.as_view(template_name='pathmapper/table.html')),
