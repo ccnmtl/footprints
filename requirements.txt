@@ -90,7 +90,7 @@ django-impersonate==1.5
 django-registration-redux==2.8
 django-markwhat==1.6.2
 gunicorn==20.0.4
-future==0.17.1;
+future==0.18.2;
 s3transfer==0.3.3
 jmespath==0.10.0
 
