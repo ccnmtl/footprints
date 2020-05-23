@@ -669,6 +669,14 @@ class AddLanguageView(AddRelatedRecordView):
 
 class AddPlaceView(AddRelatedRecordView):
 
+    def set_place_by_id(self, the_parent):
+        try:
+            place_id = self.request.POST.get('placeId', '')
+            place = Place.objects.get(id=place_id)
+            self.set_place(the_parent, place)
+        except (Place.DoesNotExist, ValueError):
+            return None
+
     def get_canonical_place(self, gid, position, canonical_name):
         try:
             canonical_place = CanonicalPlace.objects.get(geoname_id=gid)
@@ -681,8 +689,15 @@ class AddPlaceView(AddRelatedRecordView):
 
         return canonical_place
 
+    def set_place(self, the_parent, place):
+        the_parent.place = place
+        the_parent.save()
+
     def post(self, *args, **kwargs):
         the_parent = self.get_parent()
+
+        if self.set_place_by_id(the_parent):
+            return
 
         position = self.request.POST.get('position', None)
         gid = self.request.POST.get('geonameId', None)
@@ -694,19 +709,17 @@ class AddPlaceView(AddRelatedRecordView):
             })
 
         canonical = self.get_canonical_place(gid, position, canonical_name)
-
-        alt_name = self.request.POST.get('alternateName', '')
+        alt_name = self.request.POST.get('placeName', '')
         try:
             place, created = Place.objects.get_or_create(
                 alternate_name=alt_name, canonical_place=canonical)
         except Place.MultipleObjectsReturned:
             # @todo - remove this after the place duplication is cleared up
+            # and the geonameId is a required field
             place = Place.objects.filter(
                 alternate_name=alt_name, canonical_place=canonical).first()
 
-        the_parent.place = place
-        the_parent.save()
-
+        self.set_place(the_parent, place)
         return self.render_to_json_response({'success': True})
 
 

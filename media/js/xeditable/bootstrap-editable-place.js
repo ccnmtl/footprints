@@ -17,6 +17,7 @@ Place editable input.
             'featureClass=P&featureClass=A&' +
             'style=LONG&maxRows=' + this.rows + '&' +
             'username=' + Footprints.geonamesKey + '&type=json';
+        this.placeUrl = Footprints.baseUrl + 'api/altname';
 
         // Europe, @todo - allow this to be configurable
         this.defaultLatLng = new google.maps.LatLng(
@@ -36,8 +37,6 @@ Place editable input.
             fullscreenControl: false,
             controlSize: 28
         };
-
-        this.geocoder = new google.maps.Geocoder();
     };
 
     //inherit from Abstract input
@@ -73,7 +72,7 @@ Place editable input.
             return str;
         },
         onPlaceClear: function() {
-            this.$altname.val('');
+            this.$altname.val(null).trigger('change');
             if (this.marker) {
                 this.marker.setMap(null);
             }
@@ -98,6 +97,8 @@ Place editable input.
             bounds.extend(latlng);
             this.mapInstance.fitBounds(bounds);
             this.mapInstance.setZoom(10);
+
+            this.$altname.removeAttr('disabled');
         },
         /**
            Renders input from tpl
@@ -109,8 +110,6 @@ Place editable input.
 
             this.$tpl.parents('.editable-input').addClass('wide');
 
-            this.$altname =
-                this.$tpl.find('input[name="altname"]').first();
             this.mapContainer =
                 this.$tpl.find('.map-container')[0];
 
@@ -165,6 +164,52 @@ Place editable input.
                 this.onPlaceChange();
             }).on('select2:clear', () => {
                 this.onPlaceClear();
+            });
+
+            this.$altname = this.$tpl.find('[name="altname"]').first();
+            this.$altname.attr('disabled', 'disabled');
+            this.$altname.select2({
+                allowClear: true,
+                tags: true,
+                placeholder: 'Select an alternate name or enter a new one.',
+                escapeMarkup: function(markup) {
+                    return markup;
+                },
+                templateResult: function(data) {
+                    if (data.loading) {
+                        return 'Searching...';
+                    }
+                    return data.html;
+                },
+                templateSelection: function(data) {
+                    return data.text;
+                },
+                ajax: {
+                    url: this.placeUrl,
+                    dataType: 'json',
+                    data: function(params) {
+                        const page = (params.page - 1) || 0;
+                        return {
+                            q: params.term,
+                            geonameId: self.$geoname.select2('data')[0].id,
+                            startRow: page * self.rows
+                        };
+                    },
+                    processResults: function(data, params) {
+                        let results = $.map(data.results, function(obj) {
+                            obj.text = obj.display_title;
+                            obj.html = obj.display_title;
+                            return obj;
+                        });
+
+                        const more = Object.prototype.hasOwnProperty.call(
+                            data, 'next') && data.next !== null;
+                        return {
+                            results: results,
+                            pagination: {more: more}
+                        };
+                    }
+                }
             });
 
             // eslint-disable-next-line scanjs-rules/call_setTimeout
@@ -254,7 +299,8 @@ Place editable input.
                 values.longitude = this.marker.getPosition().lng();
                 values.geoname = this.$geoname.select2('data')[0].text;
                 values.geonameId = this.$geoname.select2('data')[0].id;
-                values.altname = this.$altname.val();
+                values.placeName = this.$altname.select2('data')[0].text;
+                values.placeId = this.$altname.select2('data')[0].id;
             }
             return values;
         },
@@ -267,7 +313,8 @@ Place editable input.
         value2submit: function(values) {
             return {
                 position: this.marker.getPosition().toUrlValue(),
-                alternateName: values.altname,
+                placeId: values.placeId,
+                placeName: values.placeName,
                 canonicalName: values.geoname,
                 geonameId: values.geonameId
             };

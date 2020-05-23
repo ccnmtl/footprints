@@ -25,7 +25,8 @@ from footprints.main.viewsets import (
     ExtendedDateViewSet, FootprintViewSet, LanguageViewSet,
     PersonViewSet, PlaceViewSet, RoleViewSet, WrittenWorkViewSet,
     StandardizedIdentificationViewSet, DigitalFormatViewSet,
-    DigitalObjectViewSet, StandardizedIdentificationTypeViewSet)
+    DigitalObjectViewSet, StandardizedIdentificationTypeViewSet,
+    AlternatePlaceNameViewSet)
 from footprints.pathmapper.views import (
     PathmapperView, BookCopySearchView, PathmapperTableView,
     PathmapperRouteView)
@@ -39,6 +40,7 @@ if hasattr(settings, 'CAS_BASE'):
 
 router = routers.DefaultRouter()
 router.register(r'actor', ActorViewSet)
+router.register(r'altname', AlternatePlaceNameViewSet, basename='altname')
 router.register(r'book', BookCopyViewSet, basename='book')
 router.register(r'digitalformat', DigitalFormatViewSet)
 router.register(r'digitalobject', DigitalObjectViewSet)
