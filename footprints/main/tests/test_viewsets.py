@@ -99,7 +99,7 @@ class AlternatePlaceNameViewsetTest(TestCase):
             geoname_id=1234)
         PlaceFactory(canonical_place=cp, alternate_name='New York')
         PlaceFactory(canonical_place=cp, alternate_name='Neuva York')
-        PlaceFactory(canonical_place=cp, alternate_name='NYC')
+        p1 = PlaceFactory(canonical_place=cp, alternate_name='NYC')
 
         grp = GroupFactory(permissions=ADD_CHANGE_PERMISSIONS)
         contributor = UserFactory(group=grp)
@@ -110,9 +110,11 @@ class AlternatePlaceNameViewsetTest(TestCase):
         self.assertEqual(response.status_code, 200)
         the_json = loads(response.content.decode('utf-8'))
         self.assertEquals(len(the_json['results']), 3)
+
+        url = '/api/altname/?q=NYC&geonameId=1234'
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        the_json = loads(response.content.decode('utf-8'))
+        self.assertEquals(len(the_json['results']), 1)
         self.assertEquals(
-            the_json['results'][0]['display_title'], 'NYC')
-        self.assertEquals(
-            the_json['results'][1]['display_title'], 'Neuva York')
-        self.assertEquals(
-            the_json['results'][2]['display_title'], 'New York')
+            the_json['results'][0]['id'], p1.id)
