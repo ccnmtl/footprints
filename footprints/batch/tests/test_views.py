@@ -178,20 +178,21 @@ class BatchJobUpdateViewTest(TestCase):
                 {"long_name": "Gondor", "types": ["country", "political"]}
             ]}]}"""
 
-        with mock.patch('footprints.batch.views.urlopen') as urlopen:
-            urlopen().read.side_effect = [content]
+        with self.settings(GOOGLE_MAP_API='something secret'):
+            with mock.patch('footprints.batch.views.urlopen') as urlopen:
+                urlopen().read.side_effect = [content]
 
-            footprint = FootprintFactory()
-            view = BatchJobUpdateView()
-            view.add_place(footprint, '51.064650,20.944979')
+                footprint = FootprintFactory()
+                view = BatchJobUpdateView()
+                view.add_place(footprint, '51.064650,20.944979')
 
-            footprint.refresh_from_db()
-            self.assertEqual(51.064650, footprint.place.latitude())
-            self.assertEqual(20.944979, footprint.place.longitude())
-            self.assertEqual(None, footprint.place.alternate_name)
-            self.assertEqual(
-                'Osgiliath, Gondor',
-                footprint.place.canonical_place.canonical_name)
+                footprint.refresh_from_db()
+                self.assertEqual(51.064650, footprint.place.latitude())
+                self.assertEqual(20.944979, footprint.place.longitude())
+                self.assertEqual(None, footprint.place.alternate_name)
+                self.assertEqual(
+                    'Osgiliath, Gondor',
+                    footprint.place.canonical_place.canonical_name)
 
     def test_add_place_existing(self):
         position = '51.064650,20.944979'
