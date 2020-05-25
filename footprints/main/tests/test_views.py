@@ -869,7 +869,8 @@ class AddPlaceViewTest(TestCase):
             self.url,
             {'parent_id': footprint.id,
              'parent_model': 'footprint',
-             'alternateName': 'NYC',
+             'placeName': 'NYC',
+             'placeId': 'NYC',
              'canonicalName': 'New York, United States',
              'geonameId': 1234,
              'position': '40.752946,-73.983435'},
@@ -900,7 +901,8 @@ class AddPlaceViewTest(TestCase):
             self.url,
             {'parent_id': fp.id,
              'parent_model': 'footprint',
-             'alternateName': 'Nueva York',
+             'placeName': 'Nueva York',
+             'placeId': 'Nueva York',
              'geonameId': fp.place.canonical_place.geoname_id,
              'canonicalName': fp.place.canonical_place.canonical_name,
              'position': fp.place.canonical_place.latlng_string()},
@@ -912,6 +914,26 @@ class AddPlaceViewTest(TestCase):
         self.assertNotEqual(old_place.id, fp.place.id)
         self.assertEqual(fp.place.alternate_name, 'Nueva York')
 
+    def test_post_existing_place_id(self):
+        place = PlaceFactory()
+        fp = FootprintFactory()
+
+        # existing canonical place is used, new place created
+        self.client.login(username=self.contributor.username, password="test")
+        response = self.client.post(
+            self.url,
+            {'parent_id': fp.id,
+             'parent_model': 'footprint',
+             'placeName': place.alternate_name,
+             'placeId': place.id,
+             'geonameId': place.canonical_place.geoname_id,
+             'canonicalName': place.canonical_place.canonical_name,
+             'position': place.canonical_place.latlng_string()},
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEqual(response.status_code, 200)
+        fp.refresh_from_db()
+        self.assertEqual(fp.place.id, place.id)
+
     def test_post_existing_place(self):
         fp = FootprintFactory()
         old_place = fp.place
@@ -922,7 +944,8 @@ class AddPlaceViewTest(TestCase):
             self.url,
             {'parent_id': fp.id,
              'parent_model': 'footprint',
-             'alternateName': fp.place.alternate_name,
+             'placeName': fp.place.alternate_name,
+             'placeId': fp.place.alternate_name,
              'geonameId': fp.place.canonical_place.geoname_id,
              'canonicalName': fp.place.canonical_place.canonical_name,
              'position': fp.place.canonical_place.latlng_string()},
@@ -946,7 +969,8 @@ class AddPlaceViewTest(TestCase):
             self.url,
             {'parent_id': fp.id,
              'parent_model': 'footprint',
-             'alternateName': new_place.alternate_name,
+             'placeName': new_place.alternate_name,
+             'placeId': new_place.alternate_name,
              'geonameId': new_place.canonical_place.geoname_id,
              'canonicalName': new_place.canonical_place.canonical_name,
              'position': new_place.canonical_place.latlng_string()},

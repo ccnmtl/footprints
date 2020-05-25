@@ -67,6 +67,22 @@ class PlaceViewSet(viewsets.ModelViewSet):
         return Place.objects.none()
 
 
+class AlternatePlaceNameViewSet(viewsets.ModelViewSet):
+    model = Place
+    serializer_class = PlaceSerializer
+
+    def get_queryset(self):
+        qs = Place.objects.none()
+        q = self.request.GET.get('q', '')
+        gid = self.request.GET.get('geonameId', '')
+        if gid:
+            qs = Place.objects.filter(canonical_place__geoname_id=gid)
+            if q:
+                qs = qs.filter(alternate_name__contains=q)
+
+        return qs
+
+
 class ActorViewSet(viewsets.ModelViewSet):
     queryset = Actor.objects.all()
     serializer_class = ActorSerializer

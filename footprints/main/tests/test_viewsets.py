@@ -1,3 +1,5 @@
+from json import loads
+
 from django.test import TestCase
 from django.test.client import Client, encode_multipart
 from django.urls.base import reverse
@@ -10,7 +12,7 @@ from footprints.main.tests.factories import (
     StandardizedIdentificationFactory,
     LanguageFactory, ExtendedDateFactory, ActorFactory,
     GroupFactory, ADD_CHANGE_PERMISSIONS,
-    UserFactory, FootprintFactory)
+    UserFactory, FootprintFactory, CanonicalPlaceFactory, PlaceFactory)
 
 
 class SerializerTest(TestCase):
@@ -66,7 +68,7 @@ class FootprintViewsetTest(TestCase):
         grp = GroupFactory(permissions=ADD_CHANGE_PERMISSIONS)
         contributor = UserFactory(group=grp)
 
-        csrf_client.login(username=contributor.username, password="test")
+        csrf_client.login(username=contributor.username, password='test')
 
         # get a csrf token
         url = reverse('create-footprint-view')
@@ -87,3 +89,32 @@ class FootprintViewsetTest(TestCase):
 
         footprint.refresh_from_db()
         self.assertEqual(footprint.title, 'abcdefg')
+
+
+class AlternatePlaceNameViewsetTest(TestCase):
+
+    def test_viewset(self):
+        cp = CanonicalPlaceFactory(
+            canonical_name='New York, New York, United States',
+            geoname_id=1234)
+        PlaceFactory(canonical_place=cp, alternate_name='New York')
+        PlaceFactory(canonical_place=cp, alternate_name='Neuva York')
+        p1 = PlaceFactory(canonical_place=cp, alternate_name='NYC')
+
+        grp = GroupFactory(permissions=ADD_CHANGE_PERMISSIONS)
+        contributor = UserFactory(group=grp)
+        self.client.login(username=contributor.username, password='test')
+
+        url = '/api/altname/?q=&geonameId=1234'
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        the_json = loads(response.content.decode('utf-8'))
+        self.assertEquals(len(the_json['results']), 3)
+
+        url = '/api/altname/?q=NYC&geonameId=1234'
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        the_json = loads(response.content.decode('utf-8'))
+        self.assertEquals(len(the_json['results']), 1)
+        self.assertEquals(
+            the_json['results'][0]['id'], p1.id)
