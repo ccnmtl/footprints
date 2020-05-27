@@ -15,4 +15,4 @@ script:
 notifications:
   slack: ccnmtl:GizSNscLWJLldjQrffB8mwgm
 addons:
-  postgresql: "10.11"
+  postgresql: "10"
