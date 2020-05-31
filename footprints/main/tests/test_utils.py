@@ -69,9 +69,11 @@ class GeonameUtilTest(TestCase):
         self.assertEqual('Albany, NY, US', GeonameUtil().format_name(data))
 
     def test_get_place_by_id(self):
-        content = {'name': 'Osgiliath',
+        content = {
+            'name': 'Osgiliath',
             'adminName1': 'Gondor', 'countryName': 'Middle Earth',
-            'lat': '-44.2599', 'lng': '170.1043'}
+            'lat': '-44.2599', 'lng': '170.1043'
+        }
 
         with mock.patch('footprints.main.utils.requests.get') as mock_get:
             mock_get.return_value.json.return_value = content

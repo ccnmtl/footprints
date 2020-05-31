@@ -7,7 +7,6 @@ from django.db.models.query_utils import Q
 from footprints.batch.validators import validate_date, validate_numeric
 from footprints.main.models import Footprint, Imprint, Role, MEDIUM_CHOICES, \
     BookCopy
-from footprints.main.utils import string_to_point
 
 
 class BatchJob(models.Model):
