@@ -178,22 +178,23 @@ class BatchJobUpdateViewTest(TestCase):
             'lat': '-44.2599', 'lng': '170.1043'
         }
 
-        with mock.patch('footprints.main.utils.requests.get') as mock_get:
-            mock_get.return_value.json.return_value = content
+        with self.settings(GEONAMES_KEY='abcd'):
+            with mock.patch('footprints.main.utils.requests.get') as mock_get:
+                mock_get.return_value.json.return_value = content
 
-            footprint = FootprintFactory()
-            view = BatchJobUpdateView()
-            view.add_place(footprint, '1')
+                footprint = FootprintFactory()
+                view = BatchJobUpdateView()
+                view.add_place(footprint, '1')
 
-            footprint.refresh_from_db()
-            self.assertEqual(-44.2599, footprint.place.latitude())
-            self.assertEqual(170.1043, footprint.place.longitude())
-            self.assertEqual(
-                'Osgiliath, Gondor, Middle Earth',
-                footprint.place.alternate_name)
-            self.assertEqual(
-                'Osgiliath, Gondor, Middle Earth',
-                footprint.place.canonical_place.canonical_name)
+                footprint.refresh_from_db()
+                self.assertEqual(-44.2599, footprint.place.latitude())
+                self.assertEqual(170.1043, footprint.place.longitude())
+                self.assertEqual(
+                    'Osgiliath, Gondor, Middle Earth',
+                    footprint.place.alternate_name)
+                self.assertEqual(
+                    'Osgiliath, Gondor, Middle Earth',
+                    footprint.place.canonical_place.canonical_name)
 
     def test_add_place_existing(self):
         position = '51.064650,20.944979'

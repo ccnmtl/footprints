@@ -75,16 +75,17 @@ class GeonameUtilTest(TestCase):
             'lat': '-44.2599', 'lng': '170.1043'
         }
 
-        with mock.patch('footprints.main.utils.requests.get') as mock_get:
-            mock_get.return_value.json.return_value = content
+        with self.settings(GEONAMES_KEY='abcd'):
+            with mock.patch('footprints.main.utils.requests.get') as mock_get:
+                mock_get.return_value.json.return_value = content
 
-            place = GeonameUtil().get_or_create_place('123')
-            self.assertEqual(
-                place.canonical_place.canonical_name,
-                'Osgiliath, Gondor, Middle Earth')
-            self.assertEqual(
-                place.alternate_name,
-                'Osgiliath, Gondor, Middle Earth')
+                place = GeonameUtil().get_or_create_place('123')
+                self.assertEqual(
+                    place.canonical_place.canonical_name,
+                    'Osgiliath, Gondor, Middle Earth')
+                self.assertEqual(
+                    place.alternate_name,
+                    'Osgiliath, Gondor, Middle Earth')
 
-            self.assertEqual(place.id,
-                             GeonameUtil().get_or_create_place('123').id)
+                self.assertEqual(place.id,
+                                 GeonameUtil().get_or_create_place('123').id)
