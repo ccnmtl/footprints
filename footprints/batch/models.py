@@ -4,8 +4,7 @@ from django.core.validators import URLValidator
 from django.db import models
 from django.db.models.query_utils import Q
 
-from footprints.batch.validators import validate_date, validate_numeric, \
-    validate_latlng
+from footprints.batch.validators import validate_date, validate_numeric
 from footprints.main.models import Footprint, Imprint, Role, MEDIUM_CHOICES, \
     BookCopy
 from footprints.main.utils import string_to_point
@@ -237,8 +236,8 @@ class BatchRow(models.Model):
 
         if (self.publication_location and
                 self.validate_publication_location()):
-            kwargs['book_copy__imprint__place__canonical_place__latlng'] = \
-                string_to_point(self.publication_location)
+            fld = 'book_copy__imprint__place__canonical_place__geoname_id'
+            kwargs[fld] = self.publication_location
 
         if self.footprint_actor:
             args.append(
@@ -247,8 +246,8 @@ class BatchRow(models.Model):
 
         if (self.footprint_location and
                 self.validate_footprint_location()):
-            kwargs['place__canonical_place__latlng'] = \
-                string_to_point(self.footprint_location)
+            kwargs['place__canonical_place__geoname_id'] = \
+                self.footprint_location
 
         qs = Footprint.objects.filter(*args, **kwargs)
         return qs.values_list('id', flat=True)
@@ -280,7 +279,7 @@ class BatchRow(models.Model):
         return validate_date(self.publication_date)
 
     def validate_publication_location(self):
-        return validate_latlng(self.publication_location)
+        return validate_numeric(self.publication_location)
 
     def validate_book_copy_call_number(self):
         if not self.book_copy_call_number:
@@ -335,4 +334,4 @@ class BatchRow(models.Model):
             name=self.footprint_actor_role).exists()
 
     def validate_footprint_location(self):
-        return validate_latlng(self.footprint_location)
+        return validate_numeric(self.footprint_location)

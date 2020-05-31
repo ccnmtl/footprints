@@ -1,6 +1,3 @@
-from json import loads
-
-from django.conf import settings
 from django.contrib import messages
 from django.db import transaction
 from django.http.response import HttpResponseRedirect
@@ -14,15 +11,9 @@ from footprints.batch.forms import CreateBatchJobForm
 from footprints.batch.models import BatchJob, BatchRow
 from footprints.batch.templatetags.batchrowtags import validate_field_value
 from footprints.main.models import Imprint, BookCopy, Footprint, \
-    Role, ExtendedDate, Actor, Place, CanonicalPlace
-from footprints.main.utils import string_to_point
+    Role, ExtendedDate, Actor
 from footprints.mixins import (LoggedInMixin, BatchAccessMixin)
-
-
-try:
-    from urllib.request import urlopen
-except ImportError:
-    from urllib2 import urlopen
+from footprints.main.utils import GeonameUtil
 
 
 class BatchJobListView(LoggedInMixin, BatchAccessMixin, FormView):
@@ -65,39 +56,8 @@ class BatchJobUpdateView(LoggedInMixin, BatchAccessMixin, View):
     INVALID_LOCATION = (
         'Location [{}] lookup failed at the {} level [id={}]')
 
-    def reverse_geocode(self, latitude, longitude):
-        # reverse geocode the lat/long
-        url = "{}&key={}".format(
-            settings.GOOGLE_MAPS_REVERSE_GEOCODE, settings.GOOGLE_MAP_API)
-        response = urlopen(url.format(latitude, longitude))  # nosec
-        the_json = loads(response.read())
-        components = the_json['results'][0]['address_components']
-
-        city = None
-        country = None
-        for component in components:
-            if ('locality' in component['types'] or
-                    'administrative_area_level_1' in component['types']):
-                city = component['long_name']
-            if 'country' in component['types']:
-                country = component['long_name']
-
-        return city, country
-
-    def add_place(self, obj, location):
-        # @todo - rework this with a geonames id + canonical_name
-        point = string_to_point(location)
-        place = Place.objects.filter(canonical_place__latlng=point).first()
-        if place:
-            obj.place = place
-        else:
-            city, country = self.reverse_geocode(
-                point.coords[1], point.coords[0])
-            canonical_name = '{}, {}'.format(city, country)
-
-            cp = CanonicalPlace.objects.create(
-                latlng=point, canonical_name=canonical_name)
-            obj.place = Place.objects.create(canonical_place=cp)
+    def add_place(self, obj, geoname_id):
+        obj.place = GeonameUtil().get_or_create_place(geoname_id)
         obj.save()
 
     def add_author(self, record, work):

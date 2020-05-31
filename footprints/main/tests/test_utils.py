@@ -1,8 +1,10 @@
+from unittest import mock
+
 from django.test.testcases import TestCase
 
 from footprints.main.models import Actor, Role
-from footprints.main.utils import interpolate_role_actors, snake_to_camel, \
-    camel_to_snake
+from footprints.main.utils import (
+    interpolate_role_actors, snake_to_camel, camel_to_snake, GeonameUtil)
 
 
 class CustomUtilsTest(TestCase):
@@ -55,3 +57,32 @@ class CustomUtilsTest(TestCase):
         self.assertEqual(camel_to_snake(''), '')
         self.assertEqual(camel_to_snake('footprint'), 'footprint')
         self.assertEqual(camel_to_snake('footprintStart'), 'footprint_start')
+
+
+class GeonameUtilTest(TestCase):
+
+    def test_format_name(self):
+        data = {'name': 'Albany', 'adminName1': '', 'countryName': 'US'}
+        self.assertEqual('Albany, US', GeonameUtil().format_name(data))
+
+        data['adminName1'] = 'NY'
+        self.assertEqual('Albany, NY, US', GeonameUtil().format_name(data))
+
+    def test_get_place_by_id(self):
+        content = {'name': 'Osgiliath',
+            'adminName1': 'Gondor', 'countryName': 'Middle Earth',
+            'lat': '-44.2599', 'lng': '170.1043'}
+
+        with mock.patch('footprints.main.utils.requests.get') as mock_get:
+            mock_get.return_value.json.return_value = content
+
+            place = GeonameUtil().get_or_create_place('123')
+            self.assertEqual(
+                place.canonical_place.canonical_name,
+                'Osgiliath, Gondor, Middle Earth')
+            self.assertEqual(
+                place.alternate_name,
+                'Osgiliath, Gondor, Middle Earth')
+
+            self.assertEqual(place.id,
+                             GeonameUtil().get_or_create_place('123').id)
