@@ -2,7 +2,7 @@ from django.test.testcases import TestCase
 
 from footprints.batch.tests.factories import BatchRowFactory
 from footprints.batch.validators import validate_date, \
-    validate_numeric,  validate_latlng
+    validate_numeric
 from footprints.main.tests.factories import RoleFactory
 
 
@@ -20,13 +20,6 @@ class ValidatorsTest(TestCase):
         self.assertTrue(validate_numeric('1987'))
         self.assertFalse(validate_numeric('a12b'))
         self.assertFalse(validate_numeric('abcd'))
-
-    def test_validate_latlong(self):
-        self.assertTrue(validate_latlng(None))
-        self.assertTrue(validate_latlng(''))
-        self.assertTrue(validate_latlng('41.0136,28.9550'))
-        self.assertTrue(validate_latlng('41.0136, 28.9550'))
-        self.assertFalse(validate_latlng('12312312312'))
 
     def test_validate_catalog_url(self):
         row = BatchRowFactory(catalog_url=None)

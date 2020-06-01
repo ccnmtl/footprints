@@ -1,9 +1,12 @@
 import re
 
+from django.conf import settings
 from django.contrib.gis.geos.point import Point
 from django.utils.encoding import smart_text
+import requests
 from rest_framework.renderers import BrowsableAPIRenderer
 
+from footprints.main.models import CanonicalPlace, Place
 from footprints.mixins import BatchAccessMixin, ModerationAccessMixin, \
     AddChangeAccessMixin
 
@@ -98,3 +101,37 @@ def camel_to_snake(s):
 # how-can-i-simplify-this-conversion-from-underscore-to-camelcase-in-python
 def snake_to_camel(s):
     return re.sub(r'(?!^)_([a-zA-Z])', lambda m: m.group(1).upper(), s)
+
+
+class GeonameUtil(object):
+
+    def format_name(self, the_json):
+        name = the_json['name']
+        if the_json['adminName1']:
+            name += ', ' + the_json['adminName1']
+        name += ', ' + the_json['countryName']
+        return name
+
+    def get_geoname_by_id(self, gid):
+        url = ('https://secure.geonames.org/getJSON?'
+               'username={}&type=json&geonameId={}').format(
+                   settings.GEONAMES_KEY, gid)
+        results = requests.get(url)
+        the_json = results.json()
+
+        pt = Point(float(the_json['lng']), float(the_json['lat']))
+
+        return (self.format_name(the_json), pt)
+
+    def get_or_create_place(self, gid):
+        try:
+            cp = CanonicalPlace.objects.get(geoname_id=gid)
+            name = cp.canonical_name
+        except CanonicalPlace.DoesNotExist:
+            name, pt = self.get_geoname_by_id(gid)
+            cp = CanonicalPlace.objects.create(
+                geoname_id=gid, canonical_name=name, latlng=pt)
+
+        place, created = Place.objects.get_or_create(
+            alternate_name=name, canonical_place=cp)
+        return place
