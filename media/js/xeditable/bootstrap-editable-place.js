@@ -299,8 +299,14 @@ Place editable input.
                 values.longitude = this.marker.getPosition().lng();
                 values.geoname = this.$geoname.select2('data')[0].text;
                 values.geonameId = this.$geoname.select2('data')[0].id;
-                values.placeName = this.$altname.select2('data')[0].text;
-                values.placeId = this.$altname.select2('data')[0].id;
+
+                if (this.$altname.select2('data').length > 0) {
+                    values.placeId = this.$altname.select2('data')[0].id;
+                    values.placeName = this.$altname.select2('data')[0].text;
+                } else {
+                    values.placeId = null;
+                    values.placeName = null;
+                }
             }
             return values;
         },
