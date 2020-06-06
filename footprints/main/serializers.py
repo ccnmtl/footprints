@@ -9,7 +9,7 @@ from rest_framework.serializers import Serializer, HyperlinkedModelSerializer
 from footprints.main.models import Footprint, Language, Role, Actor, \
     ExtendedDate, Person, Place, WrittenWork, Imprint, BookCopy, \
     StandardizedIdentification, DigitalObject, DigitalFormat, \
-    StandardizedIdentificationType
+    StandardizedIdentificationType, CanonicalPlace
 
 
 class NameSerializer(Serializer):
@@ -95,13 +95,24 @@ class PersonSerializer(HyperlinkedModelSerializer):
                   'standardized_identifier')
 
 
-class PlaceSerializer(HyperlinkedModelSerializer):
+class CanonicalPlaceSerializer(HyperlinkedModelSerializer):
     latitude = ReadOnlyField()
     longitude = ReadOnlyField()
 
     class Meta:
+        model = CanonicalPlace
+        fields = ('id', 'canonical_name', 'latitude', 'longitude')
+
+
+class PlaceSerializer(HyperlinkedModelSerializer):
+    latitude = ReadOnlyField()
+    longitude = ReadOnlyField()
+    canonical_place = CanonicalPlaceSerializer()
+
+    class Meta:
         model = Place
-        fields = ('id', 'display_title', 'latitude', 'longitude')
+        fields = ('id', 'display_title', 'canonical_place',
+                  'latitude', 'longitude')
 
 
 class DigitalObjectSerializer(HyperlinkedModelSerializer):
