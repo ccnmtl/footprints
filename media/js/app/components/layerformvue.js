@@ -24,10 +24,13 @@ define(['jquery', 'selectWidget'], function($, select) {
                     'visible': true
                 },
                 total: null,
-                pubMin: 1000,
-                pubMax: new Date().getFullYear(),
-                footprintMin: 1000,
-                footprintMax: new Date().getFullYear()
+                totalMax: null,
+                pubMin: null,
+                pubMax: null,
+                footprintMin: null,
+                footprintMax: null,
+                minYear: 1000,
+                maxYear: new Date().getFullYear()
             };
         },
         computed: {
@@ -39,52 +42,57 @@ define(['jquery', 'selectWidget'], function($, select) {
             'select-widget': select.SelectWidget
         },
         methods: {
-            displayMinMax: function(start, end) {
-                start = start > this.dateMin ? start : null;
-                end = end < this.dateMax ? end : null;
-                if (start && !end) {
-                    return start + ' to present';
-                } else if (!start && end) {
-                    return 'Up to ' + end;
-                } else if (start && end) {
-                    return start + ' to ' + end;
-                } else {
-                    return '';
+            displayRangeStatus: function(lbl, prefix) {
+                const start = parseInt(this.layer[lbl + 'Start'], 10);
+                const end = parseInt(this.layer[lbl + 'End'], 10);
+                const range = this.layer[lbl + 'Range'];
+
+                if (start && start < this.minYear || start > this.maxYear) {
+                    return 'The start year must be between ' +
+                        this.minYear + ' - ' + this.maxYear;
                 }
-            },
-            displayFootprintMinMax: function() {
-                return this.displayMinMax(this.footprintMin, this.footprintMax);
-            },
-            displayPubMinMax: function() {
-                return this.displayMinMax(this.pubMin, this.pubMax);
-            },
-            displayYearStatus: function(lbl) {
-                var start = this.layer[lbl + 'Start'];
-                var end = this.layer[lbl + 'End'];
-                var range = this.layer[lbl + 'Range'];
 
                 if (range) {
                     if (start && !end) {
-                        return start + ' to present';
+                        return prefix + 'from ' + start + ' to present';
+                    }
+
+                    if (end < this.minYear || end > this.maxYear) {
+                        return 'The end year must be between ' +
+                            this.minYear + ' - ' + this.maxYear;
+                    }
+
+                    if (start > end) {
+                        return 'The start year must be less than the end year.';
                     }
 
                     if (start && end) {
-                        return start + ' to ' + end;
+                        return prefix + 'from ' + start + ' to ' + end;
                     }
 
                     if (!start && end) {
-                        return 'Up to ' + end;
+                        return prefix + 'up to ' + end;
                     }
                 } else if (start) {
-                    return start;
+                    return prefix + 'in the year ' + start;
                 }
-                return 'All years';
+                return '';
             },
-            displayFootprintYearStatus: function() {
-                return this.displayYearStatus('footprint');
+            displayFootprintRangeStatus: function() {
+                return this.displayRangeStatus('footprint', 'Occurred ');
             },
-            displayPubYearStatus: function() {
-                return this.displayYearStatus('pub');
+            displayPubRangeStatus: function() {
+                return this.displayRangeStatus('pub', 'Published ');
+            },
+            pubRangeChanged: function() {
+                if (this.validPubRange()) {
+                    this.search();
+                }
+            },
+            footprintRangeChanged: function() {
+                if (this.validFootprintRange()) {
+                    this.search();
+                }
             },
             workChanged: function() {
                 // the imprint is always cleared when the work changes
@@ -115,6 +123,7 @@ define(['jquery', 'selectWidget'], function($, select) {
                     type: 'post'
                 }).done((results) => {
                     this.state = JSON.stringify(this.layer);
+                    this.totalMax = results.totalMax;
                     this.total = results.total;
                     this.pubMin = results.pubMin;
                     this.pubMax = results.pubMax;
@@ -126,8 +135,40 @@ define(['jquery', 'selectWidget'], function($, select) {
             cancel: function() {
                 this.$emit('cancel');
             },
+            validResults: function() {
+                return this.total > 0 && this.total < this.totalMax;
+            },
+            validLayerTitle: function() {
+                return this.layer.title.length > 0;
+            },
+            validDateRange: function(lbl) {
+                const start = parseInt(this.layer[lbl + 'Start'], 10);
+                const end = parseInt(this.layer[lbl + 'End'], 10);
+                const range = this.layer[lbl + 'Range'];
+
+                if (start && (start < this.minYear || start > this.maxYear)) {
+                    return false;
+                }
+
+                if (range && end &&
+                        (end < this.minYear || end > this.maxYear)) {
+                    return false;
+                }
+
+                if (range && start && end && start > end) {
+                    return false;
+                }
+                return true;
+            },
+            validPubRange: function() {
+                return this.validDateRange('pub');
+            },
+            validFootprintRange: function() {
+                return this.validDateRange('footprint');
+            },
             save: function() {
-                if (document.forms['create-layer-form'].reportValidity()) {
+                if (this.total > 0 && this.validLayerTitle() &&
+                        this.validPubRange() && this.validFootprintRange()) {
                     this.$emit('save', $.extend(true, {}, this.layer));
                 }
             },
@@ -151,9 +192,6 @@ define(['jquery', 'selectWidget'], function($, select) {
                 if (!this.layer.footprintRange) {
                     this.layer.footprintEnd = null;
                 }
-            },
-            validateYear: function(event) {
-                event.target.reportValidity();
             }
         },
         created: function() {
@@ -168,10 +206,12 @@ define(['jquery', 'selectWidget'], function($, select) {
             this.$watch('layer.imprint', this.search);
             this.$watch('layer.imprintLocation', this.search);
             this.$watch('layer.footprintLocation', this.search);
-            this.$watch('layer.footprintStart', this.search);
-            this.$watch('layer.footprintEnd', this.search);
-            this.$watch('layer.pubStart', this.search);
-            this.$watch('layer.pubEnd', this.search);
+            this.$watch('layer.footprintStart', this.footprintRangeChanged);
+            this.$watch('layer.footprintEnd', this.footprintRangeChanged);
+            this.$watch('layer.footprintRange', this.footprintRangeChanged);
+            this.$watch('layer.pubStart', this.pubRangeChanged);
+            this.$watch('layer.pubEnd', this.pubRangeChanged);
+            this.$watch('layer.pubRange', this.pubRangeChanged);
             this.$watch('layer.actor', this.search);
             this.$watch('layer.censored', this.search);
             this.$watch('layer.expurgated', this.search);

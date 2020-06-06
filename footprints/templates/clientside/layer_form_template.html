@@ -72,48 +72,60 @@
                 <h2 id="region4">Years</h2>
 
                 <div class="form-group row mb-1">
-                    <div class="col-8 d-flex offset-4"><small>{{displayPubMinMax()}}</small></div>
+                    <div class="col-8 d-flex offset-4">
+                        <small v-if="validResults()">
+                            Publications range from {{pubMin}} to {{pubMax}}.
+                        </small>
+                    </div>
                 </div>
                 <div class="form-group row mb-1">
                     <label for="criteriaPubYearBegin" class="col-4 col-form-label">Publication:</label>
                     <div class="col-8 d-flex">
                         <input v-model="layer.pubStart" class="form-control"
-                            id="criteriaPubYearBegin" type="number" :min="pubMin" :max="pubMax"
-                            v-on:blur="validateYear($event)">
+                            id="criteriaPubYearBegin" type="number" :min="pubMin" :max="pubMax">
 
                         <button type="button" v-on:click="togglePubRange"
                             :class="['btn', 'btn-outline-secondary', 'criteria-range', {'range-on': layer.pubRange}]">
                             <span v-if="layer.pubRange">to</span><span v-else>add range</span>
                         </button>
                         <input v-if="layer.pubRange" v-model="layer.pubEnd" class="form-control"
-                            id="criteriaPubYearEnd" type="number" :min="pubMin" :max="pubMax"
-                            v-on:blur.native="validateYear">
+                            id="criteriaPubYearEnd" type="number" :min="pubMin" :max="pubMax">
                     </div>
                 </div>
                 <div class="form-group row mb-2">
-                    <div class="col-8 d-flex offset-4"><small>{{displayPubYearStatus()}}</small></div>
+                    <div :class="['col-8', 'd-flex', 'offset-4', {'is-invalid': !validPubRange}]">
+                        <small :class="[{'invalid-feedback': !validPubRange}]">
+                            {{displayPubRangeStatus()}}
+                        </small>
+                    </div>
                 </div>
 
                 <div class="form-group row mb-1">
-                    <div class="col-8 d-flex offset-4"><small>{{displayFootprintMinMax()}}</small></div>
+                    <div class="col-8 d-flex offset-4">
+                        <small v-if="validResults()">
+                            Footprints range from {{footprintMin}} to {{footprintMax}}.
+                        </small>
+                    </div>
                 </div>
                 <div class="form-group mb-1 row">
                     <label for="criteriaFootprintYearBegin" class="col-4 col-form-label">Footprint:</label>
                     <div class="col-8 d-flex">
                         <input v-model="layer.footprintStart" class="form-control"
-                            id="criteriaFootprintYearBegin" type="number" :min="footprintMin" :max="footprintMax"
-                            v-on:blur.native="validateYear">
+                            id="criteriaFootprintYearBegin" type="number" :min="footprintMin" :max="footprintMax">
                         <button type="button" v-on:click="toggleFootprintRange"
                             :class="['btn', 'btn-outline-secondary', 'criteria-range', {'range-on': layer.footprintRange}]">
                             <span v-if="layer.footprintRange">to</span><span v-else>add range</span>
                         </button>
                         <input v-if="layer.footprintRange" v-model="layer.footprintEnd" class="form-control"
-                            id="criteriaFootprintYearEnd" type="number" :min="footprintMin" :max="footprintMax"
-                            v-on:blur.native="validateYear">
+                            id="criteriaFootprintYearEnd" type="number" :min="footprintMin" :max="footprintMax">
                     </div>
                 </div>
                 <div class="form-group row">
-                    <div class="col-8 d-flex offset-4"><small>{{displayFootprintYearStatus()}}</small></div>
+                    <div class="col-8 d-flex offset-4">
+                        <small :class="[{'has-error': validFootprintRange()}]">
+                            {{displayFootprintRangeStatus()}}
+                        </small>
+                    </div>
                 </div>
 
             </section><!-- /#criteria-years -->
