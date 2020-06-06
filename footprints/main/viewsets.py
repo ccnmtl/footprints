@@ -61,7 +61,7 @@ class PlaceViewSet(viewsets.ModelViewSet):
             if q:
                 qs = qs.filter(
                     Q(alternate_name__contains=q) |
-                    Q(canonical_name__contains=q))
+                    Q(canonical_place__canonical_name__contains=q))
 
             return qs
         return Place.objects.none()
