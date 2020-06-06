@@ -8,7 +8,7 @@
                 :class="[{'d-none': !selectedLocation}]"/>
 
             <!-- Initial Create Layer pane -->
-            <form class="criteria-set-pane" :class="[{'d-none': selectedLocation}]"><!-- Begin form -->
+            <form id="create-layer-form" class="criteria-set-pane" :class="[{'d-none': selectedLocation}]"><!-- Begin form -->
                 <!-- Layer Create / Edit form -->
                 <layer-form v-if="selectedLayer" v-model="selectedLayer"
                     @save="saveLayer" @cancel="cancelLayer" 

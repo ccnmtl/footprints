@@ -77,14 +77,17 @@
                 <div class="form-group row mb-1">
                     <label for="criteriaPubYearBegin" class="col-4 col-form-label">Publication:</label>
                     <div class="col-8 d-flex">
-                        <input v-model="layer.pubStart" type="text" class="form-control"
-                            id="criteriaPubYearBegin">
+                        <input v-model="layer.pubStart" class="form-control"
+                            id="criteriaPubYearBegin" type="number" :min="pubMin" :max="pubMax"
+                            v-on:blur="validateYear($event)">
+
                         <button type="button" v-on:click="togglePubRange"
                             :class="['btn', 'btn-outline-secondary', 'criteria-range', {'range-on': layer.pubRange}]">
                             <span v-if="layer.pubRange">to</span><span v-else>add range</span>
                         </button>
-                        <input v-if="layer.pubRange" v-model="layer.pubEnd" type="text" class="form-control"
-                            id="criteriaPubYearEnd">
+                        <input v-if="layer.pubRange" v-model="layer.pubEnd" class="form-control"
+                            id="criteriaPubYearEnd" type="number" :min="pubMin" :max="pubMax"
+                            v-on:blur.native="validateYear">
                     </div>
                 </div>
                 <div class="form-group row mb-2">
@@ -97,14 +100,16 @@
                 <div class="form-group mb-1 row">
                     <label for="criteriaFootprintYearBegin" class="col-4 col-form-label">Footprint:</label>
                     <div class="col-8 d-flex">
-                        <input v-model="layer.footprintStart" type="text" class="form-control"
-                            id="criteriaFootprintYearBegin">
+                        <input v-model="layer.footprintStart" class="form-control"
+                            id="criteriaFootprintYearBegin" type="number" :min="footprintMin" :max="footprintMax"
+                            v-on:blur.native="validateYear">
                         <button type="button" v-on:click="toggleFootprintRange"
                             :class="['btn', 'btn-outline-secondary', 'criteria-range', {'range-on': layer.footprintRange}]">
                             <span v-if="layer.footprintRange">to</span><span v-else>add range</span>
                         </button>
-                        <input v-if="layer.footprintRange" v-model="layer.footprintEnd" type="text" class="form-control"
-                            id="criteriaFootprintYearEnd">
+                        <input v-if="layer.footprintRange" v-model="layer.footprintEnd" class="form-control"
+                            id="criteriaFootprintYearEnd" type="number" :min="footprintMin" :max="footprintMax"
+                            v-on:blur.native="validateYear">
                     </div>
                 </div>
                 <div class="form-group row">

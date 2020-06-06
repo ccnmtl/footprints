@@ -24,10 +24,10 @@ define(['jquery', 'selectWidget'], function($, select) {
                     'visible': true
                 },
                 total: null,
-                pubMin: null,
-                pubMax: null,
-                footprintMin: null,
-                footprintMax: null
+                pubMin: 1000,
+                pubMax: new Date().getFullYear(),
+                footprintMin: 1000,
+                footprintMax: new Date().getFullYear()
             };
         },
         computed: {
@@ -127,7 +127,9 @@ define(['jquery', 'selectWidget'], function($, select) {
                 this.$emit('cancel');
             },
             save: function() {
-                this.$emit('save', $.extend(true, {}, this.layer));
+                if (document.forms['create-layer-form'].reportValidity()) {
+                    this.$emit('save', $.extend(true, {}, this.layer));
+                }
             },
             togglePane: function() {
                 if ($('#container-pane').hasClass('widget-pane-expanded')) {
@@ -149,6 +151,9 @@ define(['jquery', 'selectWidget'], function($, select) {
                 if (!this.layer.footprintRange) {
                     this.layer.footprintEnd = null;
                 }
+            },
+            validateYear: function(event) {
+                event.target.reportValidity();
             }
         },
         created: function() {
