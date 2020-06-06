@@ -46,7 +46,8 @@ define(['jquery', 'utils'], function($, utils) {
             },
             copyUrl: function(pt) {
                 return '/writtenwork/' + pt.bookcopy.imprint.work_id + '/' +
-                     + pt.bookcopy.id + '/';
+                    pt.bookcopy.imprint.id + '/' +
+                    pt.bookcopy.id + '/';
             }
         },
         created: function() {
