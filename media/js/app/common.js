@@ -14,7 +14,6 @@ requirejs.config({
         'layerMapVue': 'js/app/components/layermapvue',
         'locationVue': 'js/app/components/locationvue',
         'mapVue': 'js/app/components/mapvue',
-        'markerclusterer': 'js/lib/markerclusterer/markerclustererplus.min',
         'select2': 'js/lib/select2-4.0.10/js/select2.full',
         'selectWidget': 'js/app/components/select-widget',
         'tableVue': 'js/app/components/tableVue',
