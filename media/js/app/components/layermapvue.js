@@ -45,8 +45,8 @@ define(['jquery', 'utils'], function($, utils) {
                     lng: bookcopy.imprint.place.longitude
                 };
                 return this.addPoint(
-                    bookcopy.imprint.place.id,
-                    bookcopy.imprint.place.display_title,
+                    bookcopy.imprint.place.canonical_place.id,
+                    bookcopy.imprint.place.canonical_place.canonical_name,
                     'initial', bookcopy, null, latlng,
                     Date.parse(bookcopy.imprint.sort_date));
             },
@@ -56,7 +56,8 @@ define(['jquery', 'utils'], function($, utils) {
                     lng: footprint.place.longitude
                 };
                 return this.addPoint(
-                    footprint.place.id, footprint.place.display_title,
+                    footprint.place.canonical_place.id,
+                    footprint.place.canonical_place.canonical_name,
                     'interim', bookcopy, footprint, latlng,
                     Date.parse(footprint.sort_date));
             },
