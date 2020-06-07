@@ -19,8 +19,8 @@ define(['jquery', 'selectWidget'], function($, select) {
                     'footprintStart': null,
                     'footprintEnd': null,
                     'footprintRange': false,
-                    'censored': '',
-                    'expurgated': '',
+                    'censored': 'notapp',
+                    'expurgated': 'notapp',
                     'visible': true
                 },
                 total: null,
