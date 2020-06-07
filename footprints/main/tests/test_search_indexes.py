@@ -30,7 +30,7 @@ class TestBookCopyIndex(TestCase):
     def test_prepare_footprint_locations(self):
         fp = FootprintFactory()
         places = BookCopyIndex().prepare_footprint_location(fp.book_copy)
-        self.assertTrue(fp.place.id in places)
+        self.assertTrue(fp.place.canonical_place.id in places)
 
     def test_prepare_actor(self):
         fp = FootprintFactory()
@@ -55,7 +55,7 @@ class TestImprintIndex(TestCase):
         fp = FootprintFactory()
         places = ImprintIndex().prepare_footprint_location(
             fp.book_copy.imprint)
-        self.assertTrue(fp.place.id in places)
+        self.assertTrue(fp.place.canonical_place.id in places)
 
     def test_prepare_actor(self):
         fp = FootprintFactory()
@@ -77,13 +77,14 @@ class TestWrittenWorkIndex(TestCase):
         fp = FootprintFactory()
         places = WrittenWorkIndex().prepare_footprint_location(
             fp.book_copy.imprint.work)
-        self.assertTrue(fp.place.id in places)
+        self.assertTrue(fp.place.canonical_place.id in places)
 
     def test_prepare_imprint_location(self):
         fp = FootprintFactory()
         places = WrittenWorkIndex().prepare_imprint_location(
             fp.book_copy.imprint.work)
-        self.assertTrue(fp.book_copy.imprint.place.id in places)
+        self.assertTrue(
+            fp.book_copy.imprint.place.canonical_place.id in places)
 
     def test_prepare_actor(self):
         fp = FootprintFactory()
