@@ -48,9 +48,10 @@ define(['jquery', 'select2'], function($, select2) {
                     processResults: function(data, params) {
                         let results = $.map(data.results, function(obj) {
                             obj.text = obj.title || obj.search_title ||
-                                obj.display_title || obj.display_name;
+                                obj.display_title || obj.display_name ||
+                                obj.canonical_name;
                             obj.html = obj.description || obj.search_title ||
-                                obj.display_title;
+                                obj.display_title || obj.canonical_name;
                             return obj;
                         });
 
@@ -79,7 +80,8 @@ define(['jquery', 'select2'], function($, select2) {
                 }).done((data) => {
                     if (data.results.length > 0) {
                         const item = data.results[0];
-                        const title = item.title || item.display_title;
+                        const title = item.title || item.display_title ||
+                            item.canonical_name;
                         const value = item.id;
                         const option = new Option(title, value, true, true);
                         $(this.$el).append(option).trigger('change');

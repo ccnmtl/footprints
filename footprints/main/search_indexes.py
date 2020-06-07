@@ -73,14 +73,14 @@ class WrittenWorkIndex(CelerySearchIndex, Indexable):
         places = []
         for f in obj.footprints():
             if f.place:
-                places.append(f.place.id)
+                places.append(f.place.canonical_place.id)
         return places
 
     def prepare_imprint_location(self, obj):
         places = []
         for imprint in obj.imprints():
             if imprint.place:
-                places.append(imprint.place.id)
+                places.append(imprint.place.canonical_place.id)
         return places
 
     def _actors(self, obj):
@@ -141,26 +141,27 @@ class ImprintIndex(CelerySearchIndex, Indexable):
 
     def prepare_imprint_location(self, obj):
         if obj.place:
-            return [obj.place.id]
+            return [obj.place.canonical_place.id]
         return []
 
     def prepare_imprint_location_title(self, obj):
         if obj.place:
-            return [smart_text(obj.place)]
+            return [smart_text(obj.place.canonical_place.canonical_name)]
         return []
 
     def prepare_footprint_location(self, obj):
         places = []
         for f in obj.footprints():
             if f.place:
-                places.append(f.place.id)
+                places.append(f.place.canonical_place.id)
         return places
 
     def prepare_footprint_location_title(self, obj):
         places = []
         for f in obj.footprints():
             if f.place:
-                places.append(smart_text(f.place))
+                name = f.place.canonical_place.canonical_name
+                places.append(smart_text(name))
         return places
 
     def _actors(self, obj):
@@ -221,26 +222,28 @@ class BookCopyIndex(CelerySearchIndex, Indexable):
 
     def prepare_imprint_location(self, obj):
         if obj.imprint.place:
-            return [obj.imprint.place.id]
+            return [obj.imprint.place.canonical_place.id]
         return []
 
     def prepare_imprint_location_title(self, obj):
         if obj.imprint.place:
-            return [smart_text(obj.imprint.place)]
+            name = smart_text(obj.imprint.place.canonical_place.canonical_name)
+            return [name]
         return []
 
     def prepare_footprint_location(self, obj):
         places = []
         for f in obj.footprints():
             if f.place:
-                places.append(f.place.id)
+                places.append(f.place.canonical_place.id)
         return places
 
     def prepare_footprint_location_title(self, obj):
         places = []
         for f in obj.footprints():
             if f.place:
-                places.append(smart_text(f.place))
+                name = smart_text(f.place.canonical_place.canonical_name)
+                places.append(name)
         return places
 
     def prepare_actor(self, obj):
@@ -349,25 +352,26 @@ class FootprintIndex(CelerySearchIndex, Indexable):
 
     def prepare_footprint_location(self, obj):
         if obj.place:
-            return [obj.place.id]
+            return [obj.place.canonical_place.id]
 
         return []
 
     def prepare_footprint_location_title(self, obj):
         if obj.place:
-            return [smart_text(obj.place)]
+            return [smart_text(obj.place.canonical_place.canonical_name)]
 
         return []
 
     def prepare_imprint_location(self, obj):
         if obj.book_copy.imprint.place:
-            return [obj.book_copy.imprint.place.id]
+            return [obj.book_copy.imprint.place.canonical_place.id]
 
         return []
 
     def prepare_imprint_location_title(self, obj):
         if obj.book_copy.imprint.place:
-            return [smart_text(obj.book_copy.imprint.place)]
+            place = obj.book_copy.imprint.place
+            return [smart_text(place.canonical_place.canonical_name)]
 
         return []
 

@@ -1,8 +1,2 @@
 {{object.title}}
 {{object.notes}}
-{% for imprint in object.imprints %}
-    {{imprint.place.city}} {{imprint.place.country}}
-{% endfor %}
-{% for author in object.authors %}
-    {{author.person.name}} {{author.alias}}
-{% endfor %}

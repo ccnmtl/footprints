@@ -1,8 +1,10 @@
 {{object.title}}
 {{object.notes}}
 {{object.book_copy.imprint.work.title}}
-{{object.place.display_title}}
-{{object.book_copy.imprint.place.display_title}}
+{{object.place.alternate_name}}
+{{object.place.canonical_place.canonical_name}}
+{{object.book_copy.imprint.place.alternate_name}}
+{{object.book_copy.imprint.place.canonical_place.canonical_name}}
 {{object.book_copy.call_number}}
 {{object.book_copy.imprint.get_bhb_number}}
 {% for actor in object.actor.all %}
