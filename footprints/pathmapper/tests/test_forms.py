@@ -67,7 +67,7 @@ class ModelSearchFormExTest(TestCase):
         self.assertEqual(
             kwargs['footprint_start_date__lte'], date(1850, 12, 31))
 
-        form.cleaned_data['footprint_range'] = 'true'
+        form.cleaned_data['footprint_range'] = True
         kwargs = form.handle_footprint_year()
         self.assertEqual(kwargs['footprint_start_date__gte'], date(1850, 1, 1))
         self.assertEqual(
@@ -85,7 +85,7 @@ class ModelSearchFormExTest(TestCase):
         self.assertEqual(
             kwargs['pub_start_date__lte'], date(1850, 12, 31))
 
-        form.cleaned_data['pub_range'] = 'true'
+        form.cleaned_data['pub_range'] = True
         kwargs = form.handle_pub_year()
         self.assertEqual(kwargs['pub_start_date__gte'], date(1850, 1, 1))
         self.assertEqual(
@@ -247,7 +247,7 @@ SAMPLE_CLEANED_DATA = {
     'q': 'Foo',
     'work': 12,
     'imprint': 13,
-    'footprint_range': 'true',
+    'footprint_range': True,
     'footprint_start': 1910,
     'footprint_end': 1940,
     'pub_start': 1800,

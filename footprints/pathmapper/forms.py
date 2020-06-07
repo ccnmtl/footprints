@@ -85,7 +85,7 @@ class ModelSearchFormEx(ModelSearchForm):
         kwargs = {}
         start_year = self.cleaned_data.get('footprint_start')
         end_year = self.cleaned_data.get('footprint_end')
-        ranged = self.cleaned_data.get('footprint_range') == 'true'
+        ranged = self.cleaned_data.get('footprint_range') is True
 
         if ranged:
             kwargs.update(self.handle_range(
@@ -100,7 +100,7 @@ class ModelSearchFormEx(ModelSearchForm):
         kwargs = {}
         start_year = self.cleaned_data.get('pub_start')
         end_year = self.cleaned_data.get('pub_end')
-        ranged = self.cleaned_data.get('pub_range') == 'true'
+        ranged = self.cleaned_data.get('pub_range') is True
 
         if ranged:
             kwargs.update(self.handle_range(
