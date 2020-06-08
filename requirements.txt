@@ -41,7 +41,7 @@ logilab-common==1.6.4
 lazy-object-proxy==1.5.0
 wrapt==1.12.1
 
-pylint==2.5.2
+pylint==2.5.3
 
 astroid==2.4.2
 
