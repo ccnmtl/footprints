@@ -112,11 +112,11 @@ class ModelSearchFormEx(ModelSearchForm):
         return kwargs
 
     def handle_imprint_location(self):
-        args = []
+        kwargs = {}
         loc = self.cleaned_data.get('imprint_location')
         if loc:
-            args.append(Q(imprint_location_exact__in=[loc]))
-        return args
+            kwargs['imprint_location'] = loc
+        return kwargs
 
     def handle_imprint_location_title(self):
         args = []
@@ -130,11 +130,11 @@ class ModelSearchFormEx(ModelSearchForm):
         return args
 
     def handle_footprint_location(self):
-        args = []
+        kwargs = {}
         loc = self.cleaned_data.get('footprint_location')
         if loc:
-            args.append(Q(footprint_location_exact__in=[loc]))
-        return args
+            kwargs['footprint_location'] = loc
+        return kwargs
 
     def handle_footprint_location_title(self):
         args = []
@@ -210,8 +210,8 @@ class BookCopySearchForm(ModelSearchFormEx):
         if imprint_id:
             kwargs['imprint_id'] = imprint_id
 
-        args += self.handle_imprint_location()
-        args += self.handle_footprint_location()
+        kwargs.update(self.handle_imprint_location())
+        kwargs.update(self.handle_footprint_location())
         args += self.handle_actor()
 
         kwargs.update(self.handle_boolean('censored'))
@@ -262,8 +262,8 @@ class ImprintSearchForm(ModelSearchFormEx):
         if imprint_id:
             kwargs['object_id'] = imprint_id
 
-        args += self.handle_imprint_location()
-        args += self.handle_footprint_location()
+        kwargs.update(self.handle_imprint_location())
+        kwargs.update(self.handle_footprint_location())
         args += self.handle_actor()
 
         kwargs.update(self.handle_pub_year())
@@ -294,8 +294,8 @@ class WrittenWorkSearchForm(ModelSearchFormEx):
         if work_id:
             kwargs['object_id'] = work_id
 
-        args += self.handle_imprint_location()
-        args += self.handle_footprint_location()
+        kwargs.update(self.handle_imprint_location())
+        kwargs.update(self.handle_footprint_location())
         args += self.handle_actor()
 
         kwargs.update(self.handle_pub_year())
@@ -330,11 +330,7 @@ class PlaceSearchForm(ModelSearchFormEx):
         if imprint_id:
             kwargs['imprint_id'] = imprint_id
 
-        args += self.handle_imprint_location_title()
-
-        q = self.cleaned_data.get('q', '')
-        if q:
-            args.append(Q(footprint_location_title__contains=q))
+        kwargs.update(self.handle_imprint_location())
 
         sqs = self.searchqueryset.filter(*args, **kwargs)
         counts = sqs.facet('footprint_location').facet_counts()
@@ -348,11 +344,7 @@ class PlaceSearchForm(ModelSearchFormEx):
         if imprint_id:
             kwargs['object_id'] = imprint_id
 
-        args += self.handle_footprint_location_title()
-
-        q = self.cleaned_data.get('q', '')
-        if q:
-            args.append(Q(imprint_location_title__contains=q))
+        kwargs.update(self.handle_footprint_location())
 
         sqs = self.searchqueryset.filter(*args, **kwargs)
         counts = sqs.facet('imprint_location').facet_counts()
@@ -399,9 +391,8 @@ class ActorSearchForm(ModelSearchFormEx):
         if imprint_id:
             kwargs['imprint_id'] = imprint_id
 
-        args += self.handle_imprint_location()
-        args += self.handle_footprint_location()
-
+        kwargs.update(self.handle_imprint_location())
+        kwargs.update(self.handle_footprint_location())
         kwargs.update(self.handle_pub_year())
         kwargs.update(self.handle_footprint_year())
         return args, kwargs

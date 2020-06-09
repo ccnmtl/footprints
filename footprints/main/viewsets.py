@@ -4,14 +4,14 @@ from rest_framework import viewsets
 from footprints.main.models import (
     Footprint, Actor, Person, Role, WrittenWork, Language, ExtendedDate,
     Place, Imprint, BookCopy, StandardizedIdentification, DigitalFormat,
-    DigitalObject, StandardizedIdentificationType)
+    DigitalObject, StandardizedIdentificationType, CanonicalPlace)
 from footprints.main.serializers import (
     FootprintSerializer, LanguageSerializer, RoleSerializer,
     ExtendedDateSerializer, ActorSerializer, PersonSerializer,
     PlaceSerializer, WrittenWorkSerializer, ImprintSerializer,
     BookCopySerializer, StandardizedIdentificationSerializer,
     DigitalFormatSerializer, DigitalObjectSerializer,
-    StandardizedIdentificationTypeSerializer)
+    StandardizedIdentificationTypeSerializer, CanonicalPlaceSerializer)
 from footprints.pathmapper.forms import (
     ActorSearchForm,
     ImprintSearchForm, WrittenWorkSearchForm, PlaceSearchForm)
@@ -43,8 +43,8 @@ class PersonViewSet(viewsets.ModelViewSet):
 
 
 class PlaceViewSet(viewsets.ModelViewSet):
-    model = Place
-    serializer_class = PlaceSerializer
+    model = CanonicalPlace
+    serializer_class = CanonicalPlaceSerializer
 
     def get_queryset(self):
         form = PlaceSearchForm(self.request.GET)
@@ -55,16 +55,16 @@ class PlaceViewSet(viewsets.ModelViewSet):
             else:
                 ids = form.search()
 
-            qs = Place.objects.filter(id__in=ids)
+            qs = CanonicalPlace.objects.filter(id__in=ids)
 
             q = form.cleaned_data.get('q', '')
             if q:
                 qs = qs.filter(
-                    Q(alternate_name__contains=q) |
+                    Q(place__alternate_name__contains=q) |
                     Q(canonical_place__canonical_name__contains=q))
 
-            return qs
-        return Place.objects.none()
+            return qs.distinct()
+        return CanonicalPlace.objects.none()
 
 
 class AlternatePlaceNameViewSet(viewsets.ModelViewSet):

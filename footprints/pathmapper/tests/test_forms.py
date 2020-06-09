@@ -97,8 +97,8 @@ class ModelSearchFormExTest(TestCase):
             'imprint_location': 1
         }
 
-        args = form.handle_imprint_location()
-        self.assertEqual(args[0], Q(imprint_location_exact__in=[1]))
+        kwargs = form.handle_imprint_location()
+        self.assertEqual(kwargs['imprint_location'], 1)
 
     def test_handle_imprint_location_title(self):
         place = PlaceFactory()
@@ -117,8 +117,8 @@ class ModelSearchFormExTest(TestCase):
             'footprint_location': 1
         }
 
-        args = form.handle_footprint_location()
-        self.assertEqual(args[0], Q(footprint_location_exact__in=[1]))
+        kwargs = form.handle_footprint_location()
+        self.assertEqual(kwargs['footprint_location'], 1)
 
     def test_handle_footprint_location_title(self):
         place = PlaceFactory()
@@ -269,9 +269,9 @@ class BookCopySearchFormTest(TestCase):
         self.assertEqual(kwargs['django_ct'], 'main.bookcopy')
         self.assertEqual(kwargs['work_id'], 12)
         self.assertEqual(kwargs['imprint_id'], 13)
-        self.assertEqual(args[0], Q(imprint_location_exact__in=[14]))
-        self.assertEqual(args[1], Q(footprint_location_exact__in=[15]))
-        self.assertEqual(args[2], Q(actor_exact__in=[16]))
+        self.assertEqual(kwargs['imprint_location'], 14)
+        self.assertEqual(kwargs['footprint_location'], 15)
+        self.assertEqual(args[0], Q(actor_exact__in=[16]))
         self.assertEqual(kwargs['footprint_start_date__gte'], date(1910, 1, 1))
         self.assertEqual(
             kwargs['footprint_end_date__lte'], date(1940, 12, 31))
@@ -291,9 +291,9 @@ class ImprintSearchFormTest(TestCase):
         self.assertEqual(kwargs['content'], 'Foo')
         self.assertEqual(kwargs['work_id'], 12)
         self.assertFalse('imprint_id' in kwargs)
-        self.assertEqual(args[0], Q(imprint_location_exact__in=[14]))
-        self.assertEqual(args[1], Q(footprint_location_exact__in=[15]))
-        self.assertEqual(args[2], Q(actor_exact__in=[16]))
+        self.assertEqual(kwargs['imprint_location'], 14)
+        self.assertEqual(kwargs['footprint_location'], 15)
+        self.assertEqual(args[0], Q(actor_exact__in=[16]))
         self.assertEqual(kwargs['footprint_start_date__gte'], date(1910, 1, 1))
         self.assertEqual(
             kwargs['footprint_end_date__lte'], date(1940, 12, 31))
@@ -313,9 +313,9 @@ class WrittenWorkSearchFormTest(TestCase):
         self.assertEqual(kwargs['content'], 'Foo')
         self.assertFalse('work_id' in kwargs)
         self.assertFalse('imprint_id' in kwargs)
-        self.assertEqual(args[0], Q(imprint_location_exact__in=[14]))
-        self.assertEqual(args[1], Q(footprint_location_exact__in=[15]))
-        self.assertEqual(args[2], Q(actor_exact__in=[16]))
+        self.assertEqual(kwargs['imprint_location'], 14)
+        self.assertEqual(kwargs['footprint_location'], 15)
+        self.assertEqual(args[0], Q(actor_exact__in=[16]))
         self.assertEqual(kwargs['footprint_start_date__gte'], date(1910, 1, 1))
         self.assertEqual(
             kwargs['footprint_end_date__lte'], date(1940, 12, 31))
@@ -338,8 +338,8 @@ class ActorSearchFormTest(TestCase):
         self.assertEqual(args[1], Q(actor_title_exact__contains='Foo'))
         self.assertEqual(kwargs['work_id'], 12)
         self.assertEqual(kwargs['imprint_id'], 13)
-        self.assertEqual(args[2], Q(imprint_location_exact__in=[14]))
-        self.assertEqual(args[3], Q(footprint_location_exact__in=[15]))
+        self.assertEqual(kwargs['imprint_location'], 14)
+        self.assertEqual(kwargs['footprint_location'], 15)
         self.assertEqual(kwargs['footprint_start_date__gte'], date(1910, 1, 1))
         self.assertEqual(
             kwargs['footprint_end_date__lte'], date(1940, 12, 31))
