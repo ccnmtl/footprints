@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from datetime import datetime, date
+from datetime import datetime
 import html
 from json import loads
 import re
@@ -87,21 +87,25 @@ class BookCopySearchView(JSONResponseMixin, View):
     def min_year(self, sqs, key):
         stats = sqs.stats(key).stats_results()
         if not stats or not stats[key] or not stats[key]['min']:
-            return date.min.year
+            return 1000
 
         return datetime.strptime(stats[key]['min'], '%Y-%m-%dT%H:%M:%SZ').year
 
     def max_year(self, sqs, key):
+        this_year = datetime.now().year
         stats = sqs.stats(key).stats_results()
         if not stats or not stats[key] or not stats[key]['max']:
-            return date.max.year
-        return datetime.strptime(stats[key]['max'], '%Y-%m-%dT%H:%M:%SZ').year
+            return this_year
+        return min(
+            this_year,
+            datetime.strptime(stats[key]['max'], '%Y-%m-%dT%H:%M:%SZ').year)
 
     def post(self, request):
         form = BookCopySearchForm(request.POST)
         if form.is_valid():
             sqs = form.search()
             ctx = {
+                'totalMax': BookCopy.objects.count(),
                 'total': sqs.count(),
                 'footprintMin': self.min_year(sqs, 'footprint_start_date'),
                 'footprintMax': self.max_year(sqs, 'footprint_end_date'),
