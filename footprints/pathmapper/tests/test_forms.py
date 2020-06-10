@@ -149,6 +149,8 @@ class ModelSearchFormExTest(TestCase):
             'footprintLocation': None,
             'footprintStart': None,
             'footprintEnd': None,
+            'footprintRange': False,
+            'pubRange': 'false',
             'pubStart': None,
             'pubEnd': None
         }
@@ -163,8 +165,10 @@ class ModelSearchFormExTest(TestCase):
             'q': '',
             'footprintStart': 2080,
             'footprintEnd': 2080,
+            'footprintRange': 'false',
             'pubStart': None,
-            'pubEnd': None
+            'pubEnd': None,
+            'pubRange': False
         }
 
         form.clean()
@@ -232,7 +236,7 @@ class ModelSearchFormExTest(TestCase):
         form.cleaned_data = {}
         form.data = {
             'q': '',
-            'footprintRange': '1',
+            'footprintRange': 'true',
             'footprintStart': None,
             'footprintEnd': 1740,
             'pubStart': None,
@@ -252,7 +256,7 @@ SAMPLE_CLEANED_DATA = {
     'footprint_end': 1940,
     'pub_start': 1800,
     'pub_end': 1820,
-    'pub_range': 'false',
+    'pub_range': False,
     'imprint_location': 14,
     'footprint_location': 15,
     'actor': 16
