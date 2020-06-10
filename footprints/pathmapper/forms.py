@@ -60,6 +60,10 @@ class ModelSearchFormEx(ModelSearchForm):
             self._errors[fieldname] = self.error_class([
                 'Year must be greater than 1000'])
 
+    def clean_range(self, fieldname):
+        val = self.cleaned_data.get(fieldname, False)
+        self.cleaned_data[fieldname] = val in [True, 'true']
+
     def handle_single_year(self, field_name, start_year):
         kwargs = {}
         start_year = int(start_year)
@@ -85,7 +89,7 @@ class ModelSearchFormEx(ModelSearchForm):
         kwargs = {}
         start_year = self.cleaned_data.get('footprint_start')
         end_year = self.cleaned_data.get('footprint_end')
-        ranged = self.cleaned_data.get('footprint_range') is True
+        ranged = self.cleaned_data.get('footprint_range')
 
         if ranged:
             kwargs.update(self.handle_range(
@@ -100,7 +104,7 @@ class ModelSearchFormEx(ModelSearchForm):
         kwargs = {}
         start_year = self.cleaned_data.get('pub_start')
         end_year = self.cleaned_data.get('pub_end')
-        ranged = self.cleaned_data.get('pub_range') is True
+        ranged = self.cleaned_data.get('pub_range')
 
         if ranged:
             kwargs.update(self.handle_range(
@@ -181,6 +185,9 @@ class ModelSearchFormEx(ModelSearchForm):
 
         self.clean_year('pub_start')
         self.clean_year('pub_end')
+
+        self.clean_range('pub_range')
+        self.clean_range('footprint_range')
 
         if (cleaned_data.get('pub_start', None) and
             cleaned_data.get('pub_end', None) and
