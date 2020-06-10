@@ -166,8 +166,21 @@ define(['jquery', 'selectWidget'], function($, select) {
             validFootprintRange: function() {
                 return this.validDateRange('footprint');
             },
+            validTitleField: function() {
+                if (!this.validLayerTitle()) {
+                    $('#layerTitle').addClass('invalid-form-field');
+                    $('#layerTitle').removeClass('valid-form-field');
+                }
+                if (this.validLayerTitle()) {
+                    $('#layerTitle').removeClass('invalid-form-field');
+                    $('#layerTitle').addClass('valid-form-field');
+                }
+            },
             save: function() {
-                if (this.total > 0 && this.validLayerTitle() &&
+                if (!(this.validLayerTitle())) {
+                    $('#layerTitle').addClass('invalid-form-field');
+                    $('#layerTitle').focus();
+                } else if (this.total > 0 && this.validLayerTitle() &&
                         this.validPubRange() && this.validFootprintRange()) {
                     this.$emit('save', $.extend(true, {}, this.layer));
                 }
