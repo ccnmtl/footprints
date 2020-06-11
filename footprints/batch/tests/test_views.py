@@ -247,6 +247,8 @@ class BatchJobUpdateViewTest(TestCase):
 
         self.assertEqual(fp.book_copy, copy)
         self.assertEqual(fp.medium, self.record1.medium)
+        self.assertEqual(fp.medium_description,
+                         self.record1.medium_description)
         self.assertEqual(fp.provenance, self.record1.provenance)
         self.assertEqual(fp.call_number, self.record1.call_number)
         self.assertEqual(fp.notes, self.record1.aggregate_notes())

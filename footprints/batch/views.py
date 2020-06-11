@@ -124,6 +124,7 @@ class BatchJobUpdateView(LoggedInMixin, BatchAccessMixin, View):
         fp = Footprint.objects.create(
             title=record.imprint_title,
             book_copy=copy, medium=record.medium,
+            medium_description=record.medium_description,
             provenance=record.provenance, call_number=record.call_number,
             notes=record.aggregate_notes())
 
