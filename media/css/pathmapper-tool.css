@@ -696,6 +696,52 @@ header .btn-priority-hi {
 }
 
 
+/* Error display */
+
+.invalid-form-field {
+    border-color: #dc3545;
+    background-color: #fbf3f4;
+    background-image: url('../img/icon-invalid-form-field.svg');
+    background-repeat: no-repeat;
+    background-position: calc(100% - 0.5rem) center;
+    background-size: 1.5rem;
+}
+
+.invalid-form-field:focus {
+    border-color: #dc3545;
+    background-color: #fff;
+    box-shadow: 0 0 0 0.2rem rgba(220,53,69,.25);
+}
+
+.valid-form-field {
+    border-color: #28a745;
+    background-color: #fff;
+    background-image: url('../img/icon-valid-form-field.svg');
+    background-repeat: no-repeat;
+    background-position: calc(100% - 0.5rem) center;
+    background-size: 1rem;
+}
+
+.valid-form-field:focus {
+    border-color: #28a745;
+    background-color: #fff;
+    box-shadow: 0 0 0 0.2rem rgba(40,167,69,.25);
+}
+
+.invalid-bookTotal {
+    border: 1px solid #dc3545 !important;
+    background-color: #fbf3f4 !important;
+    background-image: url('../img/icon-invalid-form-field.svg') !important;
+    background-repeat: no-repeat !important;
+    background-position: calc(100% - 0.5rem) center !important;
+    background-size: 1.5rem !important;
+}
+
+#bookTotal-alert {
+    font-size: 0.8rem;
+    margin-right: 1.2rem;
+    margin-top: 0.25rem;
+}
 
 /* Extra small devices (portrait phones, less than 576px) */
 /* No media query for `xs` since this is the default in Bootstrap */
