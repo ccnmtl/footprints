@@ -1124,7 +1124,8 @@ class Footprint(models.Model):
         "Evidence Type", max_length=256,
         help_text='''Where the footprint is derived or deduced from, e.g.
             an extant copy with an owner's signature''')
-    medium_description = models.TextField(null=True, blank=True)
+    medium_description = models.TextField(
+        "Evidence Description", null=True, blank=True)
     provenance = models.TextField(
         "Evidence Location",
         help_text='''Where can one find the evidence now: a particular

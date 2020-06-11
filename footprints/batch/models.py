@@ -34,8 +34,9 @@ class BatchRow(models.Model):
         'publication_location',
         'publication_date',
         'book_copy_call_number',
-        'medium',
-        'provenance',
+        'medium',  # Evidence Type
+        'medium_description',  # Evidence Description
+        'provenance',  # Evidence Location
         'call_number',
         'footprint_actor',
         'footprint_actor_viaf',
@@ -116,6 +117,8 @@ class BatchRow(models.Model):
 
     medium = models.TextField(
         verbose_name='Evidence Type', help_text='This field is required.')
+    medium_description = models.TextField(
+        verbose_name='Evidence Description', null=True, blank=True)
     provenance = models.TextField(
         verbose_name='Evidence Location', help_text='This field is required.')
     call_number = models.TextField(
