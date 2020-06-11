@@ -34,6 +34,7 @@ class BatchRowFactory(factory.DjangoModelFactory):
     book_copy_call_number = 'B893.1BC'
 
     medium = 'Library Catalog/Union Catalog'
+    medium_description = 'Description of the medium or evidence'
     provenance = 'Columbia University, New York, New York'
     call_number = 'B893.14 Y11'
 
