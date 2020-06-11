@@ -170,14 +170,13 @@ define(['jquery', 'selectWidget'], function($, select) {
                 if (!this.validLayerTitle()) {
                     $('#layerTitle').addClass('invalid-form-field');
                     $('#layerTitle').removeClass('valid-form-field');
-                }
-                if (this.validLayerTitle()) {
+                } else {
                     $('#layerTitle').removeClass('invalid-form-field');
                     $('#layerTitle').addClass('valid-form-field');
                 }
             },
             save: function() {
-                if (!(this.validLayerTitle())) {
+                if (!this.validLayerTitle()) {
                     $('#layerTitle').addClass('invalid-form-field');
                     $('#layerTitle').focus();
                 } else if (this.total > 0 && this.validLayerTitle() &&
