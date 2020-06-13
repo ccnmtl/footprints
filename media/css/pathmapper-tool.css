@@ -567,8 +567,14 @@ header .btn-priority-hi {
 
 /* Table view */
 
+.table-pathmapper-count {
+    margin: 5rem auto 1rem auto;
+    padding: 0;
+    width: calc(100% - 2rem);
+}
+
 .table-pathmapper {
-    margin: 5rem auto;
+    margin: 1rem auto;
     padding: 0;
     width: calc(100% - 2rem);
 }
