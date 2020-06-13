@@ -23,8 +23,10 @@ define(['jquery', 'utils'], function($, utils) {
             updateLocation: function() {
                 this.clearStats();
                 for (let pt of this.value.points) {
-                    this.summarize(pt);
-                    this.items.push(pt);
+                    if (pt.layer.visible) {
+                        this.summarize(pt);
+                        this.items.push(pt);
+                    }
                 }
                 this.items.sort(function(a, b) {return a.sortBy > b.sortBy;});
             },
