@@ -11,7 +11,8 @@
             <input type="text" class="form-control criteria-form-field" id="layerTitle" autocomplete="off" v-model="layer.title" v-on:blur="validTitleField">
         </header>
         <div class="pane-content-container" id="style-3">
-            <section id="bookTotal" aria-labelledby="region1" :class="[{'invalid-bookTotal': total == 0}]">
+            <section id="bookTotal" aria-labelledby="region1"
+                :class="[{'invalid-bookTotal': total === 0}]">
                 <h2 id="region1" class="sr-only">Contextual description of this layer's criteria set</h2>
                 {{displayCriteria}}
                 <div class="d-flex" v-if="total !== null">

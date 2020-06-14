@@ -107,7 +107,7 @@ define(['jquery', 'selectWidget'], function($, select) {
             },
             setIsSearching: function() {
                 $('html').addClass('busy');
-                this.total = 0;
+                this.total = null;
             },
             search: function() {
                 if (this.isSearching() || !this.isDirty()) {
