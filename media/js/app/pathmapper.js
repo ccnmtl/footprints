@@ -1,8 +1,8 @@
 requirejs(['./common'], function(common) {
     const libs = ['jquery', 'Vue', 'mapVue', 'layerListVue',
-        'tableVue', 'utils'];
+        'tableVue', 'utils', 'timelineVue'];
     requirejs(libs,
-        function($, Vue, map, layers, table, utils) {
+        function($, Vue, map, layers, table, utils, timeline) {
             new Vue({
                 el: '#pathmapper-container',
                 data: function() {
@@ -19,7 +19,8 @@ requirejs(['./common'], function(common) {
                 components: {
                     'layer-list': layers.LayerListVue,
                     'pathmapper-map': map.PathmapperMapVue,
-                    'pathmapper-table': table.PathmapperTableVue
+                    'pathmapper-table': table.PathmapperTableVue,
+                    'pathmapper-timeline': timeline.PathmapperTimelineVue
                 },
                 methods: {
                     clearLocation: function() {

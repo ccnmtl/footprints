@@ -17,6 +17,7 @@ requirejs.config({
         'select2': 'js/lib/select2-4.0.10/js/select2.full',
         'selectWidget': 'js/app/components/select-widget',
         'tableVue': 'js/app/components/tableVue',
+        'timelineVue': 'js/app/components/timelineVue',
         'utils': 'js/app/utils',
         'Vue': vuePath
     },

@@ -19,6 +19,7 @@
     {% include "clientside/pathmapper_location.html" %}
     {% include "clientside/pathmapper_map.html" %}
     {% include "clientside/pathmapper_table.html" %}
+    {% include "clientside/pathmapper_timeline.html" %}
     {% include "clientside/select_widget_template.html" %}
 {% endblock %}
 
@@ -78,6 +79,10 @@
         <pathmapper-map :layers="collection.layers" v-model="selectedLocation" />
     </div>
 
+    <div v-if="showMap" id="timeline-container">
+        <pathmapper-timeline :layers="collection.layers"></pathmapper-timeline>
+    </div>
+
 {% endblock %}
 
 {% block js %}
@@ -92,6 +97,8 @@
 
     <script type="text/javascript"
         src="//maps.google.com/maps/api/js?key={{settings.GOOGLE_MAP_API}}&libraries=places"></script>
+
+    <script src="https://code.highcharts.com/highcharts.src.js"></script>
 
     <script data-main="{{STATIC_URL}}js/app/pathmapper.js"
         src="{{STATIC_URL}}js/lib/require/require.js"></script>
