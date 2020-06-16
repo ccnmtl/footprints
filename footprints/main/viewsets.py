@@ -46,6 +46,14 @@ class PlaceViewSet(viewsets.ModelViewSet):
     model = CanonicalPlace
     serializer_class = CanonicalPlaceSerializer
 
+    def filter_places(self, form, qs):
+        q = form.cleaned_data.get('q', '')
+        if q:
+            qs = qs.filter(
+                Q(place__alternate_name__contains=q) |
+                Q(canonical_name__contains=q))
+        return qs
+
     def get_queryset(self):
         form = PlaceSearchForm(self.request.GET)
         if form.is_valid():
@@ -56,12 +64,7 @@ class PlaceViewSet(viewsets.ModelViewSet):
                 ids = form.search()
 
             qs = CanonicalPlace.objects.filter(id__in=ids)
-
-            q = form.cleaned_data.get('q', '')
-            if q:
-                qs = qs.filter(
-                    Q(place__alternate_name__contains=q) |
-                    Q(canonical_place__canonical_name__contains=q))
+            qs = self.filter_places(form, qs)
 
             return qs.distinct()
         return CanonicalPlace.objects.none()
