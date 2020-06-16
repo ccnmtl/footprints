@@ -118,7 +118,6 @@ class BookCopySearchView(JSONResponseMixin, View):
 
 
 class PathmapperRouteView(ListAPIView):
-
     model = BookCopy
     serializer_class = PathmapperRouteSerializer
     authentication_classes = []
@@ -163,6 +162,29 @@ class PathmapperTableView(ListAPIView):
         form = BookCopyFootprintsForm()
         sqs = form.search(ids)
         return sqs.order_by('wtitle', 'pub_start_date', 'book_copy_id')
+
+    def post(self, request, *args, **kwargs):
+        return self.get(request, *args, **kwargs)
+
+
+class PathmapperTimelineView(ListAPIView):
+    model = BookCopy
+    serializer_class = PathmapperRouteSerializer
+    authentication_classes = []
+    permission_classes = []
+    page_size = 15
+
+    def get_book_copies(self, layer):
+        form = BookCopySearchForm(layer)
+        if form.is_valid():
+            sqs = form.search()
+            return sqs.values_list('object_id', flat=True)
+
+    def get_queryset(self):
+        layer = loads(self.request.POST.get('layer'))
+        ids = self.get_book_copies(layer)
+        return BookCopy.objects.filter(id__in=ids).select_related(
+            'imprint__place')
 
     def post(self, request, *args, **kwargs):
         return self.get(request, *args, **kwargs)

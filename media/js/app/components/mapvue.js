@@ -81,6 +81,17 @@ define(maplibs, function($, layermap, utils) {
                         delete this.places[key];
                     }
                 }
+            },
+            play: function() {
+                // assemble all the imprints and footprints
+                for (let [key, place] of Object.entries(this.places)) {
+                }
+
+                // sort them
+
+                // make all the markers disappear
+
+                // play
             }
         },
         created: function() {

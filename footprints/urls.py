@@ -29,7 +29,7 @@ from footprints.main.viewsets import (
     AlternatePlaceNameViewSet)
 from footprints.pathmapper.views import (
     PathmapperView, BookCopySearchView, PathmapperTableView,
-    PathmapperRouteView)
+    PathmapperRouteView, PathmapperTimelineView)
 
 
 admin.autodiscover()
@@ -171,6 +171,8 @@ urlpatterns = [
         PathmapperRouteView.as_view(), name='pathmapper-route-view'),
     url(r'^pathmapper/table/',
         PathmapperTableView.as_view(), name='pathmapper-table-view'),
+    url(r'^pathmapper/table/',
+        PathmapperTimelineView.as_view(), name='pathmapper-timeline-view'),
     url(r'^pathmapper/vision/',
         TemplateView.as_view(template_name='design/pathmapper.html')),
     url(r'^pathmapper/', PathmapperView.as_view(), name='pathmapper-view'),
