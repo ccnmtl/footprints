@@ -102,8 +102,8 @@ class PathmapperRouteViewTest(TestCase):
 class PlaceViewSetTest(TestCase):
 
     def test_filter_places(self):
-        p1 = PlaceFactory()
-        p2 = PlaceFactory(alternate_name='Stołeczne Królewskie Miasto Kraków')
+        cp1 = PlaceFactory().canonical_place
+        cp2 = PlaceFactory(alternate_name='Miasto Kraków').canonical_place
 
         form = PlaceSearchForm()
         form.cleaned_data = {'q': ''}
@@ -112,8 +112,8 @@ class PlaceViewSetTest(TestCase):
         vs = PlaceViewSet()
         results = vs.filter_places(form, qs)
         self.assertEqual(results.count(), 2)
-        self.assertEqual(results.get(id=p1.id), p1.canonical_place)
-        self.assertEqual(results.get(id=p2.id), p2.canonical_place)
+        self.assertEqual(results.get(id=cp1.id), cp1)
+        self.assertEqual(results.get(id=cp2.id), cp2)
 
         form.cleaned_data = {'q': 'foo'}
         results = vs.filter_places(form, qs)
@@ -122,4 +122,4 @@ class PlaceViewSetTest(TestCase):
         form.cleaned_data = {'q': 'Miasto'}
         results = vs.filter_places(form, qs)
         self.assertEqual(results.count(), 1)
-        self.assertEqual(results.get(id=p2.id), p2.canonical_place)
+        self.assertEqual(results.get(id=cp2.id), cp2)
