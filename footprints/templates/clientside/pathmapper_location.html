@@ -8,23 +8,28 @@
             <a class="btn btn-priority-hi btn-close-pane"
             href="#" title="Close the location view" v-on:click="clearLocation">Back to layers</a>
         </header>
-        <div class="pane-content-container p-2">
-            <h2 v-if="value">
+        <div class="pane-content-container p-2" id="style-3">
+            <h2 class="location-title" v-if="value">
                 {{value.title}}
             </h2>
-            <hr />
-            <div>Initial: {{initial}}</div>
-            <div>Interim: {{interim}}</div>
-            <div>Terminal: {{terminal}}</div>
-            <hr />
-            <div v-for="item in items">
-                <div>Type: {{item.type}}</div>
-                <div>
-                    Book Copy:
+            <div class="location-summary">
+                <p>
+                    {{items.length}} book copies passed through this location. It is:
+                </p>
+                <ul>
+                    <li v-if="initial > 0">An imprint location to {{initial}}</li>
+                    <li v-if="interim > 0">An interim location to {{interim}}</li>
+                    <li v-if="terminal > 0">A final location to {{terminal}}</li>
+                </ul>
+            </div>
+            <section class="location-card" v-for="item in items">
+                <h3>
+                    Book copy:
                     <a :href="copyUrl(item)" target="_blank" rel="noopener noreferrer">
                         {{item.bookcopy.identifier}}
                     </a>
-                </div>
+                </h3>
+                <div>Location type: <span class="text-capitalize">{{item.type}}</span></div>
                 <div v-if="item.footprint">
                     {{item.footprint.narrative}}
                 </div>
@@ -55,8 +60,7 @@
                         {{item.bookcopy.imprint.display_date}}, {{item.bookcopy.imprint.place.display_title}}
                     </a>
                 </div>
-                <hr />
-            </div>
+            </section>
             <small v-if="value">
                  [Place Id: {{value.id}}] [{{value.latlng}}]
             </small>
