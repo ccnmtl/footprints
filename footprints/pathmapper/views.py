@@ -169,7 +169,7 @@ class PathmapperTableView(ListAPIView):
 
 class PathmapperTimelineView(ListAPIView):
     model = BookCopy
-    serializer_class = PathmapperRouteSerializer
+    serializer_class = PathmapperTimelineSerializer
     authentication_classes = []
     permission_classes = []
     page_size = 15

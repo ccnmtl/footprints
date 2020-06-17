@@ -262,6 +262,14 @@ class PathmapperRouteSerializer(HyperlinkedModelSerializer):
         fields = ('id', 'identifier', 'imprint', 'footprints')
 
 
+class PathmapperTimelineSerializer(Serializer):
+    tick_date = serializers.DateField(read_only=True)
+    tick_count = serializers.IntegerField(read_only=True)
+
+    class Meta:
+        fields = ('tick_date', 'tick_count')
+
+
 class PathmapperTableRowSerializer(Serializer):
     work_id = serializers.CharField(read_only=True)
     work_title = serializers.CharField(

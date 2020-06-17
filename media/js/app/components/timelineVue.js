@@ -22,6 +22,16 @@ define(['jquery', 'utils'], function($, utils) {
                     data: ctx
                 }).done((data) => {
                     // populate the chart
+                    this.chart.data = [{
+                        "x": 1293840000000, // year
+                        "y": 1, // static
+                        "value": 10 // count
+                    },
+                    {
+                        "x": 129380000000, // year
+                        "y": 2, // static
+                        "value": 30 // count
+                    }];
                 });
             }
         },
@@ -65,17 +75,6 @@ define(['jquery', 'utils'], function($, utils) {
                 },
                 series: [{
                     nullColor: '#EFEFEF',
-                    data: [{
-                        "x": 1293840000000, // year
-                        "y": 1, // static
-                        "value": 10 // count
-                    },
-                    {
-                        "x": 129380000000, // year
-                        "y": 2, // static
-                        "value": 30 // count
-                    }],
-                    colsize: 24 * 366 * 36e5, // one day
                     tooltip: {
                         headerFormat: 'Footprints<br/>',
                         pointFormat: '{point.x:%Y}: <b>{point.value}</b>'
@@ -83,7 +82,7 @@ define(['jquery', 'utils'], function($, utils) {
                     turboThreshold: Number.MAX_VALUE // #3404, remove after 4.0.5 release
                 }]
             };
-z        },
+        },
         mounted: function() {
             this.myChart = Highcharts.chart('the-timeline', this.options);
         }
