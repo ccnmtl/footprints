@@ -2,14 +2,16 @@
 <script type="text/x-template" id="pathmapper-location-template">
     <div class="pane-content">
         <header class="d-flex flex-row">
-            <h1 v-if="value">
-                {{value.title}}
+            <h1><i class="fas fa-map-marker-alt mr-2" aria-hidden="true"></i>
+                Location
             </h1>
+            <a class="btn btn-priority-hi btn-close-pane"
+            href="#" title="Close the location view" v-on:click="clearLocation">Back to layers</a>
         </header>
         <div class="pane-content-container p-2">
-            <a href="#" title="Close the location view" v-on:click="clearLocation">
-                Close
-            </a>
+            <h2 v-if="value">
+                {{value.title}}
+            </h2>
             <hr />
             <div>Initial: {{initial}}</div>
             <div>Interim: {{interim}}</div>
