@@ -30,7 +30,17 @@ define(maplibs, function($, layermap, utils) {
                     title: placeTitle,
                 });
                 marker.addListener('click', () => {
+                    const activeIcon = {
+                        url: Footprints.staticUrl +
+                            'img/pathmapper-selected-location.svg',
+                        scaledSize: new google.maps.Size(26,35)
+                    };
                     this.$emit('input', this.places[placeId]);
+                    if (this.activeMarker) {
+                        this.activeMarker.setIcon(icon);
+                    }
+                    marker.setIcon(activeIcon);
+                    this.activeMarker = marker;
                 });
                 return marker;
             },
@@ -90,6 +100,7 @@ define(maplibs, function($, layermap, utils) {
             this.bounds = null;
             this.zoom = 3;
             this.center = new google.maps.LatLng(35.408632, -41.164887);
+            this.activeMarker = null;
         },
         mounted: function() {
             let elt = document.getElementById(this.mapName);
