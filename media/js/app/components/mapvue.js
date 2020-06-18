@@ -34,7 +34,7 @@ define(maplibs, function($, layermap, utils) {
                         url: Footprints.staticUrl +
                             'img/pathmapper-selected-location.svg',
                         scaledSize: new google.maps.Size(26,35)
-                    }
+                    };
                     this.$emit('input', this.places[placeId]);
                     if (this.activeMarker) {
                         this.activeMarker.setIcon(icon);
