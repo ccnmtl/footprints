@@ -15,7 +15,7 @@ define(maplibs, function($, layermap, utils) {
             'layer-map': layermap.LayerMapVue
         },
         methods: {
-            addMarker: function(placeId, latlng) {
+            addMarker: function(placeId, latlng, placeTitle) {
                 let icon = {
                     fillOpacity: .6,
                     anchor: new google.maps.Point(0,0),
@@ -26,7 +26,8 @@ define(maplibs, function($, layermap, utils) {
                 };
                 let marker = new google.maps.Marker({
                     position: latlng,
-                    icon: icon
+                    icon: icon,
+                    title: placeTitle,
                 });
                 marker.addListener('click', () => {
                     this.$emit('input', this.places[placeId]);
@@ -42,7 +43,8 @@ define(maplibs, function($, layermap, utils) {
                         title: params.placeTitle,
                         latlng: params.latlng,
                         points: [],
-                        marker: this.addMarker(placeId, params.latlng)
+                        marker: this.addMarker(
+                            placeId, params.latlng, params.placeTitle)
                     };
                 }
                 this.places[placeId].points.push(params.point);
