@@ -8,7 +8,7 @@ Footprints is a project to develop a database that tracks individual books throu
 
 TECHNICAL REQUIREMENTS
 ------------
-Python 2.7  
+Python 3
 Postgres  
 SOLR 3+
 Celery 3
