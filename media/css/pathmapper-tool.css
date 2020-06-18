@@ -230,6 +230,11 @@ label.layer-title {
     background: #f8f5f4 url("../img/fp_section_bg.png") repeat;
 }
 
+.pane-content-container section h3 {
+    font-size: 1.125rem;
+    font-weight: 500;
+}
+
 .pane-content-container section .listdown-selection .select2-container {
     width: 100% !important;
 }
@@ -605,6 +610,31 @@ header .btn-priority-hi {
 
 .table-pathmapper th.footprint-title {
     width: 25%;
+}
+
+/* Pathmapper point of interest, location pane */
+
+.location-title {
+    font-size: 1.5rem !important;
+    font-weight: 500 !important;
+    color: #836737 !important;
+    margin: 1rem !important;
+    padding: 0 !important;
+}
+
+.location-summary {
+    margin: 0;
+    padding: 1rem;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
+
+.location-summary ul {
+    margin: 0;
+}
+
+.location-card div {
+    margin: 0.5rem 0;
 }
 
 /*
