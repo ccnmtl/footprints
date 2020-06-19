@@ -8,7 +8,8 @@ define(['jquery', 'utils'], function($, utils) {
                 'totalPages': 0,
                 'rows': [],
                 'baseUrl': Footprints.baseUrl,
-                'pageSize': 15
+                'pageSize': 15,
+                'total': null
             };
         },
         methods: {
@@ -31,8 +32,11 @@ define(['jquery', 'utils'], function($, utils) {
                     'pathmapper/table/?page=' + pageNumber;
             },
             updateLayers: function() {
+                // respect layer visibility
+                const value = this.value.filter(layer => layer.visible);
+
                 const ctx = {
-                    layers: JSON.stringify(this.value)
+                    layers: JSON.stringify(value)
                 };
 
                 $.ajax({
@@ -44,6 +48,7 @@ define(['jquery', 'utils'], function($, utils) {
                     this.page.nextPage = utils.parsePageNumber(data.next);
                     this.page.prevPage = utils.parsePageNumber(data.previous);
                     this.totalPages = Math.ceil(data.count / this.pageSize);
+                    this.total = data.count;
                     this.rows = $.extend(true, [], data.results);
                 });
             }

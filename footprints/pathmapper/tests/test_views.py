@@ -4,6 +4,10 @@ from django.test.client import RequestFactory
 from django.test.testcases import TestCase
 from django.urls.base import reverse
 
+from footprints.main.models import CanonicalPlace
+from footprints.main.tests.factories import PlaceFactory
+from footprints.main.viewsets import PlaceViewSet
+from footprints.pathmapper.forms import PlaceSearchForm
 from footprints.pathmapper.views import PathmapperView
 
 
@@ -93,3 +97,29 @@ class PathmapperRouteViewTest(TestCase):
         self.assertEqual(the_json['next'], None)
         self.assertEqual(the_json['previous'], None)
         self.assertEqual(the_json['results'], [])
+
+
+class PlaceViewSetTest(TestCase):
+
+    def test_filter_places(self):
+        cp1 = PlaceFactory().canonical_place
+        cp2 = PlaceFactory(alternate_name='Miasto Kraków').canonical_place
+
+        form = PlaceSearchForm()
+        form.cleaned_data = {'q': ''}
+        qs = CanonicalPlace.objects.all()
+
+        vs = PlaceViewSet()
+        results = vs.filter_places(form, qs)
+        self.assertEqual(results.count(), 2)
+        self.assertEqual(results.get(id=cp1.id), cp1)
+        self.assertEqual(results.get(id=cp2.id), cp2)
+
+        form.cleaned_data = {'q': 'foo'}
+        results = vs.filter_places(form, qs)
+        self.assertEqual(results.count(), 0)
+
+        form.cleaned_data = {'q': 'Miasto'}
+        results = vs.filter_places(form, qs)
+        self.assertEqual(results.count(), 1)
+        self.assertEqual(results.get(id=cp2.id), cp2)
