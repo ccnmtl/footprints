@@ -198,6 +198,11 @@ a {
     color: #333;
 }
 
+.pane-content header .fa-cancel-form {
+    cursor: pointer;
+    color: #97421b;
+}
+
 label.layer-title {
     margin: 0 0.5rem 0 0;
     line-height: 3.25rem;
