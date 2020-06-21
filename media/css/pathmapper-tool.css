@@ -230,6 +230,11 @@ label.layer-title {
     background: #f8f5f4 url("../img/fp_section_bg.png") repeat;
 }
 
+.pane-content-container section.final {
+    margin-bottom: 6rem;
+    border-bottom: 1px solid #ddd;
+}
+
 .pane-content-container section h3 {
     font-size: 1.125rem;
     font-weight: 500;
@@ -240,19 +245,51 @@ label.layer-title {
 }
 
 .layer-actions {
-    margin: 1rem;
-    padding: 1rem;
-    border-top: 1px solid #ddd;
-    text-align: right;
+    margin: 0;
+    padding: 2.5rem 0;
+    position: fixed;
+    bottom: 0;
+    width: calc(100% - 0.5rem);
 }
+
+.layer-actions .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #edeae6;
+    width: 100%;
+    height: 100%;
+    opacity: 0.7;
+}
+
+.layer-actions .action-set {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 1rem 0 0 0;
+    background-color: transparent;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    opacity: 1;
+}
+
+.layer-actions .action-set .btn {
+    border-radius: calc(1.5em + .75rem + 2px);
+box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2), 0px 6px 10px 0px rgba(0, 0, 0, 0.14), 0px 1px 18px 0px rgba(0,0,0,.12);
+    font-size: 1.125rem;
+    font-weight: normal;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    }
 
 .btn-priority-low {
     margin-left: 0.125rem;
     margin-right: 0.125rem;
     font-weight: 500;
     color: #97421b;
-    background-color: transparent;
-    border-color: transparent;
+    background-color: #fafafa;
+    border-color: #fafafa;
 }
 
 .btn-priority-low:hover {
@@ -840,6 +877,9 @@ header .btn-priority-hi {
     }
     .widget-pane-toggle .fas {
         margin: 0 !important;
+    }
+    .layer-actions {
+        width: 31.5rem;
     }
 }
 

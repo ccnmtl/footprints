@@ -161,7 +161,7 @@
                     </div>
             </section><!-- /#criteria-censored -->
 
-            <section aria-labelledby="region7">
+            <section class="final" aria-labelledby="region7">
                 <h2 id="region7">Expurgated</h2>
                     <div class="form-group md-radio mb-0 col-10 offset-1" aria-labelledby="region7" role="radiogroup">
                         <input v-model="layer.expurgated" name="criteriaExpurgated" id="criteriaExpurgatedNotApp" type="radio" value="notapp">
@@ -174,9 +174,12 @@
             </section><!-- /#criteria-Expurgated -->
 
             <div class="layer-actions">
-                <button v-on:click="cancel" type="button" class="btn btn-priority-low">Cancel</button>
-                <button v-if="layer.id !== null" v-on:click="save" type="button" class="btn btn-priority-mid">Save layer</button>
-                <button v-else v-on:click="save" type="button" class="btn btn-priority-mid">Create layer</button>
+                <div class="overlay"></div>
+                <div class="action-set">
+                    <button v-on:click="cancel" type="button" class="btn btn-priority-low">Cancel</button>
+                    <button v-if="layer.id !== null" v-on:click="save" type="button" class="btn btn-priority-mid">Save layer</button>
+                    <button v-else v-on:click="save" type="button" class="btn btn-priority-mid">Create layer</button>
+                </div>
             </div><!-- /.layer actions -->
 
         </div><!-- /.pane-content-container -->
