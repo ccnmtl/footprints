@@ -334,16 +334,26 @@ header .btn-priority-hi {
     color: #97421b;
 }
 
-.btn-layer-action.btn-layer-off {
-    color: gray;
-}
-
 .btn-layer-action:hover {
     color: #82320d;
     background-color: #efefef;
     border-color: #efefef;
     /* offset-x | offset-y | blur-radius | color */
     box-shadow: 0 2px 1px -1px rgba(0,0,0,0.2), 0 1px 1px 0 rgba(0,0,0,0.141), 0 1px 3px 0 rgba(0,0,0,0.122);
+}
+
+.btn-layer-action:active {
+    color: #999;
+}
+
+.btn-layer-action.btn-layer-off,
+.btn-layer-action.btn-layer-off:hover,
+.btn-layer-action.btn-layer-off:focus {
+    color: #999;
+}
+
+.btn-layer-action.btn-layer-off:active {
+    color: #82320d;
 }
 
 .pane-content-container .col-form-label {
