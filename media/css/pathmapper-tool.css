@@ -198,6 +198,11 @@ a {
     color: #333;
 }
 
+.pane-content header .fa-cancel-form {
+    cursor: pointer;
+    color: #97421b;
+}
+
 label.layer-title {
     margin: 0 0.5rem 0 0;
     line-height: 3.25rem;
@@ -230,6 +235,11 @@ label.layer-title {
     background: #f8f5f4 url("../img/fp_section_bg.png") repeat;
 }
 
+.pane-content-container section.final {
+    margin-bottom: 6rem;
+    border-bottom: 1px solid #ddd;
+}
+
 .pane-content-container section h3 {
     font-size: 1.125rem;
     font-weight: 500;
@@ -240,19 +250,51 @@ label.layer-title {
 }
 
 .layer-actions {
-    margin: 1rem;
-    padding: 1rem;
-    border-top: 1px solid #ddd;
-    text-align: right;
+    margin: 0;
+    padding: 2.5rem 0;
+    position: fixed;
+    bottom: 0;
+    width: calc(100% - 0.5rem);
 }
+
+.layer-actions .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #edeae6;
+    width: 100%;
+    height: 100%;
+    opacity: 0.7;
+}
+
+.layer-actions .action-set {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 1rem 0 0 0;
+    background-color: transparent;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    opacity: 1;
+}
+
+.layer-actions .action-set .btn {
+    border-radius: calc(1.5em + .75rem + 2px);
+box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2), 0px 6px 10px 0px rgba(0, 0, 0, 0.14), 0px 1px 18px 0px rgba(0,0,0,.12);
+    font-size: 1.125rem;
+    font-weight: normal;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    }
 
 .btn-priority-low {
     margin-left: 0.125rem;
     margin-right: 0.125rem;
     font-weight: 500;
     color: #97421b;
-    background-color: transparent;
-    border-color: transparent;
+    background-color: #fafafa;
+    border-color: #fafafa;
 }
 
 .btn-priority-low:hover {
@@ -329,16 +371,26 @@ header .btn-priority-hi {
     color: #97421b;
 }
 
-.btn-layer-action.btn-layer-off {
-    color: gray;
-}
-
 .btn-layer-action:hover {
     color: #82320d;
     background-color: #efefef;
     border-color: #efefef;
     /* offset-x | offset-y | blur-radius | color */
     box-shadow: 0 2px 1px -1px rgba(0,0,0,0.2), 0 1px 1px 0 rgba(0,0,0,0.141), 0 1px 3px 0 rgba(0,0,0,0.122);
+}
+
+.btn-layer-action:active {
+    color: #999;
+}
+
+.btn-layer-action.btn-layer-off,
+.btn-layer-action.btn-layer-off:hover,
+.btn-layer-action.btn-layer-off:focus {
+    color: #999;
+}
+
+.btn-layer-action.btn-layer-off:active {
+    color: #82320d;
 }
 
 .pane-content-container .col-form-label {
@@ -852,6 +904,9 @@ header .btn-priority-hi {
         height: 8.8rem;
         width: calc(100% - 37rem);
         box-shadow: 0 1px 4px -1px rgba(0, 0, 0, 0.3);
+    }
+    .layer-actions {
+        width: 31.5rem;
     }
 }
 
