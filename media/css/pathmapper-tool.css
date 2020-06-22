@@ -841,6 +841,18 @@ header .btn-priority-hi {
     .widget-pane-toggle .fas {
         margin: 0 !important;
     }
+    .widget-timeline {
+        position: absolute;
+        bottom: 1.5rem;
+        right: 4rem;
+        border-radius: 0;
+        margin: 0;
+        padding: 0;
+        background-color: #fff;
+        height: 8.8rem;
+        width: calc(100% - 37rem);
+        box-shadow: 0 1px 4px -1px rgba(0, 0, 0, 0.3);
+    }
 }
 
 /* Extra large devices (large desktops, 1200px and up) */
