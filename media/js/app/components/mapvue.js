@@ -15,32 +15,40 @@ define(maplibs, function($, layermap, utils) {
             'layer-map': layermap.LayerMapVue
         },
         methods: {
-            addMarker: function(placeId, latlng, placeTitle) {
+            adjustIcon: function(place) {
+                const pct = (place.refs / this.events) * 75;
+                const r = Math.max(3, pct);
+                const d = r * 2;
+                let path =
+                    `M-${r},0a${r},${r} 0 1,0 ${r*2},0a${r},${r} 0 1,0 -${d},0`;
                 let icon = {
-                    fillOpacity: .6,
-                    anchor: new google.maps.Point(0,0),
-                    strokeWeight: 0,
-                    scale: 1,
+                    strokeColor: '#cb8d78',
+                    strokeOpacity: 1,
+                    strokeWeight: 1,
                     fillColor: '#cb8d78',
-                    path: 'M-5,0a5,5 0 1,0 10,0a5,5 0 1,0 -10,0'
+                    fillOpacity: .4,
+                    anchor: new google.maps.Point(0,0),
+                    scale: 1,
+                    path: path
                 };
+                if (place.marker) {
+                    place.marker.setIcon(icon);
+                }
+            },
+            addMarker: function(placeId, latlng, placeTitle) {
                 let marker = new google.maps.Marker({
                     position: latlng,
-                    icon: icon,
                     title: placeTitle,
                 });
                 marker.addListener('click', () => {
-                    const activeIcon = {
-                        url: Footprints.staticUrl +
-                            'img/pathmapper-selected-location.svg',
-                        scaledSize: new google.maps.Size(26,35)
-                    };
-                    this.$emit('input', this.places[placeId]);
-                    if (this.activeMarker) {
-                        this.activeMarker.setIcon(icon);
+                    const clicked = this.places[placeId];
+                    this.$emit('input', clicked);
+                    if (this.activePlace) {
+                        // reset icon back to the variable circle
+                        this.adjustIcon(this.activePlace);
                     }
-                    marker.setIcon(activeIcon);
-                    this.activeMarker = marker;
+                    clicked.marker.setIcon(this.activeIcon);
+                    this.activePlace = clicked;
                 });
                 return marker;
             },
@@ -60,27 +68,35 @@ define(maplibs, function($, layermap, utils) {
                 this.places[placeId].points.push(params.point);
             },
             updateLayer: function(layer) {
+                this.events = 0;
                 // eslint-disable-next-line no-unused-vars
                 for (let [key, place] of Object.entries(this.places)) {
-                    let refs = 0;
+                    place.refs = 0;
                     for (const pt of place.points) {
                         if (layer.id === pt.layer.id) {
                             pt.layer.visible = layer.visible;
                         }
                         if (pt.layer.visible) {
-                            refs++;
+                            place.refs++;
                         }
                     }
-                    if (refs > 0) {
+                    this.events += place.refs;
+                    if (place.refs > 0) {
                         place.marker.setMap(this.map);
                     } else {
                         place.marker.setMap(null);
                     }
                 }
+
+                // eslint-disable-next-line no-unused-vars
+                for (let [key, place] of Object.entries(this.places)) {
+                    this.adjustIcon(place);
+                }
             },
             deleteLayer: function(layer) {
                 // Remove all points that are attached to the specified layer
                 // If the place no longer has references, hide it & delete it
+                // eslint-disable-next-line no-unused-vars
                 for (let [key, place] of Object.entries(this.places)) {
                     for (let i = place.points.length - 1; i >= 0; i--) {
                         if (place.points[i].layer.id === layer.id) {
@@ -100,7 +116,13 @@ define(maplibs, function($, layermap, utils) {
             this.bounds = null;
             this.zoom = 3;
             this.center = new google.maps.LatLng(35.408632, -41.164887);
-            this.activeMarker = null;
+            this.activePlace = null;
+            this.activeIcon = {
+                url: Footprints.staticUrl +
+                    'img/pathmapper-selected-location.svg',
+                scaledSize: new google.maps.Size(26, 35)
+            };
+            this.events = 0;
         },
         mounted: function() {
             let elt = document.getElementById(this.mapName);
