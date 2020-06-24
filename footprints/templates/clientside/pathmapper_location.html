@@ -34,14 +34,15 @@
                     {{item.footprint.narrative}}
                 </div>
                 <div v-else>
-                    In {{item.bookcopy.imprint.display_date}}, a copy of the 
+                    In {{item.bookcopy.imprint.display_date}}, a copy of the
                     <a :href="workUrl(item)" target="_blank" rel="noopener noreferrer">
                         {{item.bookcopy.imprint.work_title}}</a> was published
-                    <span v-if="item.bookcopy.imprint.work_titel !== item.bookcopy.imprint.title">
+                    <span v-if="item.bookcopy.imprint.work_title !== item.bookcopy.imprint.title">
                         as <a :href="imprintUrl(item)"
                         target="_blank" rel="noopener noreferrer">
                             {{item.bookcopy.imprint.title}}</a>
-                    </span> in {{item.bookcopy.imprint.place.display_title}}.
+                    </span>
+                    <span v-if="item.bookcopy.imprint.place"> in {{item.bookcopy.imprint.place.display_title}}</span>.
                 </div>
                 <div>
                     Literary Work:
@@ -54,10 +55,11 @@
                     Imprint:
                     <a :href="imprintUrl(item)"
                         target="_blank" rel="noopener noreferrer">
-                        <span v-if="item.bookcopy.imprint.work_titel !== item.bookcopy.imprint.title">
+                        <span v-if="item.bookcopy.imprint.work_title !== item.bookcopy.imprint.title">
                             {{item.bookcopy.imprint.title}}
                         </span>
-                        {{item.bookcopy.imprint.display_date}}, {{item.bookcopy.imprint.place.display_title}}
+                        {{item.bookcopy.imprint.display_date}}
+                        <span v-if="item.bookcopy.imprint.place">, {{item.bookcopy.imprint.place.display_title}}</span>
                     </a>
                 </div>
             </section>
