@@ -7,6 +7,13 @@ define(['jquery', 'utils'], function($, utils) {
             };
         },
         methods: {
+            playTimeline: function() {
+                if ($('.button-timeline').hasClass('pause')) {
+                    $('.button-timeline').removeClass('pause');
+                } else {
+                    $('.button-timeline').addClass('pause');
+                }
+            }
         },
         created: function() {
         },

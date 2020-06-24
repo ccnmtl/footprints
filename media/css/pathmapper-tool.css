@@ -909,14 +909,47 @@ header .btn-priority-hi {
         width: calc(100% - 37rem);
         box-shadow: 0 1px 4px -1px rgba(0, 0, 0, 0.3);
     }
-    .control-button-wrap {
-        background-color: #97421b;
-        border-radius: 100%;
-        border: 0;
-        height: 3rem;
-        width: 3rem;
-        cursor: pointer;
-    }
+.button-timeline {
+  width: 3rem;
+  height: 3rem;
+  background: #97421b;
+  border: 1px solid transparent;
+  border-radius: 100%;
+  padding: 0;
+  cursor: pointer;
+}
+.button-timeline:focus {
+  outline: 0;
+  border: 1px solid #3399ff;
+  box-shadow: 0 0 3px 3px rgba(51, 153, 255, 0.5);
+/* offset-x | offset-y | blur-radius | spread-radius | color */
+}
+.button-timeline:hover {
+    background-color: #82320d;
+    /* offset-x | offset-y | blur-radius | color*/ 
+    box-shadow: 0 2px 1px -1px rgba(0,0,0,0.2), 0 1px 1px 0 rgba(0,0,0,0.141), 0 1px 3px 0 rgba(0,0,0,0.122);
+}
+}
+.button-timeline::before {
+  content: '';
+  display: block;
+box-sizing: border-box;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-style: solid;
+  border-width: 0.8rem 0 0.8rem 1.6rem;
+  border-color: transparent transparent transparent #fff;
+  transition: 10ms all linear;
+  position: relative;
+  top: 0;
+  left: 0.75rem;
+}
+.button-timeline.pause::before {
+  border-style: double;
+  border-width: 0 0 0 1rem;
+  border-color: #fff;
+ left: 0.925rem;
+}
     .layer-actions {
         width: 31.5rem;
     }
