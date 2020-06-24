@@ -2,6 +2,9 @@ define(['jquery', 'selectWidget'], function($, select) {
     const LayerVue = {
         props: ['value'],
         template: '#layer-template',
+        components: {
+            'select-widget': select.SelectWidget
+        },
         data: function() {
             return {
                 layer: {
@@ -34,9 +37,6 @@ define(['jquery', 'selectWidget'], function($, select) {
             };
         },
         computed: {
-            displayCriteria: function() {
-                return '';
-            },
             pluralizeTerm: function() {
                 if (this.total === 1) {
                     return 'copy';
@@ -44,11 +44,29 @@ define(['jquery', 'selectWidget'], function($, select) {
                     return 'copies';
                 }
             },
+            workTitle: function() {
+                return this.$refs.work.selected();
+            }
         },
         components: {
             'select-widget': select.SelectWidget
+            }
         },
         methods: {
+            criteriaExists: function() {
+                const exclude = ['id', 'visible', 'title'];
+                const rv = Object.keys(this.layer).reduce((prev, key) => {
+                    let value = false;
+                    if (['censored', 'expurgated'].includes(key)) {
+                        value = this.layer[key] !== 'notapp';
+                    } else if (!exclude.includes(key)) {
+                        value = this.layer[key];
+                    }
+                    return Boolean(prev || value);
+                }, false);
+                console.log('criteriaExists: ' + rc);
+                return rv;
+            },
             displayRangeStatus: function(lbl, prefix) {
                 const start = parseInt(this.layer[lbl + 'Start'], 10);
                 const end = parseInt(this.layer[lbl + 'End'], 10);
@@ -217,8 +235,6 @@ define(['jquery', 'selectWidget'], function($, select) {
             this.searchUrl = Footprints.baseUrl + 'search/book/';
             this.dateMin = 1000;
             this.dateMax = 9999;
-
-            // @todo - how is this handled when the list updates the model?
 
             this.layer = $.extend(true, this.layer, this.value);
             this.$watch('layer.work', this.workChanged);

@@ -13,8 +13,40 @@
         <div class="pane-content-container" id="style-3">
             <section id="bookTotal" aria-labelledby="region1"
                 :class="[{'invalid-bookTotal': total === 0}]">
-                <h2 id="region1" class="sr-only">Contextual description of this layer's criteria set</h2>
-                {{displayCriteria}}
+                <div v-if="criteriaExists">
+                    <h2 id="region1" class="sr-only">Contextual description of this layer's criteria set</h2>
+
+                     Searching for book copies
+                        <span v-if="layer.work">
+                            {{workTitle}}
+                        </span>
+                        <span v-if="layer.imprint">
+                        </span>
+                        <span v-if="layer.imprintLocation">
+                        </span>
+                        <span v-if="layer.footprintLocation">
+                        </span>
+                        <span v-if="layer.actor">
+                        </span>
+                        <span v-if="validPubRange">
+                            {{displayPubRangeStatus()}}
+                        </span>
+                        <span v-if="validFootprintRange">
+                            {{displayFootprintRangeStatus()}}
+                        </span>
+                        <span v-if="layer.censored === 'yes'">
+                            censored
+                        </span>
+                        <span v-if="layer.censored === 'no'">
+                            not censored
+                        </span>
+                        <span v-if="layer.expurgated === 'yes'">
+                            expurgated
+                        </span>
+                        <span v-if="layer.expurgated === 'no'">
+                            not expurgated
+                        </span>
+                </div>
                 <div class="d-flex" v-if="total !== null">
                     <div>Book {{pluralizeTerm}}: {{total}}</div>
                     <div class="ml-auto text-danger" id="bookTotal-alert" v-if="total == 0">
@@ -28,7 +60,7 @@
                 <div class="form-group row">
                     <label for="criteriaLiteraryWork" class="col-4 col-form-label">Literary work:</label>
                     <div class="col-8 listdown-selection">
-                        <select-widget v-model="layer.work" id="criteriaLiteraryWork" 
+                        <select-widget ref="work" v-model="layer.work" id="criteriaLiteraryWork" 
                             :criteria="layer" data-url="api/writtenwork/"
                             v-bind:minimum-input="0">
                         </select-widget>
@@ -37,7 +69,7 @@
                 <div class="form-group mb-0 row">
                     <label for="criteriaImprint" class="col-4 col-form-label">Imprint:</label>
                     <div class="col-8 listdown-selection">
-                        <select-widget v-model="layer.imprint" id="criteriaImprint"
+                        <select-widget ref="imprint" v-model="layer.imprint" id="criteriaImprint"
                             :disabled="!layer.work" v-bind:minimum-input="0"
                             :criteria="layer" data-url="api/imprint/">
                         </select-widget>
@@ -50,7 +82,7 @@
                 <div class="form-group row">
                     <label for="criteriaImprintLoc" class="col-4 col-form-label">Imprint:</label>
                     <div class="col-8 listdown-selection">
-                        <select-widget v-model="layer.imprintLocation" id="criteriaImprintLoc"
+                        <select-widget ref="imprintLoc" v-model="layer.imprintLocation" id="criteriaImprintLoc"
                             name="imprint-location" :criteria="layer" v-bind:minimum-input="0"
                             data-url="api/place/" search-for="imprint">
                         </select-widget>
@@ -59,7 +91,7 @@
                 <div class="form-group mb-0 row">
                     <label for="criteriaFootprintLoc" class="col-4 col-form-label">Footprint:</label>
                     <div class="col-8 listdown-selection">
-                        <select-widget v-model="layer.footprintLocation" id="criteriaFootprintLoc"
+                        <select-widget ref="footprintLoc" v-model="layer.footprintLocation" id="criteriaFootprintLoc"
                             name="footprint-location" :criteria="layer" v-bind:minimum-input="0"
                             data-url="api/place/" search-for="footprint">
                         </select-widget>
@@ -141,7 +173,7 @@
                 <div class="form-group mb-0 row">
                     <label for="criteriaPerson" class="col-4 col-form-label">Person:</label>
                     <div class="col-8 listdown-selection">
-                        <select-widget v-model="layer.actor"
+                        <select-widget ref="actor" v-model="layer.actor"
                             name="actor" id="criteriaActor" v-bind:minimum-input="0"
                             :criteria="layer" data-url="api/actor/">
                         </select-widget>

@@ -12,6 +12,9 @@ define(['jquery', 'select2'], function($, select2) {
                 ctx.searchFor = this.searchFor;
                 return ctx;
             },
+            selected: function() {
+                return $(this.$el).select2('data')[0].title;
+            },
             url: function() {
                 return Footprints.baseUrl + this.dataUrl;
             }
