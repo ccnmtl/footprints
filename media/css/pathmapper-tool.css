@@ -847,6 +847,9 @@ header .btn-priority-hi {
 
 /* Medium devices (tablets, 768px and up) */
 @media (min-width: 768px) {
+    .widget-timeline {
+        display: none;
+    }
 }
 
 /* Large devices (desktops, 992px and up) */
@@ -894,16 +897,25 @@ header .btn-priority-hi {
         margin: 0 !important;
     }
     .widget-timeline {
+        display: block;
         position: absolute;
         bottom: 1.5rem;
         right: 4rem;
         border-radius: 0;
         margin: 0;
-        padding: 0;
+        padding: 1rem;
         background-color: #fff;
         height: 8.8rem;
         width: calc(100% - 37rem);
         box-shadow: 0 1px 4px -1px rgba(0, 0, 0, 0.3);
+    }
+    .control-button-wrap {
+        background-color: #97421b;
+        border-radius: 100%;
+        border: 0;
+        height: 3rem;
+        width: 3rem;
+        cursor: pointer;
     }
     .layer-actions {
         width: 31.5rem;
