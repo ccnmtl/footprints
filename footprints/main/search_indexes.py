@@ -188,6 +188,8 @@ class BookCopyIndex(CelerySearchIndex, Indexable):
 
     imprint_location = MultiValueField(faceted=True)
     imprint_location_title = MultiValueField(faceted=True)
+
+    pub_year = CharField(faceted=True)
     pub_start_date = DateTimeField()
     pub_end_date = DateTimeField()
 
@@ -213,6 +215,11 @@ class BookCopyIndex(CelerySearchIndex, Indexable):
 
     def prepare_footprint_start_date(self, obj):
         return obj.footprints_start_date()
+
+    def prepare_pub_year(self, obj):
+        dt = obj.imprint.sort_date()
+        if dt:
+            return dt.year
 
     def prepare_pub_end_date(self, obj):
         return obj.imprint.end_date()
@@ -290,6 +297,8 @@ class FootprintIndex(CelerySearchIndex, Indexable):
 
     footprint_location = MultiValueField(faceted=True)
     footprint_location_title = MultiValueField(faceted=True)
+
+    footprint_year = CharField(faceted=True)
     footprint_start_date = DateTimeField()
     footprint_end_date = DateTimeField()
 
@@ -327,6 +336,11 @@ class FootprintIndex(CelerySearchIndex, Indexable):
 
     def prepare_fdate(self, obj):
         return obj.sort_date()
+
+    def prepare_footprint_year(self, obj):
+        dt = obj.sort_date()
+        if dt:
+            return dt.year
 
     def prepare_footprint_end_date(self, obj):
         return obj.end_date()

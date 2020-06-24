@@ -7,11 +7,14 @@ from json import loads
 import re
 
 from django.views.generic.base import TemplateView, View
+from rest_framework import viewsets
 from rest_framework.generics import ListAPIView
+from rest_framework.response import Response
 
 from footprints.main.models import Footprint, BookCopy
 from footprints.main.serializers import (
-    PathmapperRouteSerializer, PathmapperTableRowSerializer)
+    PathmapperRouteSerializer, PathmapperTableRowSerializer,
+    PathmapperEventSerializer)
 from footprints.mixins import JSONResponseMixin
 from footprints.pathmapper.forms import BookCopySearchForm, \
     BookCopyFootprintsForm
@@ -118,7 +121,6 @@ class BookCopySearchView(JSONResponseMixin, View):
 
 
 class PathmapperRouteView(ListAPIView):
-
     model = BookCopy
     serializer_class = PathmapperRouteSerializer
     authentication_classes = []
@@ -163,6 +165,52 @@ class PathmapperTableView(ListAPIView):
         form = BookCopyFootprintsForm()
         sqs = form.search(ids)
         return sqs.order_by('wtitle', 'pub_start_date', 'book_copy_id')
+
+    def post(self, request, *args, **kwargs):
+        return self.get(request, *args, **kwargs)
+
+
+class PathmapperEventViewSet(viewsets.ViewSet):
+    serializer_class = PathmapperEventSerializer
+    authentication_classes = []
+    permission_classes = []
+    page_size = 15
+
+    def get_book_copies(self, layer):
+        form = BookCopySearchForm(layer)
+        if form.is_valid():
+            sqs = form.search()
+            return sqs
+
+    def map_events(self, counts):
+        for key, value in counts:
+            key = int(key)
+            if value > 0 and key > 1000 and key < self.current_year:
+                year = '{}-01-01'.format(key)
+                self.events.setdefault(key, {'year': year, 'count': 0})
+                self.events[key]['count'] += value
+
+    def get_events(self):
+        ids = []
+        layers = loads(self.request.POST.get('layers'))
+        for layer in layers:
+            sqs = self.get_book_copies(layer)
+            counts = sqs.facet('pub_year').facet_counts()
+            self.map_events(counts['fields']['pub_year'])
+            ids += sqs.values_list('object_id', flat=True)
+
+        form = BookCopyFootprintsForm()
+        sqs = form.search(ids)
+        counts = sqs.facet('footprint_year').facet_counts()
+        self.map_events(counts['fields']['footprint_year'])
+        return self.events.values()
+
+    def list(self, request):
+        self.events = {}
+        self.current_year = int(datetime.now().year)
+        serializer = PathmapperEventSerializer(
+            instance=self.get_events(), many=True)
+        return Response(serializer.data)
 
     def post(self, request, *args, **kwargs):
         return self.get(request, *args, **kwargs)

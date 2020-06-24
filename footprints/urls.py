@@ -29,7 +29,7 @@ from footprints.main.viewsets import (
     AlternatePlaceNameViewSet)
 from footprints.pathmapper.views import (
     PathmapperView, BookCopySearchView, PathmapperTableView,
-    PathmapperRouteView)
+    PathmapperRouteView, PathmapperEventViewSet)
 
 
 admin.autodiscover()
@@ -53,7 +53,9 @@ router.register(r'language', LanguageViewSet)
 router.register(r'person', PersonViewSet)
 router.register(r'place', PlaceViewSet, basename='place')
 router.register(r'role', RoleViewSet)
-router.register(r'writtenwork', WrittenWorkViewSet, basename='writtenwork')
+router.register(r'writtenwork', WrittenWorkViewSet, basename='writtenwork'),
+router.register(r'events', PathmapperEventViewSet, basename='event')
+urlpatterns = router.urls
 
 
 urlpatterns = [

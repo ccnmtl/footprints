@@ -42,7 +42,9 @@
                         target="_blank" rel="noopener noreferrer">
                             {{item.bookcopy.imprint.title}}</a>
                     </span>
-                    <span v-if="item.bookcopy.imprint.place"> in {{item.bookcopy.imprint.place.display_title}}</span>.
+                    <span v-if="item.bookcopy.imprint.place">
+                        in {{item.bookcopy.imprint.place.display_title}}
+                    </span>.
                 </div>
                 <div>
                     Literary Work:
@@ -59,7 +61,9 @@
                             {{item.bookcopy.imprint.title}}
                         </span>
                         {{item.bookcopy.imprint.display_date}}
-                        <span v-if="item.bookcopy.imprint.place">, {{item.bookcopy.imprint.place.display_title}}</span>
+                        <span v-if="item.bookcopy.imprint.place">
+                            , {{item.bookcopy.imprint.place.display_title}}
+                        </span>
                     </a>
                 </div>
             </section>
