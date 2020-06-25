@@ -23,7 +23,8 @@ module.exports = {
         "Footprints": true,
         "requirejs": true,
         "Promise": true,
-        "MarkerClusterer": true
+        "MarkerClusterer": true,
+        "Highcharts": true
     },
     "rules": {
         "indent": [

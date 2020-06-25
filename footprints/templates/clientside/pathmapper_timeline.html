@@ -1,8 +1,15 @@
 {% verbatim %}
 <script type="text/x-template" id="pathmapper-timeline-template">
 <div class="widget-timeline">
-    <div class="control-button-wrap">
-        <button class="button-timeline" name="play" v-on:click="playTimeline"></button>
+    <div class="row">
+        <div class="col-1">
+            <div class="control-button-wrap">
+                <button class="button-timeline" name="play" v-on:click="playTimeline"></button>
+            </div>
+        </div>
+        <div class="col">
+            <div id="heatmap"></div>
+        </div>
     </div>
 </div>
 </script>
