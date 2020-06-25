@@ -1,3 +1,4 @@
+from datetime import datetime
 from json import loads
 
 from django.test.client import RequestFactory
@@ -8,7 +9,7 @@ from footprints.main.models import CanonicalPlace
 from footprints.main.tests.factories import PlaceFactory
 from footprints.main.viewsets import PlaceViewSet
 from footprints.pathmapper.forms import PlaceSearchForm
-from footprints.pathmapper.views import PathmapperView
+from footprints.pathmapper.views import PathmapperView, PathmapperEventViewSet
 
 
 class PathmapperViewTest(TestCase):
@@ -123,3 +124,54 @@ class PlaceViewSetTest(TestCase):
         results = vs.filter_places(form, qs)
         self.assertEqual(results.count(), 1)
         self.assertEqual(results.get(id=cp2.id), cp2)
+
+
+class PathmapperEventViewSetTest(TestCase):
+
+    def test_get_book_copies_invalid(self):
+        layer = {
+            'work': None,
+            'imprint': None,
+            'imprintLocation': None,
+            'footprintLocation': None,
+            'footprintStart': '2000',
+            'footprintEnd': '1970',
+            'footprintRange': True,
+            'pubRange': 'false',
+            'pubStart': None,
+            'pubEnd': None
+        }
+
+        viewset = PathmapperEventViewSet()
+        self.assertIsNone(viewset.get_book_copies(layer))
+
+    def test_get_book_copies_valid(self):
+        layer = {
+            'work': None,
+            'imprint': None,
+            'imprintLocation': None,
+            'footprintLocation': None,
+            'footprintStart': '',
+            'footprintEnd': '',
+            'footprintRange': False,
+            'pubRange': 'false',
+            'pubStart': None,
+            'pubEnd': None
+        }
+
+        viewset = PathmapperEventViewSet()
+        sqs = viewset.get_book_copies(layer)
+        self.assertEquals(sqs.count(), 0)
+
+    def test_map_events(self):
+        events = {}
+        current_year = int(datetime.now().year)
+        counts = [('1950', 1), ('1950', 2), ('1970', 0),
+                  ('1', 15), ('2100', 17)]
+        viewset = PathmapperEventViewSet()
+        viewset.map_events(counts, current_year, events)
+
+        self.assertEquals(events[1950], {'year': '1950-01-01', 'count': 3})
+        self.assertFalse('1970' in events)
+        self.assertFalse('1' in events)
+        self.assertFalse('2100' in events)

@@ -75,22 +75,23 @@ define(['jquery', 'utils'], function($, utils) {
                 },
                 colorAxis: {
                     min: 0,
-                    minColor: '#FFFFFF',
-                    maxColor: '#FF0000'
+                    minColor: '#edb69c',
+                    maxColor: '#56260f',
+                    visible: false
                 },
                 series: [{
                     nullColor: '#EFEFEF',
                     colsize: 365 * 24 * 36e5, // one day
                     tooltip: {
-                        headerFormat: 'Events ',
-                        pointFormat: '{point.x:%Y} <b>{point.value}</b>'
+                        headerFormat: '<b>Events in ',
+                        pointFormat: '{point.x:%Y}:</b> {point.value}'
                     },
                     data: []
                 }]
             };
         },
         mounted: function() {
-            this.chart = Highcharts.chart('the-timeline', this.options);
+            this.chart = Highcharts.chart('heatmap', this.options);
         }
     };
     return {

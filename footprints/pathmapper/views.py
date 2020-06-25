@@ -182,32 +182,32 @@ class PathmapperEventViewSet(viewsets.ViewSet):
             sqs = form.search()
             return sqs
 
-    def map_events(self, counts):
+    def map_events(self, counts, current_year, events):
         for key, value in counts:
             key = int(key)
-            if value > 0 and key > 1000 and key < self.current_year:
+            if value > 0 and key > 1000 and key < current_year:
                 year = '{}-01-01'.format(key)
-                self.events.setdefault(key, {'year': year, 'count': 0})
-                self.events[key]['count'] += value
+                events.setdefault(key, {'year': year, 'count': 0})
+                events[key]['count'] += value
 
     def get_events(self):
+        events = {}
+        cur_year = int(datetime.now().year)
         ids = []
         layers = loads(self.request.POST.get('layers'))
         for layer in layers:
             sqs = self.get_book_copies(layer)
             counts = sqs.facet('pub_year').facet_counts()
-            self.map_events(counts['fields']['pub_year'])
+            self.map_events(counts['fields']['pub_year'], cur_year, events)
             ids += sqs.values_list('object_id', flat=True)
 
         form = BookCopyFootprintsForm()
         sqs = form.search(ids)
         counts = sqs.facet('footprint_year').facet_counts()
-        self.map_events(counts['fields']['footprint_year'])
-        return self.events.values()
+        self.map_events(counts['fields']['footprint_year'], cur_year, events)
+        return events.values()
 
     def list(self, request):
-        self.events = {}
-        self.current_year = int(datetime.now().year)
         serializer = PathmapperEventSerializer(
             instance=self.get_events(), many=True)
         return Response(serializer.data)
