@@ -10,6 +10,15 @@ define(['jquery', 'utils'], function($, utils) {
                 terminal: 0
             };
         },
+        computed: {
+            pluralizeTerm: function() {
+                if (this.items.length === 1) {
+                    return 'copy';
+                } else {
+                    return 'copies';
+                }
+            },
+        },
         methods: {
             clearLocation: function() {
                 this.$emit('clearlocation', null);
