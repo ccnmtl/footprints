@@ -37,6 +37,13 @@ define(['jquery', 'selectWidget'], function($, select) {
             displayCriteria: function() {
                 return '';
             },
+            pluralizeTerm: function() {
+                if (this.total == 1) {
+                    return 'copy';
+                } else {
+                    return 'copies';
+                }
+            },
         },
         components: {
             'select-widget': select.SelectWidget
@@ -54,12 +61,12 @@ define(['jquery', 'selectWidget'], function($, select) {
 
                 if (range) {
                     if (start && !end) {
-                        return prefix + 'from ' + start + ' to present';
+                        return prefix + 'from ' + start + ' to present.';
                     }
 
                     if (end < this.minYear || end > this.maxYear) {
                         return 'The end year must be between ' +
-                            this.minYear + ' - ' + this.maxYear;
+                            this.minYear + ' - ' + this.maxYear + '.';
                     }
 
                     if (start > end) {
@@ -67,14 +74,14 @@ define(['jquery', 'selectWidget'], function($, select) {
                     }
 
                     if (start && end) {
-                        return prefix + 'from ' + start + ' to ' + end;
+                        return prefix + 'from ' + start + ' to ' + end + '.';
                     }
 
                     if (!start && end) {
-                        return prefix + 'up to ' + end;
+                        return prefix + 'up to ' + end + '.';
                     }
                 } else if (start) {
-                    return prefix + 'in the year ' + start;
+                    return prefix + 'in the year ' + start + '.';
                 }
                 return '';
             },

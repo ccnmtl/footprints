@@ -16,7 +16,7 @@
                 <h2 id="region1" class="sr-only">Contextual description of this layer's criteria set</h2>
                 {{displayCriteria}}
                 <div class="d-flex" v-if="total !== null">
-                    <div>Book Copies: {{total}}</div>
+                    <div>Book {{pluralizeTerm}}: {{total}}</div>
                     <div class="ml-auto text-danger" id="bookTotal-alert" v-if="total == 0">
                     No results found for this search
                     </div>
