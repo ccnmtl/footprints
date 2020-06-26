@@ -38,7 +38,7 @@ define(['jquery', 'selectWidget'], function($, select) {
                 return '';
             },
             pluralizeTerm: function() {
-                if (this.total == 1) {
+                if (this.total === 1) {
                     return 'copy';
                 } else {
                     return 'copies';

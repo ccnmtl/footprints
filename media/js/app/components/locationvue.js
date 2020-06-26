@@ -12,7 +12,7 @@ define(['jquery', 'utils'], function($, utils) {
         },
         computed: {
             pluralizeTerm: function() {
-                if (this.items.length == 1) {
+                if (this.items.length === 1) {
                     return 'copy';
                 } else {
                     return 'copies';
