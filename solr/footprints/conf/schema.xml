@@ -220,6 +220,14 @@
     <field name="book_copy_id" type="text_en" indexed="true" stored="true" multiValued="false" />
 
     <field name="book_copy_identifier" type="text_en" indexed="true" stored="true" multiValued="false" />
+
+    <field name="pub_year" type="text_en" indexed="true" stored="true" multiValued="false" />
+
+    <field name="pub_year_exact" type="string" indexed="true" stored="true" multiValued="false" />
+
+    <field name="footprint_year" type="text_en" indexed="true" stored="true" multiValued="false" />
+
+    <field name="footprint_year_exact" type="string" indexed="true" stored="true" multiValued="false" />
   </fields>
 
   <!-- field to use to determine and enforce document uniqueness. -->
