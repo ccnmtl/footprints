@@ -41,14 +41,7 @@ define(maplibs, function($, layermap, utils) {
                     title: placeTitle,
                 });
                 marker.addListener('click', () => {
-                    const clicked = this.places[placeId];
-                    this.$emit('input', clicked);
-                    if (this.activePlace) {
-                        // reset icon back to the variable circle
-                        this.adjustIcon(this.activePlace);
-                    }
-                    clicked.marker.setIcon(this.activeIcon);
-                    this.activePlace = clicked;
+                    this.$emit('input', this.places[placeId]);
                 });
                 return marker;
             },
@@ -109,6 +102,16 @@ define(maplibs, function($, layermap, utils) {
                         delete this.places[key];
                     }
                 }
+            },
+            valueChanged: function() {
+                if (this.activePlace) {
+                    // reset icon back to the variable circle
+                    this.adjustIcon(this.activePlace);
+                }
+                if (this.value) {
+                    this.value.marker.setIcon(this.activeIcon);
+                }
+                this.activePlace = this.value;
             }
         },
         created: function() {
@@ -142,6 +145,8 @@ define(maplibs, function($, layermap, utils) {
             });
             this.map.mapTypes.set('styled_map', utils.lightGrayStyle);
             this.map.setMapTypeId('styled_map');
+
+            this.$watch('value', this.valueChanged);
         }
     };
     return {
