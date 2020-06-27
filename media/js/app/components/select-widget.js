@@ -13,7 +13,10 @@ define(['jquery', 'select2'], function($, select2) {
                 return ctx;
             },
             selected: function() {
-                return $(this.$el).select2('data')[0].title;
+                if ($(this.$el).select2('data').length) {
+                    return $(this.$el).select2('data')[0].text;
+                }
+                return '';
             },
             url: function() {
                 return Footprints.baseUrl + this.dataUrl;

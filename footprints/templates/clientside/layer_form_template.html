@@ -13,45 +13,15 @@
         <div class="pane-content-container" id="style-3">
             <section id="bookTotal" aria-labelledby="region1"
                 :class="[{'invalid-bookTotal': total === 0}]">
-                <div v-if="criteriaExists">
-                    <h2 id="region1" class="sr-only">Contextual description of this layer's criteria set</h2>
-
-                     Searching for book copies
-                        <span v-if="layer.work">
-                            {{workTitle}}
-                        </span>
-                        <span v-if="layer.imprint">
-                        </span>
-                        <span v-if="layer.imprintLocation">
-                        </span>
-                        <span v-if="layer.footprintLocation">
-                        </span>
-                        <span v-if="layer.actor">
-                        </span>
-                        <span v-if="validPubRange">
-                            {{displayPubRangeStatus()}}
-                        </span>
-                        <span v-if="validFootprintRange">
-                            {{displayFootprintRangeStatus()}}
-                        </span>
-                        <span v-if="layer.censored === 'yes'">
-                            censored
-                        </span>
-                        <span v-if="layer.censored === 'no'">
-                            not censored
-                        </span>
-                        <span v-if="layer.expurgated === 'yes'">
-                            expurgated
-                        </span>
-                        <span v-if="layer.expurgated === 'no'">
-                            not expurgated
-                        </span>
-                </div>
                 <div class="d-flex" v-if="total !== null">
                     <div>Book {{pluralizeTerm}}: {{total}}</div>
                     <div class="ml-auto text-danger" id="bookTotal-alert" v-if="total == 0">
                     No results found for this search
                     </div>
+                </div>
+                <div>
+                    <h2 id="region1" class="sr-only">Contextual description of this layer's criteria set</h2>
+                    {{layer.narrative}}
                 </div>
             </section><!-- /contextual description -->
 

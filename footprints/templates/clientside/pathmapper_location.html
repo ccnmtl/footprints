@@ -8,8 +8,8 @@
             <a class="btn btn-priority-hi btn-close-pane"
             href="#" title="Close the location view" v-on:click="clearLocation">Back to layers</a>
         </header>
-        <div class="pane-content-container p-2" id="style-3">
-            <h2 class="location-title" v-if="value">
+        <div class="pane-content-container p-2" id="style-3" v-if="value">
+            <h2 class="location-title">
                 {{value.title}}
             </h2>
             <div class="location-summary">

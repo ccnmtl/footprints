@@ -24,7 +24,8 @@ define(['jquery', 'selectWidget'], function($, select) {
                     'footprintRange': false,
                     'censored': 'notapp',
                     'expurgated': 'notapp',
-                    'visible': true
+                    'visible': true,
+                    'narrative': ''
                 },
                 total: null,
                 totalMax: null,
@@ -43,29 +44,64 @@ define(['jquery', 'selectWidget'], function($, select) {
                 } else {
                     return 'copies';
                 }
-            },
-            workTitle: function() {
-                return this.$refs.work.selected();
-            }
-        },
-        components: {
-            'select-widget': select.SelectWidget
             }
         },
         methods: {
-            criteriaExists: function() {
-                const exclude = ['id', 'visible', 'title'];
-                const rv = Object.keys(this.layer).reduce((prev, key) => {
-                    let value = false;
-                    if (['censored', 'expurgated'].includes(key)) {
-                        value = this.layer[key] !== 'notapp';
-                    } else if (!exclude.includes(key)) {
-                        value = this.layer[key];
+            updateNarrative: function() {
+                let s = '';
+                if (this.$refs.imprint.selected()) {
+                    s += ' from ' + this.$refs.imprint.selected();
+                } else if (this.$refs.work.selected()) {
+                    s += ' from ' + this.$refs.work.selected();
+                }
+
+                // Imprint criteria
+                const imprintLoc = this.$refs.imprintLoc.selected();
+                let pubDate = this.displayPubRangeStatus().toLowerCase();
+                if (imprintLoc && pubDate) {
+                    s += ' ' + pubDate + ' in ' + imprintLoc;
+                } else if (imprintLoc) {
+                    s += ' published in ' + imprintLoc;
+                } else if (pubDate) {
+                    s += ' ' + pubDate;
+                }
+
+                // Footprint criteria
+                const ftLoc = this.$refs.footprintLoc.selected();
+                const ftDate = this.displayFootprintRangeStatus().toLowerCase();
+                if (ftLoc && ftDate) {
+                    s += ' with footprints that ' + ftDate + ' in ' + ftLoc;
+                } else if (ftLoc) {
+                    s += ' with footprints in ' + ftLoc;
+                } else if (ftDate) {
+                    s += ' with footprints that ' + ftDate;
+                }
+
+                if (this.$refs.actor.selected()) {
+                    s += ' associated with ' + this.$refs.actor.selected();
+                }
+
+                if (this.layer.censored !== 'notapp' ||
+                        this.layer.expurgated !== 'notapp') {
+                    s += ' that were ';
+                }
+                if (this.layer.censored !== 'notapp') {
+                    if (this.layer.censored === 'yes') {
+                        s += ' censored';
+                    } else if (this.layer.censored === 'no') {
+                        s += ' not censored';
                     }
-                    return Boolean(prev || value);
-                }, false);
-                console.log('criteriaExists: ' + rc);
-                return rv;
+                    if (this.layer.expurgated !== 'notapp') {
+                        s += ' and ';
+                    }
+                }
+                if (this.layer.expurgated === 'yes') {
+                    s += ' expurgated';
+                }
+                if (this.layer.expurgated === 'no') {
+                    s += ' not expurgated';
+                }
+                this.layer.narrative = 'Searching for book copies' + s + '.';
             },
             displayRangeStatus: function(lbl, prefix) {
                 const start = parseInt(this.layer[lbl + 'Start'], 10);
@@ -79,7 +115,7 @@ define(['jquery', 'selectWidget'], function($, select) {
 
                 if (range) {
                     if (start && !end) {
-                        return prefix + 'from ' + start + ' to present.';
+                        return prefix + 'from ' + start + ' to present';
                     }
 
                     if (end < this.minYear || end > this.maxYear) {
@@ -88,18 +124,18 @@ define(['jquery', 'selectWidget'], function($, select) {
                     }
 
                     if (start > end) {
-                        return 'The start year must be less than the end year.';
+                        return 'The start year must be less than the end year';
                     }
 
                     if (start && end) {
-                        return prefix + 'from ' + start + ' to ' + end + '.';
+                        return prefix + 'from ' + start + ' to ' + end;
                     }
 
                     if (!start && end) {
-                        return prefix + 'up to ' + end + '.';
+                        return prefix + 'up to ' + end;
                     }
                 } else if (start) {
-                    return prefix + 'in the year ' + start + '.';
+                    return prefix + 'in the year ' + start;
                 }
                 return '';
             },
@@ -138,13 +174,15 @@ define(['jquery', 'selectWidget'], function($, select) {
                 if (this.isSearching() || !this.isDirty()) {
                     return;
                 }
-
                 this.setIsSearching();
+
+                const data = {...this.layer};
+                delete data.narrative;
 
                 // retrieve book copies based on criteria
                 $.ajax({
                     url: this.searchUrl,
-                    data: this.layer,
+                    data: data,
                     type: 'post'
                 }).done((results) => {
                     this.state = JSON.stringify(this.layer);
@@ -250,6 +288,20 @@ define(['jquery', 'selectWidget'], function($, select) {
             this.$watch('layer.actor', this.search);
             this.$watch('layer.censored', this.search);
             this.$watch('layer.expurgated', this.search);
+
+            this.$watch('layer.work', this.updateNarrative);
+            this.$watch('layer.imprint', this.updateNarrative);
+            this.$watch('layer.imprintLocation', this.updateNarrative);
+            this.$watch('layer.footprintLocation', this.updateNarrative);
+            this.$watch('layer.footprintStart', this.updateNarrative);
+            this.$watch('layer.footprintEnd', this.updateNarrative);
+            this.$watch('layer.footprintRange', this.updateNarrative);
+            this.$watch('layer.pubStart', this.updateNarrative);
+            this.$watch('layer.pubEnd', this.updateNarrative);
+            this.$watch('layer.pubRange', this.updateNarrative);
+            this.$watch('layer.actor', this.updateNarrative);
+            this.$watch('layer.censored', this.updateNarrative);
+            this.$watch('layer.expurgated', this.updateNarrative);
         },
         mounted: function() {
             this.search();
