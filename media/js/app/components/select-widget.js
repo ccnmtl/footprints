@@ -12,6 +12,12 @@ define(['jquery', 'select2'], function($, select2) {
                 ctx.searchFor = this.searchFor;
                 return ctx;
             },
+            selected: function() {
+                if ($(this.$el).select2('data').length) {
+                    return $(this.$el).select2('data')[0].text;
+                }
+                return '';
+            },
             url: function() {
                 return Footprints.baseUrl + this.dataUrl;
             }

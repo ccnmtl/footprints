@@ -5,7 +5,10 @@ module.exports = {
         "jquery": true
     },
     "parserOptions": {
-        "ecmaVersion": 6
+        "ecmaVersion": 9,
+        "ecmaFeatures": {
+            "experimentalObjectRestSpread": true
+        }
     },
     "plugins": [
         "security",
