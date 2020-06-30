@@ -120,7 +120,7 @@ define(['jquery', 'selectWidget'], function($, select) {
 
                     if (end < this.minYear || end > this.maxYear) {
                         return 'The end year must be between ' +
-                            this.minYear + ' - ' + this.maxYear + '.';
+                            this.minYear + ' - ' + this.maxYear;
                     }
 
                     if (start > end) {
@@ -140,10 +140,10 @@ define(['jquery', 'selectWidget'], function($, select) {
                 return '';
             },
             displayFootprintRangeStatus: function() {
-                return this.displayRangeStatus('footprint', 'Occurred ');
+                return this.displayRangeStatus('footprint', 'occurred ');
             },
             displayPubRangeStatus: function() {
-                return this.displayRangeStatus('pub', 'Published ');
+                return this.displayRangeStatus('pub', 'published ');
             },
             pubRangeChanged: function() {
                 if (this.validPubRange()) {
