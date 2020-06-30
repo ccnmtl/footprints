@@ -802,6 +802,11 @@ header .btn-priority-hi {
     background-size: 1.5rem;
 }
 
+.invalid-year-field {
+    border-color: #dc3545;
+    background-color: #fbf3f4;
+}
+
 .invalid-form-field:focus {
     border-color: #dc3545;
     background-color: #fff;
@@ -830,6 +835,23 @@ header .btn-priority-hi {
     background-repeat: no-repeat !important;
     background-position: calc(100% - 0.5rem) center !important;
     background-size: 1.5rem !important;
+}
+
+.year-context-display {
+    display: block;
+    line-height: 100%;
+    margin: 0.25rem 0 0.25rem 0;
+    padding: 0;
+}
+
+.year-context-display span {
+    font-size: 0.8rem;
+    font-weight: 400;
+}
+
+.error-message {
+    font-style: italic;
+    color: #97421b;
 }
 
 #bookTotal-alert {
