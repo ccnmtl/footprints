@@ -1,10 +1,13 @@
 {% verbatim %}
 <script type="text/x-template" id="pathmapper-timeline-template">
-<div class="widget-timeline">
+<div id="widget-timeline" class="timeline-collapsed">
+    <button type="button" class="btn widget-timeline-close" aria-label="Close" v-on:click="closeTimeline">
+        <i class="fas fa-times" aria-hidden="true"></i>
+    </button>
     <div class="row">
         <div class="col-1">
             <div class="control-button-wrap">
-                <button class="button-timeline" name="play" v-on:click="playTimeline"></button>
+                <button class="btn-play-timeline" name="play" v-on:click="playTimeline"></button>
             </div>
         </div>
         <div class="col">
