@@ -53,9 +53,11 @@ define(listLibs, function($, form, loc, utils) {
                 if ($('#container-pane').hasClass('widget-pane-expanded')) {
                     $('#container-pane').removeClass('widget-pane-expanded');
                     $('#container-pane').addClass('widget-pane-collapsed');
+                    $('#widget-timeline').addClass('timeline-md');
                 } else {
                     $('#container-pane').addClass('widget-pane-expanded');
                     $('#container-pane').removeClass('widget-pane-collapsed');
+                    $('#widget-timeline').removeClass('timeline-md');
                 }
             },
             toggleTimeline: function() {
