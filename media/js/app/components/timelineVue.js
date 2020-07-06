@@ -8,11 +8,16 @@ define(['jquery', 'utils'], function($, utils) {
         },
         methods: {
             playTimeline: function() {
-                if ($('.button-timeline').hasClass('pause')) {
-                    $('.button-timeline').removeClass('pause');
+                if ($('.btn-play-timeline').hasClass('pause')) {
+                    $('.btn-play-timeline').removeClass('pause');
                 } else {
-                    $('.button-timeline').addClass('pause');
+                    $('.btn-play-timeline').addClass('pause');
                 }
+            },
+            closeTimeline: function() {
+                $('#widget-timeline').removeClass('timeline-expanded');
+                $('#widget-timeline').addClass('timeline-collapsed');
+                $('#timeline-launch').html('View Timeline');
             },
             updateLayers: function() {
                 // respect layer visibility

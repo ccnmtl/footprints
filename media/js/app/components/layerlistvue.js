@@ -57,6 +57,17 @@ define(listLibs, function($, form, loc, utils) {
                     $('#container-pane').addClass('widget-pane-expanded');
                     $('#container-pane').removeClass('widget-pane-collapsed');
                 }
+            },
+            toggleTimeline: function() {
+                if ($('#widget-timeline').hasClass('timeline-expanded')) {
+                    $('#widget-timeline').removeClass('timeline-expanded');
+                    $('#widget-timeline').addClass('timeline-collapsed');
+                    $('#timeline-launch').html('View Timeline');
+                } else {
+                    $('#widget-timeline').addClass('timeline-expanded');
+                    $('#widget-timeline').removeClass('timeline-collapsed');
+                    $('#timeline-launch').html('Close Timeline');
+                }
             }
         },
         created: function() {
