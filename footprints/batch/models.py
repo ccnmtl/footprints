@@ -17,6 +17,9 @@ class BatchJob(models.Model):
     def rows(self):
         return self.batchrow_set.all().order_by('id')
 
+    def __str__(self):
+        return str(self.id)
+
 
 class BatchRow(models.Model):
 
