@@ -59,7 +59,11 @@ define(['jquery', 'selectWidget'], function($, select) {
                 const imprintLoc = this.$refs.imprintLoc.selected();
                 let pubDate = this.displayPubRangeStatus().toLowerCase();
                 if (imprintLoc && pubDate) {
-                    s += ' ' + pubDate + ' in ' + imprintLoc;
+                    if (!this.validPubRange()) {
+                        s += ' published in ' + imprintLoc;
+                    } else {
+                        s += ' ' + pubDate + ' in ' + imprintLoc;
+                    }
                 } else if (imprintLoc) {
                     s += ' published in ' + imprintLoc;
                 } else if (pubDate) {
@@ -101,7 +105,7 @@ define(['jquery', 'selectWidget'], function($, select) {
                 if (this.layer.expurgated === 'no') {
                     s += ' not expurgated';
                 }
-                this.layer.narrative = 'Searching for book copies' + s + '.';
+                this.layer.narrative = s + '.';
             },
             displayRangeStatus: function(lbl, prefix) {
                 const start = parseInt(this.layer[lbl + 'Start'], 10);
