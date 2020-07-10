@@ -21,7 +21,17 @@
                 </div>
                 <div>
                     <h2 id="region1" class="sr-only">Contextual description of this layer's criteria set</h2>
-                    {{layer.narrative}}
+                    <span v-if="total !== totalMax">Searching for book copies {{layer.narrative}}</span>
+                    <p role="alert" class="criteria-context-display" v-if="!validPubRange()">
+                        <span class="error-message">
+                        The publication year criteria is invalid.
+                        </span>
+                    </p>
+                    <p role="alert" class="criteria-context-display" v-if="!validFootprintRange()">
+                        <span class="error-message">
+                        The footprint year criteria is invalid.
+                        </span>
+                    </p>
                 </div>
             </section><!-- /contextual description -->
 
@@ -97,7 +107,7 @@
                 </div>
                 <div class="form-group row mb-1" v-if="displayPubRangeStatus() || validResults()">
                     <div class="col-8 offset-4">
-                        <p role="alert" class="year-context-display" v-if="displayPubRangeStatus()">
+                        <p role="alert" class="criteria-context-display" v-if="displayPubRangeStatus()">
                             <span v-if="validPubRange()">
                             You’re looking for books copies {{displayPubRangeStatus()}}.
                             </span>
@@ -105,7 +115,7 @@
                             {{displayPubRangeStatus()}}.
                             </span>
                         </p>
-                        <p role="alert" class="year-context-display">
+                        <p role="alert" class="criteria-context-display">
                             <span v-if="validResults()">
                             Book copies found in this set were published between {{pubMin}} and {{pubMax}}.
                             </span>
@@ -131,7 +141,7 @@
                 </div>
                 <div class="form-group row mb-1" v-if="displayFootprintRangeStatus() || validResults()">
                     <div class="col-8 offset-4">
-                        <p role="alert" class="year-context-display" v-if="displayFootprintRangeStatus()">
+                        <p role="alert" class="criteria-context-display" v-if="displayFootprintRangeStatus()">
                             <span v-if="validFootprintRange()">
                             You’re looking for books copies with footprints that {{displayFootprintRangeStatus()}}.
                             </span>
@@ -139,7 +149,7 @@
                             {{displayFootprintRangeStatus()}}.
                             </span>
                         </p>
-                        <p role="alert" class="year-context-display">
+                        <p role="alert" class="criteria-context-display">
                             <span v-if="validResults()">
                             Book copies found in this set have footprints occurring between {{footprintMin}} and {{footprintMax}}.
                             </span>
