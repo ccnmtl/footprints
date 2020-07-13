@@ -15,9 +15,13 @@ define(maplibs, function($, layermap, utils) {
             'layer-map': layermap.LayerMapVue
         },
         methods: {
+            orderOfMagnitude: function(n) {
+                const x = Math.floor(Math.log(n) / Math.LN10);
+                // smallest marker is of 3 radius
+                return Math.pow(3, x + 1);
+            },
             adjustIcon: function(place) {
-                const pct = (place.refs / this.events) * 75;
-                const r = Math.max(3, pct);
+                const r = this.orderOfMagnitude(place.refs);
                 const d = r * 2;
                 let path =
                     `M-${r},0a${r},${r} 0 1,0 ${r*2},0a${r},${r} 0 1,0 -${d},0`;
@@ -61,7 +65,6 @@ define(maplibs, function($, layermap, utils) {
                 this.places[placeId].points.push(params.point);
             },
             updateLayer: function(layer) {
-                this.events = 0;
                 // eslint-disable-next-line no-unused-vars
                 for (let [key, place] of Object.entries(this.places)) {
                     place.refs = 0;
@@ -73,7 +76,6 @@ define(maplibs, function($, layermap, utils) {
                             place.refs++;
                         }
                     }
-                    this.events += place.refs;
                     if (place.refs > 0) {
                         place.marker.setMap(this.map);
                     } else {
@@ -125,7 +127,6 @@ define(maplibs, function($, layermap, utils) {
                     'img/pathmapper-selected-location.svg',
                 scaledSize: new google.maps.Size(26, 35)
             };
-            this.events = 0;
         },
         mounted: function() {
             let elt = document.getElementById(this.mapName);
