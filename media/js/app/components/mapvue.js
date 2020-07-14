@@ -18,7 +18,7 @@ define(maplibs, function($, layermap, utils) {
             orderOfMagnitude: function(n) {
                 const x = Math.floor(Math.log(n) / Math.LN10);
                 // smallest marker is of 3 radius
-                return Math.pow(3, x + 1);
+                return Math.pow(4, x + 1);
             },
             adjustIcon: function(place) {
                 const r = this.orderOfMagnitude(place.refs);
@@ -30,7 +30,7 @@ define(maplibs, function($, layermap, utils) {
                     strokeOpacity: 1,
                     strokeWeight: 1,
                     fillColor: '#cb8d78',
-                    fillOpacity: .4,
+                    fillOpacity: .5,
                     anchor: new google.maps.Point(0,0),
                     scale: 1,
                     path: path
