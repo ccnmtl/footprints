@@ -21,7 +21,7 @@
                 </div>
                 <div>
                     <h2 id="region1" class="sr-only">Contextual description of this layer's criteria set</h2>
-                    <span v-if="total !== totalMax">Searching for book copies {{layer.narrative}}</span>
+                    <span v-if="layer.narrative">Searching for book copies {{layer.narrative}}.</span>
                     <p role="alert" class="criteria-context-display" v-if="!validPubRange()">
                         <span class="error-message">
                         The publication year criteria is invalid.
