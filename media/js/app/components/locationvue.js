@@ -30,6 +30,9 @@ define(['jquery', 'utils'], function($, utils) {
                 this.items = [];
             },
             updateLocation: function() {
+                if (!this.value) {
+                    return;
+                }
                 this.clearStats();
                 for (let pt of this.value.points) {
                     if (pt.layer.visible) {
