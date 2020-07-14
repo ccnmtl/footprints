@@ -105,7 +105,7 @@ define(['jquery', 'selectWidget'], function($, select) {
                 if (this.layer.expurgated === 'no') {
                     s += ' not expurgated';
                 }
-                this.layer.narrative = s + '.';
+                this.layer.narrative = s;
             },
             displayRangeStatus: function(lbl, prefix) {
                 const start = parseInt(this.layer[lbl + 'Start'], 10);

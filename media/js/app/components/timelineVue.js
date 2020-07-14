@@ -52,7 +52,17 @@ define(['jquery', 'utils'], function($, utils) {
             this.options = {
                 chart: {
                     type: 'heatmap',
-                    height: '100px'
+                    height: '40px',
+                    spacing: [0, 0, 0, 0],
+                    plotBackgroundColor: '#fafafa',
+                    plotBorderColor: '#dddddd',
+                    plotBorderWidth: 2,
+                    style: {
+                        fontFamily: '"Asap", Helvetica, Arial, sans-serif'
+                    }
+                },
+                credits: {
+                    enabled: false
                 },
                 title: {
                     text: null
@@ -61,11 +71,16 @@ define(['jquery', 'utils'], function($, utils) {
                     type: 'datetime',
                     labels: {
                         align: 'left',
-                        x: 5,
+                        x: 2,
                         y: 14,
-                        format: '{value:%Y}'
+                        format: '{value:%Y}',
+                        style: {
+                            color: '#212529',
+                            fontSize: '0.6875rem'
+                        }
                     },
-                    tickLength: 16
+                    tickLength: 15,
+                    tickColor: '#999999'
                 },
                 yAxis: {
                     visible: false,
@@ -75,8 +90,7 @@ define(['jquery', 'utils'], function($, utils) {
                     endOnTick: false
                 },
                 legend: {
-                    margin: 20,
-                    padding: 0
+                    enabled: false
                 },
                 colorAxis: {
                     min: 0,
