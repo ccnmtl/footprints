@@ -130,7 +130,7 @@ class FootprintSearchForm(ModelSearchForm):
             q = q.replace('has:image', '')
 
         if q:
-            kwargs['content'] = q
+            args.append(Q(content__fuzzy=q))
 
         if self.cleaned_data['actor']:
             for a in self.cleaned_data['actor']:
