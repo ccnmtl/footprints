@@ -42,6 +42,9 @@ define(['jquery', 'utils'], function($, utils) {
                         };
                     });
                     this.chart.series[0].update({data: data});
+                    if (this.value.length < 1) {
+                        this.closeTimeline();
+                    }
                 });
             }
         },
