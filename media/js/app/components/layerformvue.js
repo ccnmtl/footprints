@@ -25,7 +25,8 @@ define(['jquery', 'selectWidget'], function($, select) {
                     'censored': 'notapp',
                     'expurgated': 'notapp',
                     'visible': true,
-                    'narrative': ''
+                    'narrative': '',
+                    'totalCopies': 0
                 },
                 total: null,
                 totalMax: null,
@@ -192,6 +193,7 @@ define(['jquery', 'selectWidget'], function($, select) {
                     this.state = JSON.stringify(this.layer);
                     this.totalMax = results.totalMax;
                     this.total = results.total;
+                    this.layer.totalCopies = this.total;
                     this.pubMin = results.pubMin;
                     this.pubMax = results.pubMax;
                     this.footprintMin = results.footprintMin;

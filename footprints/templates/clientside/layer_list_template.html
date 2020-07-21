@@ -25,7 +25,7 @@
                         <section v-for="(layer, idx) in layers" :aria-labelledby="'layer-' + idx" class="d-flex">
                             <div class="d-flex flex-column">
                             <h2 :id="'layer-' + idx">{{layer.title}}</h2>
-                            <p class="criteria-context-display mr-4">Book copies {{layer.total}} {{layer.narrative}}.</p>
+                            <p class="criteria-context-display mr-4">{{layer.totalCopies}} book copies {{layer.narrative}}.</p>
                             </div>
                             <ul class="indiv-layer-actions d-flex">
                                 <li><button :data-idx="idx" v-on:click="editLayer" type="button" class="btn btn-layer-action"><i class="fas fa-pencil-alt"></i></button></li>
@@ -40,7 +40,7 @@
                             </ul>
                         </section>
                         
-                        <button type="button" class="btn btn-timeline" id="timeline-launch" v-on:click="toggleTimeline">View Timeline</button>
+                        <button type="button" class="btn btn-timeline" id="timeline-launch" v-if="layers.length > 0" v-on:click="toggleTimeline">View Timeline</button>
                         
                     </div><!-- /.pane-content-container -->
                 </div><!-- /End #layer-list pane -->
