@@ -64,6 +64,14 @@
                 <img class="img-responsive" src="{{STATIC_URL}}img/fp_header_logo.png" alt="Footprints" />
                 {% endblock %}
                 </a>
+                <ul class="nav navbar-nav user-tools">
+                    <li><a href="/help/" title="Footprints Help and Tutorial">Help</a></li>
+                    {% if request.user.is_anonymous %}
+                    <li><a href="#" title="Log in" id="login-link" data-toggle="modal" data-target="#login-modal"><span class="glyphicon glyphicon-user"></span> Log In</a></li>
+                    {% else %}
+                    <li><a href="/accounts/logout/?next=/" title="Log out"><span class="glyphicon glyphicon-user"></span> Log Out</a></li>
+                    {% endif %}
+                </ul>
             </div>
             <!-- New navbar -->
             <nav class="navbar navbar-default navbar-fp-top">
@@ -78,16 +86,20 @@
                   <ul class="nav navbar-nav">
                     <li><a href="/about/">About</a></li>
                     
-                    {% if can_create %}
-                    <li><a href="/footprint/create/">Create</a></li>
-                    {% endif %}
-                    
                     {% flag "enable_search" %}
                     <li><a href="/search/">Search</a></li>
                     {% endflag %}
                     
+                    <li><a href="/pathmapper/">Pathmapper</a></li>
+
                     <li><a href="http://edblogs.columbia.edu/footprints/" target="_blank">Blog</a></li>
 
+                    <li><a href="/teaching/">Teaching</a></li>
+
+                    {% if can_create %}
+                    <li><a href="/footprint/create/">Create</a></li>
+                    {% endif %}
+                    
                     {% if can_import or can_moderate %}
                     <li class="dropdown">
                       <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Manage <span class="caret"></span></a>
@@ -103,12 +115,6 @@
                         {% endif %}
                       </ul>
                     </li>
-                    {% endif %}
-
-                    {% if request.user.is_anonymous %}
-                    <li><a id="login-link" href="#" data-toggle="modal" data-target="#login-modal">Log In</a></li>
-                    {% else %}
-                    <li><a href="/accounts/logout/?next=/">Log Out</a></li>
                     {% endif %}
                   </ul>
                 </div><!--/.nav-collapse -->
