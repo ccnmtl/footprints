@@ -188,7 +188,7 @@ class BaseSearchView(SearchView):
 
 
 class FootprintSearchView(BaseSearchView):
-    template_name = 'main/footprint_advanced_search.html'
+    template_name = 'search/search.html'
     paginate_by = 15
     facet_fields = [
         'footprint_location_title', 'imprint_location_title', 'actor_title']

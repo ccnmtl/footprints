@@ -1,122 +1,459 @@
 {% extends 'base.html' %}
+{% load compress %}
+{% load waffle_tags %}
 
 {% block title %}Search{% endblock %}
 
-{% block content %}
-<div class="page-header">
-  <h1>Search</h1>
-</div>
+{% block description %}Footprints is a database that traces the history and movement of Jewish books since the inception of print.{% endblock %}
 
-<div class="object-search">
-    <div class="row">
-        <div class="col-md-3">
+{% block seosettings %}
+<!-- DCMI Metadata -->
+<meta name="DC.Title" content="Search Footprints: Jewish Books Through Time and Place" />
+<meta name="DC.Description" content="Footprints is a database that traces the history and movement of Jewish books since the inception of print." />
+<meta name="DC.Publisher" content="Columbia University Center for Teaching and Learning" />
 
-            <form method="get" action=".">
-                <br />
-                <div class="form-group">
-                    <label for="q">Search for</label>
-                    <div class="input-group">
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></span>
-                        {{form.q}}
-                    </div>
-                </div>
-                <br />
-                <div class="form-group">
-                    <label for="models">Filter By Record Type</label>
-                    {{form.models}}
-                </div>
-                <input class="btn btn-default" type="reset" value="Clear"></input>
-                <input class="btn btn-primary" type="submit" value="Search"></input>
-            </form>
-        </div>
-        <div class="col-md-9">
-            {% if form.is_bound %}
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <div class="panel-title">
-                            <div class="pull-left">
-                                {{page.start_index}} - {{page.end_index}} of {{paginator.count}} items
-                            </div>
-                            {% if paginator.num_pages > 1 %}
-                                <ul class="pagination pagination-sm pull-right">
-                                    {% for a_page in paginator.page_range %}
-                                        {% ifequal page.number a_page %}
-                                            <li class="active"><a class="page-link disabled"
-                                        {% else %}
-                                            <li><a class="page-link"
-                                        {% endifequal %}
-                                            href="?{{form.get_query_params}}&amp;page={{ a_page }}">{{a_page}}</a></li>
-                                    {% endfor %}
-                                </ul>
-                            {% endif %}
-                            <div class="clearfix"></div>
-                        </div>
-                    </div>
-                    <div class="panel-body">
-                        {% for result in page.object_list %}
-                            <div class="search-result {% cycle 'odd' 'even' %}" data-href="/{{result.model_name}}/{{result.object.id}}/">
-                                {% ifequal result.model_name 'footprint' %}
-                                    <h4><img src="{{STATIC_URL}}img/footprint.png" />{{result.object.display_title}}</h4>
-                                    {{result.object.description}}
-                                {% else %}{% ifequal result.model_name 'person' %}
-                                    <h4><span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{result.object}}</h4>
-                                {% else %}{% ifequal result.model_name 'place' %}
-                                    <h4><span class="glyphicon glyphicon-globe" aria-hidden="true"></span> {{result.object}}</h4>
-                                {% else %}{% ifequal result.model_name 'writtenwork' %}
-                                    <h4><span class="glyphicon glyphicon-book" aria-hidden="true"></span> {{result.object.title}}</h4>
-                                    <dl class="dl-horizontal">
-                                    {% with authors=result.object.authors %}
-                                        {% for actor in authors %}
-                                            <dt>Author</dt><dd>{{actor.display_name}}</dd>
-                                        {% endfor %}
-                                    {% endwith %}
-                                    </dl>
-                                {% endifequal %}{% endifequal %}{% endifequal %}{% endifequal %}
-                                
-                            </div>
-                        {% empty %}
-                            <div class="no-results"><h4>No results found</h4></div>
-                        {% endfor %}
-                    </div>
-                    {% if page.has_previous or page.has_next %}
-                        <nav>
-                          <ul class="pager">
-                            {% if page.has_previous %}
-                                <li><a href="?{{form.get_query_params}}&amp;page={{ page.previous_page_number }}">&laquo; Previous</a></li>
-                            {% else %}
-                                <li class="disabled"><a href="#">&laquo; Previous</a>
-                            {% endif %}
-                            {% if page.has_next %}
-                                <li><a href="?{{form.get_query_params}}&amp;page={{ page.next_page_number }}">Next &raquo;</a></li>
-                            {% else %}
-                                <li class="disabled"><a href="#">Next &raquo;</a>
-                            {% endif %}
-                          </ul>
-                        </nav>
-                    {% endif %}
-                </div>
-            {% else %}
-                {# Show some example queries to run, maybe query syntax, something else? #}
-            {% endif %}
-        </div>
-    </div>
-</div>    
+<!-- JSON Structured Data-->
+<script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "WebSite",
+    "url": "{{request.build_absolute_uri}}",
+    "name": "Footprints: Jewish Books Through Time and Place",
+    "image": "{% spaceless %}{{STATIC_URL}}img/footprints_opengraph.jpg{% endspaceless %}", 
+    "about": "Footprints is a database that traces the history and movement of Jewish books since the inception of print.",
+    "publisher": "Columbia University Center for Teaching and Learning",
+    "keywords": "Hebrew books, Provenance, Jewish books, Jewish, Nazi-looted books, Hebrew Incunabula, Lost Jewish books, Footsteps, Sefarim, Sefer, Seforim, Old books, Ancient Jewish books"
+}
+</script>
+{% endblock %}
+
+{% block opengraph %}
+    <meta property="og:title" content="{% spaceless %}Footprints: Search{% endspaceless %}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="{% spaceless %}{{STATIC_URL}}img/footprints_opengraph.jpg{% endspaceless %}" />
+    <meta property="og:image:alt" content="Footprints: Jewish Books Through Time and Place logo">
+    <meta property="og:url" content="{{request.build_absolute_uri}}" />
+    <meta property="og:description" content="Search the Footprints database" />
+    <meta property="og:site_name" content="Footprints" />
+{% endblock %}
+
+{% block twittercard %}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@Footprints_Heb" />
+    <meta name="twitter:title" content="{% spaceless %}Footprints: Search{% endspaceless %}" />
+    <meta name="twitter:description" content="Search the Footprints database" />
+    <meta name="twitter:image" content="{% spaceless %}{{STATIC_URL}}img/footprints_opengraph.jpg{% endspaceless %}" />
+    <meta name="twitter:image:alt" content="Footprints: Jewish Books Through Time and Place logo" />
 {% endblock %}
 
 {% block js %}
-<script type="text/javascript">
+    {% compress js %}
+        <script src="{{STATIC_URL}}js/jquery-circle-progress/circle-progress.js"></script>
+        <script src="{{STATIC_URL}}js/app/footprint-search.js"></script>
+    {% endcompress %}
 
-    jQuery(document).ready(function() {
-        jQuery('.search-result').click(function() {
-            var url = jQuery(this).data('href');
-            window.location = url;
+    <script type="text/javascript">
+        jQuery(document).ready(function() {
+            var view = new FootprintListView({
+                el: jQuery(".page"),
+                baseUrl: "{% url 'search' %}",
+                selectedDirection: "{{form.data.direction}}",
+                selectedSort: "{{form.data.sort_by}}",
+                query: "{{form.data.q}}"
+            });
         });
-        
-        jQuery('input:reset').click(function(evt) {
-            window.location = '/search/';
-        });
-        
-        jQuery("input[type='search']").focus();
-    });
-</script>
+    </script>
 {% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Search Footprints</h1>
+</div>
+
+<div class="object-browse">
+    <div class="loading-overlay" style="display: none">
+        <div>
+            <img alt="Searching" src="{{STATIC_URL}}img/ajax-loader.gif">
+            <br><br>
+            <h3>Searching</h3>
+        </div>
+    </div>
+    <form class="form-inline" action="{% url 'search' %}">
+    <div class="advanced-search-filter">
+        <div class="row tools search-level">
+            <input type="hidden" name="sort_by" id="id_sort_by" value="{% if form.data.sort_by %}{{form.data.sort_by}}{% else %}ftitle{% endif %}">
+            <input type="hidden" name="direction" id="id_direction" value="{% if form.data.direction %}{{form.data.direction}}{% else %}asc{% endif %}">
+            {{form.page}}
+            <div class="col-q">
+                <div class="form-group{% if form.q.errors %} has-error{% endif %}">
+                    <label for="keyword-search">Keyword:</span></label>
+                    <input class="form-control" id="keyword-search" name="q" placeholder="Find..." value="{{form.data.q}}">
+                </div>
+            </div>
+            {% flag "advanced_search" %}
+            <div class="col-footprint-year">
+                <div class="form-group {% if form.footprint_start_year.errors or form.footprint_end_year.errors or form.q.errors %}has-error{% endif %}">
+                    <label>Footprint year:</label>
+                        <input type="number" class="form-control start-year"
+                         name="footprint_start_year" min="1000" max="{% now 'Y' %}"
+                         maxlength="4" value="{{form.data.footprint_start_year}}" />
+                        <input type="hidden" name="footprint_range" value="{{form.data.footprint_range}}" />
+                        <button class="btn-white btn btn-xs toggle-range form-control
+                        {% if form.data.footprint_range == '1' %}
+                        range-on
+                        {% endif %}
+                        ">
+                        {% if form.data.footprint_range == '1' %}
+                        to
+                        {% else %}
+                        add range
+                        {% endif %}
+                        </button>
+                        <input type="number" class="form-control end-year"
+                         name="footprint_end_year" min="1000" max="{% now 'Y' %}"
+                         maxlength="4" value="{{form.data.footprint_end_year}}" 
+                        {% if form.data.footprint_range != '1' %}
+                        style='display: none;'
+                        {% endif %}
+                          />
+                </div>
+                <div class="search-status-message" id="footprint-year-status">
+                    All years
+                </div>
+                {% if form.footprint_start_year.errors or form.footprint_end_year.errors %}
+                <div class="error-message">
+                {{form.footprint_start_year.errors}}
+                {{form.footprint_end_year.errors}}
+                </div>
+                {% endif %}
+            </div>
+            <div class="col-pub-year">
+                <div class="form-group {% if form.pub_start_year.errors or form.pub_end_year.errors or form.q.errors %}has-error{% endif %}">
+                    <label>Publication year:</label>
+                        <input type="number" class="form-control start-year"
+                         name="pub_start_year" min="1000" max="{% now 'Y' %}"
+                         maxlength="4" value="{{form.data.pub_start_year}}" />
+                        <input type="hidden" name="pub_range" value="{{form.data.pub_range}}" />
+                        <button class="btn-white btn btn-xs toggle-range form-control
+                        {% if form.data.pub_range == '1' %}
+                        range-on
+                        {% endif %}
+                        ">
+                        {% if form.data.pub_range == '1' %}
+                        to
+                        {% else %}
+                        add range
+                        {% endif %}
+                        </button>
+                        <input type="number" class="form-control end-year"
+                         name="pub_end_year" min="1000" max="{% now 'Y' %}"
+                         maxlength="4" value="{{form.data.pub_end_year}}" 
+                        {% if form.data.pub_range != '1' %}
+                        style='display: none;'
+                        {% endif %}
+                          />
+                </div>
+                <div class="search-status-message" id="pub-year-status">
+                    All years
+                </div>
+                {% if form.pub_start_year.errors or form.pub_end_year.errors %}
+                <div class="error-message">
+                {{form.pub_start_year.errors}}
+                {{form.pub_end_year.errors}}
+                </div>
+                {% endif %}
+            </div>
+            {% endflag %}
+            <div class="col-submit">
+                <button name="search_level" value="1" type="submit" class="btn btn-default">
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search
+                </button>
+                <button type="reset" class="btn btn-default" id="clear_primary_search">
+                    <span class="glyphicon glyphicon-remove"></span> Clear
+                </button>
+                {% flag "advanced_search" %}
+                {% if form.is_bound and form.errors|length < 1 and search_criteria %}
+                <div class="filter-marker">
+                    Filters
+                </div>
+                {% endif %}
+                {% endflag %}
+
+                {% if form.q.errors %}
+                <br />
+                <div class="error-message">
+                    {{form.q.errors}}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div><!-- /.advanced-search-filter -->
+
+    {% flag "advanced_search" %}
+    {% if form.is_bound and form.errors|length < 1 and search_criteria %}
+    <div class="advanced-search-filter" style="padding-top: 0;">
+        <div class="filter-level">
+            <div class="row">
+                <div class="col-xs-4">
+                    <h3>Imprint Location:</h3>
+                    <div class="row">
+                        <div class="col-xs-12 filter-col">
+                            {% for loc in imprint_location_title|slice:"4" %}
+                                <div class="checkbox highlighted">
+                                    <label {% if loc.1 == 0 %}class="disabled"{% endif %}>
+                                        <input name="imprint_location" type="checkbox" value="{{loc.0}}"
+                                            {% if loc.1 == 0 %}disabled="disabled"{% endif %}
+                                            {% if loc.0 in form.cleaned_data.imprint_location %} checked="checked" {% endif %}>
+                                            {{loc.0}} ({{loc.1}})
+                                    </label>
+                                </div>
+                            {% endfor %}
+                            <div class="more-module-link">
+                                <a id="more-imprint-locations" href="#" data-toggle="modal" data-target="#imprint-locations-dlg">More locations...</a>
+                            </div>
+                            <div id="imprint-locations-dlg" class="modal fade " tabindex="-1" role="dialog">
+                              <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">Imprint Locations</h4>
+                                  </div>
+                                  <div class="modal-body column-count-3">
+                                    {% for loc in imprint_location_title %}
+                                    <div class="checkbox">
+                                        <label {% if loc.1 == 0 %}class="disabled"{% endif %}>
+                                            <input name="imprint_location" type="checkbox" value="{{loc.0}}"
+                                                {% if loc.1 == 0 %}disabled="disabled"{% endif %}
+                                                {% if loc.0 in form.cleaned_data.imprint_location %} checked="checked" {% endif %}>
+                                                {{loc.0}} ({{loc.1}})
+                                        </label>
+                                    </div>
+                                    {% endfor %}
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-default btn-apply-filters" data-dismiss="modal">Apply Filters</button>
+                                  </div>
+                                </div><!-- /.modal-content -->
+                              </div><!-- /.modal-dialog -->
+                            </div><!-- /.modal -->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <h3>Footprint Location:</h3>
+                    <div class="row">
+                        <div class="col-xs-12 filter-col">
+                            {% for loc in footprint_location_title|slice:"4" %}
+                                <div class="checkbox highlighted">
+                                    <label {% if loc.1 == 0 %}class="disabled"{% endif %}>
+                                        <input name="footprint_location" type="checkbox" value="{{loc.0}}"
+                                            {% if loc.1 == 0 %}disabled="disabled"{% endif %}
+                                            {% if loc.0 in form.cleaned_data.footprint_location %} checked="checked" {% endif %}>
+                                            {{loc.0}} ({{loc.1}})
+                                    </label>
+                                </div>
+                            {% endfor %}
+                            <div class="more-module-link">
+                                <a id="more-footprint-locations" href="#" data-toggle="modal" data-target="#footprint-locations-dlg">More locations...</a>
+                            </div>
+                            <div id="footprint-locations-dlg" class="modal fade " tabindex="-1" role="dialog">
+                              <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">Footprint Locations</h4>
+                                  </div>
+                                  <div class="modal-body column-count-3">
+                                    {% for loc in footprint_location_title %}
+                                    <div class="checkbox">
+                                        <label {% if loc.1 == 0 %}class="disabled"{% endif %}>
+                                            <input name="footprint_location" type="checkbox" value="{{loc.0}}"
+                                                {% if loc.1 == 0 %}disabled="disabled"{% endif %}
+                                                {% if loc.0 in form.cleaned_data.imprint_location %} checked="checked" {% endif %}>
+                                                {{loc.0}} ({{loc.1}})
+                                        </label>
+                                    </div>
+                                    {% endfor %}
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-default btn-apply-filters" data-dismiss="modal">Apply Filters</button>
+                                  </div>
+                                </div><!-- /.modal-content -->
+                              </div><!-- /.modal-dialog -->
+                            </div><!-- /.modal -->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <h3>Person:</h3>
+                    <div class="row">
+                        <div class="col-xs-12 filter-col">
+                            {% for a in actor_title|slice:"4" %}
+                                <div class="checkbox highlighted">
+                                    <label {% if a.1 == 0 %}class="disabled"{% endif %}>
+                                        <input name="actor" value="{{a.0}}" type="checkbox"
+                                            {% if a.1 == 0 %}disabled="disabled"{% endif %}
+                                            {% if a.0 in form.cleaned_data.actor %} checked="checked" {% endif %}>
+                                        {{a.0}} ({{a.1}})
+                                    </label>
+                                </div>
+                            {% endfor %}
+                            {% if actor_title|length > 4 %}
+                                <div class="more-module-link">
+                                    <a id="more-actors" href="#" data-toggle="modal" data-target="#actors-dlg">More people...</a>
+                                </div>
+                                <div id="actors-dlg" class="modal fade " tabindex="-1" role="dialog">
+                                  <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title">People</h4>
+                                      </div>
+                                      <div class="modal-body column-count-3">
+                                        {% for a in actor %}
+                                        <div class="checkbox">
+                                            <label {% if a.1 == 0 %}class="disabled"{% endif %}>
+                                                <input name="actor" type="checkbox" value="{{a.0}}"
+                                                    {% if a.1 == 0 %}disabled="disabled"{% endif %}
+                                                    {% if a.0 in form.cleaned_data.imprint_location %} checked="checked" {% endif %}>
+                                                    {{a.0}} ({{a.1}})
+                                            </label>
+                                        </div>
+                                        {% endfor %}
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-default btn-apply-filters" data-dismiss="modal">Apply Filters</button>
+                                      </div>
+                                    </div><!-- /.modal-content -->
+                                  </div><!-- /.modal-dialog -->
+                                </div><!-- /.modal -->
+                            {% endif %}
+                        </div>
+                   </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- /.advanced-search-filter -->
+    {% endif %}
+    {% endflag %}
+
+    <!-- Results navigation  -->
+    <div class="row tools results-navigation">
+        <div class="col-xs-6">
+            <div class="total-results-count">
+                {{paginator.count}} footprints
+            </div>
+            {% if object_list|length > 0 %}
+                <button class="btn btn-white btn-sm btn-export" type="button">
+                <span class="glyphicon glyphicon-download-alt"></span> Export
+                </button>
+            {% endif %}
+        </div>
+        <div class="col-xs-6">
+            {% include 'main/pagination.html' %}
+        </div>
+    </div>
+
+    {% if object_list|length < 1 %}
+        <h4 class="well">No matching Footprints</h4>
+    {% else %}
+        <div class="table-responsive">
+            <table class="table table-striped table-footprints">
+                <tr>
+                    <th data-sort-by="ftitle" class="sortable ftitle">
+                        Footprint
+                    </th>
+                    <th data-sort-by="fdate" class="sortable fdate">
+                        Footprint Date
+                    </th>
+                    <th data-sort-by="flocation" class="sortable flocation">
+                        Footprint Location
+                    </th>
+                    <th data-sort-by="owners" class="sortable owners">Owners</th>
+                    <th data-sort-by="wtitle" class="sortable wtitle">Literary Work / Imprint</th>
+                    <th data-sort-by="added" class="sortable added">Added</th>
+                    <th data-sort-by="complete" class="sortable complete">Complete</th>
+                </tr>
+                {% for result in object_list %}
+                    {% with footprint=result.object %}
+                    <tr>
+                        <td>
+                            <div>
+                                <a href="/footprint/{{footprint.id}}">
+                                    {% if footprint.digital_object.exists %}
+                                        <span class="glyphicon glyphicon-camera" aria-hidden="true"></span>
+                                    {% endif %}
+                                    {{footprint.title}}
+                                </a>
+                            </div>
+                        </td>
+                        <td>
+                            {% if footprint.associated_date %}
+                                {{footprint.associated_date}}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if footprint.place %}
+                                {{footprint.place}}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% for owner in footprint.owners %}
+                                {{owner.display_name}}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td>
+                            <a href="/writtenwork/{{footprint.book_copy.imprint.work.id}}">
+                                {{footprint.book_copy.imprint.work.title|default:"n/a"}}
+                            </a><br />
+                            {% if footprint.book_copy.imprint.title and footprint.book_copy.imprint.title|length > 0 and footprint.book_copy.imprint.work.title != footprint.book_copy.imprint.title %}
+                                <div class="subtext">as {{footprint.book_copy.imprint.title}}</div>
+                            {% endif %} 
+    
+                            {% with printers=footprint.book_copy.imprint.printers %}
+                            {% for printer in printers %}
+                                {% if forloop.first %}
+                                    <div class="subtext">
+                                {% endif %}
+                                    {{printer.display_name}}
+                                    {% if not forloop.last %},{% endif %}
+                                {% if forloop.last %}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                            {% endwith %}
+                            <div class="subtext">
+                                {% if footprint.book_copy.imprint.publication_date %}
+                                    {{footprint.book_copy.imprint.publication_date}}{% if footprint.book_copy.imprint.place %}, {% endif %}
+                                {% endif %}
+                                {% if footprint.book_copy.imprint.place %}
+                                    {{footprint.book_copy.imprint.place}}
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td class="added">
+                            {{footprint.created_at|date:"m/d/y"}}
+                        </td>
+                        <td class="complete">
+                            <div class="progress-circle" data-value="{{footprint.percent_complete}}">
+                                <strong>{{footprint.percent_complete}}<i>%</i></strong>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endwith %}
+                {% endfor %}
+            </table>
+        </div>
+        <div class="row tools">
+            <div class="col-md-12">
+            {% include 'main/pagination.html' %}
+            </div>
+        </div>
+    {% endif %}
+    </form>
+</div><!-- /.object-browse -->
+{% endblock %}
+
