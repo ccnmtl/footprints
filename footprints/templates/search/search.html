@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% load compress %}
-{% load waffle_tags %}
 
 {% block title %}Search{% endblock %}
 
@@ -90,7 +89,6 @@
                     <input class="form-control" id="keyword-search" name="q" placeholder="Find..." value="{{form.data.q}}">
                 </div>
             </div>
-            {% flag "advanced_search" %}
             <div class="col-footprint-year">
                 <div class="form-group {% if form.footprint_start_year.errors or form.footprint_end_year.errors or form.q.errors %}has-error{% endif %}">
                     <label>Footprint year:</label>
@@ -163,7 +161,6 @@
                 </div>
                 {% endif %}
             </div>
-            {% endflag %}
             <div class="col-submit">
                 <button name="search_level" value="1" type="submit" class="btn btn-default">
                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search
@@ -171,13 +168,11 @@
                 <button type="reset" class="btn btn-default" id="clear_primary_search">
                     <span class="glyphicon glyphicon-remove"></span> Clear
                 </button>
-                {% flag "advanced_search" %}
                 {% if form.is_bound and form.errors|length < 1 and search_criteria %}
                 <div class="filter-marker">
                     Filters
                 </div>
                 {% endif %}
-                {% endflag %}
 
                 {% if form.q.errors %}
                 <br />
@@ -189,7 +184,6 @@
         </div>
     </div><!-- /.advanced-search-filter -->
 
-    {% flag "advanced_search" %}
     {% if form.is_bound and form.errors|length < 1 and search_criteria %}
     <div class="advanced-search-filter" style="padding-top: 0;">
         <div class="filter-level">
@@ -338,7 +332,6 @@
         </div>
     </div><!-- /.advanced-search-filter -->
     {% endif %}
-    {% endflag %}
 
     <!-- Results navigation  -->
     <div class="row tools results-navigation">
