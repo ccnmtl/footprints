@@ -22,8 +22,16 @@ admin.site.register(Role)
 admin.site.register(Language)
 admin.site.register(DigitalFormat)
 admin.site.register(DigitalObject)
-admin.site.register(StandardizedIdentification)
 admin.site.register(StandardizedIdentificationType)
+
+
+class StandardizedIdentificationAdmin(admin.ModelAdmin):
+    list_display = ('identifier', 'identifier_type')
+    list_filter = ('identifier_type',)
+
+
+admin.site.register(
+    StandardizedIdentification, StandardizedIdentificationAdmin)
 
 
 class PersonAdmin(admin.ModelAdmin):
@@ -104,7 +112,7 @@ def language(obj):
 class ImprintAdmin(admin.ModelAdmin):
     list_display = (work_title, 'title', 'publication_date', language)
     raw_id_fields = ('actor',)
-    search_fields = ('title',)
+    search_fields = ('title', 'standardized_identifier__identifier')
 
 
 admin.site.register(Imprint, ImprintAdmin)
