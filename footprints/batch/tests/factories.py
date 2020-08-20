@@ -4,14 +4,14 @@ from footprints.batch.models import BatchJob, BatchRow
 from footprints.main.tests.factories import UserFactory
 
 
-class BatchJobFactory(factory.DjangoModelFactory):
+class BatchJobFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = BatchJob
 
     created_by = factory.SubFactory(UserFactory)
 
 
-class BatchRowFactory(factory.DjangoModelFactory):
+class BatchRowFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = BatchRow
 

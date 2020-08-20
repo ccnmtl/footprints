@@ -59,7 +59,7 @@ class FuzzyPoint(BaseFuzzyAttribute):
                      random.uniform(-90.0, 90.0))  # nosec
 
 
-class UserFactory(factory.DjangoModelFactory):
+class UserFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = User
     username = factory.Sequence(lambda n: "user%03d" % n)
@@ -74,7 +74,7 @@ class UserFactory(factory.DjangoModelFactory):
             self.groups.add(extracted)
 
 
-class GroupFactory(factory.DjangoModelFactory):
+class GroupFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Group
 
@@ -88,32 +88,32 @@ class GroupFactory(factory.DjangoModelFactory):
             self.permissions.add(*lst)
 
 
-class ExtendedDateFactory(factory.DjangoModelFactory):
+class ExtendedDateFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = ExtendedDate
     edtf_format = '1984~'
 
 
-class RoleFactory(factory.DjangoModelFactory):
+class RoleFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Role
     name = factory.Sequence(lambda n: "Author%03d" % n)
     level = 'footprint'
 
 
-class LanguageFactory(factory.DjangoModelFactory):
+class LanguageFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Language
     name = factory.Sequence(lambda n: "Language%03d" % n)
 
 
-class DigitalFormatFactory(factory.DjangoModelFactory):
+class DigitalFormatFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = DigitalFormat
     name = factory.Sequence(lambda n: "format%03d" % n)
 
 
-class DigitalObjectFactory(factory.DjangoModelFactory):
+class DigitalObjectFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = DigitalObject
     name = factory.Sequence(lambda n: "image%03d" % n)
@@ -123,7 +123,7 @@ class DigitalObjectFactory(factory.DjangoModelFactory):
                                     filename=TEST_MEDIA_PATH)
 
 
-class StandardizedIdentificationTypeFactory(factory.DjangoModelFactory):
+class StandardizedIdentificationTypeFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = StandardizedIdentificationType
 
@@ -132,7 +132,7 @@ class StandardizedIdentificationTypeFactory(factory.DjangoModelFactory):
     level = IMPRINT_LEVEL
 
 
-class StandardizedIdentificationFactory(factory.DjangoModelFactory):
+class StandardizedIdentificationFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = StandardizedIdentification
 
@@ -140,7 +140,7 @@ class StandardizedIdentificationFactory(factory.DjangoModelFactory):
     identifier_type = factory.SubFactory(StandardizedIdentificationTypeFactory)
 
 
-class PersonFactory(factory.DjangoModelFactory):
+class PersonFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Person
 
@@ -152,7 +152,7 @@ class PersonFactory(factory.DjangoModelFactory):
     notes = "notes"
 
 
-class ActorFactory(factory.DjangoModelFactory):
+class ActorFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Actor
 
@@ -161,7 +161,7 @@ class ActorFactory(factory.DjangoModelFactory):
     alias = factory.Sequence(lambda n: "Name%03d" % n)
 
 
-class CanonicalPlaceFactory(factory.DjangoModelFactory):
+class CanonicalPlaceFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = CanonicalPlace
 
@@ -176,7 +176,7 @@ class CanonicalPlaceFactory(factory.DjangoModelFactory):
             self.save()
 
 
-class PlaceFactory(factory.DjangoModelFactory):
+class PlaceFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Place
 
@@ -184,7 +184,7 @@ class PlaceFactory(factory.DjangoModelFactory):
     canonical_place = factory.SubFactory(CanonicalPlaceFactory)
 
 
-class CollectionFactory(factory.DjangoModelFactory):
+class CollectionFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Collection
 
@@ -196,7 +196,7 @@ class CollectionFactory(factory.DjangoModelFactory):
             self.actor.add(ActorFactory())
 
 
-class WrittenWorkFactory(factory.DjangoModelFactory):
+class WrittenWorkFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = WrittenWork
 
@@ -210,7 +210,7 @@ class WrittenWorkFactory(factory.DjangoModelFactory):
             self.actor.add(ActorFactory(role=role))
 
 
-class ImprintFactory(factory.DjangoModelFactory):
+class ImprintFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Imprint
 
@@ -238,7 +238,7 @@ class ImprintFactory(factory.DjangoModelFactory):
             self.language.add(LanguageFactory())
 
 
-class BookCopyFactory(factory.DjangoModelFactory):
+class BookCopyFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = BookCopy
 
@@ -247,7 +247,7 @@ class BookCopyFactory(factory.DjangoModelFactory):
     call_number = 'B893.1BC'
 
 
-class EmptyFootprintFactory(factory.DjangoModelFactory):
+class EmptyFootprintFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Footprint
 
@@ -258,7 +258,7 @@ class EmptyFootprintFactory(factory.DjangoModelFactory):
     created_by = factory.SubFactory(UserFactory)
 
 
-class FootprintFactory(factory.DjangoModelFactory):
+class FootprintFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Footprint
 
