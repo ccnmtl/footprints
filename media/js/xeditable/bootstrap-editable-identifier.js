@@ -87,7 +87,7 @@
         },
 
         validate: function() {
-            if (this.$input.val().length < 1) {
+            if (this.$input.val().trim().length < 1) {
                 return 'Please specify an identifer';
             } else if (this.$type.val().length < 1) {
                 return 'Please select the type of identifier';
@@ -118,7 +118,7 @@
         value2submit: function(value) {
             return {
                 error: this.validate(),
-                identifier: this.$input.val(),
+                identifier: this.$input.val().trim(),
                 identifier_type: this.$type.val()
             };
         },
