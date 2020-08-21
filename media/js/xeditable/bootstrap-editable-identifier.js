@@ -95,7 +95,7 @@
                 var pattern = /^\d{9}$/;
                 if (!this.$input.val().match(pattern)) {
                     return 'Please enter a valid BHB number. ' +
-                        'Valid BHB numbers are 9-digits long. ' +
+                        'Valid BHB numbers are 9 digits long. ' +
                         'For example: 000334234';
                 }
             }
