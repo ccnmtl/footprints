@@ -109,8 +109,13 @@ def language(obj):
     return ', '.join(obj.language.values_list('name', flat=True))
 
 
+def bhb_number(obj):
+    return obj.get_bhb_number()
+
+
 class ImprintAdmin(admin.ModelAdmin):
-    list_display = (work_title, 'title', 'publication_date', language)
+    list_display = (work_title, 'title', 'publication_date',
+                    language, bhb_number)
     raw_id_fields = ('actor',)
     search_fields = ('title', 'standardized_identifier__identifier')
 
