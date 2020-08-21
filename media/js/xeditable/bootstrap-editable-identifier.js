@@ -91,6 +91,13 @@
                 return 'Please specify an identifer';
             } else if (this.$type.val().length < 1) {
                 return 'Please select the type of identifier';
+            } else if (this.$type.val() === 'BHB') {
+                var pattern = /^\d{9}$/;
+                if (!this.$input.val().match(pattern)) {
+                    return 'Please enter a valid BHB number. ' +
+                        'Valid BHB numbers are 9-digits long. ' +
+                        'For example: 000334234';
+                }
             }
         },
 
