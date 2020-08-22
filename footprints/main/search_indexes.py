@@ -51,6 +51,11 @@ class WrittenWorkIndex(CelerySearchIndex, Indexable):
     def get_model(self):
         return WrittenWork
 
+    def index_queryset(self, using=None):
+        return self.get_model().objects.prefetch_related(
+            'imprint_set__bookcopy_set__footprint_set__associated_date',
+            'standardized_identifier__identifier_type', 'actor__person')
+
     def prepare_object_type(self, obj):
         return type(obj).__name__
 
@@ -207,6 +212,15 @@ class BookCopyIndex(CelerySearchIndex, Indexable):
     def get_model(self):
         return BookCopy
 
+    def index_queryset(self, using=None):
+        qs = self.get_model().objects.all()
+        return qs.select_related(
+            'imprint__work',
+            'imprint__place__canonical_place').prefetch_related(
+            'footprint_set__associated_date',
+            'footprint_set__place',
+            'footprint_set__actor')
+
     def prepare_object_type(self, obj):
         return type(obj).__name__
 
@@ -318,6 +332,16 @@ class FootprintIndex(CelerySearchIndex, Indexable):
 
     def get_model(self):
         return Footprint
+
+#     def index_queryset(self, using=None):
+#         qs = self.get_model().objects.all()
+#         qs = qs.select_related(
+#             'created_by', 'associated_date', 'place__canonical_place',
+#             'book_copy__imprint__work', 'book_copy__imprint__place',
+#             'book_copy__imprint__place__canonical_place').prefetch_related(
+#                 'book_copy__imprint__standardized_identifier__identifier_type',
+#                 'actor__person', 'book_copy__imprint__work__actor')
+#         return qs
 
     def prepare_object_type(self, obj):
         return type(obj).__name__
