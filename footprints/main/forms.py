@@ -23,6 +23,13 @@ DIRECTION_CHOICES = (
     ('desc', 'Descending'),
 )
 
+PRECISION_CHOICES = (
+    ('contains', 'Contains'),
+    ('exact', 'Exact'),
+    ('startswith', 'Starts with'),
+    ('endswith', 'Ends with'),
+)
+
 SORT_CHOICES = (
     ('added', 'Added'),
     ('complete', 'Complete'),
@@ -48,6 +55,10 @@ class FootprintSearchForm(ModelSearchForm):
     pub_end_year = forms.IntegerField(required=False, min_value=1000)
     pub_range = forms.BooleanField(
         required=False, widget=forms.HiddenInput())
+
+    precision = forms.ChoiceField(
+        choices=PRECISION_CHOICES, initial='contains',
+        required=True, widget=forms.HiddenInput())
 
     direction = forms.ChoiceField(
         choices=DIRECTION_CHOICES, initial='asc',
@@ -130,7 +141,16 @@ class FootprintSearchForm(ModelSearchForm):
             q = q.replace('has:image', '')
 
         if q:
-            args.append(Q(content__fuzzy=q))
+            q = q.strip()
+            precision = self.cleaned_data.get('precision', 'contains')
+            if precision == 'contains':
+                args.append(Q(content__fuzzy=q))
+            elif precision == 'exact':
+                args.append(Q(content__content=q))
+            elif precision == 'startswith':
+                args.append(Q(content__startswith=q))
+            elif precision == 'endswith':
+                args.append(Q(content__startswith=q))
 
         if self.cleaned_data['actor']:
             for a in self.cleaned_data['actor']:

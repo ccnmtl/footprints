@@ -20,7 +20,8 @@
             'keyup input[name="footprint_start_year"]': 'updateStatus',
             'keyup input[name="footprint_end_year"]': 'updateStatus',
             'keyup input[name="pub_start_year"]': 'updateStatus',
-            'keyup input[name="pub_end_year"]': 'updateStatus'
+            'keyup input[name="pub_end_year"]': 'updateStatus',
+            'click a.search-precision': 'changePrecision',
         },
         initialize: function(options) {
             _.bindAll(
@@ -28,7 +29,7 @@
                 'nextOrPreviousPage', 'specifyPage', 'onKeydown',
                 'busy', 'matchHighlightedValue',
                 'applySingleFilter', 'submitForm', 'clearErrors',
-                'updateStatus');
+                'updateStatus', 'changePrecision');
 
             var self = this;
             this.baseUrl = options.baseUrl;
@@ -121,6 +122,15 @@
             } else if (this.isCharacter(charCode)) {
                 this.clearErrors();
             }
+        },
+        changePrecision: function(evt) {
+            var $elt = jQuery(evt.currentTarget);
+            var $btn = $elt.parents('.dropdown-menu').prev();
+            $btn.find('.search-precision-label').html($elt.html());
+
+            jQuery(this.el)
+                .find('[name="precision"]')
+                .val($elt.data('precision'));
         },
         nextOrPreviousPage: function(evt) {
             evt.preventDefault();
