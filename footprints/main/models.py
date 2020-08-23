@@ -1012,6 +1012,17 @@ class Imprint(models.Model):
         return self.start_date()
 
 
+class ImprintAlternateTitle(models.Model):
+    alternate_title = models.TextField()
+    standardized_identifier = models.ForeignKey(
+        StandardizedIdentification, on_delete=models.CASCADE)
+    language = models.ForeignKey(
+        Language, null=True, blank=True, on_delete=models.SET_NULL)
+
+    class Meta:
+        unique_together = [['alternate_title', 'standardized_identifier']]
+
+
 @python_2_unicode_compatible
 class BookCopy(models.Model):
     imprint = models.ForeignKey(Imprint, on_delete=models.CASCADE)
