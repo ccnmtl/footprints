@@ -306,6 +306,8 @@ class Role(models.Model):
 @python_2_unicode_compatible
 class Language(models.Model):
     name = models.CharField(max_length=100, unique=True)
+    marc_code = models.CharField(
+        max_length=3, null=True, blank=True, unique=True)
 
     class Meta:
         ordering = ['name']
