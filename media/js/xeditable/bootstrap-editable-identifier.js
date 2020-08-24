@@ -87,10 +87,17 @@
         },
 
         validate: function() {
-            if (this.$input.val().length < 1) {
+            if (this.$input.val().trim().length < 1) {
                 return 'Please specify an identifer';
             } else if (this.$type.val().length < 1) {
                 return 'Please select the type of identifier';
+            } else if (this.$type.val() === 'BHB') {
+                var pattern = /^\d{9}$/;
+                if (!this.$input.val().match(pattern)) {
+                    return 'Please enter a valid BHB number. ' +
+                        'Valid BHB numbers are 9 digits long. ' +
+                        'For example: 000334234';
+                }
             }
         },
 
@@ -111,7 +118,7 @@
         value2submit: function(value) {
             return {
                 error: this.validate(),
-                identifier: this.$input.val(),
+                identifier: this.$input.val().trim(),
                 identifier_type: this.$type.val()
             };
         },
