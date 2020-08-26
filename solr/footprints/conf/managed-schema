@@ -96,6 +96,7 @@
   <field name="book_copy_id" type="text_en" multiValued="false" indexed="true" stored="true"/>
   <field name="book_copy_identifier" type="text_en" multiValued="false" indexed="true" stored="true"/>
   <field name="censored" type="boolean" multiValued="false" indexed="true" stored="true"/>
+  <field name="creator" type="text_en" multiValued="false" indexed="true" stored="true"/>
   <field name="complete" type="long" multiValued="false" indexed="true" stored="true"/>
   <field name="django_ct" type="string" multiValued="false" indexed="true" stored="true"/>
   <field name="django_id" type="string" multiValued="false" indexed="true" stored="true"/>

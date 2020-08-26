@@ -1,4 +1,5 @@
 from datetime import date, datetime
+import re
 import urllib
 
 from django import forms
@@ -128,18 +129,21 @@ class FootprintSearchForm(ModelSearchForm):
 
         return cleaned_data
 
-    def search(self):
-        args = []
-        kwargs = {
-            'django_ct': 'main.footprint',
-        }
-
-        q = self.cleaned_data.get('q', '')
-
+    def handle_image(self, q, args):
         if q.find('has:image') > -1:
             args.append(Q(has_image=True))
             q = q.replace('has:image', '')
+        return q
 
+    def handle_creator(self, q, args):
+        pattern = 'creator:(\w+)'
+        m = re.search(pattern, q)
+        if m:
+            args.append(Q(creator__contains=m.group(1)))
+            q = re.sub(pattern, '', q)
+        return q
+
+    def handle_content(self, q, args):
         if q:
             q = q.strip()
             precision = self.cleaned_data.get('precision', 'contains')
@@ -151,10 +155,30 @@ class FootprintSearchForm(ModelSearchForm):
                 args.append(Q(content__startswith=q))
             elif precision == 'endswith':
                 args.append(Q(content__startswith=q))
+        return q
 
+    def handle_actor(self):
+        a = []
         if self.cleaned_data['actor']:
             for a in self.cleaned_data['actor']:
-                args.append(Q(actor_title_exact__in=[a]))
+                a.append(Q(actor_title_exact__in=[a]))
+        return a
+
+    def search(self):
+        args = []
+        kwargs = {
+            'django_ct': 'main.footprint',
+        }
+
+        q = self.cleaned_data.get('q', '')
+
+        q = self.handle_image(q, args)
+
+        q = self.handle_creator(q, args)
+
+        q = self.handle_content(q, args)
+
+        args += self.handle_actor()
 
         kwargs.update(self.handle_footprint_year())
         kwargs.update(self.handle_pub_year())

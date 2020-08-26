@@ -285,6 +285,8 @@ class FootprintIndex(CelerySearchIndex, Indexable):
     title = NgramField(model_attr='title')
     sort_by = CharField()
 
+    creator = CharField(model_attr='created_by__username')
+
     work_id = CharField(model_attr='book_copy__imprint__work__id')
     imprint_id = CharField(model_attr='book_copy__imprint__id')
     book_copy_id = CharField(model_attr='book_copy__id')
