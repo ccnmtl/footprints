@@ -152,7 +152,7 @@ class FootprintSearchFormTest(TestCase):
 
         a = ['prior']
         q = 'a b'
-        self.assertEqual('a b', form.handle_creator(q, a))
+        self.assertEqual('a b', form.handle_image(q, a))
         self.assertEqual(a, ['prior'])
 
         q = 'search has:image'
@@ -170,17 +170,17 @@ class FootprintSearchFormTest(TestCase):
         q = 'a b creator:username'
         a = []
         self.assertEqual('a b ', form.handle_creator(q, a))
-        self.assertEqual(a, [Q(creator='username')])
+        self.assertEqual(a, [Q(creator__contains='username')])
 
         q = 'creator:username a b'
         a = []
         self.assertEqual(' a b', form.handle_creator(q, a))
-        self.assertEqual(a, [Q(creator='username')])
+        self.assertEqual(a, [Q(creator__contains='username')])
 
         q = 'a creator:username b'
         a = ['prior']
         self.assertEqual('a  b', form.handle_creator(q, a))
-        self.assertEqual(a, ['prior', Q(creator='username')])
+        self.assertEqual(a, ['prior', Q(creator__contains='username')])
 
 
 class ContactUsFormTest(TestCase):
