@@ -1163,7 +1163,8 @@ input[type=number] {
     border-color: #ccc;
 }
 
-.btn-primary:hover, .btn-primary:focus, .btn-primary.focus, .btn-primary:active, .btn-primary.active, .open > .dropdown-toggle.btn-primary {
+.btn-primary:hover, .btn-primary:focus, .btn-primary.focus, .btn-primary:active,
+.btn-primary.active, .open > .dropdown-toggle.btn-primary {
     color: #fff;
     background-color: #406777;
     border-color: #406777;
@@ -1189,6 +1190,18 @@ input[type=number] {
     cursor: inherit;
     display: block;
 }
+
+.btn-gray {
+    color: #333;
+    background-color: #e6e6e6;
+    border-color: #adadad;
+}
+
+.btn-gray:hover, .btn-gray:focus, .btn-gray:active {
+    color: #fff;
+    background-color: #2e5367;
+    border-color: #2e5367;
+} 
 
 /* Create Footprint */
 
@@ -2374,6 +2387,10 @@ th.sortable.tablesorter-headerDesc,
 
 .advanced-search-filter .search-level button {
     margin-top: 25px;
+}
+
+.advanced-search-filter .search-level button.btn-gray {
+    margin-top: 0px;
 }
 
 .advanced-search-filter .search-level .start-year,

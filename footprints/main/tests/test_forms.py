@@ -1,3 +1,4 @@
+from django.db.models.query_utils import Q
 from django.test.testcases import TestCase
 
 from footprints.main.forms import FootprintSearchForm, ContactUsForm, \
@@ -145,6 +146,41 @@ class FootprintSearchFormTest(TestCase):
 
         form.clean()
         self.assertEqual(len(form._errors.keys()), 0)
+
+    def test_handle_image(self):
+        form = FootprintSearchForm()
+
+        a = ['prior']
+        q = 'a b'
+        self.assertEqual('a b', form.handle_image(q, a))
+        self.assertEqual(a, ['prior'])
+
+        q = 'search has:image'
+        self.assertEqual('search ', form.handle_image(q, a))
+        self.assertEqual(a, ['prior', Q(has_image=True)])
+
+    def test_handle_creator(self):
+        form = FootprintSearchForm()
+
+        q = 'a b'
+        a = []
+        self.assertEqual('a b', form.handle_creator(q, a))
+        self.assertEqual(a, [])
+
+        q = 'a b creator:username'
+        a = []
+        self.assertEqual('a b ', form.handle_creator(q, a))
+        self.assertEqual(a, [Q(creator__contains='username')])
+
+        q = 'creator:username a b'
+        a = []
+        self.assertEqual(' a b', form.handle_creator(q, a))
+        self.assertEqual(a, [Q(creator__contains='username')])
+
+        q = 'a creator:username b'
+        a = ['prior']
+        self.assertEqual('a  b', form.handle_creator(q, a))
+        self.assertEqual(a, ['prior', Q(creator__contains='username')])
 
 
 class ContactUsFormTest(TestCase):
