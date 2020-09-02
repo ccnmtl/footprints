@@ -35,10 +35,6 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('filename')
 
-    def csvfile_reader(self, filename):
-        csv_file = open(filename)
-        return csv.reader(csv_file)
-
     def format_bhb_number(self, bhb):
         if len(bhb) < 9:
             bhb = bhb.rjust(9, '0')
@@ -111,19 +107,13 @@ class Command(BaseCommand):
         # Save anything that needs saved
         imprint.save()
 
-    def aggregate_languages(self, *args, **options):
-        languages = {}
-        reader = self.csvfile_reader(options['filename'])
-        for (idx, row) in enumerate(reader):
-            lng = row[FIELD_LANGUAGE]
-            languages[lng] = languages.get(lng, 0) + 1
-
-        print(languages)
-
     def handle(self, *args, **options):
         created = 0
         updated = 0
-        reader = self.csvfile_reader(options['filename'])
+
+        csv_file = open(options['filename'])
+        reader = csv.reader(csv_file)
+
         bhb = StandardizedIdentificationType.objects.bhb()
         for (idx, row) in enumerate(reader):
             bhb_number = self.format_bhb_number(row[FIELD_BHB_NUMBER])
@@ -140,4 +130,5 @@ class Command(BaseCommand):
                 for imprint in imprints:
                     self.update_imprint(imprint, row, bhb_number)
 
+        csv_file.close()
         print('updated {}, created {}'.format(updated, created))
