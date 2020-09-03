@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from footprints.main.management.commands.update_imprints import Command, \
-    FIELD_TITLE
+    FIELD_TITLE, FIELD_PLACE_MURKY, FIELD_PUBLICATION_PLACE
 from footprints.main.models import ImprintAlternateTitle, SLUG_BHB
 from footprints.main.tests.factories import ImprintFactory, LanguageFactory
 
@@ -13,8 +13,8 @@ TEST_ROW = [
     'alternate title',
     'written work title',
     'subtitle',
-    'place murky',
-    'publication place',
+    'Cracóvia',  # FIELD_PLACE_MURKY
+    'Cracow',  # FIELD_PUBLICATION_PLACE
     'locstatus',
     'print murky',
     'publisher',
@@ -83,3 +83,37 @@ class UpdateImprintsTest(TestCase):
             imprint.notes,
             'lorem ipsum<br />Subtitle: subtitle<br />'
             'Notes from the BHB: note<br />')
+
+    def test_handle_place(self):
+        cmd = Command()
+
+        # An imprint with an existing place
+        # Same Canonical Place, Updated Place alternate_name
+        imprint = ImprintFactory()
+        existing_place = imprint.place
+        cmd.handle_place(imprint, TEST_ROW)
+        self.assertEqual(existing_place.id, imprint.place.id)
+        self.assertEqual(
+            existing_place.canonical_place, imprint.place.canonical_place)
+        self.assertEqual(existing_place.alternate_name, 'Cracóvia')
+
+        # An imprint with no place should first try to match an
+        # existing CanonicalPlace and existing Place
+        imprint = ImprintFactory(place=None)
+        cmd.handle_place(imprint, TEST_ROW)
+        self.assertEqual(existing_place.id, imprint.place.id)
+        self.assertEqual(
+            existing_place.canonical_place, imprint.place.canonical_place)
+        self.assertEqual(existing_place.alternate_name, 'Cracóvia')
+
+        # An imprint with no place should first get an
+        # existing CanonicalPlace and existing Place
+        row = TEST_ROW.copy()
+        row[FIELD_PLACE_MURKY] = 'Krakkó'
+        row[FIELD_PUBLICATION_PLACE] = 'Kraków'
+        imprint = ImprintFactory(place=None)
+        cmd.handle_place(imprint, row)
+        self.assertNotEqual(existing_place.id, imprint.place.id)
+        self.assertEqual(imprint.place.alternate_name, 'Krakkó')
+        self.assertEqual(
+            existing_place.canonical_place, imprint.place.canonical_place)
