@@ -79,7 +79,7 @@ raven==6.10.0
 sentry-sdk==0.17.3
 django-bootstrap-form==3.4
 django-debug-toolbar==2.2
-django-waffle==1.0.0
+django-waffle==2.0.0
 django-smoketest==1.1.2
 django-extensions==3.0.7
 
