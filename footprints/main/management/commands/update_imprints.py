@@ -1,11 +1,12 @@
 import csv
 
 from django.core.management.base import BaseCommand
+from django.db.models.query_utils import Q
 
 from footprints.main.models import (
     Imprint, StandardizedIdentificationType,
     Language, ExtendedDate, StandardizedIdentification,
-    ImprintAlternateTitle)
+    ImprintAlternateTitle, CanonicalPlace, Place)
 
 
 FIELD_BHB_NUMBER = 0
@@ -69,10 +70,25 @@ class Command(BaseCommand):
         imprint.publication_date = dt
 
     def handle_place(self, imprint, row):
-        # @todo
-        # place_name = row[FIELD_PUBLICATION_PLACE]
-        # alt_place_name = row[FIELD_PLACE_MURKY]
-        pass
+        place_name = row[FIELD_PUBLICATION_PLACE]
+        alt_place_name = row[FIELD_PLACE_MURKY]
+
+        alt_place_name = alt_place_name.replace('(', '')
+        alt_place_name = alt_place_name.replace(')', '')
+        alt_place_name = alt_place_name.replace('[', '')
+        alt_place_name = alt_place_name.replace(']', '')
+
+        if imprint.place:
+            imprint.place.alternate_name = alt_place_name
+            imprint.place.save()
+        else:
+            # all imprints in the spreadsheet have a matching canonical place
+            cp = CanonicalPlace.objects.filter(
+                Q(canonical_name__startswith=place_name) |
+                Q(place__alternate_name__startswith=place_name) |
+                Q(place__alternate_name__startswith=alt_place_name)).first()
+            imprint.place, created = Place.objects.get_or_create(
+                canonical_place=cp, alternate_name=alt_place_name)
 
     def handle_actor(self, imprint, row):
         # @todo
