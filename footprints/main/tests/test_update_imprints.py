@@ -3,14 +3,15 @@ from django.test import TestCase
 from footprints.main.management.commands.update_imprints import Command, \
     FIELD_TITLE, FIELD_PLACE_MURKY, FIELD_PUBLICATION_PLACE
 from footprints.main.models import ImprintAlternateTitle, SLUG_BHB
-from footprints.main.tests.factories import ImprintFactory, LanguageFactory
+from footprints.main.tests.factories import ImprintFactory, LanguageFactory, \
+    PlaceFactory
 
 
 TEST_ROW = [
     '105180',
     'heb',
     'author',
-    'alternate title',
+    'alternate imprint title',
     'written work title',
     'subtitle',
     'Cracóvia',  # FIELD_PLACE_MURKY
@@ -53,7 +54,7 @@ class UpdateImprintsTest(TestCase):
 
         self.assertEqual(ImprintAlternateTitle.objects.count(), 1)
         iat = ImprintAlternateTitle.objects.first()
-        self.assertEqual(iat.alternate_title, 'alternate title')
+        self.assertEqual(iat.alternate_title, 'alternate imprint title')
         self.assertEqual(iat.standardized_identifier.identifier, bhb_number)
         self.assertEqual(iat.standardized_identifier.identifier_type.slug,
                          SLUG_BHB)
@@ -62,6 +63,14 @@ class UpdateImprintsTest(TestCase):
         # but don't create duplicates
         cmd.handle_title(imprint, TEST_ROW, bhb_number)
         self.assertEqual(ImprintAlternateTitle.objects.count(), 1)
+
+    def test_handle_language(self):
+        language = LanguageFactory(marc_code='heb')
+        cmd = Command()
+
+        imprint = ImprintFactory()
+        cmd.handle_language(imprint, TEST_ROW)
+        self.assertTrue(language in imprint.language.all())
 
     def test_handle_publication_date(self):
         cmd = Command()
@@ -82,7 +91,7 @@ class UpdateImprintsTest(TestCase):
         self.assertEqual(
             imprint.notes,
             'lorem ipsum<br />Subtitle: subtitle<br />'
-            'Notes from the BHB: note<br />')
+            'Notes from the BHB: note')
 
     def test_handle_place(self):
         cmd = Command()
@@ -117,3 +126,23 @@ class UpdateImprintsTest(TestCase):
         self.assertEqual(imprint.place.alternate_name, 'Krakkó')
         self.assertEqual(
             existing_place.canonical_place, imprint.place.canonical_place)
+
+    def test_create_imprint(self):
+        cmd = Command()
+        bhb_number = '000105180'
+        language = LanguageFactory(marc_code='heb')
+        PlaceFactory(alternate_name='Cracow')
+
+        imprint = cmd.create_imprint(TEST_ROW, bhb_number)
+
+        self.assertEqual(imprint.title, 'alternate imprint title')
+        self.assertEqual(imprint.work.title, 'written work title')
+        self.assertEqual(imprint.get_bhb_number().identifier, bhb_number)
+        self.assertTrue(language in imprint.language.all())
+        self.assertEqual(imprint.publication_date.__str__(), '1653')
+        self.assertEqual(imprint.place.alternate_name, 'Cracóvia')
+        self.assertEqual(imprint.place.canonical_place.canonical_name,
+                         'Kraków, Poland')
+        self.assertEqual(imprint.notes,
+                         'Subtitle: subtitle<br />'
+                         'Notes from the BHB: note')
