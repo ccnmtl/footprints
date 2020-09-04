@@ -105,7 +105,7 @@ class LanguageFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Language
     name = factory.Sequence(lambda n: "Language%03d" % n)
-    marc_code = 'arc'
+    marc_code = factory.Sequence(lambda n: "%03d" % n)
 
 
 class DigitalFormatFactory(factory.django.DjangoModelFactory):
