@@ -2,9 +2,9 @@ from django.test import TestCase
 
 from footprints.main.management.commands.update_imprints import Command, \
     FIELD_TITLE, FIELD_PLACE_MURKY, FIELD_PUBLICATION_PLACE
-from footprints.main.models import ImprintAlternateTitle, SLUG_BHB
+from footprints.main.models import ImprintAlternateTitle, SLUG_BHB, Role
 from footprints.main.tests.factories import ImprintFactory, LanguageFactory, \
-    PlaceFactory
+    PlaceFactory, RoleFactory
 
 
 TEST_ROW = [
@@ -132,6 +132,8 @@ class UpdateImprintsTest(TestCase):
         bhb_number = '000105180'
         language = LanguageFactory(marc_code='heb')
         PlaceFactory(alternate_name='Cracow')
+        RoleFactory(name=Role.AUTHOR)
+        RoleFactory(name=Role.PUBLISHER)
 
         imprint = cmd.create_imprint(TEST_ROW, bhb_number)
 
@@ -146,3 +148,39 @@ class UpdateImprintsTest(TestCase):
         self.assertEqual(imprint.notes,
                          'Subtitle: subtitle<br />'
                          'Notes from the BHB: note')
+
+    def test_get_or_create_actor(self):
+        cmd = Command()
+
+        role = RoleFactory(name=Role.AUTHOR)
+
+        # Create person & actor
+        actor = cmd.get_or_create_actor(role, 'Jacob Weil')
+        self.assertEqual(actor.role.name, Role.AUTHOR)
+        self.assertEqual(actor.alias, 'Jacob Weil')
+        self.assertEqual(actor.person.name, 'Jacob Weil')
+
+        # Pickup existing person & actor
+        actor2 = cmd.get_or_create_actor(role, 'Jacob Weil')
+        self.assertEqual(actor.id, actor2.id)
+
+    def test_handle_actors(self):
+        cmd = Command()
+
+        RoleFactory(name=Role.AUTHOR)
+        RoleFactory(name=Role.PUBLISHER)
+        imprint = ImprintFactory()
+
+        cmd.handle_actors(imprint, TEST_ROW)
+
+        self.assertEqual(imprint.actor.count(), 2)
+        actor = imprint.actor.filter(alias='publisher').first()
+        self.assertIsNotNone(actor)
+        self.assertEqual(actor.role.name, Role.PUBLISHER)
+        self.assertEqual(actor.person.name, 'publisher')
+
+        self.assertEqual(imprint.work.actor.count(), 2)
+        actor = imprint.work.actor.filter(alias='author').first()
+        self.assertIsNotNone(actor)
+        self.assertEqual(actor.role.name, Role.AUTHOR)
+        self.assertEqual(actor.person.name, 'author')
