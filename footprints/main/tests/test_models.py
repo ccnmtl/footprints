@@ -17,7 +17,8 @@ from footprints.main.tests.factories import RoleFactory, \
     ActorFactory, PlaceFactory, CollectionFactory, \
     WrittenWorkFactory, ImprintFactory, BookCopyFactory, FootprintFactory, \
     PersonFactory, DigitalObjectFactory, ExtendedDateFactory, \
-    EmptyFootprintFactory, StandardizedIdentificationFactory, UserFactory
+    EmptyFootprintFactory, StandardizedIdentificationFactory, UserFactory, \
+    ImprintAlternateTitleFactory
 from footprints.main.utils import string_to_point
 
 
@@ -440,6 +441,22 @@ class ImprintTest(TestCase):
 
         imprint.actor.add(censor)
         self.assertTrue(imprint.has_censor())
+
+    def test_get_alternate_titles(self):
+        imprint = ImprintFactory()
+        self.assertEqual(imprint.get_alternate_titles(), [])
+
+        bhb_number = '094677047'
+        imprint, created = Imprint.objects.get_or_create_by_attributes(
+            bhb_number, 'The Odyssey', 'The Odyssey, Edition 1',
+            'approximately 1984')
+        self.assertEqual(imprint.get_alternate_titles().count(), 0)
+
+        title = ImprintAlternateTitleFactory(bhb_number=bhb_number)
+        self.assertEqual(imprint.get_alternate_titles().count(), 1)
+        self.assertEqual(
+            imprint.get_alternate_titles().first(),
+            title.alternate_title)
 
 
 class ActorTest(TestCase):

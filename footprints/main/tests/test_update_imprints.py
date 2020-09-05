@@ -91,7 +91,7 @@ class UpdateImprintsTest(TestCase):
         self.assertEqual(
             imprint.notes,
             'lorem ipsum<br />Subtitle: subtitle<br />'
-            'Notes from the BHB: note')
+            'BHB note: note')
 
     def test_handle_place(self):
         cmd = Command()
@@ -147,7 +147,7 @@ class UpdateImprintsTest(TestCase):
                          'Kraków, Poland')
         self.assertEqual(imprint.notes,
                          'Subtitle: subtitle<br />'
-                         'Notes from the BHB: note')
+                         'BHB note: note')
 
     def test_get_or_create_actor(self):
         cmd = Command()
@@ -184,3 +184,16 @@ class UpdateImprintsTest(TestCase):
         self.assertIsNotNone(actor)
         self.assertEqual(actor.role.name, Role.AUTHOR)
         self.assertEqual(actor.person.name, 'author')
+
+    def test_log_entry(self):
+        bhb_number = '000105180'
+        LanguageFactory(marc_code='heb')
+        PlaceFactory(alternate_name='Cracow')
+        RoleFactory(name=Role.AUTHOR)
+        RoleFactory(name=Role.PUBLISHER)
+
+        cmd = Command()
+        imprint = cmd.create_imprint(TEST_ROW, bhb_number)
+
+        entry = cmd.log_entry(1, imprint, 'created')
+        self.assertTrue(entry.startswith('"2","created"'))

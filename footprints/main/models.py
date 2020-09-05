@@ -911,6 +911,14 @@ class Imprint(models.Model):
         qs = Footprint.objects.filter(book_copy__imprint=self)
         return Footprint.objects.get_end_date(qs)
 
+    def get_alternate_titles(self):
+        bhb_number = self.get_bhb_number()
+        if not bhb_number:
+            return []
+        return ImprintAlternateTitle.objects.filter(
+            standardized_identifier__identifier=bhb_number).values_list(
+                'alternate_title', flat=True)
+
     def has_censor(self):
         return Actor.objects.filter(
             role__name=Role.CENSOR,

@@ -10,7 +10,7 @@ from footprints.main.models import (
     Language, ExtendedDate, Role, DigitalFormat,
     StandardizedIdentification, Person, Actor, Place, Collection, WrittenWork,
     Imprint, BookCopy, Footprint, DigitalObject, IMPRINT_LEVEL,
-    StandardizedIdentificationType, CanonicalPlace)
+    StandardizedIdentificationType, CanonicalPlace, ImprintAlternateTitle)
 from footprints.main.utils import string_to_point
 
 
@@ -237,6 +237,29 @@ class ImprintFactory(factory.django.DjangoModelFactory):
     def language(self, create, extracted, **kwargs):
         if create:
             self.language.add(LanguageFactory())
+
+
+class ImprintAlternateTitleFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = ImprintAlternateTitle
+
+    alternate_title = factory.Sequence(lambda n: "Alternate %03d" % n)
+    standardized_identifier = factory.SubFactory(
+        StandardizedIdentificationFactory)
+    language = factory.SubFactory(LanguageFactory)
+
+    @factory.post_generation
+    def bhb_number(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            bhb_type = StandardizedIdentificationType.objects.bhb()
+            identifier = StandardizedIdentificationFactory(
+                identifier_type=bhb_type,
+                identifier=extracted)
+            self.standardized_identifier = identifier
+            self.save()
 
 
 class BookCopyFactory(factory.django.DjangoModelFactory):
