@@ -348,7 +348,7 @@
                                         <h4 class="modal-title">People</h4>
                                       </div>
                                       <div class="modal-body column-count-3">
-                                        {% for a in actor %}
+                                        {% for a in actor_title %}
                                         <div class="checkbox">
                                             <label {% if a.1 == 0 %}class="disabled"{% endif %}>
                                                 <input name="actor" type="checkbox" value="{{a.0}}"
