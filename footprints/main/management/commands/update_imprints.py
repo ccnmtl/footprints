@@ -6,7 +6,7 @@ from django.db.models.query_utils import Q
 from footprints.main.models import (
     Imprint, StandardizedIdentificationType,
     Language, ExtendedDate, StandardizedIdentification,
-    ImprintAlternateTitle, CanonicalPlace, Place)
+    ImprintAlternateTitle, CanonicalPlace, WrittenWork, Place)
 
 
 FIELD_BHB_NUMBER = 0
@@ -40,6 +40,10 @@ class Command(BaseCommand):
         if len(bhb) < 9:
             bhb = bhb.rjust(9, '0')
         return bhb
+
+    def handle_language(self, imprint, row):
+        language = Language.objects.get(marc_code=row[FIELD_LANGUAGE])
+        imprint.language.add(language)
 
     def handle_title(self, imprint, row, bhb_number):
         if imprint.title == row[FIELD_TITLE]:
@@ -90,23 +94,60 @@ class Command(BaseCommand):
             imprint.place, created = Place.objects.get_or_create(
                 canonical_place=cp, alternate_name=alt_place_name)
 
-    def handle_actor(self, imprint, row):
+    def handle_actors(self, imprint, row):
         # @todo
         # author_name = row[FIELD_AUTHOR]
         # publisher = row[FIELD_PUBLISHER]
         pass
 
     def handle_notes(self, imprint, row):
-        fmt = '{}<br />Subtitle: {}<br />Notes from the BHB: {}<br />'
-        imprint.notes = fmt.format(
-            imprint.notes, row[FIELD_SUBTITLE], row[FIELD_NOTE])
+        fmt = 'Subtitle: {}<br />Notes from the BHB: {}'
+        notes = fmt.format(row[FIELD_SUBTITLE], row[FIELD_NOTE])
+        if imprint.notes:
+            imprint.notes += '<br />' + notes
+        else:
+            imprint.notes = notes
 
-    def create_imprint(self, row):
-        pass
+    def create_imprint(self, row, bhb_number):
+        # get or create the written work
+        work, created = WrittenWork.objects.get_or_create(
+            title=row[FIELD_WORK_TITLE])
+
+        # create the imprint
+        imprint = Imprint.objects.create(work=work, title=row[FIELD_TITLE])
+
+        # attach the bhb number
+        bhb = StandardizedIdentificationType.objects.bhb()
+        si = StandardizedIdentification.objects.create(
+            identifier_type=bhb, identifier=bhb_number)
+        imprint.standardized_identifier.add(si)
+
+        # add language
+        self.handle_language(imprint, row)
+
+        # add the published date
+        self.handle_publication_date(imprint, row)
+
+        # add a canonical place and/or place name alias
+        self.handle_place(imprint, row)
+
+        # add the written work author and the imprint publisher
+        self.handle_actors(imprint, row)
+
+        # Add information to the notes field
+        self.handle_notes(imprint, row)
+
+        # Save anything that needs saved
+        imprint.save()
+
+        return imprint
 
     def update_imprint(self, imprint, row, bhb_number):
         # add a title alias if the imprint title does not match
         self.handle_title(imprint, row, bhb_number)
+
+        # add language
+        self.handle_language(imprint, row)
 
         # add the published date if the imprint does not have one
         self.handle_publication_date(imprint, row)
@@ -133,7 +174,6 @@ class Command(BaseCommand):
         bhb = StandardizedIdentificationType.objects.bhb()
         for (idx, row) in enumerate(reader):
             bhb_number = self.format_bhb_number(row[FIELD_BHB_NUMBER])
-            print('BHB Number: {}'.format(bhb_number))
             imprints = Imprint.objects.filter(
                 standardized_identifier__identifier_type=bhb,
                 standardized_identifier__identifier=bhb_number)
