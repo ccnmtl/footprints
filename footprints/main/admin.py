@@ -19,15 +19,22 @@ import adminactions.actions as actions
 actions.add_to_site(site)
 
 admin.site.register(Role)
-admin.site.register(Language)
 admin.site.register(DigitalFormat)
 admin.site.register(DigitalObject)
 admin.site.register(StandardizedIdentificationType)
 
 
+class LanguageAdmin(admin.ModelAdmin):
+    list_display = ('name', 'marc_code')
+
+
+admin.site.register(Language, LanguageAdmin)
+
+
 class StandardizedIdentificationAdmin(admin.ModelAdmin):
     list_display = ('identifier', 'identifier_type')
     list_filter = ('identifier_type',)
+    search_fields = ('name',)
 
 
 admin.site.register(
@@ -77,12 +84,21 @@ def person_name(obj):
 class ActorAdmin(admin.ModelAdmin):
 
     list_display = (person_name, 'alias', 'role')
+    list_filter = ('role__name',)
     person_name.admin_order_field = 'person__name'
+    search_fields = ('alias', 'person__name')
 
 
 admin.site.register(Actor, ActorAdmin)
 admin.site.register(Collection)
-admin.site.register(WrittenWork)
+
+
+class WrittenWorkAdmin(admin.ModelAdmin):
+    list_display = ('title',)
+    search_fields = ('title',)
+
+
+admin.site.register(WrittenWork, WrittenWorkAdmin)
 
 
 def imprint_display(obj):
@@ -93,6 +109,7 @@ class BookCopyAdmin(admin.ModelAdmin):
     list_display = ('id', imprint_display)
     fields = ('id', 'imprint', 'digital_object', 'notes')
     readonly_fields = ('id',)
+    search_fields = ('imprint__title',)
 
 
 admin.site.register(BookCopy, BookCopyAdmin)
