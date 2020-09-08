@@ -6,7 +6,8 @@ from django.db.models.query_utils import Q
 from footprints.main.models import (
     Imprint, StandardizedIdentificationType,
     Language, ExtendedDate, StandardizedIdentification,
-    ImprintAlternateTitle, CanonicalPlace, WrittenWork, Place)
+    ImprintAlternateTitle, CanonicalPlace,
+    Person, Actor, Role, WrittenWork, Place)
 
 
 FIELD_BHB_NUMBER = 0
@@ -94,11 +95,36 @@ class Command(BaseCommand):
             imprint.place, created = Place.objects.get_or_create(
                 canonical_place=cp, alternate_name=alt_place_name)
 
+    def get_or_create_actor(self, role, name):
+        name = name.strip()
+        if not name or len(name) < 1:
+            return None
+
+        # is there an existing actor or person with this name?
+        actor = Actor.objects.filter(
+            Q(alias=name) | Q(person__name=name)).first()
+        person = Person.objects.filter(name=name).first()
+
+        if not actor and not person:
+            person = Person.objects.create(name=name)
+            actor = Actor.objects.create(person=person, role=role, alias=name)
+        elif not actor:
+            actor = Actor.objects.create(person=person, role=role, alias=name)
+
+        return actor
+
     def handle_actors(self, imprint, row):
-        # @todo
-        # author_name = row[FIELD_AUTHOR]
-        # publisher = row[FIELD_PUBLISHER]
-        pass
+        author_name = row[FIELD_AUTHOR]
+        role = Role.objects.get(name=Role.AUTHOR)
+        actor = self.get_or_create_actor(role, author_name)
+        if actor:
+            imprint.work.actor.add(actor)
+
+        publisher_name = row[FIELD_PUBLISHER]
+        role = Role.objects.get(name=Role.PUBLISHER)
+        actor = self.get_or_create_actor(role, publisher_name)
+        if actor:
+            imprint.actor.add(actor)
 
     def handle_notes(self, imprint, row):
         fmt = 'Subtitle: {}<br />Notes from the BHB: {}'
