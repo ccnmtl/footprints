@@ -194,7 +194,7 @@ class PathmapperEventViewSet(viewsets.ViewSet):
         events = {}
         cur_year = int(datetime.now().year)
         ids = []
-        layers = loads(self.request.POST.get('layers'))
+        layers = loads(self.request.POST.get('layers', '[]'))
         for layer in layers:
             sqs = self.get_book_copies(layer)
             counts = sqs.facet('pub_year').facet_counts()
