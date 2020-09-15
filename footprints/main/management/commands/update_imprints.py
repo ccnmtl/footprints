@@ -1,4 +1,5 @@
 import csv
+import re
 
 from django.core.management.base import BaseCommand
 from django.db.models.query_utils import Q
@@ -37,8 +38,15 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('filename')
 
+    def clean(self, s):
+        s = re.sub(r'^\(', '', s)
+        s = re.sub(r'\)$', '', s)
+        s = re.sub(r'^\[', '', s)
+        s = re.sub(r'\]$', '', s)
+        return s
+
     def format_bhb_number(self, bhb):
-        if len(bhb) < 9:
+        if len(bhb) > 0 and len(bhb) < 9:
             bhb = bhb.rjust(9, '0')
         return bhb
 
@@ -47,7 +55,8 @@ class Command(BaseCommand):
         imprint.language.add(language)
 
     def handle_title(self, imprint, row, bhb_number):
-        if imprint.title == row[FIELD_TITLE]:
+        title = self.clean(row[FIELD_TITLE])
+        if imprint.title == title:
             return
 
         language = Language.objects.get(marc_code=row[FIELD_LANGUAGE])
@@ -55,15 +64,19 @@ class Command(BaseCommand):
         try:
             ImprintAlternateTitle.objects.get(
                 standardized_identifier__identifier=bhb_number,
-                alternate_title=row[FIELD_TITLE],
+                alternate_title=title,
                 language=language)
         except ImprintAlternateTitle.DoesNotExist:
             bhb_type = StandardizedIdentificationType.objects.bhb()
-            si, created = StandardizedIdentification.objects.get_or_create(
-                identifier_type=bhb_type, identifier=bhb_number)
+            si = StandardizedIdentification.objects.filter(
+                identifier_type=bhb_type, identifier=bhb_number).first()
+            if not si:
+                si = StandardizedIdentification.objects.create(
+                    identifier_type=bhb_type, identifier=bhb_number)
+
             ImprintAlternateTitle.objects.create(
                 standardized_identifier=si,
-                alternate_title=row[FIELD_TITLE],
+                alternate_title=title,
                 language=language)
 
     def handle_publication_date(self, imprint, row):
@@ -76,12 +89,7 @@ class Command(BaseCommand):
 
     def handle_place(self, imprint, row):
         place_name = row[FIELD_PUBLICATION_PLACE]
-        alt_place_name = row[FIELD_PLACE_MURKY]
-
-        alt_place_name = alt_place_name.replace('(', '')
-        alt_place_name = alt_place_name.replace(')', '')
-        alt_place_name = alt_place_name.replace('[', '')
-        alt_place_name = alt_place_name.replace(']', '')
+        alt_place_name = self.clean(row[FIELD_PLACE_MURKY])
 
         if imprint.place:
             imprint.place.alternate_name = alt_place_name
@@ -92,8 +100,12 @@ class Command(BaseCommand):
                 Q(canonical_name__startswith=place_name) |
                 Q(place__alternate_name__startswith=place_name) |
                 Q(place__alternate_name__startswith=alt_place_name)).first()
-            imprint.place, created = Place.objects.get_or_create(
-                canonical_place=cp, alternate_name=alt_place_name)
+
+            imprint.place = Place.objects.filter(
+                canonical_place=cp, alternate_name=alt_place_name).first()
+            if not imprint.place:
+                imprint.place = Place.objects.create(
+                    canonical_place=cp, alternate_name=alt_place_name)
 
     def get_or_create_actor(self, role, name):
         name = name.strip()
@@ -127,20 +139,23 @@ class Command(BaseCommand):
             imprint.actor.add(actor)
 
     def handle_notes(self, imprint, row):
-        fmt = 'Subtitle: {}<br />Notes from the BHB: {}'
-        notes = fmt.format(row[FIELD_SUBTITLE], row[FIELD_NOTE])
+        fields = []
         if imprint.notes:
-            imprint.notes += '<br />' + notes
-        else:
-            imprint.notes = notes
+            fields.append(imprint.notes)
+        if row[FIELD_SUBTITLE]:
+            fields.append('Subtitle: ' + row[FIELD_SUBTITLE])
+        if row[FIELD_NOTE]:
+            fields.append('BHB note: ' + row[FIELD_NOTE])
+        imprint.notes = '<br />'.join(fields)
 
     def create_imprint(self, row, bhb_number):
         # get or create the written work
-        work, created = WrittenWork.objects.get_or_create(
-            title=row[FIELD_WORK_TITLE])
+        title = self.clean(row[FIELD_WORK_TITLE])
+        work, created = WrittenWork.objects.get_or_create(title=title)
 
         # create the imprint
-        imprint = Imprint.objects.create(work=work, title=row[FIELD_TITLE])
+        title = self.clean(row[FIELD_TITLE])
+        imprint = Imprint.objects.create(work=work, title=title)
 
         # attach the bhb number
         bhb = StandardizedIdentificationType.objects.bhb()
@@ -190,6 +205,35 @@ class Command(BaseCommand):
         # Save anything that needs saved
         imprint.save()
 
+    def log_entry(self, row_idx, imprint, status):
+        publishers = [str(actor) for actor in imprint.publishers()]
+        authors = [str(actor) for actor in imprint.work.authors()]
+
+        alternate_place_name = ''
+        canonical_place_name = ''
+        if imprint.place:
+            alternate_place_name = imprint.place.alternate_name
+            canonical_place_name = \
+                imprint.place.canonical_place.canonical_name
+
+        fields = [
+            str(row_idx + 1),
+            status,
+            imprint.get_bhb_number().identifier,
+            str(imprint.id),
+            imprint.title,
+            ' | '.join(imprint.get_alternate_titles()),
+            imprint.work.title,
+            ' | '.join(imprint.language.values_list('name', flat=True)),
+            str(imprint.publication_date),
+            alternate_place_name,
+            canonical_place_name,
+            ' | '.join(publishers),
+            ' | '.join(authors),
+            imprint.notes or '',
+        ]
+        return ','.join('"{0}"'.format(fld) for fld in fields)
+
     def handle(self, *args, **options):
         created = 0
         updated = 0
@@ -198,19 +242,25 @@ class Command(BaseCommand):
         reader = csv.reader(csv_file)
 
         bhb = StandardizedIdentificationType.objects.bhb()
-        for (idx, row) in enumerate(reader):
-            bhb_number = self.format_bhb_number(row[FIELD_BHB_NUMBER])
+        for idx, row in enumerate(reader):
+            if idx == 0:
+                continue
+
+            bhb_number = self.format_bhb_number(str(row[FIELD_BHB_NUMBER]))
             imprints = Imprint.objects.filter(
                 standardized_identifier__identifier_type=bhb,
-                standardized_identifier__identifier=bhb_number)
+                standardized_identifier__identifier=bhb_number).distinct()
 
             if imprints.count() < 1:
                 created += 1
-                self.create_imprint(row)
+                imprint = self.create_imprint(row, bhb_number)
+                print(self.log_entry(idx, imprint, 'created'))
             else:
                 updated += imprints.count()
                 for imprint in imprints:
+                    print(self.log_entry(idx, imprint, 'existing'))
                     self.update_imprint(imprint, row, bhb_number)
+                    print(self.log_entry(idx, imprint, 'updated'))
 
         csv_file.close()
         print('updated {}, created {}'.format(updated, created))
