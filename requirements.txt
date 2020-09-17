@@ -109,7 +109,7 @@ django-reversion==3.0.8
 python-dateutil==2.8.1
 requirements/src/edtf-0.9.3ctl-py2.py3-none-any.whl
 
-django-storages==1.9.1
+django-storages==1.10.1
 django-cacheds3storage==0.2.2
 ccnmtlsettings==1.9.0
 funcsigs==1.0.2
