@@ -160,8 +160,8 @@ class FootprintSearchForm(ModelSearchForm):
     def handle_actor(self):
         a = []
         if self.cleaned_data['actor']:
-            for a in self.cleaned_data['actor']:
-                a.append(Q(actor_title_exact__in=[a]))
+            for actor in self.cleaned_data['actor']:
+                a.append(Q(actor_title_exact__in=[actor]))
         return a
 
     def search(self):
