@@ -39,11 +39,13 @@ class Command(BaseCommand):
         parser.add_argument('filename')
 
     def clean(self, s):
+        s = re.sub(r'\[!\]', '', s)
+        s = re.sub(r'\?', '', s)
         s = re.sub(r'^\(', '', s)
         s = re.sub(r'\)$', '', s)
         s = re.sub(r'^\[', '', s)
         s = re.sub(r'\]$', '', s)
-        return s
+        return s.strip()
 
     def format_bhb_number(self, bhb):
         if len(bhb) > 0 and len(bhb) < 9:

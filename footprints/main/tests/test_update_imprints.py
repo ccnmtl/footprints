@@ -197,3 +197,18 @@ class UpdateImprintsTest(TestCase):
 
         entry = cmd.log_entry(1, imprint, 'created')
         self.assertTrue(entry.startswith('"2","created"'))
+
+    def test_clean(self):
+        cmd = Command()
+
+        s = '(קונטשטינא [!])'
+        self.assertEqual(cmd.clean(s), 'קונטשטינא')
+
+        s = '[ויניציאה]'
+        self.assertEqual(cmd.clean(s), 'ויניציאה')
+
+        s = '[ספרד?]'
+        self.assertEqual(cmd.clean(s), 'ספרד')
+
+        s = '[Halle?]'
+        self.assertEqual(cmd.clean(s), 'Halle')
