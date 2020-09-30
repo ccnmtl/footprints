@@ -1,5 +1,6 @@
 import csv
 import re
+import time
 
 from django.core.management.base import BaseCommand
 from django.db.models.query_utils import Q
@@ -263,6 +264,9 @@ class Command(BaseCommand):
                     print(self.log_entry(idx, imprint, 'existing'))
                     self.update_imprint(imprint, row, bhb_number)
                     print(self.log_entry(idx, imprint, 'updated'))
+
+            # take a breath
+            time.sleep(0.2)
 
         csv_file.close()
         print('updated {}, created {}'.format(updated, created))
