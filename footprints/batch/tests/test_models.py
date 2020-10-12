@@ -1,6 +1,7 @@
 from django.test.testcases import TestCase
-
 from footprints.batch.tests.factories import BatchRowFactory
+from footprints.main.models import StandardizedIdentificationType, \
+    StandardizedIdentification
 from footprints.main.tests.factories import ImprintFactory, BookCopyFactory, \
     FootprintFactory, WrittenWorkFactory, StandardizedIdentificationFactory, \
     ActorFactory, CanonicalPlaceFactory, PlaceFactory
@@ -93,12 +94,15 @@ class BatchRowTest(TestCase):
         row = BatchRowFactory(book_copy_call_number='abcde')
         self.assertTrue(row.validate_book_copy_call_number())
 
-        # book copy exists, but the imprint title doesn't match batch row title
+        # book copy exists and the bhb numbers do not match
         copy = BookCopyFactory()
         row = BatchRowFactory()
         self.assertFalse(row.validate_book_copy_call_number())
 
-        # book copy exists, and the imprint title matches batch row title
-        copy.imprint.title = row.imprint_title
+        # book copy exists, and the bhb numbers match
+        bhb_type = StandardizedIdentificationType.objects.bhb()
+        si = StandardizedIdentification.objects.create(
+            identifier=row.bhb_number, identifier_type=bhb_type)
+        copy.imprint.standardized_identifier.add(si)
         copy.imprint.save()
         self.assertTrue(row.validate_book_copy_call_number())
