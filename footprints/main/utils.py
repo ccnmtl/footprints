@@ -22,6 +22,12 @@ def permissions(request):
     }
 
 
+def format_bhb_number(bhb):
+    if len(bhb) > 0 and len(bhb) < 9:
+        bhb = bhb.rjust(9, '0')
+    return bhb
+
+
 def interpolate_role_actors(roles, actors):
     ''' Takes in a list of roles and returns a list of actors
     and the role that they have
