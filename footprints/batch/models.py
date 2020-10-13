@@ -294,12 +294,15 @@ class BatchRow(models.Model):
             # does a book copy exist with this call number?
             copy = BookCopy.objects.get(call_number=self.book_copy_call_number)
 
-            # make sure the imprint titles match
-            return self.imprint_title == copy.imprint.title
+            # make sure the imprint BHB numbers match
+            return self.bhb_number == copy.imprint.get_bhb_number().identifier
         except BookCopy.MultipleObjectsReturned:
             return True
         except BookCopy.DoesNotExist:
             return True
+        except AttributeError:
+            # copy's imprint does not have a bhb number
+            return False
 
     def validate_medium(self):
         if not self.medium:
