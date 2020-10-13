@@ -113,9 +113,10 @@ class GeonameUtil(object):
 
     def format_name(self, the_json):
         name = the_json['name']
-        if the_json['adminName1']:
+        if 'adminName1' in the_json and the_json['adminName1']:
             name += ', ' + the_json['adminName1']
-        name += ', ' + the_json['countryName']
+        if 'countryName' in the_json and the_json['countryName']:
+            name += ', ' + the_json['countryName']
         return name
 
     def get_geoname_by_id(self, gid):
