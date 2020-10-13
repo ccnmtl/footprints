@@ -7,6 +7,7 @@ from django.db.models.query_utils import Q
 from footprints.batch.validators import validate_date, validate_numeric
 from footprints.main.models import Footprint, Imprint, Role, MEDIUM_CHOICES, \
     BookCopy
+from footprints.main.utils import format_bhb_number
 
 
 class BatchJob(models.Model):
@@ -72,6 +73,8 @@ class BatchRow(models.Model):
         "has conflicting data: <b>{}</b>.")
     BOOK_COPY_INTEGRITY = (
         "Multiple book copies have the same call number: {}.")
+    BOOK_COPY_CALL_NUMBER_INTEGRITY = (
+        "This call number is identified with a different BHB number ")
     FOOTPRINT_ACTOR_HELP_TEXT = (
         "An actor name is required when a role is specified.")
 
@@ -116,7 +119,8 @@ class BatchRow(models.Model):
     # book copy call number
     book_copy_call_number = models.CharField(
         max_length=256, null=True, blank=True,
-        verbose_name='Book Copy Call Number')
+        verbose_name='Book Copy Call Number',
+        help_text=BOOK_COPY_CALL_NUMBER_INTEGRITY)
 
     medium = models.TextField(
         verbose_name='Evidence Type', help_text='This field is required.')
@@ -295,7 +299,8 @@ class BatchRow(models.Model):
             copy = BookCopy.objects.get(call_number=self.book_copy_call_number)
 
             # make sure the imprint BHB numbers match
-            return self.bhb_number == copy.imprint.get_bhb_number().identifier
+            return format_bhb_number(self.bhb_number) == \
+                format_bhb_number(copy.imprint.get_bhb_number().identifier)
         except BookCopy.MultipleObjectsReturned:
             return True
         except BookCopy.DoesNotExist:
