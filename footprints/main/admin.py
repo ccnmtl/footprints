@@ -106,10 +106,10 @@ def imprint_display(obj):
 
 
 class BookCopyAdmin(admin.ModelAdmin):
-    list_display = ('id', imprint_display)
-    fields = ('id', 'imprint', 'digital_object', 'notes')
+    list_display = ('id', imprint_display, 'call_number')
+    fields = ('id', 'imprint', 'digital_object', 'notes', 'call_number')
     readonly_fields = ('id',)
-    search_fields = ('imprint__title',)
+    search_fields = ('imprint__title', 'call_number')
 
 
 admin.site.register(BookCopy, BookCopyAdmin)
