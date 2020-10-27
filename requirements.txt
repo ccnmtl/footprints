@@ -1,6 +1,6 @@
 Django>=2.2.12,<3
 
-feedparser==6.0.1
+feedparser==6.0.2
 
 Markdown==3.3.3
 
