@@ -137,6 +137,7 @@
                         {% endfor %}
                     {% endif %}
                     <dt>Imprints</dt><dd>{{imprints|length}}</dd>
+                    <dt>Book Copies</dt><dd>{{work.book_copies.count}}</dd>
                     <dt>Footprints</dt><dd>{{work.footprints.count}}</dd>
                     {% if work.notes %}
                         <dt>Notes</dt><dd>{{work.notes|safe}}</dd>

@@ -766,6 +766,9 @@ class WrittenWork(models.Model):
         return self.standardized_identifier.filter(
             identifier_type=loc_type).first()
 
+    def book_copies(self):
+        return BookCopy.objects.filter(imprint__work=self)
+
     def footprints(self):
         return Footprint.objects.filter(book_copy__imprint__work=self)
 
