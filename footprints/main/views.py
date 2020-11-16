@@ -180,7 +180,13 @@ class BaseSearchView(SearchView):
         # The first view is "unbound" and retrieves all Footprints
         # as such, the sort needs to happen here rather than in the form
         sort_by = self.request.GET.get('sort_by', 'ftitle')
+        if sort_by not in SORT_OPTIONS.keys():
+            sort_by = 'ftitle'
+
         direction = self.request.GET.get('direction', 'asc')
+        if direction not in ['asc', 'desc']:
+            direction = 'asc'
+
         if direction == 'desc':
             sort_by = '-{}'.format(sort_by)
 
@@ -194,6 +200,7 @@ class FootprintSearchView(BaseSearchView):
         'footprint_location_title', 'imprint_location_title', 'actor_title']
 
     def get_context_data(self, **kwargs):
+
         context = super(FootprintSearchView, self).get_context_data(**kwargs)
 
         base = reverse('search')
