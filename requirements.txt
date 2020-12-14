@@ -32,7 +32,7 @@ pyasn1==0.4.8
 cryptography==3.3.1  # pyOpenSSL
 
 
-chardet==3.0.4
+chardet==4.0.0
 idna==2.10
 urllib3==1.26.2  # sentry-sdk
 
