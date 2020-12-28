@@ -66,7 +66,7 @@ librabbitmq==2.0.0
 celery>=3.1.26.post2,<4.0.0
 anyjson==0.3.3
 billiard==3.6.3.0
-pytz==2020.4
+pytz==2020.5
 
 djangowind==1.2.3
 requirements/src/sorl-3.2ctl-py2.py3-none-any.whl
