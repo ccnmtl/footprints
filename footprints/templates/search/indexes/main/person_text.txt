@@ -1,2 +1,6 @@
+{% autoescape off %}
 {{object.name}}
-{{object.notes}}
+{% if object.notes %}
+    {{object.notes}}
+{% endif %}
+{% endautoescape %}

@@ -5,6 +5,8 @@
 {{object.book_copy.imprint.place.canonical_place.canonical_name}}
 {{object.book_copy.call_number}}
 {{object.book_copy.imprint.get_bhb_number}}
+{% autoescape off %}
 {% for actor in object.actor.all %} {{actor}} {% endfor %}
 {% for actor in object.book_copy.imprint.work.actor.all %} {{actor}} {% endfor %}
+{% endautoescape %}
 {{object.notes}}
