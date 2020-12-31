@@ -1,2 +1,4 @@
+{% autoescape off %}
 {{object.imprint.title}}
 {{object.imprint.work.title}}
+{% endautoescape %}
