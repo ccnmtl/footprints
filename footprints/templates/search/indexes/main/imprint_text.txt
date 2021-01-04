@@ -1,2 +1,4 @@
+{% autoescape off %}
 {{object.title}}
 {{object.notes}}
+{% endautoescape %}

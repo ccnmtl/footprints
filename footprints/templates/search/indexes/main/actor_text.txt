@@ -1,3 +1,5 @@
+{% autoescape off %}
 {{object.person.name}}
 {{object.alias}}
 {{object.notes}}
+{% endautoescape %}
