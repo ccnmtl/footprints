@@ -94,21 +94,17 @@ class Command(BaseCommand):
         place_name = row[FIELD_PUBLICATION_PLACE]
         alt_place_name = self.clean(row[FIELD_PLACE_MURKY])
 
-        if imprint.place:
-            imprint.place.alternate_name = alt_place_name
-            imprint.place.save()
-        else:
-            # all imprints in the spreadsheet have a matching canonical place
-            cp = CanonicalPlace.objects.filter(
-                Q(canonical_name__startswith=place_name) |
-                Q(place__alternate_name__startswith=place_name) |
-                Q(place__alternate_name__startswith=alt_place_name)).first()
+        # all imprints in the spreadsheet have a matching canonical place
+        cp = CanonicalPlace.objects.filter(
+            Q(canonical_name__startswith=place_name) |
+            Q(place__alternate_name__startswith=place_name) |
+            Q(place__alternate_name__startswith=alt_place_name)).first()
 
-            imprint.place = Place.objects.filter(
-                canonical_place=cp, alternate_name=alt_place_name).first()
-            if not imprint.place:
-                imprint.place = Place.objects.create(
-                    canonical_place=cp, alternate_name=alt_place_name)
+        imprint.place = Place.objects.filter(
+            canonical_place=cp, alternate_name=alt_place_name).first()
+        if not imprint.place:
+            imprint.place = Place.objects.create(
+                canonical_place=cp, alternate_name=alt_place_name)
 
     def get_or_create_actor(self, role, name):
         name = name.strip()
