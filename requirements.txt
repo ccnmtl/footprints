@@ -18,7 +18,7 @@ mccabe==0.6.1
 pyparsing==2.4.7
 pycodestyle==2.6.0
 configparser==5.0.1
-importlib-metadata==3.3.0  # for flake8
+importlib-metadata==3.4.0  # for flake8
 typing_extensions==3.7.4.3
 zipp==3.4.0  # for flake8
 flake8==3.8.4
