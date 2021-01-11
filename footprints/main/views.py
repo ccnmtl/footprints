@@ -717,14 +717,9 @@ class AddPlaceView(AddRelatedRecordView):
 
         canonical = self.get_canonical_place(gid, position, canonical_name)
         alt_name = self.request.POST.get('placeName', '')
-        try:
-            place, created = Place.objects.get_or_create(
-                alternate_name=alt_name, canonical_place=canonical)
-        except Place.MultipleObjectsReturned:
-            # @todo - remove this after the place duplication is cleared up
-            # and the geonameId is a required field
-            place = Place.objects.filter(
-                alternate_name=alt_name, canonical_place=canonical).first()
+
+        place, created = Place.objects.get_or_create(
+            alternate_name=alt_name, canonical_place=canonical)
 
         self.set_place(the_parent, place)
         return self.render_to_json_response({'success': True})

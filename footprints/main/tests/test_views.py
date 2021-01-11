@@ -956,29 +956,6 @@ class AddPlaceViewTest(TestCase):
             old_place.canonical_place.id, fp.place.canonical_place.id)
         self.assertEqual(old_place.id, fp.place.id)
 
-    def test_post_multiple_duplicate_places(self):
-        fp = FootprintFactory()
-
-        new_place = PlaceFactory()
-        PlaceFactory(
-            alternate_name=new_place.alternate_name,
-            canonical_place=new_place.canonical_place)
-
-        self.client.login(username=self.contributor.username, password="test")
-        response = self.client.post(
-            self.url,
-            {'parent_id': fp.id,
-             'parent_model': 'footprint',
-             'placeName': new_place.alternate_name,
-             'placeId': new_place.alternate_name,
-             'geonameId': new_place.canonical_place.geoname_id,
-             'canonicalName': new_place.canonical_place.canonical_name,
-             'position': new_place.canonical_place.latlng_string()},
-            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEqual(response.status_code, 200)
-        fp.refresh_from_db()
-        self.assertEqual(new_place.id, fp.place.id)
-
     def test_get_canonical_place(self):
         # gets an existing place by geonameid
         cp = CanonicalPlaceFactory()
