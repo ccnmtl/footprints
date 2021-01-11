@@ -139,6 +139,10 @@ class GeonameUtil(object):
             cp = CanonicalPlace.objects.create(
                 geoname_id=gid, canonical_name=name, latlng=pt)
 
-        place, created = Place.objects.get_or_create(
-            alternate_name=name, canonical_place=cp)
+        try:
+            place, created = Place.objects.get_or_create(
+                alternate_name=name, canonical_place=cp)
+        except Place.MultipleObjectsReturned:
+            place = Place.objects.filter(
+                alternate_name=name, canonical_place=cp).first()
         return place

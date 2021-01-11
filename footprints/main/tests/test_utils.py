@@ -3,6 +3,7 @@ from unittest import mock
 from django.test.testcases import TestCase
 
 from footprints.main.models import Actor, Role
+from footprints.main.tests.factories import CanonicalPlaceFactory, PlaceFactory
 from footprints.main.utils import (
     interpolate_role_actors, snake_to_camel, camel_to_snake, GeonameUtil)
 
@@ -89,3 +90,14 @@ class GeonameUtilTest(TestCase):
 
                 self.assertEqual(place.id,
                                  GeonameUtil().get_or_create_place('123').id)
+
+    def test_get_or_create_place_multiple(self):
+        cp = CanonicalPlaceFactory(
+            position='50.064650,20.944979', geoname_id='999')
+        name = cp.canonical_name
+
+        place1 = PlaceFactory(canonical_place=cp, alternate_name=name)
+        PlaceFactory(canonical_place=cp, alternate_name=name)
+
+        place = GeonameUtil().get_or_create_place('999')
+        self.assertEqual(place1, place)
