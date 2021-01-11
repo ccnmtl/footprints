@@ -51,7 +51,6 @@
                         </div>
                         <div class="clearfix"></div>
                     </div>
-                    
                     <div role="tabpanel" class="tab-pane wizard-pane" id="evidencetype">
                         <div class="form-content">
                             <div class="form-group required">
@@ -63,7 +62,7 @@
                                     {% for medium in mediums %}
                                         <option name="{{medium}}">{{medium}}</option>
                                     {% endfor %}
-                                    <option value="other">Other (please specify)</option>
+                                    <option value="Other">Other (please specify)</option>
                                 </select>
                                 <input type="form-control" name="footprint-medium-other" class="form-control"
                                     placeholder="Specify another evidence type" style="display: none"></input>
