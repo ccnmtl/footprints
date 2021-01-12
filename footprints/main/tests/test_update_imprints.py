@@ -110,8 +110,7 @@ class UpdateImprintsTest(TestCase):
 
         # An imprint with no place should first try to match an
         # existing CanonicalPlace and existing Place
-        existing_place.alternate_name = 'Cracóvia'
-        existing_place.save()
+        existing_place = imprint.place
         imprint = ImprintFactory(place=None)
         cmd.handle_place(imprint, TEST_ROW)
         self.assertEqual(existing_place.id, imprint.place.id)
