@@ -663,6 +663,7 @@ class Place(models.Model):
     last_modified_by = LastUserField(related_name='place_last_modified_by')
 
     class Meta:
+        unique_together = [['canonical_place', 'alternate_name']]
         ordering = ['alternate_name', 'canonical_place__canonical_name', 'id']
         verbose_name = 'Place'
 
