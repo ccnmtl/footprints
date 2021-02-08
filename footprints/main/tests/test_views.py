@@ -254,14 +254,12 @@ class ExportFootprintSearchTest(TestCase):
                    'Evidence Call Number,Evidence Details,')
 
         for r in Role.objects.for_footprint():
-            role = 'Footprint Role ' + smart_text(r.name).encode('utf-8')\
-                     + ' Actor'
+            role = 'Footprint Role ' + smart_text(r.name) + ' Actor'
             headers += role + ','
             headers += (role + ' VIAF Number,')
 
         for r in Role.objects.for_imprint():
-            role = 'Imprint Role: ' + smart_text(r.name).encode('utf-8')\
-                     + ' Actor'
+            role = 'Imprint Role: ' + smart_text(r.name) + ' Actor'
             headers += role + ','
             headers += (role + ' VIAF Number,')
 
@@ -284,9 +282,9 @@ class ExportFootprintSearchTest(TestCase):
                   for a in self.footprint2.book_copy.imprint.actor.all()]
         actors = '; '.join(actors)
 
-        row1 = [b'Empty Footprint', b'None', b'None', b'', b'None', b'None',
-                b'', b'None', self.footprint1.created_at.strftime('%m/%d/%Y'),
-                0, b'None', b'', b'', b'', b'', b'', b'None', b'None']
+        row1 = ['Empty Footprint', 'None', 'None', '', 'None', 'None',
+                '', 'None', self.footprint1.created_at.strftime('%m/%d/%Y'),
+                0, 'None', '', '', '', '', '', 'None', 'None']
 
         row1 += interpolate_role_actors(Role.objects.all().for_footprint(),
                                         self.footprint1.actors())
@@ -296,24 +294,24 @@ class ExportFootprintSearchTest(TestCase):
             self.footprint1.book_copy.imprint.actor.all())
 
         work = self.footprint2.book_copy.imprint.work
-        row2 = [b'Odyssey',  # Footprint Title
-                b'c. 1984',  # Footprint Date
-                b'Cracow, Poland',  # Footprint Location
-                o.encode(),  # Footprint Owners
-                work.title.encode(),  # Written Work Title
-                b'The Odyssey, Edition 1',  # Imprint Display Title
-                p.encode(),  # Imprint Printers
-                b'c. 1984',  # Imprint Creation Date
+        row2 = ['Odyssey',  # Footprint Title
+                'c. 1984',  # Footprint Date
+                'Cracow, Poland',  # Footprint Location
+                o,  # Footprint Owners
+                work.title,  # Written Work Title
+                'The Odyssey, Edition 1',  # Imprint Display Title
+                p,  # Imprint Printers
+                'c. 1984',  # Imprint Creation Date
                 self.footprint2.created_at.strftime('%m/%d/%Y'),
                 90,  # Footprint Percent Complete
-                b'None',
-                actors.encode(),  # Imprint Actor and Role
-                b'',  # Imprint BHB
-                b'',  # Imprint OCLC Number
-                b'Medium',  # Evidence Type
-                b'Provenance',  # Evidence Location
-                b'call number',  # Evidence Call Number
-                b'lorem ipsum']
+                'None',
+                actors,  # Imprint Actor and Role
+                '',  # Imprint BHB
+                '',  # Imprint OCLC Number
+                'Medium',  # Evidence Type
+                'Provenance',  # Evidence Location
+                'call number',  # Evidence Call Number
+                'lorem ipsum']
 
         # Footprint Actors
         row2 += interpolate_role_actors(Role.objects.all().for_footprint(),

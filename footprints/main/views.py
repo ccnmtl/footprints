@@ -279,33 +279,31 @@ class ExportFootprintSearch(BaseSearchView):
 
             row = []
             # Footprint title
-            row.append(smart_text(o.title).encode('utf-8'))
+            row.append(o.title)
             # Footprint date
-            row.append(smart_text(o.associated_date).encode('utf-8'))
+            row.append(smart_text(o.associated_date))
 
             # Footprint location
-            row.append(smart_text(o.place).encode('utf-8'))
+            row.append(smart_text(o.place))
 
             # owners
             a = [owner.display_name() for owner in o.owners()]
-            row.append(smart_text('; '.join(a)).encode('utf-8'))
+            row.append(smart_text('; '.join(a)))
 
             # Written work title
-            row.append(smart_text(o.book_copy.imprint.work.title)
-                       .encode('utf-8'))
+            row.append(smart_text(o.book_copy.imprint.work.title))
 
             # Imprint display_title
-            a = smart_text(o.book_copy.imprint.display_title()).encode('utf-8')
+            a = smart_text(o.book_copy.imprint.display_title())
             row.append(a)
 
             # Imprint Printers
             a = [p.display_name()
                  for p in o.book_copy.imprint.printers()]
-            row.append(smart_text('; '.join(a)).encode('utf-8'))
+            row.append(smart_text('; '.join(a)))
 
             # Imprint publication date
-            row.append(smart_text(o.book_copy.imprint.publication_date)
-                       .encode('utf-8'))
+            row.append(smart_text(o.book_copy.imprint.publication_date))
 
             # Imprint created at date
             row.append(o.created_at.strftime('%m/%d/%Y'))
@@ -316,41 +314,41 @@ class ExportFootprintSearch(BaseSearchView):
             # Literary work LOC
             loc_id = o.book_copy.imprint.work\
                 .get_library_of_congress_identifier()
-            loc_id = smart_text(loc_id).encode('utf-8')
+            loc_id = smart_text(loc_id)
             row.append(loc_id)
 
             # Imprint actor
-            actors = [smart_text(p).encode('utf-8') for p
+            actors = [smart_text(p) for p
                       in o.book_copy.imprint.actor.all()]
-            row.append(b'; '.join(actors))
+            row.append('; '.join(actors))
 
             # Imprint BHB
             if o.book_copy.imprint.has_bhb_number():
                 row.append(smart_text(o.book_copy
                                        .imprint.get_bhb_number()
-                                       .identifier).encode('utf-8'))
+                                       .identifier))
             else:
-                row.append(b'')
+                row.append('')
 
             # Imprint OCLC #
             if o.book_copy.imprint.has_oclc_number():
                 row.append(smart_text(o.book_copy
                                        .imprint.get_oclc_number()
-                                       .identifier).encode('utf-8'))
+                                       .identifier))
             else:
-                row.append(b'')
+                row.append('')
 
             # Evidence type
-            row.append(smart_text(o.medium).encode('utf-8'))
+            row.append(smart_text(o.medium))
 
             # Evidence location
-            row.append(smart_text(o.provenance).encode('utf-8'))
+            row.append(smart_text(o.provenance))
 
             # Evidence source
-            row.append(smart_text(o.call_number).encode('utf-8'))
+            row.append(smart_text(o.call_number))
 
             # Evidence details
-            row.append(smart_text(o.notes).encode('utf-8'))
+            row.append(smart_text(o.notes))
 
             # Footprint Actors
             row.extend(self.get_footprint_actors_string(o))

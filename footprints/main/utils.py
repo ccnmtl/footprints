@@ -38,8 +38,8 @@ def interpolate_role_actors(roles, actors):
     separated by a semicolon.'''
     array = []
     for r in roles:
-        actor_string = b''
-        viaf_string = b''
+        actor_string = ''
+        viaf_string = ''
         # for each actor
         for a in actors:
             # if the actor matches that role
@@ -48,21 +48,21 @@ def interpolate_role_actors(roles, actors):
                 # iteration, add the actor, else append a semicolon and the
                 # actor to the end of the actor string
                 if not actor_string:
-                    actor_string = smart_text(a).encode('utf-8')
+                    actor_string = smart_text(a)
                 else:
-                    actor_string = b'; '.join(
-                        [actor_string, smart_text(a).encode('utf-8')])
+                    actor_string = '; '.join(
+                        [actor_string, smart_text(a)])
 
                 # If the VIAF String is empty, as it would be on the first
                 # iteration, add the VIAF number. Else append a semicolon
                 # and the VIAF number at the end of the string
                 if not viaf_string:
                     viaf_string = \
-                        a.person.get_viaf_number().encode('utf-8')
+                        a.person.get_viaf_number()
                 else:
-                    viaf_string = b'; '.join(
+                    viaf_string = '; '.join(
                         [viaf_string,
-                         a.person.get_viaf_number().encode('utf-8')])
+                         a.person.get_viaf_number()])
 
         array.append(actor_string)
         array.append(viaf_string)

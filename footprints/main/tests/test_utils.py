@@ -34,9 +34,9 @@ class CustomUtilsTest(TestCase):
 
         # roles and actors should return the string you expect
         array = interpolate_role_actors(roles, actors)
-        self.assertTrue(array[0].count(b'Nick (Author)') == 1)
-        self.assertTrue(array[2].count(b'Nick (Printer)') == 1)
-        self.assertTrue(array[4].count(b'Nick (Censor)') == 1)
+        self.assertTrue(array[0].count('Nick (Author)') == 1)
+        self.assertTrue(array[2].count('Nick (Printer)') == 1)
+        self.assertTrue(array[4].count('Nick (Censor)') == 1)
 
         # roles and multiple actors should put all the actors of a given role
         # into the same col
@@ -44,9 +44,9 @@ class CustomUtilsTest(TestCase):
             'Nick', 1234, role1, '11/09/84', '11/09/17')
         actors.append(actor4)
         array = interpolate_role_actors(roles, actors)
-        self.assertTrue(array[0].count(b'Nick (Author)') == 2)
-        self.assertTrue(array[2].count(b'Nick (Printer)') == 1)
-        self.assertTrue(array[4].count(b'Nick (Censor)') == 1)
+        self.assertTrue(array[0].count('Nick (Author)') == 2)
+        self.assertTrue(array[2].count('Nick (Printer)') == 1)
+        self.assertTrue(array[4].count('Nick (Censor)') == 1)
 
     def test_snake_to_camel(self):
         self.assertEqual(snake_to_camel(''), '')
