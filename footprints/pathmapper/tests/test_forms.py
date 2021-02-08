@@ -157,6 +157,24 @@ class ModelSearchFormExTest(TestCase):
         sqs = form.search()
         self.assertEqual(sqs.count(), 0)
 
+    def test_form_clean_errors_string_date(self):
+        form = ModelSearchFormEx()
+        form._errors = {}
+        form.cleaned_data = {}
+        form.data = {
+            'q': '',
+            'footprintStart': '0',
+            'footprintEnd': 2020,
+            'footprintRange': 'false',
+            'pubStart': None,
+            'pubEnd': None,
+            'pubRange': False
+        }
+
+        form.clean()
+        self.assertTrue(form._errors['footprintStart'],
+                        ['Year must be greater than 1000'])
+
     def test_form_clean_errors_future_date(self):
         form = ModelSearchFormEx()
         form._errors = {}

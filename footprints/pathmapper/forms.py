@@ -49,7 +49,12 @@ class ModelSearchFormEx(ModelSearchForm):
     def clean_year(self, fieldname):
         year = self.cleaned_data.get(fieldname, '')
 
-        if not isinstance(year, int):
+        if isinstance(year, str):
+            try:
+                self.cleaned_data[fieldname] = int(year)
+            except ValueError:
+                return
+        elif not isinstance(year, int):
             return
 
         now = datetime.now()
