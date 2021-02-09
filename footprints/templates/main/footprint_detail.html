@@ -213,7 +213,7 @@
                         {% book_copy_footprints footprint as footprints %}
                         <div class="sidebar-box related-footprint">
                             <h4>Related Footprints</h4>
-                                {% if footprints.exists %}
+                                {% if footprints|length %}
                                 <p class="info">
                                     This physical copy of <strong>{{footprint.book_copy.imprint.display_title}}</strong>{% if imprint.publication_date or imprint.place %}, published
                                         {% if imprint.publication_date %}
