@@ -244,8 +244,8 @@ class ExportFootprintSearchTest(TestCase):
         self.footprint2.actor.add(self.owner)
 
     def get_headers(self):
-        headers = ('Footprint Title,Footprint Date,Footprint Location,'
-                   'Footprint Owners,Written Work Title,'
+        headers = ('FootprintID,Footprint Title,Footprint Date,',
+                   'Footprint Location,Footprint Owners,Written Work Title,'
                    'Imprint Display Title,Imprint Printers,'
                    'Imprint Publication Date,Imprint Creation Date,'
                    'Footprint Percent Complete,Literary Work LOC,'
@@ -282,7 +282,8 @@ class ExportFootprintSearchTest(TestCase):
                   for a in self.footprint2.book_copy.imprint.actor.all()]
         actors = '; '.join(actors)
 
-        row1 = ['Empty Footprint', 'None', 'None', '', 'None', 'None',
+        row1 = [self.footprint1.identifier(),
+                'Empty Footprint', 'None', 'None', '', 'None', 'None',
                 '', 'None', self.footprint1.created_at.strftime('%m/%d/%Y'),
                 0, 'None', '', '', '', '', '', 'None', 'None']
 
@@ -294,7 +295,8 @@ class ExportFootprintSearchTest(TestCase):
             self.footprint1.book_copy.imprint.actor.all())
 
         work = self.footprint2.book_copy.imprint.work
-        row2 = ['Odyssey',  # Footprint Title
+        row2 = [self.footprint2.identifier(),
+                'Odyssey',  # Footprint Title
                 'c. 1984',  # Footprint Date
                 'Cracow, Poland',  # Footprint Location
                 o,  # Footprint Owners
