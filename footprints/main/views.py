@@ -238,7 +238,8 @@ class Echo(object):
 class ExportFootprintSearch(BaseSearchView):
 
     def get_header_string(self):
-        headers = ['Footprint Title', 'Footprint Date', 'Footprint Location',
+        headers = ['Footprint ID',
+                   'Footprint Title', 'Footprint Date', 'Footprint Location',
                    'Footprint Owners', 'Written Work Title',
                    'Imprint Display Title', 'Imprint Printers',
                    'Imprint Publication Date', 'Imprint Creation Date',
@@ -278,6 +279,9 @@ class ExportFootprintSearch(BaseSearchView):
                 continue
 
             row = []
+
+            # Footprint identifier
+            row.append(o.identifier())
             # Footprint title
             row.append(o.title)
             # Footprint date

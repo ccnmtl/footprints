@@ -1230,6 +1230,11 @@ class Footprint(models.Model):
     def has_notes(self):
         return self.notes is not None and len(self.notes) > 0
 
+    def identifier(self):
+        return '{}-{}-{}-{}'.format(
+            self.book_copy.imprint.work.id, self.book_copy.imprint.id,
+            self.book_copy.id, self.id)
+
     def calculate_percent_complete(self):
         try:
             required = 11.0  # not including call_number & collection
