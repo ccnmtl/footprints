@@ -111,6 +111,7 @@
   <field name="footprint_year" type="text_en" indexed="true" stored="true" multiValued="false" />
   <field name="footprint_year_exact" type="string" indexed="true" stored="true" multiValued="false" />
   <field name="footprint_start_date" type="date" multiValued="false" indexed="true" stored="true"/>
+  <field name="footprint_years" type="long" indexed="true" stored="true" multiValued="true" />
   <field name="ftitle" type="text_en" multiValued="false" indexed="true" stored="true"/>
   <field name="has_image" type="boolean" multiValued="false" indexed="true" stored="true"/>
   <field name="id" type="string" multiValued="false" indexed="true" required="true" stored="true"/>
@@ -127,6 +128,7 @@
   <field name="pub_year_exact" type="string" indexed="true" stored="true" multiValued="false" />
   <field name="pub_end_date" type="date" multiValued="false" indexed="true" stored="true"/>
   <field name="pub_start_date" type="date" multiValued="false" indexed="true" stored="true"/>
+  <field name="pub_years" type="long" indexed="true" stored="true" multiValued="true" />
   <field name="sort_by" type="text_en" multiValued="false" indexed="true" stored="true"/>
   <field name="text" type="ngram" multiValued="false" indexed="true" stored="true"/>
   <field name="title" type="ngram" multiValued="false" indexed="true" stored="true"/>

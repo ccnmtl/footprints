@@ -12,6 +12,10 @@ from footprints.main.models import WrittenWork, Footprint, Person, Place, \
     Imprint, Actor, BookCopy
 
 
+class IntegerMultiValueField(MultiValueField):
+    field_type = 'integer'
+
+
 def format_sort_by(sort_term, remove_articles=False):
     ''' processes text for sorting field:
         * converts non-ASCII characters to ASCII equivalents
@@ -39,11 +43,13 @@ class WrittenWorkIndex(CelerySearchIndex, Indexable):
     imprint_location_title = MultiValueField(faceted=True)
     pub_start_date = DateTimeField()
     pub_end_date = DateTimeField()
+    pub_years = IntegerMultiValueField()
 
     footprint_location = MultiValueField(faceted=True)
     footprint_location_title = MultiValueField(faceted=True)
     footprint_start_date = DateTimeField()
     footprint_end_date = DateTimeField()
+    footprint_years = IntegerMultiValueField()
 
     actor = MultiValueField(faceted=True)
     actor_title = MultiValueField(faceted=True)
@@ -68,11 +74,29 @@ class WrittenWorkIndex(CelerySearchIndex, Indexable):
     def prepare_footprint_start_date(self, obj):
         return obj.footprints_start_date()
 
+    def prepare_footprint_years(self, obj):
+        years = []
+        qs = Footprint.objects.filter(
+            book_copy__imprint__work=obj).select_related('associated_date')
+        for footprint in qs:
+            if footprint.associated_date:
+                years.append(footprint.associated_date.start().year)
+        return years
+
     def prepare_pub_end_date(self, obj):
         return obj.pub_end_date()
 
     def prepare_pub_start_date(self, obj):
         return obj.pub_start_date()
+
+    def prepare_pub_years(self, obj):
+        years = []
+        qs = Imprint.objects.filter(
+            work=obj).select_related('publication_date')
+        for imprint in qs:
+            if imprint.publication_date:
+                years.append(imprint.publication_date.start().year)
+        return years
 
     def prepare_footprint_location(self, obj):
         places = []
@@ -117,11 +141,13 @@ class ImprintIndex(CelerySearchIndex, Indexable):
     imprint_location_title = MultiValueField(faceted=True)
     pub_start_date = DateTimeField()
     pub_end_date = DateTimeField()
+    pub_years = IntegerMultiValueField()
 
     footprint_location = MultiValueField(faceted=True)
     footprint_location_title = MultiValueField(faceted=True)
     footprint_start_date = DateTimeField()
     footprint_end_date = DateTimeField()
+    footprint_years = IntegerMultiValueField()
 
     actor = MultiValueField(faceted=True)
     actor_title = MultiValueField(faceted=True)
@@ -138,11 +164,26 @@ class ImprintIndex(CelerySearchIndex, Indexable):
     def prepare_footprint_start_date(self, obj):
         return obj.footprints_start_date()
 
+    def prepare_footprint_years(self, obj):
+        years = []
+        qs = Footprint.objects.filter(
+            book_copy__imprint=obj).select_related('associated_date')
+        for footprint in qs:
+            if footprint.associated_date:
+                years.append(footprint.associated_date.start().year)
+        return years
+
     def prepare_pub_end_date(self, obj):
         return obj.end_date()
 
     def prepare_pub_start_date(self, obj):
         return obj.start_date()
+
+    def prepare_pub_years(self, obj):
+        years = []
+        if obj.publication_date:
+            years.append(obj.publication_date.start().year)
+        return years
 
     def prepare_imprint_location(self, obj):
         if obj.place:
@@ -197,11 +238,13 @@ class BookCopyIndex(CelerySearchIndex, Indexable):
     pub_year = CharField(faceted=True)
     pub_start_date = DateTimeField()
     pub_end_date = DateTimeField()
+    pub_years = IntegerMultiValueField()
 
     footprint_location = MultiValueField(faceted=True)
     footprint_location_title = MultiValueField(faceted=True)
     footprint_start_date = DateTimeField()
     footprint_end_date = DateTimeField()
+    footprint_years = IntegerMultiValueField()
 
     actor = MultiValueField(faceted=True)
     actor_title = MultiValueField(faceted=True)
@@ -230,6 +273,14 @@ class BookCopyIndex(CelerySearchIndex, Indexable):
     def prepare_footprint_start_date(self, obj):
         return obj.footprints_start_date()
 
+    def prepare_footprint_years(self, obj):
+        years = []
+        qs = obj.footprint_set.select_related('associated_date')
+        for footprint in qs:
+            if footprint.associated_date:
+                years.append(footprint.associated_date.start().year)
+        return years
+
     def prepare_pub_year(self, obj):
         dt = obj.imprint.sort_date()
         if dt:
@@ -240,6 +291,12 @@ class BookCopyIndex(CelerySearchIndex, Indexable):
 
     def prepare_pub_start_date(self, obj):
         return obj.imprint.start_date()
+
+    def prepare_pub_years(self, obj):
+        years = []
+        if obj.imprint.publication_date:
+            years.append(obj.imprint.publication_date.start().year)
+        return years
 
     def prepare_imprint_location(self, obj):
         if obj.imprint.place:
@@ -310,6 +367,7 @@ class FootprintIndex(CelerySearchIndex, Indexable):
     imprint_location_title = MultiValueField(faceted=True)
     pub_start_date = DateTimeField()
     pub_end_date = DateTimeField()
+    pub_years = IntegerMultiValueField()
 
     footprint_location = MultiValueField(faceted=True)
     footprint_location_title = MultiValueField(faceted=True)
@@ -317,6 +375,7 @@ class FootprintIndex(CelerySearchIndex, Indexable):
     footprint_year = CharField(faceted=True)
     footprint_start_date = DateTimeField()
     footprint_end_date = DateTimeField()
+    footprint_years = IntegerMultiValueField()
 
     actor = MultiValueField(faceted=True)
     actor_title = MultiValueField(faceted=True)
@@ -371,6 +430,12 @@ class FootprintIndex(CelerySearchIndex, Indexable):
     def prepare_footprint_end_date(self, obj):
         return obj.end_date()
 
+    def prepare_footprint_years(self, obj):
+        years = []
+        if obj.associated_date:
+            years.append(obj.associated_date.start().year)
+        return years
+
     def prepare_footprint_start_date(self, obj):
         return obj.start_date()
 
@@ -381,6 +446,12 @@ class FootprintIndex(CelerySearchIndex, Indexable):
     def prepare_pub_start_date(self, obj):
         imprint = obj.book_copy.imprint
         return imprint.start_date()
+
+    def prepare_pub_years(self, obj):
+        years = []
+        if obj.book_copy.imprint.publication_date:
+            years.append(obj.book_copy.imprint.publication_date.start().year)
+        return years
 
     def prepare_wtitle(self, obj):
         return format_sort_by(obj.book_copy.imprint.work.title,
@@ -454,20 +525,3 @@ class PersonIndex(CelerySearchIndex, Indexable):
 
     def prepare_sort_by(self, obj):
         return format_sort_by(obj.name, remove_articles=True)
-
-
-#  @todo: Is this in use?
-class PlaceIndex(CelerySearchIndex, Indexable):
-    object_id = CharField(model_attr='id')
-    object_type = CharField()
-    text = NgramField(document=True, use_template=True)
-    sort_by = CharField()
-
-    def get_model(self):
-        return Place
-
-    def prepare_object_type(self, obj):
-        return type(obj).__name__
-
-    def prepare_sort_by(self, obj):
-        return format_sort_by(smart_text(obj), remove_articles=True)

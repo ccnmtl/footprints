@@ -78,15 +78,15 @@ class ModelSearchFormEx(ModelSearchForm):
             start_year, 12, 31)
         return kwargs
 
-    def handle_range(self, field_name1, field_name2, start_year, end_year):
+    def handle_range(self, field_name, start_year, end_year):
         kwargs = {}
         if start_year:
             start_year = int(start_year)
-            kwargs['{}__gte'.format(field_name1)] = date(
+            kwargs['{}__gte'.format(field_name)] = date(
                 start_year, 1, 1)
         if end_year:
             end_year = int(end_year)
-            kwargs['{}__lte'.format(field_name2)] = date(
+            kwargs['{}__lte'.format(field_name)] = date(
                 end_year, 12, 31)
         return kwargs
 
@@ -98,11 +98,10 @@ class ModelSearchFormEx(ModelSearchForm):
 
         if ranged:
             kwargs.update(self.handle_range(
-                'footprint_start_date', 'footprint_end_date',
-                start_year, end_year))
+                'footprint_years', start_year, end_year))
         elif start_year:
             kwargs.update(self.handle_single_year(
-                'footprint_start_date', start_year))
+                'footprint_years', start_year))
         return kwargs
 
     def handle_pub_year(self):
@@ -113,11 +112,10 @@ class ModelSearchFormEx(ModelSearchForm):
 
         if ranged:
             kwargs.update(self.handle_range(
-                'pub_start_date', 'pub_end_date',
-                start_year, end_year))
+                'pub_years', start_year, end_year))
         elif start_year:
             kwargs.update(self.handle_single_year(
-                'pub_start_date', start_year))
+                'pub_years', start_year))
         return kwargs
 
     def handle_imprint_location(self):
