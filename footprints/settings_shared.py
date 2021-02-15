@@ -118,7 +118,8 @@ INSTALLED_APPS += [  # noqa
     'registration',
     'django.contrib.gis',
     'footprints.pathmapper',
-    'adminactions'
+    'adminactions',
+    'drf_spectacular'
 ]
 
 djcelery.setup_loader()
@@ -145,7 +146,16 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS':
         'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 15,
-    'DATETIME_FORMAT': '%m/%d/%y %I:%M %p'
+    'DATETIME_FORMAT': '%m/%d/%y %I:%M %p',
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    # available SwaggerUI configuration parameters
+    # https://swagger.io/docs/open-source-tools/swagger-ui/usage/configuration/
+    'SWAGGER_UI_SETTINGS': {
+        'supportedSubmitMethods': ['get']
+    }
 }
 
 GOOGLE_MAPS_REVERSE_GEOCODE = \
