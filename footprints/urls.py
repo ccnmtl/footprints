@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.urls import path
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.auth.decorators import login_required
@@ -7,6 +8,7 @@ from django.contrib.auth.views import (
     PasswordResetCompleteView, PasswordChangeView, PasswordResetView)
 from django.views.generic import TemplateView
 from django.views.static import serve
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from registration.backends.default.views import RegistrationView
 from rest_framework import routers
 
@@ -182,6 +184,13 @@ urlpatterns = [
     # Temporary table view template for pathmapper
     url(r'^tableview/',
         TemplateView.as_view(template_name='pathmapper/table.html')),
+
+    # Swagger API Viewer
+    path('api/schema/', login_required(SpectacularAPIView.as_view()),
+         name='schema'),
+    path('api/schema/swagger-ui/',
+         login_required(SpectacularSwaggerView.as_view(url_name='schema')),
+         name='swagger-ui'),
 ]
 
 if settings.DEBUG:
