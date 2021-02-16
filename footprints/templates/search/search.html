@@ -381,7 +381,7 @@
             <div class="total-results-count">
                 {{paginator.count}} footprints
             </div>
-            {% if object_list|length > 0 and search_criteria %}
+            {% if search_criteria and paginator.count < 5000 and paginator.count > 0 %}
                 <button class="btn btn-white btn-sm btn-export" type="button">
                     <span class="glyphicon glyphicon-download-alt"></span> Export
                 </button>
