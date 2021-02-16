@@ -232,7 +232,7 @@ class ExportFootprintSearchTest(TestCase):
 
         self.footprint1 = Footprint.objects.create(
             title='Empty Footprint', book_copy=book_copy)
-        self.footprint2 = FootprintFactory()
+        self.footprint2 = FootprintFactory(title='Footprint 2')
 
         role = RoleFactory(name='Printer')
         self.printer = ActorFactory(role=role,
@@ -296,7 +296,7 @@ class ExportFootprintSearchTest(TestCase):
 
         work = self.footprint2.book_copy.imprint.work
         row2 = [self.footprint2.identifier(),
-                'Odyssey',  # Footprint Title
+                'Footprint 2',  # Footprint Title
                 'c. 1984',  # Footprint Date
                 'Cracow, Poland',  # Footprint Location
                 o,  # Footprint Owners
@@ -340,7 +340,16 @@ class ExportFootprintSearchTest(TestCase):
 
     def test_get(self):
         url = reverse('export-footprint-list')
-        response = self.client.get(url)
+
+        kwargs = {
+            'precision': 'contains',
+            'direction': 'asc',
+            'q': 'Footprint',
+            'sort_by': 'ftitle',
+            'page': 1
+        }
+
+        response = self.client.get(url, kwargs)
         self.assertEqual(response.status_code, 200)
 
         rows = response.streaming_content
