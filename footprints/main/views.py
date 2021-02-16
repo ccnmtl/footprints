@@ -365,10 +365,13 @@ class ExportFootprintSearch(BaseSearchView):
     def get(self, request):
         form_class = self.get_form_class()
         form = self.get_form(form_class)
-        if form.is_valid():
-            self.queryset = form.search()
 
-        rows = self.get_rows(self.queryset)
+        if form.is_valid():
+            queryset = form.search()
+        else:
+            queryset = self.get_queryset()
+
+        rows = self.get_rows(queryset)
         pseudo_buffer = Echo()
         writer = csv.writer(pseudo_buffer)
 
