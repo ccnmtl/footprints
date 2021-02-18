@@ -11,7 +11,8 @@ from django.contrib.syndication.views import Feed
 from django.core.mail import send_mail
 from django.db.models.fields import FieldDoesNotExist
 from django.db.models.fields.related import ManyToManyField
-from django.http.response import HttpResponseRedirect, StreamingHttpResponse
+from django.http.response import HttpResponseRedirect, StreamingHttpResponse, \
+    HttpResponseBadRequest
 from django.shortcuts import get_object_or_404
 from django.template import loader
 from django.urls.base import reverse
@@ -366,10 +367,10 @@ class ExportFootprintSearch(BaseSearchView):
         form_class = self.get_form_class()
         form = self.get_form(form_class)
 
-        if form.is_valid():
-            queryset = form.search()
-        else:
-            queryset = self.get_queryset()
+        if not form.is_valid():
+            return HttpResponseBadRequest('')
+
+        queryset = form.search()
 
         rows = self.get_rows(queryset)
         pseudo_buffer = Echo()
