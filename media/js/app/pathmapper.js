@@ -98,11 +98,15 @@ requirejs(['./common'], function(common) {
 
                         url += 'n=' + this.collection.layers.length + '&';
                         this.collection.layers.forEach((layer, idx) => {
-                            // @todo - JSON.stringify layer here?
                             url += 'l' + idx + '=';
                             for (let [key, value] of Object.entries(layer)) {
-                                url += utils.abbreviate(key) + ':' +
-                                    (value || '') + ',';
+                                if (key === 'narrative') {
+                                    continue;
+                                }
+                                if (key !== 'id') {
+                                    key = utils.abbreviate(key);
+                                }
+                                url += key + ':' + (value || '') + ',';
                             }
                             url += '&';
                         });
