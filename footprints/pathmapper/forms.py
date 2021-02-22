@@ -116,19 +116,19 @@ class ModelSearchFormEx(ModelSearchForm):
 
         if ranged:
             if start_year:
-                start_from = self.format_solr_date(date(start_year, 1, 1))
+                start = self.format_solr_date(date(start_year, 1, 1))
             else:
-                start_from = '*'
+                start = '*'
 
             if end_year:
-                end_from = self.format_solr_date(date(end_year, 12, 31))
+                end = self.format_solr_date(date(end_year, 12, 31))
             else:
-                end_from = '*'
+                end = '*'
         else:
-            start_from = self.format_solr_date(date(start_year, 1, 1))
-            end_from = self.format_solr_date(date(start_year, 12, 31))
+            start = self.format_solr_date(date(start_year, 1, 1))
+            end = self.format_solr_date(date(start_year, 12, 31))
 
-        return q.format(fld, start_from, end_from, start_from, end_from)
+        return q.format(fld, start, end, start, end)
 
     def filter_by_footprint_year(self, fld, sqs):
         start_year = self.cleaned_data.get('footprint_start')
