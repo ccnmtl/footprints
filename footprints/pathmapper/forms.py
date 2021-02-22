@@ -105,6 +105,43 @@ class ModelSearchFormEx(ModelSearchForm):
                 'footprint_start_date', start_year))
         return kwargs
 
+    def format_solr_date(self, dt):
+        return dt.strftime('%Y-%m-%dT00:00:00Z')
+
+    def format_footprint_year_query(self, fld, start_year, end_year, ranged):
+        # Solr specific syntax to complete a self-join to footprint data
+        q = '{{!join from={} to=django_id}}'\
+            'django_ct:"main.footprint" AND footprint_start_date:[{} TO {}]'\
+            ' AND footprint_end_date:[{} TO {}]'
+
+        if ranged:
+            if start_year:
+                start_from = self.format_solr_date(date(start_year, 1, 1))
+            else:
+                start_from = '*'
+
+            if end_year:
+                end_from = self.format_solr_date(date(end_year, 12, 31))
+            else:
+                end_from = '*'
+        else:
+            start_from = self.format_solr_date(date(start_year, 1, 1))
+            end_from = self.format_solr_date(date(start_year, 12, 31))
+
+        return q.format(fld, start_from, end_from, start_from, end_from)
+
+    def filter_by_footprint_year(self, fld, sqs):
+        start_year = self.cleaned_data.get('footprint_start')
+        end_year = self.cleaned_data.get('footprint_end')
+        ranged = self.cleaned_data.get('footprint_range')
+
+        if not start_year and not end_year:
+            # nothing to filter by, return the query set intact
+            return sqs
+
+        q = self.format_footprint_year_query(fld, start_year, end_year, ranged)
+        return sqs.narrow(q)
+
     def handle_pub_year(self):
         kwargs = {}
         start_year = self.cleaned_data.get('pub_start')
@@ -230,12 +267,13 @@ class BookCopySearchForm(ModelSearchFormEx):
         kwargs.update(self.handle_boolean('expurgated'))
 
         kwargs.update(self.handle_pub_year())
-        kwargs.update(self.handle_footprint_year())
         return args, kwargs
 
     def search(self):
         args, kwargs = self.arguments()
-        return self.searchqueryset.filter(*args, **kwargs)
+        sqs = self.searchqueryset.filter(*args, **kwargs)
+        sqs = self.filter_by_footprint_year('book_copy_id', sqs)
+        return sqs
 
 
 class BookCopyFootprintsForm(ModelSearchForm):
@@ -258,9 +296,7 @@ class ImprintSearchForm(ModelSearchFormEx):
 
     def arguments(self):
         args = []
-        kwargs = {
-            'django_ct': 'main.imprint',
-        }
+        kwargs = {'django_ct': 'main.imprint'}
 
         q = self.cleaned_data.get('q', '')
         if q:
@@ -279,12 +315,13 @@ class ImprintSearchForm(ModelSearchFormEx):
         args += self.handle_actor()
 
         kwargs.update(self.handle_pub_year())
-        kwargs.update(self.handle_footprint_year())
         return args, kwargs
 
     def search(self):
         args, kwargs = self.arguments()
-        return self.searchqueryset.filter(*args, **kwargs)
+        sqs = self.searchqueryset.filter(*args, **kwargs)
+        sqs = self.filter_by_footprint_year('imprint_id', sqs)
+        return sqs
 
 
 class WrittenWorkSearchForm(ModelSearchFormEx):
@@ -311,12 +348,13 @@ class WrittenWorkSearchForm(ModelSearchFormEx):
         args += self.handle_actor()
 
         kwargs.update(self.handle_pub_year())
-        kwargs.update(self.handle_footprint_year())
         return args, kwargs
 
     def search(self):
         args, kwargs = self.arguments()
-        return self.searchqueryset.filter(*args, **kwargs)
+        sqs = self.searchqueryset.filter(*args, **kwargs)
+        sqs = self.filter_by_footprint_year('work_id', sqs)
+        return sqs
 
 
 SEARCH_FOR_IMPRINT_LOCATION = 'imprint'
@@ -343,8 +381,10 @@ class PlaceSearchForm(ModelSearchFormEx):
             kwargs['imprint_id'] = imprint_id
 
         kwargs.update(self.handle_imprint_location())
+        kwargs.update(self.handle_footprint_year())
 
         sqs = self.searchqueryset.filter(*args, **kwargs)
+
         counts = sqs.facet('footprint_location').facet_counts()
         return [c[0] for c in counts['fields']['footprint_location']
                 if c[1] > 0]
@@ -359,6 +399,8 @@ class PlaceSearchForm(ModelSearchFormEx):
         kwargs.update(self.handle_footprint_location())
 
         sqs = self.searchqueryset.filter(*args, **kwargs)
+        sqs = self.filter_by_footprint_year('imprint_id', sqs)
+
         counts = sqs.facet('imprint_location').facet_counts()
         return [c[0] for c in counts['fields']['imprint_location'] if c[1] > 0]
 
@@ -371,7 +413,6 @@ class PlaceSearchForm(ModelSearchFormEx):
             kwargs['work_id'] = work_id
 
         kwargs.update(self.handle_pub_year())
-        kwargs.update(self.handle_footprint_year())
         args += self.handle_actor()
 
         search_for = self.cleaned_data.get('search_for', '')
@@ -386,10 +427,9 @@ class ActorSearchForm(ModelSearchFormEx):
     class Meta:
         model = Actor
 
-    def arguments(self):
-        types = ['main.writtenwork', 'main.footprint', 'main.imprint']
-        args = [Q(django_ct__in=types)]
-        kwargs = {}
+    def arguments(self, django_ct):
+        args = []
+        kwargs = {'django_ct': django_ct}
 
         q = self.cleaned_data.get('q', '')
         if q:
@@ -406,11 +446,31 @@ class ActorSearchForm(ModelSearchFormEx):
         kwargs.update(self.handle_imprint_location())
         kwargs.update(self.handle_footprint_location())
         kwargs.update(self.handle_pub_year())
-        kwargs.update(self.handle_footprint_year())
         return args, kwargs
 
-    def search(self):
-        args, kwargs = self.arguments()
+    def search_by_writtenwork(self):
+        args, kwargs = self.arguments('main.writtenwork')
+        sqs = self.searchqueryset.filter(*args, **kwargs)
+        sqs = self.filter_by_footprint_year('work_id', sqs)
+        counts = sqs.facet('actor').facet_counts()
+        return {c[0] for c in counts['fields']['actor'] if c[1] > 0}
+
+    def search_by_imprint(self):
+        args, kwargs = self.arguments('main.imprint')
+        sqs = self.searchqueryset.filter(*args, **kwargs)
+        sqs = self.filter_by_footprint_year('work_id', sqs)
+        counts = sqs.facet('actor').facet_counts()
+        return {c[0] for c in counts['fields']['actor'] if c[1] > 0}
+
+    def search_by_footprint(self):
+        args, kwargs = self.arguments('main.footprint')
+        kwargs.update(self.handle_footprint_year())
         sqs = self.searchqueryset.filter(*args, **kwargs)
         counts = sqs.facet('actor').facet_counts()
-        return [c[0] for c in counts['fields']['actor'] if c[1] > 0]
+        return {c[0] for c in counts['fields']['actor'] if c[1] > 0}
+
+    def search(self):
+        actors = self.search_by_writtenwork()
+        actors.update(self.search_by_imprint())
+        actors.update(self.search_by_footprint())
+        return actors

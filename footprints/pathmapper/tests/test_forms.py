@@ -73,6 +73,43 @@ class ModelSearchFormExTest(TestCase):
         self.assertEqual(
             kwargs['footprint_end_date__lte'], date(1886, 12, 31))
 
+    def test_format_footprint_year_query(self):
+        form = ModelSearchFormEx()
+        fld = 'book_copy_id'
+        q = form.format_footprint_year_query(fld, 1556, None, False)
+        self.assertEquals(
+            q,
+            '{!join from=book_copy_id to=django_id}'
+            'django_ct:"main.footprint" AND footprint_start_date:'
+            '[1556-01-01T00:00:00Z TO 1556-12-31T00:00:00Z]'
+            ' AND footprint_end_date:[1556-01-01T00:00:00Z TO '
+            '1556-12-31T00:00:00Z]')
+
+        q = form.format_footprint_year_query(fld, 1556, 1689, True)
+        self.assertEquals(
+            q,
+            '{!join from=book_copy_id to=django_id}'
+            'django_ct:"main.footprint" AND footprint_start_date:'
+            '[1556-01-01T00:00:00Z TO 1689-12-31T00:00:00Z]'
+            ' AND footprint_end_date:[1556-01-01T00:00:00Z TO '
+            '1689-12-31T00:00:00Z]')
+
+        q = form.format_footprint_year_query(fld, 1556, None, True)
+        self.assertEquals(
+            q,
+            '{!join from=book_copy_id to=django_id}'
+            'django_ct:"main.footprint" AND footprint_start_date:'
+            '[1556-01-01T00:00:00Z TO *]'
+            ' AND footprint_end_date:[1556-01-01T00:00:00Z TO *]')
+
+        q = form.format_footprint_year_query(fld, None, 1556, True)
+        self.assertEquals(
+            q,
+            '{!join from=book_copy_id to=django_id}'
+            'django_ct:"main.footprint" AND footprint_start_date:'
+            '[* TO 1556-12-31T00:00:00Z]'
+            ' AND footprint_end_date:[* TO 1556-12-31T00:00:00Z]')
+
     def test_handle_pub_year(self):
         form = ModelSearchFormEx()
         form.cleaned_data = {
@@ -294,9 +331,6 @@ class BookCopySearchFormTest(TestCase):
         self.assertEqual(kwargs['imprint_location'], 14)
         self.assertEqual(kwargs['footprint_location'], 15)
         self.assertEqual(args[0], Q(actor_exact__in=[16]))
-        self.assertEqual(kwargs['footprint_start_date__gte'], date(1910, 1, 1))
-        self.assertEqual(
-            kwargs['footprint_end_date__lte'], date(1940, 12, 31))
         self.assertEqual(kwargs['pub_start_date__gte'], date(1800, 1, 1))
         self.assertEqual(
             kwargs['pub_start_date__lte'], date(1800, 12, 31))
@@ -316,9 +350,6 @@ class ImprintSearchFormTest(TestCase):
         self.assertEqual(kwargs['imprint_location'], 14)
         self.assertEqual(kwargs['footprint_location'], 15)
         self.assertEqual(args[0], Q(actor_exact__in=[16]))
-        self.assertEqual(kwargs['footprint_start_date__gte'], date(1910, 1, 1))
-        self.assertEqual(
-            kwargs['footprint_end_date__lte'], date(1940, 12, 31))
         self.assertEqual(kwargs['pub_start_date__gte'], date(1800, 1, 1))
         self.assertEqual(
             kwargs['pub_start_date__lte'], date(1800, 12, 31))
@@ -338,9 +369,6 @@ class WrittenWorkSearchFormTest(TestCase):
         self.assertEqual(kwargs['imprint_location'], 14)
         self.assertEqual(kwargs['footprint_location'], 15)
         self.assertEqual(args[0], Q(actor_exact__in=[16]))
-        self.assertEqual(kwargs['footprint_start_date__gte'], date(1910, 1, 1))
-        self.assertEqual(
-            kwargs['footprint_end_date__lte'], date(1940, 12, 31))
         self.assertEqual(kwargs['pub_start_date__gte'], date(1800, 1, 1))
         self.assertEqual(
             kwargs['pub_start_date__lte'], date(1800, 12, 31))
@@ -352,19 +380,14 @@ class ActorSearchFormTest(TestCase):
         form = ActorSearchForm()
         form.cleaned_data = SAMPLE_CLEANED_DATA
 
-        args, kwargs = form.arguments()
-        self.assertEqual(args[0], Q(django_ct__in=['main.writtenwork',
-                                                   'main.footprint',
-                                                   'main.imprint']))
+        args, kwargs = form.arguments('main.writtenwork')
+        self.assertEqual(kwargs['django_ct'], 'main.writtenwork')
         self.assertFalse('content' in kwargs)
-        self.assertEqual(args[1], Q(actor_title_exact__contains='Foo'))
+        self.assertEqual(args[0], Q(actor_title_exact__contains='Foo'))
         self.assertEqual(kwargs['work_id'], 12)
         self.assertEqual(kwargs['imprint_id'], 13)
         self.assertEqual(kwargs['imprint_location'], 14)
         self.assertEqual(kwargs['footprint_location'], 15)
-        self.assertEqual(kwargs['footprint_start_date__gte'], date(1910, 1, 1))
-        self.assertEqual(
-            kwargs['footprint_end_date__lte'], date(1940, 12, 31))
         self.assertEqual(kwargs['pub_start_date__gte'], date(1800, 1, 1))
         self.assertEqual(
             kwargs['pub_start_date__lte'], date(1800, 12, 31))
