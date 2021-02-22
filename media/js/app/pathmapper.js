@@ -92,12 +92,11 @@ requirejs(['./common'], function(common) {
                     },
                     updateShareUrl: function() {
                         let url = Footprints.baseUrl + 'pathmapper/?';
-                        if (this.collection.layers.length < 1) {
-                            return url;
-                        }
+                        let visibleLayers =
+                            this.collection.layers.filter(l => l.visible);
 
-                        url += 'n=' + this.collection.layers.length + '&';
-                        this.collection.layers.forEach((layer, idx) => {
+                        url += 'n=' + visibleLayers.length + '&';
+                        visibleLayers.forEach((layer, idx) => {
                             url += 'l' + idx + '=';
                             for (let [key, value] of Object.entries(layer)) {
                                 if (key === 'narrative') {
