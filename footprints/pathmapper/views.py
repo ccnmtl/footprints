@@ -26,6 +26,7 @@ class PathmapperView(TemplateView):
     valid_keys = {
         't': 'title',
         'w': 'work',
+        'id': 'id',
         'i': 'imprint',
         'il': 'imprintLocation',
         'fl': 'footprintLocation',
@@ -39,7 +40,8 @@ class PathmapperView(TemplateView):
         'fr': 'footprintRange',
         'c': 'censored',
         'e': 'expurgated',
-        'v': 'visible'
+        'v': 'visible',
+        'tc': 'totalCopies'
     }
 
     def expand_key(self, key):

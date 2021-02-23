@@ -26,8 +26,8 @@ class PathmapperViewTest(TestCase):
         self.assertIsNone(view.parse_layer(0))
 
     def test_parse_layer_valid_layer(self):
-        q = ('i:,t:Kuzari,w:12,i:,il:,fl:,flf:,a:,ps:'
-             ',pe:,pr:,fs:,fe:,fr:,c:,e:,v:true')
+        q = ('id:0,i:,t:Kuzari,w:12,i:,il:,fl:,flf:,a:,ps:'
+             ',pe:,pr:,fs:,fe:,fr:,c:,e:,v:true,tc:1')
         view = PathmapperView()
         view.request = RequestFactory().get('/', {'l0': q})
         layer = view.parse_layer(0)
@@ -48,10 +48,10 @@ class PathmapperViewTest(TestCase):
         self.assertEqual(view.get_layers(), [])
 
     def test_get_layers(self):
-        q0 = ('i:,t:Kuzari,w:12,i:,il:,fl:,flf:,a:,ps:'
-              ',pe:,pr:,fs:,fe:,fr:,c:,e:,v:true')
-        q1 = ('i:,t:Shehitot,w:13,i:,il:,fl:,flf:,a:,ps:'
-              ',pe:,pr:,fs:,fe:,fr:,c:,e:,v:false')
+        q0 = ('id:0,i:,t:Kuzari,w:12,i:,il:,fl:,flf:,a:,ps:'
+              ',pe:,pr:,fs:,fe:,fr:,c:,e:,v:true,tc:1')
+        q1 = ('id:1,i:,t:Shehitot,w:13,i:,il:,fl:,flf:,a:,ps:'
+              ',pe:,pr:,fs:,fe:,fr:,c:,e:,v:false,tc:2')
 
         view = PathmapperView()
         view.request = RequestFactory().get('/', {'n': 2, 'l0': q0, 'l1': q1})
