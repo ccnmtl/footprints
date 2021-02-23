@@ -34,7 +34,7 @@ admin.site.register(Language, LanguageAdmin)
 class StandardizedIdentificationAdmin(admin.ModelAdmin):
     list_display = ('identifier', 'identifier_type')
     list_filter = ('identifier_type',)
-    search_fields = ('name',)
+    search_fields = ('id', 'name',)
 
 
 admin.site.register(
@@ -86,7 +86,7 @@ class ActorAdmin(admin.ModelAdmin):
     list_display = (person_name, 'alias', 'role')
     list_filter = ('role__name',)
     person_name.admin_order_field = 'person__name'
-    search_fields = ('alias', 'person__name')
+    search_fields = ('id', 'alias', 'person__name')
 
 
 admin.site.register(Actor, ActorAdmin)
@@ -96,6 +96,7 @@ admin.site.register(Collection)
 class WrittenWorkAdmin(admin.ModelAdmin):
     list_display = ('title',)
     search_fields = ('title',)
+    raw_id_fields = ('actor', 'standardized_identifier')
 
 
 admin.site.register(WrittenWork, WrittenWorkAdmin)
