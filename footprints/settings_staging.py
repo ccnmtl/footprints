@@ -9,9 +9,9 @@ locals().update(
         project=project,  # noqa F405
         base=base,  # noqa F405
         STATIC_ROOT=STATIC_ROOT,  # noqa F405
-        INSTALLED_APPS=INSTALLED_APPS,  # noqa F405
-        cloudfront="d3e8bm9sxvq1fs"
+        INSTALLED_APPS=INSTALLED_APPS  # noqa F405
     ))
+
 
 DATABASES = {
     'default': {
