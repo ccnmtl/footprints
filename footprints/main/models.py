@@ -491,6 +491,17 @@ class PersonManager(models.Manager):
         return person
 
 
+FEMALE = 'f'
+MALE = 'm'
+UNASSIGNED = 'u'
+
+GENDER_CHOICES = (
+    (FEMALE, 'Female'),
+    (MALE, 'Male'),
+    (UNASSIGNED, 'Unassigned')
+)
+
+
 @python_2_unicode_compatible
 class Person(models.Model):
     objects = PersonManager()
@@ -505,6 +516,9 @@ class Person(models.Model):
                                       null=True, blank=True,
                                       related_name="death_date",
                                       on_delete=models.CASCADE)
+
+    gender = models.CharField(
+        max_length=1, choices=GENDER_CHOICES, default=UNASSIGNED)
 
     standardized_identifier = models.ForeignKey(StandardizedIdentification,
                                                 null=True, blank=True,
