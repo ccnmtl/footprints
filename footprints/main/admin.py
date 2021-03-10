@@ -42,8 +42,9 @@ admin.site.register(
 
 
 class PersonAdmin(admin.ModelAdmin):
-    list_display = ('name', 'birth_date', 'death_date',
+    list_display = ('name', 'birth_date', 'death_date', 'gender',
                     'standardized_identifier', 'notes')
+    list_filter = ('gender',)
     search_fields = ('name',)
 
 
