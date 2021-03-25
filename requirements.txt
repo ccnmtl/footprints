@@ -30,7 +30,7 @@ sure==1.4.11
 
 coverage==5.5
 pyasn1==0.4.8
-cryptography==3.4.6  # pyOpenSSL
+cryptography==3.4.7  # pyOpenSSL
 
 
 chardet==4.0.0
