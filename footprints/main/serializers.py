@@ -246,11 +246,12 @@ class PathmapperFootprintSerializer(HyperlinkedModelSerializer):
     display_date = serializers.CharField(source='associated_date')
     narrative = serializers.CharField()
     sort_date = serializers.DateField()
+    owners = serializers.CharField(source='owner_description')
 
     class Meta:
         model = Footprint
         fields = ('id', 'title', 'place', 'display_date', 'sort_date',
-                  'narrative')
+                  'narrative', 'owners')
 
 
 class PathmapperRouteSerializer(HyperlinkedModelSerializer):

@@ -14,58 +14,56 @@
             </h2>
             <div class="location-summary">
                 <p>
-                    {{items.length}} book {{pluralizeTerm}} passed through {{value.title}}. It is:
+                    {{copyCount}} book {{pluralizeTerm}} passed through {{value.title}}. It is:
                 </p>
                 <ul>
-                    <li v-if="initial > 0">an imprint location to {{initial}}</li>
-                    <li v-if="interim > 0">an interim location to {{interim}}</li>
+                    <li v-if="initial > 0">an imprint location for {{initial}} book copies</li>
+                    <li v-if="interim > 0">an interim location for {{interim}} footprint<span v-if="interim > 1">s</span></li>
                     <li v-if="terminal > 0">a final location to {{terminal}}</li>
                 </ul>
             </div>
-            <section class="location-card" v-for="item in items">
+            <section class="location-card" v-for="(value, name) in copies">
                 <h3>
                     Book copy:
-                    <a :href="copyUrl(item)" target="_blank" rel="noopener noreferrer">
-                        {{item.bookcopy.identifier}}
+                    <a :href="copyUrl(name, value)" target="_blank" rel="noopener noreferrer">
+                        {{name}}
                     </a>
                 </h3>
-                <div>Location type: <span class="text-capitalize">{{item.type}}</span></div>
-                <div v-if="item.footprint">
-                    {{item.footprint.narrative}}
-                </div>
-                <div v-else>
-                    In {{item.bookcopy.imprint.display_date}}, a copy of the
-                    <a :href="workUrl(item)" target="_blank" rel="noopener noreferrer">
-                        {{item.bookcopy.imprint.work_title}}</a> was published
-                    <span v-if="item.bookcopy.imprint.work_title !== item.bookcopy.imprint.title">
-                        as <a :href="imprintUrl(item)"
-                        target="_blank" rel="noopener noreferrer">
-                            {{item.bookcopy.imprint.title}}</a>
-                    </span>
-                    <span v-if="item.bookcopy.imprint.place">
-                        in {{item.bookcopy.imprint.place.display_title}}
-                    </span>.
-                </div>
-                <div>
-                    Literary Work:
-                    <a :href="workUrl(item)"
-                        target="_blank" rel="noopener noreferrer">
-                        {{item.bookcopy.imprint.work_title}}
-                    </a><br />
-                </div>
-                <div>
-                    Imprint:
-                    <a :href="imprintUrl(item)"
-                        target="_blank" rel="noopener noreferrer">
-                        <span v-if="item.bookcopy.imprint.work_title !== item.bookcopy.imprint.title">
-                            {{item.bookcopy.imprint.title}}
-                        </span>
-                        {{item.bookcopy.imprint.display_date}}
-                        <span v-if="item.bookcopy.imprint.place">
-                            , {{item.bookcopy.imprint.place.display_title}}
-                        </span>
-                    </a>
-                </div>
+                <ul class="list-group" v-for="item in value">
+                    <li class="list-group-item">
+                        <div>Location type: <span class="text-capitalize">{{item.type}}</span></div>
+                        <div v-if="item.footprint && item.footprint.narrative">
+                            {{item.footprint.narrative}}
+                        </div>
+                        <div v-if="item.footprint && !item.footprint.narrative">
+                            <div>
+                                <span v-if="item.footprint.display_date">
+                                    {{item.footprint.display_date}}<span v-if="item.footprint.place">,</span>
+                                </span>
+                                <span v-if="item.footprint.place">
+                                    {{item.footprint.place.display_title}}
+                                </span>
+                                <span>as {{item.footprint.title}}</span>.
+                            </div>
+                            <div>
+                                <span v-if="item.footprint.owners">
+                                    Owned by {{item.footprint.owners}}.
+                                </span>
+                            </div>
+                        </div>
+                        <div v-if="!item.footprint">
+                            In {{item.bookcopy.imprint.display_date}}, a copy of the
+                            <a :href="workUrl(item)" target="_blank" rel="noopener noreferrer">
+                                {{item.bookcopy.imprint.work_title}}</a> was published
+                            <span v-if="item.bookcopy.imprint.work_title !== item.bookcopy.imprint.title">
+                                as <a :href="imprintUrl(item)"
+                                target="_blank" rel="noopener noreferrer">
+                                    {{item.bookcopy.imprint.title}}</a>
+                            </span>
+                            <span v-if="item.bookcopy.imprint.place">in {{item.bookcopy.imprint.place.display_title}}</span>.
+                        </div>
+                    </li>
+                </ul>
             </section>
             <small v-if="value">
                  [Place Id: {{value.id}}] [{{value.latlng}}]
