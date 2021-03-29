@@ -1282,6 +1282,10 @@ class Footprint(models.Model):
         return self.actor.filter(
             role__name=Role.OWNER).select_related('person')
 
+    def owner_description(self):
+        return ','.join(str(a) for a in self.actor.filter(
+            role__name=Role.OWNER).select_related('person'))
+
     def actors(self):
         return self.actor.all().select_related('person', 'role')
 
