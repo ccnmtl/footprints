@@ -55,10 +55,11 @@ define(['jquery', 'utils'], function($, utils) {
                     lat: footprint.place.latitude,
                     lng: footprint.place.longitude
                 };
+                const locType = footprint.is_terminal ? 'terminal' : 'interim';
                 return this.addPoint(
                     footprint.place.canonical_place.id,
                     footprint.place.canonical_place.canonical_name,
-                    'interim', bookcopy, footprint, latlng,
+                    locType, bookcopy, footprint, latlng,
                     Date.parse(footprint.sort_date));
             },
             clear: function() {

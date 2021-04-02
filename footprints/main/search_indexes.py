@@ -323,6 +323,8 @@ class FootprintIndex(CelerySearchIndex, Indexable):
 
     has_image = BooleanField()
 
+    is_terminal = BooleanField()
+
     # custom sort fields
     added = DateTimeField(model_attr='created_at')
     complete = IntegerField(model_attr='percent_complete')
@@ -436,6 +438,9 @@ class FootprintIndex(CelerySearchIndex, Indexable):
 
     def prepare_book_copy_identifier(self, obj):
         return obj.book_copy.identifier()
+
+    def prepare_is_terminal(self, obj):
+        return obj.is_terminal()
 
 
 # PersonIndex is used by the NameListView to create an autocomplete field
