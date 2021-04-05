@@ -30,7 +30,7 @@ define(['jquery', 'utils'], function($, utils) {
             clearStats: function() {
                 this.initial = 0;
                 this.interim = 0;
-                this.final = 0;
+                this.terminal = 0;
                 this.items = [];
                 this.copies = {};
             },

@@ -577,6 +577,22 @@ class FootprintTest(TestCase):
         fp.actor.add(expurgator)
         self.assertTrue(fp.has_expurgator())
 
+    def test_is_terminal(self):
+        copy = BookCopyFactory()
+        footprint1 = FootprintFactory(
+            book_copy=copy,
+            associated_date=ExtendedDateFactory(edtf_format='1452'))
+        footprint2 = FootprintFactory(
+            book_copy=copy,
+            associated_date=ExtendedDateFactory(edtf_format='1300'))
+        footprint3 = FootprintFactory(
+            book_copy=copy,
+            associated_date=ExtendedDateFactory(edtf_format='1500'))
+
+        self.assertFalse(footprint1.is_terminal())
+        self.assertFalse(footprint2.is_terminal())
+        self.assertTrue(footprint3.is_terminal())
+
 
 class FootprintModerationTest(TestCase):
 

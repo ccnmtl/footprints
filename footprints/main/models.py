@@ -1332,6 +1332,10 @@ class Footprint(models.Model):
     def sort_date(self):
         return self.start_date()
 
+    def is_terminal(self):
+        lst = self.book_copy.footprints()
+        return self == lst[-1]
+
 
 def work_actor_changed(sender, **kwargs):
     # Save Footprint to trigger index update
