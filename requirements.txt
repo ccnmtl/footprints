@@ -91,7 +91,7 @@ django-registration-redux==2.9
 django-markwhat==1.6.2
 gunicorn==20.1.0
 future==0.18.2
-s3transfer==0.3.7
+s3transfer==0.4.0
 jmespath==0.10.0
 
 botocore>=1.15.0,<1.21.0
