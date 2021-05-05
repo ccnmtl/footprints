@@ -19,7 +19,7 @@ pyparsing==2.4.7
 pycodestyle==2.7.0
 configparser==5.0.2
 importlib-metadata==4.0.1  # for flake8
-typing_extensions==3.7.4.3
+typing_extensions==3.10.0.0
 zipp==3.4.1  # for flake8
 flake8==3.9.1
 tornado==6.1
