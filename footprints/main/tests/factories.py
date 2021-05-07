@@ -1,4 +1,3 @@
-import os
 import random
 
 from django.contrib.auth.models import User, Group, Permission
@@ -14,7 +13,7 @@ from footprints.main.models import (
 from footprints.main.utils import string_to_point
 
 
-TEST_MEDIA_PATH = os.path.join(os.path.dirname(__file__), 'test.txt')
+TEST_MEDIA_PATH = 'test.txt'
 
 
 BATCH_PERMISSIONS = [
