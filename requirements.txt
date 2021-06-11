@@ -133,4 +133,4 @@ django-adminactions==1.9
 uritemplate==3.0.1
 jsonschema==3.2.0
 inflection==0.5.1
-drf-spectacular==0.16.0
+drf-spectacular==0.17.0
