@@ -53,7 +53,7 @@ Faker==8.8.1
 factory_boy==3.2.0
 ldap3==2.9
 sqlparse==0.4.1
-contextlib2==0.6.0.post1
+contextlib2==21.6.0
 rcssmin==1.0.6
 rjsmin==1.1.0
 
