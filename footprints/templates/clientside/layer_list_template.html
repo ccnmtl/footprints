@@ -22,6 +22,14 @@
                         <button v-on:click="createLayer" type="button" class="btn btn-priority-hi">Create layer</button>
                     </header>
                     <div class="pane-content-container" id="style-3">
+                        <section v-if="layers.length === 0">
+                            <h2 class="mb-3">You have not created any Pathmapper layers.</h2>
+                            <p>
+                            A layer is a set of book copies that meet the search criteria you selected.
+                            You can begin by creating one.
+                            </p>
+                            <button v-on:click="createLayer" type="button" class="btn btn-priority-hi">Create layer</button>
+                        </section>
                         <section v-for="(layer, idx) in layers" :aria-labelledby="'layer-' + idx" class="d-flex">
                             <div class="d-flex flex-column">
                             <h2 :id="'layer-' + idx">{{layer.title}}</h2>
