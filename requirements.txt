@@ -116,7 +116,7 @@ ccnmtlsettings==1.9.0
 funcsigs==1.0.2
 pbr==5.6.0
 celery-haystack==0.10
-django-s3sign==0.1.8
+django-s3sign==0.1.9
 django-smtp-ssl==1.0
 
 pbr==5.6.0
