@@ -42,7 +42,7 @@
 
         <!-- Open Graph metadata -->
         {% block opengraph %}{% endblock %}
-        
+
          <!-- Twitter card metadata -->
         {% block twittercard %}{% endblock %}
 
@@ -67,7 +67,7 @@
                 <ul class="nav navbar-nav user-tools">
                     <li><a href="/help/" title="Footprints Help and Tutorial">Help</a></li>
                     {% if request.user.is_anonymous %}
-                    <li><a href="#" title="Log in" id="login-link" data-toggle="modal" data-target="#login-modal"><span class="glyphicon glyphicon-user"></span> Log In</a></li>
+                    <li><a href="/accounts/login/?next=/" title="Log in" id="login-link"><span class="glyphicon glyphicon-user"></span> Log In</a></li>
                     {% else %}
                     <li><a href="/accounts/logout/?next=/" title="Log out"><span class="glyphicon glyphicon-user"></span> Log Out</a></li>
                     {% endif %}
@@ -85,11 +85,11 @@
                 <div id="navbar" class="navbar-collapse collapse">
                   <ul class="nav navbar-nav">
                     <li><a href="/about/">About</a></li>
-                    
+
                     {% flag "enable_search" %}
                     <li><a href="/search/">Search</a></li>
                     {% endflag %}
-                    
+
                     <li><a href="/pathmapper/">Pathmapper</a></li>
 
                     <li><a href="http://edblogs.columbia.edu/footprints/" target="_blank">Blog</a></li>
@@ -99,7 +99,7 @@
                     {% if can_create %}
                     <li><a href="/footprint/create/">Create</a></li>
                     {% endif %}
-                    
+
                     {% if can_import or can_moderate %}
                     <li class="dropdown">
                       <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Manage <span class="caret"></span></a>
@@ -121,65 +121,6 @@
               </div>
             </nav>
         </div><!-- Header -->
-
-        {% if request.user.is_anonymous %}
-        <!-- Login Modal -->
-        <div class="modal" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="loginLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                     <h4 class="modal-title" id="loginLabel">Facilitators</h4>
-                  </div><!-- /.modal-header -->
-                    <div class="modal-body">
-                        <form id="login-local" name="login_local" method="post" action="/accounts/login/" class="form-horizontal" role="form">
-                            {% csrf_token %}
-                            <div class="login-local-form">
-                                <div class="local-login-errors alert alert-danger" style="display: none;">
-                                    <span><b>Invalid username or password.</b></span>
-                                    Please try again. Note that both username and password are case-sensitive.
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="id_username" class="col-sm-4 control-label">User Name</label>
-                                    <div class="col-sm-8">
-                                        {{ login_form.username }}
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="id_password" class="col-sm-4 control-label">Password</label>
-                                    <div class="col-sm-8">
-                                        {{ login_form.password }}
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-sm-offset-4 col-sm-8">
-                                        <input class="btn btn-primary login-local-form" type="submit" value="Log In"  />
-                                        <input type="hidden" name="next" value="/" />
-                                    </div>
-                                </div>
-                            </div><!--/ .login-local-form -->
-                        </form>
-
-                     {% if request.user.is_anonymous %}
-                        <div class="pull-right">
-                            <a href="/accounts/password_reset/">Forgot Password?</a>
-                        </div>
-                        <div style="clear: both"></div>
-                     {% endif %}
-                     {% if CAS_BASE %}
-                        <form method="get" action="{{ CAS_BASE }}cas/login" style="float: right">
-                            <input type="hidden" name="destination" value="https://{{ request.get_host }}/accounts/caslogin/?next={{next}}" />
-                            <input class="btn btn-default btn-small login-uni-button" type="submit" value="Columbia University Network ID (UNI)" />
-                            <div style="clear: both;"></div>
-                        </form>
-                        <div style="clear: both"></div>
-                     {% endif %}<!-- CAS -->
-                </div><!-- /.modal-body -->
-               </div><!-- /.modal-content -->
-            </div><!-- /.modal-dialog -->
-        </div><!-- /.modal -->
-        {% endif %}<!-- request.user.is_anonymous -->
 
         {% block outercontainer %}
         <div class="{% block contentcontainer %}container{% endblock %} container-pl" id="outer-container">
@@ -243,18 +184,6 @@
     <script src="{{STATIC_URL}}js/underscore-min.js"></script>
     <script src="{{STATIC_URL}}js/backbone-min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-
-    {% if request.user.is_anonymous %}
-        <script src="{{STATIC_URL}}js/app/login.js"></script>
-
-        <script type="text/javascript"> 
-           jQuery(document).ready(function() {
-              var loginView = new LocalLoginView({
-                 el: jQuery("div#login-modal") 
-              });
-           });
-        </script>
-    {% endif %}
 
     <script type="text/javascript">
         const Footprints = {
