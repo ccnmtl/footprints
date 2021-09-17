@@ -1,6 +1,6 @@
 Django>=2.2.12,<3
 
-feedparser==6.0.2
+feedparser==6.0.8
 
 Markdown==3.3.4
 
@@ -8,7 +8,7 @@ smartypants==2.0.1
 psycopg2==2.8.6
 olefile==0.46
 
-Pillow==8.2.0
+Pillow==8.3.2
 
 versiontools==1.9.1
 statsd==3.3.0
@@ -18,42 +18,42 @@ mccabe==0.6.1
 pyparsing==2.4.7
 pycodestyle==2.7.0
 configparser==5.0.2
-importlib-metadata==4.0.1  # for flake8
-typing_extensions==3.10.0.0
-zipp==3.4.1  # for flake8
-flake8==3.9.1
+importlib-metadata==4.8.1  # for flake8
+typing_extensions==3.10.0.2
+zipp==3.5.0  # for flake8
+flake8==3.9.2
 tornado==6.1
 cssselect==1.1.0
 lxml==4.6.3
 fuzzywuzzy==0.18.0
-sure==1.4.11
+sure==2.0.0
 
 coverage==5.5
 pyasn1==0.4.8
-cryptography==3.4.7  # pyOpenSSL
+cryptography==3.4.8  # pyOpenSSL
 
 
 chardet==4.0.0
-idna==3.1
-urllib3==1.26.4  # sentry-sdk
+idna==3.2
+urllib3==1.26.6  # sentry-sdk
 
-requests==2.25.1
+requests==2.26.0
 logilab-common==1.8.1
 lazy-object-proxy==1.6.0
 wrapt==1.12.1
 
-pylint==2.8.2
+pylint==2.10.2
 
-astroid==2.5.6
+astroid==2.7.3
 
-six==1.15.0
+six==1.16.0
 ipaddress==1.0.23
 text-unidecode==1.3
-Faker==8.1.2
+Faker==8.12.1
 factory_boy==3.2.0
-ldap3==2.9
+ldap3==2.9.1
 sqlparse==0.4.1
-contextlib2==0.6.0.post1
+contextlib2==21.6.0
 rcssmin==1.0.6
 rjsmin==1.1.0
 
@@ -78,10 +78,10 @@ django-appconf==1.0.4
 django-compressor==2.4.1
 django-statsd-mozilla==0.4.0
 raven==6.10.0
-sentry-sdk==1.0.0
+sentry-sdk==1.3.1
 django-bootstrap-form==3.4
-django-debug-toolbar==3.2.1
-django-waffle==2.1.0
+django-debug-toolbar==3.2.2
+django-waffle==2.2.1
 django-smoketest==1.1.2
 django-extensions==3.1.3
 
@@ -92,22 +92,22 @@ django-registration-redux==2.9
 django-markwhat==1.6.2
 gunicorn==20.1.0
 future==0.18.2
-s3transfer==0.4.2
+s3transfer==0.5.0
 jmespath==0.10.0
 
-botocore>=1.15.0,<1.21.0
-boto3>=1.12.0,<1.18.0
+botocore>=1.15.0,<1.22.0
+boto3>=1.12.0,<1.19.0
 
 django-infranil==1.1.0
-certifi==2020.12.5  # for pysolr, sentry-sdk
+certifi==2021.5.30  # for pysolr, sentry-sdk
 pysolr==3.9.0
-django-haystack==3.0
+django-haystack==3.1.1
 requirements/src/django_audit_log-0.8.0-py2.py3-none-any.whl
 djangorestframework==3.12.4
 djangorestframework-jsonp==1.0.2
 Unidecode==1.2.0
-django-reversion==3.0.9
-python-dateutil==2.8.1
+django-reversion==4.0.0
+python-dateutil==2.8.2
 requirements/src/edtf-0.9.3ctl-py2.py3-none-any.whl
 
 django-storages==1.11.1
@@ -116,7 +116,7 @@ ccnmtlsettings==1.9.0
 funcsigs==1.0.2
 pbr==5.6.0
 celery-haystack==0.10
-django-s3sign==0.1.5
+django-s3sign==0.1.8
 django-smtp-ssl==1.0
 
 pbr==5.6.0
@@ -125,12 +125,12 @@ stevedore>=1.20.0 # Apache-2.0
 bandit==1.7.0
 
 entrypoints==0.3
-distro==1.5.0
+distro==1.6.0
 
 xlwt==1.3.0
-django-adminactions==1.9
+django-adminactions==1.12.0
 
 uritemplate==3.0.1
 jsonschema==3.2.0
 inflection==0.5.1
-drf-spectacular==0.15.1
+drf-spectacular==0.18.1

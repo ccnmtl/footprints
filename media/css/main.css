@@ -551,6 +551,45 @@ ul.footer-logos li {
     font-weight: 700;
 }
 
+/* Trailer */
+
+.home-trailer {
+    /*display: block;
+    width: calc(100%+30px);*/
+    margin: 0 -15px 2em -15px;
+    background-color: rgba(239, 229, 212, 0.85);
+    border: none;
+}
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+.home-trailer-container {
+    background-color: grey;
+    display: block;
+    padding: 0;
+}
+.home-trailer-text {
+    display: block;
+    float: none;
+    width: 100%;
+    margin: 0;
+    padding: 16px;
+    padding-bottom: 2px;
+}
+.home-trailer-text p {
+    /*font-size: 1.15em;
+    line-height: 1.85em;
+    font-family: Arvo;*/
+    font-family: Asap;
+    font-weight: 400;
+    color: #202836;
+    font-size: 1em;
+    line-height: 1.5em;
+}
+
+
 @media (min-width: 550px) {
     .footer .logos-ir {
         display: inline;
@@ -658,6 +697,11 @@ ul.footer-logos li {
     }
     .home-search-two .home-search-submit:hover {
         background-color: #222a38;
+    }
+    .home-trailer-text p {
+        font-size: 1.15em;
+        line-height: 1.85em;
+        font-family: Arvo;
     }
     .home-visual {
         display: none;
@@ -812,8 +856,33 @@ ul.footer-logos li {
         margin-left: 15px;
         margin-right: 15px;
     }
+    .home-trailer {
+        width: 940px;
+        margin: 3em auto 1em auto;
+        border: 4px solid #fff;
+    }
+    .home-trailer-container {
+        display: block;
+        float: left;
+        width: 560px;
+        margin: 0;
+        padding: 0;
+    }
+    .home-trailer-text {
+        display: block;
+        float: left;
+        width: 372px;
+        margin: 0;
+        padding: 16px;
+        padding-bottom: 2px;
+    }
+    .home-trailer-text p {
+        font-size: 1.15em;
+        line-height: 1.85em;
+        font-family: Arvo;
+    }
     .home-visual {
-        display: initial;
+        display: block;
           margin: 3em auto 1em 0;
     }
     .home-visual img {
@@ -992,13 +1061,19 @@ ul.footer-logos li {
     .home-search-two .home-search-submit:hover {
         background-color: #222a38;
     }
+    .home-trailer {
+        width: 1044px;
+        margin: 5em auto 1em auto;
+    }
+    .home-trailer-container {
+        width: 664px;
+    }
     .home-visual {
         width: 100%;
         display: block;
         text-align: center;
         margin: 5em auto .5em 0;
     }
-
     .home-visual img {
         max-width: 100%;
         display: initial;
