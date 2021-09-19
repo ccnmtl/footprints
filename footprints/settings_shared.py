@@ -43,6 +43,11 @@ DATABASES = {
     }
 }
 
+CELERY_BROKER_URL = "amqp://guest:guest@localhost:5672//ccnmtl.footprints.dev"
+CELERY_WORKER_CONCURRENCY = 2
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_CACHE_BACKEND = 'django-cache'
+
 if ('test' in sys.argv or 'jenkins' in sys.argv or 'validate' in sys.argv
         or 'check' in sys.argv):
     DATABASES = {
@@ -82,7 +87,7 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 
-HAYSTACK_SIGNAL_PROCESSOR = 'celery_haystack.signals.CelerySignalProcessor'
+HAYSTACK_SIGNAL_PROCESSOR = 'footprints.main.signals.FootprintsSignalProcessor'
 HAYSTACK_SEARCH_RESULTS_PER_PAGE = 15
 
 PROJECT_APPS = [
@@ -114,7 +119,6 @@ INSTALLED_APPS += [  # noqa
     'footprints.main',
     'rest_framework',
     'reversion',
-    'celery_haystack',
     'footprints.batch',
     's3sign',
     'registration',
@@ -125,10 +129,6 @@ INSTALLED_APPS += [  # noqa
     'django_celery_results',
 ]
 
-CELERY_BROKER_URL = "amqp://guest:guest@localhost:5672//footprints"
-CELERY_WORKER_CONCURRENCY = 2
-CELERY_RESULT_BACKEND = 'django-db'
-CELERY_CACHE_BACKEND = 'django-cache'
 
 CONTACT_US_EMAIL = 'footprints@columbia.edu'
 
