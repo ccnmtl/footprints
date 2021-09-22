@@ -1,15 +1,15 @@
 import re
 
-from celery_haystack.indexes import CelerySearchIndex
-from django.db.models.query_utils import Q
 from django.utils.encoding import smart_text
+
+from django.db.models.query_utils import Q
+from footprints.main.models import WrittenWork, Footprint, Person, Place, \
+    Imprint, Actor, BookCopy
 from haystack.constants import Indexable
 from haystack.fields import CharField, NgramField, DateTimeField, \
     IntegerField, MultiValueField, BooleanField
 from unidecode import unidecode
-
-from footprints.main.models import WrittenWork, Footprint, Person, Place, \
-    Imprint, Actor, BookCopy
+from haystack.indexes import SearchIndex
 
 
 def format_sort_by(sort_term, remove_articles=False):
@@ -28,7 +28,7 @@ def format_sort_by(sort_term, remove_articles=False):
         return ''
 
 
-class WrittenWorkIndex(CelerySearchIndex, Indexable):
+class WrittenWorkIndex(SearchIndex, Indexable):
     object_id = CharField(model_attr='id')
     object_type = CharField()
     text = NgramField(document=True, use_template=True)
@@ -105,7 +105,7 @@ class WrittenWorkIndex(CelerySearchIndex, Indexable):
         return [smart_text(actor) for actor in self._actors(obj)]
 
 
-class ImprintIndex(CelerySearchIndex, Indexable):
+class ImprintIndex(SearchIndex, Indexable):
     object_id = CharField(model_attr='id')
     object_type = CharField()
     text = NgramField(document=True, use_template=True)
@@ -183,7 +183,7 @@ class ImprintIndex(CelerySearchIndex, Indexable):
         return [smart_text(actor) for actor in self._actors(obj)]
 
 
-class BookCopyIndex(CelerySearchIndex, Indexable):
+class BookCopyIndex(SearchIndex, Indexable):
     object_id = CharField(model_attr='id')
     object_type = CharField()
     text = NgramField(document=True, use_template=True)
@@ -292,7 +292,7 @@ class BookCopyIndex(CelerySearchIndex, Indexable):
         return obj.has_expurgator()
 
 
-class FootprintIndex(CelerySearchIndex, Indexable):
+class FootprintIndex(SearchIndex, Indexable):
     object_id = CharField(model_attr='id')
     object_type = CharField()
     text = NgramField(document=True, use_template=True)
@@ -444,7 +444,7 @@ class FootprintIndex(CelerySearchIndex, Indexable):
 
 
 # PersonIndex is used by the NameListView to create an autocomplete field
-class PersonIndex(CelerySearchIndex, Indexable):
+class PersonIndex(SearchIndex, Indexable):
     object_id = CharField(model_attr='id')
     object_type = CharField()
     text = NgramField(document=True, use_template=True)
@@ -462,7 +462,7 @@ class PersonIndex(CelerySearchIndex, Indexable):
 
 
 #  @todo: Is this in use?
-class PlaceIndex(CelerySearchIndex, Indexable):
+class PlaceIndex(SearchIndex, Indexable):
     object_id = CharField(model_attr='id')
     object_type = CharField()
     text = NgramField(document=True, use_template=True)
