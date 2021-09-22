@@ -1,21 +1,22 @@
 from django.conf import settings
-from django.urls import path
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import (
     PasswordChangeDoneView, PasswordResetDoneView, PasswordResetConfirmView,
     PasswordResetCompleteView, PasswordChangeView, PasswordResetView)
+from django.urls import path
 from django.views.generic import TemplateView
 from django.views.static import serve
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from registration.backends.default.views import RegistrationView
 from rest_framework import routers
 
+from django_cas_ng import views as cas_views
 from footprints.main import views
 from footprints.main.forms import CustomRegistrationForm
 from footprints.main.views import (
-    LoginView, LogoutView, AddActorView, CreateFootprintView,
+    AddActorView, CreateFootprintView,
     FootprintDetailView, WrittenWorkDetailView, TitleListView, NameListView,
     AddPlaceView, AddDateView, RemoveRelatedView,
     AddIdentifierView, AddDigitalObjectView, ConnectFootprintView,
@@ -35,10 +36,6 @@ from footprints.pathmapper.views import (
 
 
 admin.autodiscover()
-
-auth_urls = url(r'^accounts/', include('django.contrib.auth.urls'))
-if hasattr(settings, 'CAS_BASE'):
-    auth_urls = url(r'^accounts/', include('djangowind.urls'))
 
 router = routers.DefaultRouter()
 router.register(r'actor', ActorViewSet)
@@ -63,8 +60,10 @@ urlpatterns = router.urls
 urlpatterns = [
     url(r'^$', views.IndexView.as_view()),
 
-    url(r'^accounts/login/$', LoginView.as_view()),
-    url(r'^accounts/logout/$', LogoutView.as_view()),
+    path('cas/login', cas_views.LoginView.as_view(),
+         name='cas_ng_login'),
+    path('cas/logout', cas_views.LogoutView.as_view(),
+         name='cas_ng_logout'),
 
     # password change & reset. overriding to gate them.
     url(r'^accounts/password_change/$',
@@ -89,7 +88,8 @@ urlpatterns = [
         name='registration_register'),
     url(r'^accounts/', include('registration.backends.default.urls')),
 
-    auth_urls,
+    url(r'^accounts/', include('django.contrib.auth.urls')),
+
     url(r'^actor/add/$',
         AddActorView.as_view(), name='add-actor-view'),
     url(r'^language/add/$',

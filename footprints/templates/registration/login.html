@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Log in{% endblock %}
+
+{% block content %}
+<div class="row justify-content-md-center">
+    <div class="col-md-auto text-center my-5">
+        <h2>
+            Login
+        </h2>
+
+        <p>If you have a Columbia University Network ID (UNI)</p>
+        <form class="text-center" method="get" action="/cas/login">
+            <input type="hidden" name="next" value="{{next|default:'/'}}" />
+            <input class="btn btn-primary" type="submit" value="Columbia Log In" />
+            <p class="small pt-2"><a href="http://cuit.columbia.edu/cuit/manage-my-uni" title="Learn more about UNI" target="_blank">What is a UNI?</a></p>
+        </form>
+        <hr class="seperator" />
+
+        {% if form.errors %}
+            <div class="alert alert-danger" role="alert">
+                <div><b>Invalid username or password</b></div>
+            </div>
+        {% endif %}
+
+        <p>If you have a guest account</p>
+        <form class="text-center" name="login_local" method="post" action=".">
+            {% csrf_token %}
+            <div class="login-local-form" {% if not form.errors %}style="display: none"{% endif %}>
+                <div class="form-group">
+                    <label for="id_username">Username</label>
+                    <input id="id_username" maxlength="254"
+                           name="username" type="text"
+                           class="form-control" autofocus>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_password">Password</label>
+                    <input id="id_password" name="password" type="password" class="form-control">
+                </div>
+            </div>
+            <input id="guest-login" class="btn btn-primary" type="button" value="Guest Log In" {% if form.errors %}style="display: none"{% endif %}
+                onclick="jQuery('.login-local-form').show(); jQuery(this).hide(); return false;"/>
+            <input class="btn btn-primary login-local-form" type="submit" value="Log In" {% if not form.errors %}style="display: none;"{% endif %} />                        
+            <input type="hidden" name="next" value="{{ next|urlencode }}" />
+            <p class="small pt-2"><a href="/accounts/password_reset/">Forgot Password?</a></p>
+        </form>
+    </div>
+</div>
+{% endblock %}
