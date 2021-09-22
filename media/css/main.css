@@ -1412,8 +1412,8 @@ img.footicon {
 }
 
 #carousel-fullsize img {
-    height: 600px;
-    width: auto;
+    height: auto;
+    width: 100%;
     margin: 0 auto;
 }
 
