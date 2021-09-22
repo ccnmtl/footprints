@@ -3,7 +3,6 @@
 import distro
 import os.path
 import sys
-import djcelery
 from ccnmtlsettings.shared import common
 
 project = 'footprints'
@@ -44,6 +43,11 @@ DATABASES = {
     }
 }
 
+CELERY_BROKER_URL = "amqp://guest:guest@localhost:5672//ccnmtl.footprints.dev"
+CELERY_WORKER_CONCURRENCY = 2
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_CACHE_BACKEND = 'django-cache'
+
 if ('test' in sys.argv or 'jenkins' in sys.argv or 'validate' in sys.argv
         or 'check' in sys.argv):
     DATABASES = {
@@ -57,8 +61,7 @@ if ('test' in sys.argv or 'jenkins' in sys.argv or 'validate' in sys.argv
             'ATOMIC_REQUESTS': True,
         }
     }
-    CELERY_ALWAYS_EAGER = True
-    BROKER_BACKEND = 'memory'
+
     HAYSTACK_CONNECTIONS = {
         'default': {
             'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
@@ -69,6 +72,11 @@ if ('test' in sys.argv or 'jenkins' in sys.argv or 'validate' in sys.argv
         'django.contrib.auth.hashers.MD5PasswordHasher',
     )
 
+    from celery.contrib.testing.app import DEFAULT_TEST_CONFIG
+
+    CELERY_BROKER_URL = DEFAULT_TEST_CONFIG.get('broker_url')
+    CELERY_RESULT_BACKEND = DEFAULT_TEST_CONFIG.get('result_backend')
+    CELERY_BROKER_HEARTBEAT = DEFAULT_TEST_CONFIG.get('broker_heartbeat')
 
 # This setting enables a simple search backend for the Haystack layer
 # The simple backend using very basic matching via the database itself.
@@ -79,7 +87,7 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 
-HAYSTACK_SIGNAL_PROCESSOR = 'celery_haystack.signals.CelerySignalProcessor'
+HAYSTACK_SIGNAL_PROCESSOR = 'footprints.main.signals.FootprintsSignalProcessor'
 HAYSTACK_SEARCH_RESULTS_PER_PAGE = 15
 
 PROJECT_APPS = [
@@ -111,20 +119,16 @@ INSTALLED_APPS += [  # noqa
     'footprints.main',
     'rest_framework',
     'reversion',
-    'djcelery',
-    'celery_haystack',
     'footprints.batch',
     's3sign',
     'registration',
     'django.contrib.gis',
     'footprints.pathmapper',
     'adminactions',
-    'drf_spectacular'
+    'drf_spectacular',
+    'django_celery_results',
 ]
 
-djcelery.setup_loader()
-BROKER_URL = "amqp://guest:guest@localhost:5672//footprints"
-CELERYD_CONCURRENCY = 2
 
 CONTACT_US_EMAIL = 'footprints@columbia.edu'
 
