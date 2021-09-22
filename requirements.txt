@@ -44,7 +44,7 @@ wrapt==1.12.1
 
 pylint==2.10.2
 
-astroid==2.7.3
+astroid==2.8.0
 
 six==1.16.0
 ipaddress==1.0.23
