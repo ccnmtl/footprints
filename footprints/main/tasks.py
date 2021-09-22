@@ -124,9 +124,6 @@ class CeleryHaystackSignalHandler(object):
         # and the instance of the model class with the pk
 
         instance = self.get_instance(model_class, self.pk)
-        print(self.pk)
-        print(instance)
-        print(instance.title)
 
         # Call the appropriate handler of the current index and
         # handle exception if neccessary
