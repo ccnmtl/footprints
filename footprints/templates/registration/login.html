@@ -10,7 +10,7 @@
         </h2>
 
         <p>If you have a Columbia University Network ID (UNI)</p>
-        <form class="text-center" method="get" action="/cas/login">
+        <form method="get" action="/cas/login">
             <input type="hidden" name="next" value="{{next|default:'/'}}" />
             <input class="btn btn-primary" type="submit" value="Columbia Log In" />
             <p class="small pt-2"><a href="http://cuit.columbia.edu/cuit/manage-my-uni" title="Learn more about UNI" target="_blank">What is a UNI?</a></p>
@@ -24,7 +24,7 @@
         {% endif %}
 
         <p>If you have a guest account</p>
-        <form class="text-center" name="login_local" method="post" action=".">
+        <form name="login_local" method="post" action=".">
             {% csrf_token %}
             <div class="login-local-form" {% if not form.errors %}style="display: none"{% endif %}>
                 <div class="form-group">

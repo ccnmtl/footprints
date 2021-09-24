@@ -62,22 +62,9 @@ blockquote {
     line-height: 1.75;
 }
 
-/* Login Modal */
-#login-modal .login-uni-button {
-    font-weight: 200;
-    color: #999;
-    border: none;
-    background: none;
-    line-height: normal;
-    float: right;
-    font-size: 11px;
-    margin-right: -12px;
-}
-
-#login-modal .login-uni-button:hover {
-    color: #fff;
-    background-color: #406777;
-    border-color: #406777;
+.login-local-form input {
+    width: 300px;
+    margin: 0 auto;
 }
 
 /* All pages */
