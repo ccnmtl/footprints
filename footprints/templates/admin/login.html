@@ -25,7 +25,7 @@ login through WIND with it</p>
 <input type="submit" value="Here" />
 </form>
 
-{% if not debug %}
+{% if debug %}
 <p>otherwise: </p>
 
 <form action="{{ app_path }}" method="post" id="login-form">{% csrf_token %}
