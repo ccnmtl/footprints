@@ -46,7 +46,7 @@ class BasicTest(TestCase):
                 '/sign_s3/?s3_object_name=default_name&s3_object_type=foo')
             self.assertEqual(r.status_code, 200)
             j = loads(r.content.decode('utf-8'))
-            self.assertTrue('signed_request' in j)
+            self.assertTrue('presigned_post_url' in j)
 
 
 class PasswordTest(TestCase):
