@@ -64,7 +64,7 @@ celery>=4.4.7,<5.0.0
 django-celery-results==2.2.0
 
 billiard==3.6.4.0
-pytz==2021.1
+pytz==2021.3
 
 requirements/src/sorl-3.2ctl-py2.py3-none-any.whl
 django-indexer==0.3.0
