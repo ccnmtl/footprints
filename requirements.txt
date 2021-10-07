@@ -131,4 +131,5 @@ inflection==0.5.1
 drf-spectacular==0.19.0
 
 python-cas==1.6.0
-requirements/src/django_cas_ng-4.1.3ctl-py2.py3-none-any.whl
+requirements/src/django_cas_ng-4.2.2ctl-py2.py3-none-any.whl
+
