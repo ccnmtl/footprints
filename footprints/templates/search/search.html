@@ -306,7 +306,7 @@
                                         <label {% if loc.1 == 0 %}class="disabled"{% endif %}>
                                             <input name="footprint_location" type="checkbox" value="{{loc.0}}"
                                                 {% if loc.1 == 0 %}disabled="disabled"{% endif %}
-                                                {% if loc.0 in form.cleaned_data.imprint_location %} checked="checked" {% endif %}>
+                                                {% if loc.0 in form.cleaned_data.footprint_location %} checked="checked" {% endif %}>
                                                 {{loc.0}} ({{loc.1}})
                                         </label>
                                     </div>
