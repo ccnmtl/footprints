@@ -128,7 +128,7 @@ django-adminactions==1.12.0
 uritemplate==3.0.1
 jsonschema==3.2.0
 inflection==0.5.1
-drf-spectacular==0.20.1
+drf-spectacular==0.20.2
 
 python-cas==1.6.0
 requirements/src/django_cas_ng-4.2.2ctl-py2.py3-none-any.whl
