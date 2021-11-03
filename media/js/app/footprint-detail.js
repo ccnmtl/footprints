@@ -583,7 +583,6 @@
             });
         },
         clickRelatedFootprint: function(evt) {
-            // eslint-disable-next-line scanjs-rules/assign_to_href
             location.href =
                 jQuery(evt.currentTarget).children('a').first().attr('href');
             return false;

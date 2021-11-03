@@ -83,11 +83,9 @@
         },
         clickClear: function(evt) {
             this.busy('Clearing');
-            // eslint-disable-next-line scanjs-rules/assign_to_location
             window.location = this.baseUrl;
         },
         clickExport: function(evt) {
-            // eslint-disable-next-line scanjs-rules/assign_to_location
             window.location =
                 '/export/footprints/' + window.location.search;
         },

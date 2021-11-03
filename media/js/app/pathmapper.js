@@ -33,8 +33,6 @@ requirejs(['./common'], function(common) {
                         this.showMap = true;
                     },
                     readSession: function() {
-                        /*eslint-disable scanjs-rules/identifier_localStorage*/
-                        /*eslint-disable scanjs-rules/property_localStorage*/
                         if (utils.storageAvailable('localStorage')) {
                             const str =
                                 window.localStorage.getItem('pathmapper');
@@ -43,19 +41,13 @@ requirejs(['./common'], function(common) {
                                 return true;
                             }
                         }
-                        /*eslint-enable scanjs-rules/property_localStorage*/
-                        /*eslint-enable scanjs-rules/identifier_localStorage*/
                         return false;
                     },
                     saveSession: function() {
-                        /*eslint-disable scanjs-rules/identifier_localStorage*/
-                        /*eslint-disable scanjs-rules/property_localStorage*/
                         if (utils.storageAvailable('localStorage')) {
                             const str = JSON.stringify(this.collection.layers);
                             window.localStorage.setItem('pathmapper', str);
                         }
-                        /*eslint-enable scanjs-rules/property_localStorage*/
-                        /*eslint-enable scanjs-rules/identifier_localStorage*/
                     },
                     shareResults: function() {
                         if ($('#share-panel-focus')

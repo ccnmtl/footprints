@@ -212,7 +212,6 @@ Place editable input.
                 }
             });
 
-            // eslint-disable-next-line scanjs-rules/call_setTimeout
             setTimeout(() => {
                 google.maps.event.trigger(this.mapInstance, 'resize');
                 this.mapInstance.setCenter(this.defaultLatLng);
