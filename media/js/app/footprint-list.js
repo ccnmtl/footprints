@@ -49,23 +49,19 @@
                     this.selectedDirection === 'asc' ? 'desc' : 'asc';
             }
 
-            // eslint-disable-next-line scanjs-rules/assign_to_location
             var url = this.baseUrl + sortBy +
                 '/?direction=' + direction + '&q=' + this.query;
-            // eslint-disable-next-line scanjs-rules/assign_to_location
             window.location = url;
         },
         clickSearch: function(evt) {
             var query = jQuery(this.el).find('input[name="q"]').val();
             var url = this.baseUrl + this.selectedSort +
                 '/?direction=' + this.selectedDirection + '&q=' + query;
-            // eslint-disable-next-line scanjs-rules/assign_to_location
             window.location = url;
         },
         clickExport: function(evt) {
             var query = jQuery(this.el).find('input[name="q"]').val();
             var url = '/export/footprints/?q=' + query;
-            // eslint-disable-next-line scanjs-rules/assign_to_location
             window.location = url;
         },
         clickToggleRange: function(evt) {
@@ -104,9 +100,7 @@
                     $elt.parents('.page-count').addClass('has-error');
                 } else {
                     var url = jQuery(evt.currentTarget).data('base-url');
-                    /* eslint-disable scanjs-rules/assign_to_location */
                     window.location = url + page;
-                    /* eslint-enable scanjs-rules/assign_to_location */
                 }
                 return false;
             }

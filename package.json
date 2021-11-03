@@ -17,9 +17,6 @@
   },
   "devDependencies": {
     "eslint": "~8.1.0",
-    "eslint-plugin-scanjs-rules": "0.2.1",
-    "eslint-config-scanjs": "^1.0.0-beta4",
-    "eslint-plugin-no-unsafe-innerhtml": "^1.0.16",
     "eslint-plugin-security": "^1.4.0"
   }
 }
