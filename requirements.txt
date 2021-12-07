@@ -1,4 +1,4 @@
-Django>=2.2.12,<3
+Django>=2.2.12,<5
 
 feedparser==6.0.8
 
