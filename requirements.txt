@@ -119,7 +119,7 @@ pyyaml==6.0
 stevedore>=1.20.0 # Apache-2.0
 bandit==1.7.0
 
-entrypoints==0.3
+entrypoints==0.4
 distro==1.6.0
 
 xlwt==1.3.0
