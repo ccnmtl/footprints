@@ -252,7 +252,8 @@ class PathmapperFootprintSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = Footprint
         fields = ('id', 'title', 'place', 'display_date', 'sort_date',
-                  'narrative', 'owners', 'is_terminal')
+                  'narrative', 'owners', 'call_number', 'identifier',
+                  'is_terminal')
 
 
 class PathmapperRouteSerializer(HyperlinkedModelSerializer):
