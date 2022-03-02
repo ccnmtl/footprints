@@ -11,7 +11,8 @@ from footprints.main.serializers import (
     PlaceSerializer, WrittenWorkSerializer, ImprintSerializer,
     BookCopySerializer, StandardizedIdentificationSerializer,
     DigitalFormatSerializer, DigitalObjectSerializer,
-    StandardizedIdentificationTypeSerializer, CanonicalPlaceSerializer)
+    StandardizedIdentificationTypeSerializer, CanonicalPlaceSerializer,
+    DigitalObjectExtendedSerializer)
 from footprints.pathmapper.forms import (
     ActorSearchForm,
     ImprintSearchForm, WrittenWorkSearchForm, PlaceSearchForm)
@@ -176,3 +177,8 @@ class DigitalFormatViewSet(viewsets.ModelViewSet):
 class DigitalObjectViewSet(viewsets.ModelViewSet):
     queryset = DigitalObject.objects.all()
     serializer_class = DigitalObjectSerializer
+
+
+class DigitalObjectExtendedViewSet(viewsets.ModelViewSet):
+    queryset = DigitalObject.objects.all()
+    serializer_class = DigitalObjectExtendedSerializer
