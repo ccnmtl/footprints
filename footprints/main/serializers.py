@@ -252,7 +252,8 @@ class PathmapperFootprintSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = Footprint
         fields = ('id', 'title', 'place', 'display_date', 'sort_date',
-                  'narrative', 'owners', 'is_terminal')
+                  'narrative', 'owners', 'call_number', 'identifier',
+                  'is_terminal')
 
 
 class PathmapperRouteSerializer(HyperlinkedModelSerializer):
@@ -302,3 +303,12 @@ class PathmapperTableRowSerializer(Serializer):
             'book_copy_identifier',
             'footprint_id', 'footprint_title', 'footprint_date',
             'footprint_location', 'expurgated', 'censored')
+
+
+class DigitalObjectExtendedSerializer(HyperlinkedModelSerializer):
+    footprints = PathmapperFootprintSerializer(
+        many=True, read_only=True, source='footprint_set')
+
+    class Meta:
+        model = DigitalObject
+        fields = ('id', 'name', 'description', 'url', 'footprints')
