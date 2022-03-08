@@ -152,7 +152,6 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 INSTALLED_APPS += [  # noqa
-    'sorl.thumbnail',
     'bootstrapform',
     'infranil',
     'django_extensions',
