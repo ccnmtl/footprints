@@ -8,11 +8,11 @@ from django.contrib.auth.views import (
 from django.urls import path
 from django.views.generic import TemplateView
 from django.views.static import serve
+from django_cas_ng import views as cas_views
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from registration.backends.default.views import RegistrationView
 from rest_framework import routers
 
-from django_cas_ng import views as cas_views
 from footprints.main import views
 from footprints.main.forms import CustomRegistrationForm
 from footprints.main.views import (
@@ -29,7 +29,7 @@ from footprints.main.viewsets import (
     PersonViewSet, PlaceViewSet, RoleViewSet, WrittenWorkViewSet,
     StandardizedIdentificationViewSet, DigitalFormatViewSet,
     DigitalObjectViewSet, StandardizedIdentificationTypeViewSet,
-    AlternatePlaceNameViewSet)
+    AlternatePlaceNameViewSet, DigitalObjectExtendedViewSet)
 from footprints.pathmapper.views import (
     PathmapperView, BookCopySearchView, PathmapperTableView,
     PathmapperRouteView, PathmapperEventViewSet)
@@ -43,6 +43,7 @@ router.register(r'altname', AlternatePlaceNameViewSet, basename='altname')
 router.register(r'book', BookCopyViewSet, basename='book')
 router.register(r'digitalformat', DigitalFormatViewSet)
 router.register(r'digitalobject', DigitalObjectViewSet)
+router.register(r'digitalobjectex', DigitalObjectExtendedViewSet)
 router.register(r'edtf', ExtendedDateViewSet)
 router.register(r'footprint', FootprintViewSet, basename='footprint')
 router.register(r'identifiertype', StandardizedIdentificationTypeViewSet)
