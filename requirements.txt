@@ -36,7 +36,7 @@ idna==3.3
 urllib3==1.26.7  # sentry-sdk
 
 requests==2.27.0
-logilab-common==1.8.1
+logilab-common==1.9.2
 lazy-object-proxy==1.7.1
 wrapt==1.14.0
 
