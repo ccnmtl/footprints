@@ -1,4 +1,5 @@
-Django>=2.2.12,<3
+Django==3.2.12
+asgiref==3.4.1
 
 feedparser==6.0.8
 
@@ -95,7 +96,7 @@ django-infranil==1.1.0
 certifi==2021.10.8  # for pysolr, sentry-sdk
 pysolr==3.9.0
 django-haystack==3.1.1
-requirements/src/django_audit_log-0.8.0-py2.py3-none-any.whl
+requirements/src/django_audit_log-0.8.1-py2.py3-none-any.whl
 djangorestframework==3.13.1
 djangorestframework-jsonp==1.0.2
 Unidecode==1.3.2
@@ -129,4 +130,3 @@ drf-spectacular==0.22.0
 
 python-cas==1.6.0
 django-cas-ng==4.3.0
-
