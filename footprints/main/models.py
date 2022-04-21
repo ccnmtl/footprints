@@ -7,7 +7,7 @@ from django.db.models.signals import m2m_changed
 from django.template import loader
 from django.urls.base import reverse
 from django.utils import timezone
-from django.utils.encoding import python_2_unicode_compatible, smart_text
+from django.utils.encoding import smart_text
 from edtf import edtf_date
 from edtf.edtf import EDTF
 from past.builtins import basestring
@@ -118,7 +118,6 @@ def append_approximate(dt, approximate):
     return dt
 
 
-@python_2_unicode_compatible
 class ExtendedDate(models.Model):
     objects = ExtendedDateManager()
     edtf_format = models.CharField(max_length=256)
@@ -281,7 +280,6 @@ class RoleManager(models.Manager):
         return self.get_queryset().for_work()
 
 
-@python_2_unicode_compatible
 class Role(models.Model):
     OWNER = 'Owner'
     AUTHOR = 'Author'
@@ -303,7 +301,6 @@ class Role(models.Model):
         return self.name
 
 
-@python_2_unicode_compatible
 class Language(models.Model):
     name = models.CharField(max_length=100, unique=True)
     marc_code = models.CharField(
@@ -317,7 +314,6 @@ class Language(models.Model):
         return self.name
 
 
-@python_2_unicode_compatible
 class DigitalFormat(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
@@ -329,7 +325,6 @@ class DigitalFormat(models.Model):
         return self.name
 
 
-@python_2_unicode_compatible
 class DigitalObject(models.Model):
     name = models.CharField(max_length=500)
     file = models.FileField(upload_to="%Y/%m/%d/")
@@ -412,7 +407,6 @@ class StandardizedIdentificationTypeManager(models.Manager):
         return self.oclc_type
 
 
-@python_2_unicode_compatible
 class StandardizedIdentificationType(models.Model):
     objects = StandardizedIdentificationTypeManager()
 
@@ -428,7 +422,6 @@ class StandardizedIdentificationType(models.Model):
         return self.name
 
 
-@python_2_unicode_compatible
 class StandardizedIdentification(models.Model):
     identifier = models.CharField(max_length=512)
     identifier_type = models.ForeignKey(StandardizedIdentificationType,
@@ -502,7 +495,6 @@ GENDER_CHOICES = (
 )
 
 
-@python_2_unicode_compatible
 class Person(models.Model):
     objects = PersonManager()
 
@@ -594,7 +586,6 @@ class ActorManager(models.Manager):
                 role=role, person=person, alias=alias).first(), False)
 
 
-@python_2_unicode_compatible
 class Actor(models.Model):
     objects = ActorManager()
 
@@ -628,7 +619,6 @@ class PlaceManager(models.Manager):
         self._fields = fields
 
 
-@python_2_unicode_compatible
 class CanonicalPlace(models.Model):
     canonical_name = models.TextField()
     latlng = PointField()
@@ -661,7 +651,6 @@ class CanonicalPlace(models.Model):
         return self.latlng_string() == latlng
 
 
-@python_2_unicode_compatible
 class Place(models.Model):
     objects = PlaceManager()
 
@@ -696,7 +685,6 @@ class Place(models.Model):
         return self.canonical_place.longitude()
 
 
-@python_2_unicode_compatible
 class Collection(models.Model):
     name = models.CharField(max_length=512, unique=True)
     actor = models.ManyToManyField(Actor, blank=True)
@@ -718,7 +706,6 @@ class Collection(models.Model):
         return self.name
 
 
-@python_2_unicode_compatible
 class WrittenWork(models.Model):
     title = models.TextField(null=True, unique=True)
     actor = models.ManyToManyField(
@@ -860,7 +847,6 @@ class ImprintManager(models.Manager):
         return None if the_date == date.min else the_date
 
 
-@python_2_unicode_compatible
 class Imprint(models.Model):
     objects = ImprintManager()
 
@@ -1049,7 +1035,6 @@ class ImprintAlternateTitle(models.Model):
         unique_together = [['alternate_title', 'standardized_identifier']]
 
 
-@python_2_unicode_compatible
 class BookCopy(models.Model):
     imprint = models.ForeignKey(Imprint, on_delete=models.CASCADE)
     call_number = models.CharField(max_length=256, null=True, blank=True)
@@ -1155,7 +1140,6 @@ class FootprintManager(models.Manager):
         return None if the_date == date.min else the_date
 
 
-@python_2_unicode_compatible
 class Footprint(models.Model):
     objects = FootprintManager()
     book_copy = models.ForeignKey(BookCopy, on_delete=models.CASCADE)

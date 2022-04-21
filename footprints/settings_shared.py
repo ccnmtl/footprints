@@ -47,6 +47,7 @@ CELERY_BROKER_URL = "amqp://guest:guest@localhost:5672//ccnmtl.footprints.dev"
 CELERY_WORKER_CONCURRENCY = 2
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_CACHE_BACKEND = 'django-cache'
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 if ('test' in sys.argv or 'jenkins' in sys.argv or 'validate' in sys.argv
         or 'check' in sys.argv):

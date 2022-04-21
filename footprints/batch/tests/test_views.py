@@ -2,6 +2,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test.client import RequestFactory
 from django.test.testcases import TestCase
 from django.urls.base import reverse
+from django.contrib.messages import get_messages
 
 from footprints.batch.forms import CreateBatchJobForm
 from footprints.batch.models import BatchRow, BatchJob
@@ -278,9 +279,8 @@ class BatchJobUpdateViewTest(TestCase):
         self.assertEqual(self.record2.footprint, fp2)
 
         self.assertTrue(fp1.book_copy, fp2.book_copy)
-
-        self.assertTrue('2 footprints created' in
-                        response.cookies['messages'].value)
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+        self.assertIn('2 footprints created', messages[0])
 
         self.job.refresh_from_db()
         self.assertTrue(self.job.processed)

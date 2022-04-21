@@ -4,7 +4,7 @@ from django.apps import apps
 from django.conf import settings
 from django.contrib.syndication.views import Feed
 from django.core.mail import send_mail
-from django.db.models.fields import FieldDoesNotExist
+from django.core.exceptions import FieldDoesNotExist
 from django.db.models.fields.related import ManyToManyField
 from django.http.response import HttpResponseRedirect, StreamingHttpResponse, \
     HttpResponseBadRequest
