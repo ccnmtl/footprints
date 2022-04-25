@@ -62,7 +62,7 @@ kombu>=4.6.11,<5.0.0
 celery>=4.4.7,<5.0.0
 django-celery-results==2.3.1
 
-billiard==3.6.4.0
+billiard==4.0.0
 pytz==2022.1
 
 django-indexer==0.3.0
