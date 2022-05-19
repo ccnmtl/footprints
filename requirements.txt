@@ -95,7 +95,7 @@ boto3>=1.12.0,<1.23.0
 django-infranil==1.1.0
 certifi==2022.5.18  # for pysolr, sentry-sdk
 pysolr==3.9.0
-django-haystack==3.1.1
+django-haystack==3.2.1
 requirements/src/django_audit_log-0.8.1-py2.py3-none-any.whl
 djangorestframework==3.13.1
 djangorestframework-jsonp==1.0.2
