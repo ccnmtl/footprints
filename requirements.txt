@@ -93,7 +93,7 @@ botocore>=1.15.0,<1.28.0
 boto3>=1.12.0,<1.25.0
 
 django-infranil==1.1.0
-certifi==2022.5.18  # for pysolr, sentry-sdk
+certifi==2022.6.15  # for pysolr, sentry-sdk
 pysolr==3.9.0
 django-haystack==3.2.1
 requirements/src/django_audit_log-0.8.1-py2.py3-none-any.whl
