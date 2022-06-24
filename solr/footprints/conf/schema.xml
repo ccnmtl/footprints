@@ -155,6 +155,8 @@
 
     <field name="has_image" type="boolean" indexed="true" stored="true" multiValued="false" />
 
+    <field name="is_terminal" type="boolean" multiValued="false" indexed="true" stored="true"/>
+    
     <field name="footprint_start_date" type="date" indexed="true" stored="true" multiValued="false" />
 
     <field name="text" type="ngram" indexed="true" stored="true" multiValued="false" />
@@ -173,6 +175,8 @@
 
     <field name="actor_title_exact" type="string" indexed="true" stored="true" multiValued="true" />
 
+    <field name="creator" type="text_en" multiValued="false" indexed="true" stored="true"/>
+    
     <field name="complete" type="long" indexed="true" stored="true" multiValued="false" />
 
     <field name="owners" type="text_en" indexed="true" stored="true" multiValued="false" />
