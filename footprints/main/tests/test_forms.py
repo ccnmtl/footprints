@@ -151,12 +151,11 @@ class FootprintSearchFormTest(TestCase):
         form = FootprintSearchForm()
 
         a = ['prior']
-        q = 'a b'
-        self.assertEqual('a b', form.handle_image(q, a))
+        self.assertEqual('a b', form.handle_image(a))
         self.assertEqual(a, ['prior'])
 
         q = 'search has:image'
-        self.assertEqual('search ', form.handle_image(q, a))
+        self.assertEqual('search ', form.handle_image(a))
         self.assertEqual(a, ['prior', Q(has_image=True)])
 
     def test_handle_creator(self):
