@@ -31,3 +31,4 @@ solr/footprints/conf/data
 solr/footprints/data
 solr/footprints/logs
 solr/footprints/log4j2.xml
+.vscode/

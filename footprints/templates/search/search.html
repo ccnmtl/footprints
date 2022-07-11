@@ -59,7 +59,8 @@
                 baseUrl: "{% url 'search' %}",
                 selectedDirection: "{{form.data.direction}}",
                 selectedSort: "{{form.data.sort_by}}",
-                query: "{{form.data.q}}"
+                query: "{{form.data.q}}",
+                gallery_view: "{{form.data.gallery_view}}"
             });
         });
     </script>
@@ -387,14 +388,15 @@
                     <span class="glyphicon glyphicon-download-alt"></span> Export
                 </button>
             {% endif %}
-
             {% flag "gallery_view" %}
             <div class="btn-group ml-2" role="group" aria-label="View Options">
-              <button type="button" class="btn btn-sm btn-white {% if not gallery_view %}active{% endif %}">
+              <button name="gallery_view" type="submit" class="btn btn-sm btn-white {% if not gallery_view %}active{% endif %}" 
+              formaction="{% url 'search' %}">
                 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
                     List View
               </button>
-              <button type="button" class="btn btn-sm btn-white {% if gallery_view %}active{% endif %}">
+              <button name="gallery_view" type="submit" class="btn btn-sm btn-white {% if gallery_view %}active{% endif %}" 
+              formaction="{% url 'search' %}" value="true">
                 <span class="glyphicon glyphicon-picture" aria-hidden="true"></span>
                     Image View
               </button>
