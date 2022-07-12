@@ -134,6 +134,7 @@ class FootprintSearchForm(ModelSearchForm):
     def handle_image(self, args):
         if self.cleaned_data.get('gallery_view'):
             args.append(Q(has_image=True))
+        return args
 
     def handle_creator(self, q, args):
         pattern = 'creator:(\w+)'
