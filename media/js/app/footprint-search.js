@@ -22,6 +22,7 @@
             'keyup input[name="pub_start_year"]': 'updateStatus',
             'keyup input[name="pub_end_year"]': 'updateStatus',
             'click a.search-precision': 'changePrecision',
+            'click .toggle-view': 'clickToggleView',
         },
         initialize: function(options) {
             _.bindAll(
@@ -29,7 +30,7 @@
                 'nextOrPreviousPage', 'specifyPage', 'onKeydown',
                 'busy', 'matchHighlightedValue',
                 'applySingleFilter', 'submitForm', 'clearErrors',
-                'updateStatus', 'changePrecision');
+                'updateStatus', 'changePrecision', 'clickToggleView');
 
             var self = this;
             this.baseUrl = options.baseUrl;
@@ -105,6 +106,17 @@
                 jQuery(evt.currentTarget).html('to');
             }
             this.updateStatus(evt);
+        },
+        clickToggleView: function(evt) {
+            evt.preventDefault();
+            if (jQuery(evt.currentTarget).hasClass('disabled')) {
+            } else if(jQuery(evt.currentTarget).hasClass('list')) {
+                jQuery('input[name="gallery_view"]').removeProp('checked');
+                this.submitForm();
+            } else {
+                jQuery(evt.currentTarget).children('input').first().prop('checked',true);
+                this.submitForm();
+            }
         },
         isCharacter: function(charCode) {
             return charCode === 8 ||

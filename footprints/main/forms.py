@@ -1,5 +1,4 @@
 from datetime import date, datetime
-# from email.policy import default
 import re
 import urllib
 

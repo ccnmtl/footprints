@@ -1,0 +1,20 @@
+<!--Gallery View for search.html-->
+
+<div class="gallery-container">
+    {% for result in object_list %}
+        {% with footprint=result.object %}
+            <div class="panel paned-default gallery-item">
+                <div class="panel-body">
+                    <a href="/footprint/{{footprint.id}}">
+                        <img src="{{footprint.digital_object.url}}" alt="{{footprint.title}}">
+                    </a>
+                </div>
+                <div class="panel-footer">
+                    <p>{{footprint.title}}<br>
+                        {{footprint.associated_date}}><br>
+                        {{footprint.place}}</p>
+                </div>
+            </div>
+        {% endwith %}
+    {% endfor %}
+</div>

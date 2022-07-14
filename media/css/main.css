@@ -3,6 +3,7 @@
  * Zarina Mustapha
  * ctl.columbia.edu
  * 2015
+ * Modified: 2022, Evan Petersen: gallery-view, 
  */
 
 /* General Typography */
@@ -2554,6 +2555,25 @@ th.sortable.tablesorter-headerDesc,
     color: #a94442;
     font-weight: bold;
     list-style: none;
+}
+
+/* Search Gallery View */
+input[name='gallery_view'] {
+    visibility: hidden;
+}
+
+.gallery-container {
+    margin: 0.5em;
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.gallery-item {
+    margin: 0.5em;
+    max-height: 20em;
+    width: 15em;
 }
 
 /* Admin area record entry styles */

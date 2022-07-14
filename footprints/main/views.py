@@ -193,7 +193,7 @@ class FootprintSearchView(BaseSearchView):
             self.request.GET.get('footprint_start_year') or
             self.request.GET.get('footprint_end_year'))
 
-        context['gallery_view'] = self.request.GET.get('gallery_view')
+        context['gallery_view'] = self.request.GET.get('gallery_view', False)
 
         return context
 
