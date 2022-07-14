@@ -161,10 +161,10 @@ class FootprintSearchFormTest(TestCase):
             'imprint_location': [],
             'gallery_view': True
         }
-        a = ['prior']
+        a = []
         form.handle_image(a)
-        self.assertIn('prior', a)
         self.assertIn(Q(has_image=True), a)
+        self.assertTrue(form.cleaned_data['gallery_view'])
 
     def test_handle_creator(self):
         form = FootprintSearchForm()
