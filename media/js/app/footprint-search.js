@@ -110,11 +110,13 @@
         clickToggleView: function(evt) {
             evt.preventDefault();
             if (jQuery(evt.currentTarget).hasClass('disabled')) {
+                return;
             } else if(jQuery(evt.currentTarget).hasClass('list')) {
                 jQuery('input[name="gallery_view"]').removeProp('checked');
                 this.submitForm();
             } else {
-                jQuery(evt.currentTarget).children('input').first().prop('checked',true);
+                jQuery(evt.currentTarget).children('input').first().prop(
+                    'checked', true);
                 this.submitForm();
             }
         },
