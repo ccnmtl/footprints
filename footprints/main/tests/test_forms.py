@@ -149,15 +149,27 @@ class FootprintSearchFormTest(TestCase):
 
     def test_handle_image(self):
         form = FootprintSearchForm()
+        form.cleaned_data = {
+            'q': '',
+            'search_level': True,
+            'footprint_start_year': None,
+            'footprint_end_year': None,
+            'pub_start_year': None,
+            'pub_end_year': None,
+            'actor': [],
+            'footprint_location': [],
+            'imprint_location': [],
+            'gallery_view': False
+        }
+        a = []
+        form.handle_image(a)
+        self.assertNotIn(Q(has_image=True), a)
+        self.assertFalse(form.cleaned_data['gallery_view'])
 
-        a = ['prior']
-        q = 'a b'
-        self.assertEqual('a b', form.handle_image(q, a))
-        self.assertEqual(a, ['prior'])
-
-        q = 'search has:image'
-        self.assertEqual('search ', form.handle_image(q, a))
-        self.assertEqual(a, ['prior', Q(has_image=True)])
+        form.cleaned_data['gallery_view'] = True
+        form.handle_image(a)
+        self.assertIn(Q(has_image=True), a)
+        self.assertTrue(form.cleaned_data['gallery_view'])
 
     def test_handle_creator(self):
         form = FootprintSearchForm()

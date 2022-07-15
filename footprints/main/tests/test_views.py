@@ -1169,6 +1169,26 @@ class SearchViewTest(TestCase):
         self.assertFalse(response.context['search_criteria'])
 
 
+class ToggleGalleryViewTest(TestCase):
+
+    def test_list_view_search(self):
+        url = reverse('search')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.context['gallery_view'])
+
+    def test_gallery_view_search(self):
+        url = "{}/?gallery_view=on".format(reverse('search'))
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context['gallery_view'])
+
+        url = "{}/?q=a&gallery_view=on".format(reverse('search'))
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context['gallery_view'])
+
+
 class SearchIndexTest(TestCase):
 
     def test_format_sort_by(self):

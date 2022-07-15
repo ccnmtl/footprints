@@ -56,6 +56,7 @@ class FootprintSearchForm(ModelSearchForm):
     pub_end_year = forms.IntegerField(required=False, min_value=1000)
     pub_range = forms.BooleanField(
         required=False, widget=forms.HiddenInput())
+    gallery_view = forms.BooleanField(required=False, initial=False)
 
     precision = forms.ChoiceField(
         choices=PRECISION_CHOICES, initial='contains',
@@ -129,11 +130,10 @@ class FootprintSearchForm(ModelSearchForm):
 
         return cleaned_data
 
-    def handle_image(self, q, args):
-        if q.find('has:image') > -1:
+    def handle_image(self, args):
+        if self.cleaned_data.get('gallery_view'):
             args.append(Q(has_image=True))
-            q = q.replace('has:image', '')
-        return q
+        return args
 
     def handle_creator(self, q, args):
         pattern = 'creator:(\w+)'
@@ -172,7 +172,7 @@ class FootprintSearchForm(ModelSearchForm):
 
         q = self.cleaned_data.get('q', '')
 
-        q = self.handle_image(q, args)
+        self.handle_image(args)
 
         q = self.handle_creator(q, args)
 

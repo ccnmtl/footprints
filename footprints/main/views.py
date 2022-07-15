@@ -193,6 +193,8 @@ class FootprintSearchView(BaseSearchView):
             self.request.GET.get('footprint_start_year') or
             self.request.GET.get('footprint_end_year'))
 
+        context['gallery_view'] = self.request.GET.get('gallery_view', False)
+
         return context
 
 
@@ -200,6 +202,7 @@ class Echo(object):
     """An object that implements just the write method of the file-like
     interface.
     """
+
     def write(self, value):
         """
         Write the value by returning it, instead of storing in a buffer.
@@ -221,7 +224,7 @@ class ExportFootprintSearch(BaseSearchView):
                    'Evidence Call Number', 'Evidence Details']
         for r in Role.objects.for_footprint():
             role = 'Footprint Role ' + smart_text(r.name)\
-                 + ' Actor'
+                + ' Actor'
             headers.append(role)
             headers.append(role + ' VIAF Number')
 
