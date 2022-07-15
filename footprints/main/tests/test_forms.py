@@ -159,9 +159,14 @@ class FootprintSearchFormTest(TestCase):
             'actor': [],
             'footprint_location': [],
             'imprint_location': [],
-            'gallery_view': True
+            'gallery_view': False
         }
         a = []
+        form.handle_image(a)
+        self.assertNotIn(Q(has_image=True), a)
+        self.assertFalse(form.cleaned_data['gallery_view'])
+
+        form.cleaned_data['gallery_view'] = True
         form.handle_image(a)
         self.assertIn(Q(has_image=True), a)
         self.assertTrue(form.cleaned_data['gallery_view'])

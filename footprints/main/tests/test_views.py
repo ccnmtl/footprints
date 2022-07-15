@@ -1177,10 +1177,6 @@ class ToggleGalleryViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertFalse(response.context['gallery_view'])
 
-        url = "{}/?q=a".format(reverse('search'))
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
-
     def test_gallery_view_search(self):
         url = "{}/?gallery_view=on".format(reverse('search'))
         response = self.client.get(url)
