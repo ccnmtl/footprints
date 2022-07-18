@@ -1,20 +1,23 @@
 <!--Gallery View for search.html-->
 
 <div class="gallery-container">
-    {% for result in object_list %}
-        {% with footprint=result.object %}
-            <div class="panel paned-default gallery-item">
-                <div class="panel-body">
-                    <a href="/footprint/{{footprint.id}}">
-                        <img src="{{footprint.digital_object.url}}" alt="{{footprint.title}}">
-                    </a>
-                </div>
-                <div class="panel-footer">
-                    <p>{{footprint.title}}<br>
-                        {{footprint.associated_date}}><br>
-                        {{footprint.place}}</p>
-                </div>
-            </div>
-        {% endwith %}
-    {% endfor %}
+  {% for result in object_list %} {% with footprint=result.object %}
+  <div class="panel paned-default gallery-item">
+    <div class="gallery-img-container">
+      <div class="panel-body gallery-img">
+        <a href="/footprint/{{footprint.id}}">
+          <img
+            src="{{footprint.digital_object.all.0.url}}"
+            alt="Click here for {{footprint.title}}"
+          />
+        </a>
+      </div>
+    </div>
+    <div class="panel-footer img-metadata">
+      <p><span>Title: </span>{{footprint.title}}</p>
+      <p><span>Date: </span>{{footprint.associated_date}}></p>
+      <p><span>Place: </span>{{footprint.place}}</p>
+    </div>
+  </div>
+  {% endwith %} {% endfor %}
 </div>
