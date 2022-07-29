@@ -23,6 +23,8 @@
             'keyup input[name="pub_end_year"]': 'updateStatus',
             'click a.search-precision': 'changePrecision',
             'click .toggle-view': 'clickToggleView',
+            'click .gallery-img-container': 'clickGalleryImage',
+            'click .close-overlay': 'clickCloseOverlay',
         },
         initialize: function(options) {
             _.bindAll(
@@ -30,7 +32,7 @@
                 'nextOrPreviousPage', 'specifyPage', 'onKeydown',
                 'busy', 'matchHighlightedValue',
                 'applySingleFilter', 'submitForm', 'clearErrors',
-                'updateStatus', 'changePrecision', 'clickToggleView');
+                'updateStatus', 'changePrecision', 'clickToggleView', 'clickGalleryImage', 'clickCloseOverlay');
 
             var self = this;
             this.baseUrl = options.baseUrl;
@@ -119,6 +121,45 @@
                     'checked', true);
                 this.submitForm();
             }
+        },
+        clickGalleryImage: function(evt) {
+            evt.preventDefault();
+            // Get image
+            jQuery('img[class="image-display"]').prop(
+                'src', jQuery(evt.currentTarget).find('img')[0].src);
+            // Get indices
+            let metaData = jQuery(evt.currentTarget.nextElementSibling).find('p');
+            // Extract metadata
+            let dataDisplay = jQuery('ul[title="metadata"]').find('li');
+            dataDisplay[0].innerHTML = metaData[0].innerHTML;
+            dataDisplay[1].innerHTML = metaData[1].innerHTML;
+            dataDisplay[2].innerHTML = metaData[2].innerHTML;
+            if (metaData.length > 4) {
+                let owners = "<span><strong>---Roles---</strong></span>";
+                for (let i=3; i<metaData.length-1; i++) {
+                    owners += metaData[i].outerHTML;
+                }
+                dataDisplay[3].innerHTML = owners;
+            } else {
+                dataDisplay[3].innerHTML = "";
+            }
+            // Reveal display
+            let display = jQuery('div[class="gallery-display"]');
+            display.show();
+            display.css('display', 'flex');
+            // Store tab location
+            this.selected = evt.currentTarget;
+            //Set focus
+            jQuery('ul[title="metadata"]').focus();
+        },
+        clickCloseOverlay: function(evt) {
+            evt.preventDefault();
+            // Set focus to last selected item
+            this.selected.focus();
+            // Hide view
+            let display = jQuery(this.el.getElementsByClassName(
+                'gallery-display')[0]);
+            display.hide();
         },
         isCharacter: function(charCode) {
             return charCode === 8 ||

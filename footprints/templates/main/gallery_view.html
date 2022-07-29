@@ -1,23 +1,48 @@
 <!--Gallery View for search.html-->
 
+<div class="gallery-display" hidden>
+  <img class="image-display" src=""/>
+  <ul title="metadata" tabindex="0">
+    <li><strong>Title: </strong></li>
+    <li><strong>Date: </strong></li>
+    <li><strong>Place: </strong></li>
+    <li><strong>Roles: </strong></li>
+  </ul>
+  <button class="btn-lg close-overlay" alt="close expanded view">
+    <span class="glyphicon glyphicon-remove"></span>
+  </button>
+</div>
+
 <div class="gallery-container">
-  {% for result in object_list %} {% with footprint=result.object %}
-  <div class="panel paned-default gallery-item">
-    <div class="gallery-img-container">
+  {% for result in object_list %}
+  {% with footprint=result.object %}
+  {% for image in footprint.digital_object.all %}
+  <div class="panel paned-default gallery-item" id="{{forloop.parentloop.counter}}-{{forloop.counter}}">
+    <button class="gallery-img-container" tabindex="0">
       <div class="panel-body gallery-img">
-        <a href="/footprint/{{footprint.id}}">
-          <img
-            src="{{footprint.digital_object.all.0.url}}"
-            alt="Click here for {{footprint.title}}"
-          />
-        </a>
+        <img
+          data-metadata={{footprint}}
+          id="image-thumbnail"
+          src="{{image.url}}"
+          alt="Expanded display for {{footprint.title}}"
+        />
+      </div>
+    </button>
+    <div class="panel-footer img-metadata">
+        <p>
+          <span><strong>Title: </strong></span>
+          <a role="button" href="/footprint/{{footprint.id}}" tabindex="0" title="Footprint page for {{footprint.title}}">{{footprint.title}}</a>
+        </p>
+        <p><span><strong>Date: </strong></span>{{footprint.associated_date}}></p>
+        <p><span><strong>Place: </strong></span>{{footprint.place}}</p>
+        <div hidden>
+          <span>---Roles---</span>
+          {% for actor in footprint.actors %}
+            <p>{{actor.person}} -- {{actor.role}}</p>
+          {% endfor %}
+        </p>
       </div>
     </div>
-    <div class="panel-footer img-metadata">
-      <p><span>Title: </span>{{footprint.title}}</p>
-      <p><span>Date: </span>{{footprint.associated_date}}></p>
-      <p><span>Place: </span>{{footprint.place}}</p>
-    </div>
   </div>
-  {% endwith %} {% endfor %}
+  {% endfor %} {% endwith %} {% endfor %}
 </div>
