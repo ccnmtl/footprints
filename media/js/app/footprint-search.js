@@ -32,7 +32,8 @@
                 'nextOrPreviousPage', 'specifyPage', 'onKeydown',
                 'busy', 'matchHighlightedValue',
                 'applySingleFilter', 'submitForm', 'clearErrors',
-                'updateStatus', 'changePrecision', 'clickToggleView', 'clickGalleryImage', 'clickCloseOverlay');
+                'updateStatus', 'changePrecision', 'clickToggleView',
+                'clickGalleryImage', 'clickCloseOverlay');
 
             var self = this;
             this.baseUrl = options.baseUrl;
@@ -128,20 +129,21 @@
             jQuery('img[class="image-display"]').prop(
                 'src', jQuery(evt.currentTarget).find('img')[0].src);
             // Get indices
-            let metaData = jQuery(evt.currentTarget.nextElementSibling).find('p');
+            let metaData = jQuery(
+                evt.currentTarget.nextElementSibling).find('p');
             // Extract metadata
             let dataDisplay = jQuery('ul[title="metadata"]').find('li');
             dataDisplay[0].innerHTML = metaData[0].innerHTML;
             dataDisplay[1].innerHTML = metaData[1].innerHTML;
             dataDisplay[2].innerHTML = metaData[2].innerHTML;
             if (metaData.length > 4) {
-                let owners = "<span><strong>---Roles---</strong></span>";
+                let owners = '<span><strong>---Roles---</strong></span>';
                 for (let i=3; i<metaData.length-1; i++) {
                     owners += metaData[i].outerHTML;
                 }
                 dataDisplay[3].innerHTML = owners;
             } else {
-                dataDisplay[3].innerHTML = "";
+                dataDisplay[3].innerHTML = '';
             }
             // Reveal display
             let display = jQuery('div[class="gallery-display"]');
