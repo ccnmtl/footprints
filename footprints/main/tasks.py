@@ -83,8 +83,8 @@ class CeleryHaystackSignalHandler(object):
         """
         try:
             instance = model_class._default_manager.get(pk=pk)
-        except(model_class.DoesNotExist,
-               model_class.MultipleObjectsReturned) as exc:
+        except (model_class.DoesNotExist,
+                model_class.MultipleObjectsReturned) as exc:
             raise InstanceNotFoundException(model_class, pk, reason=exc)
 
         return instance
