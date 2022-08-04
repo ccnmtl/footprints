@@ -137,7 +137,7 @@
             dataDisplay[1].innerHTML = metaData[1].innerHTML;
             dataDisplay[2].innerHTML = metaData[2].innerHTML;
             if (metaData.length > 4) {
-                let owners = '<span><strong>---Roles---</strong></span>';
+                let owners = '';
                 for (let i=3; i<metaData.length-1; i++) {
                     owners += metaData[i].outerHTML;
                 }
@@ -146,7 +146,7 @@
                 dataDisplay[3].innerHTML = '';
             }
             // Reveal display
-            let display = jQuery('div[class="gallery-display"]');
+            let display = jQuery('div[class="container gallery-display"]');
             display.show();
             display.css('display', 'flex');
             // Store tab location
