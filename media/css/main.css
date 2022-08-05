@@ -1273,7 +1273,7 @@ ul.wizard-tabs.has-error li.active a {
 }
 
 .footprint-form .form-content {
-
+    max-height: none;
 }
 
 .footprint-form .form-content h3 {
