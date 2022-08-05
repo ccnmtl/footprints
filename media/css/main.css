@@ -1273,7 +1273,7 @@ ul.wizard-tabs.has-error li.active a {
 }
 
 .footprint-form .form-content {
-
+    max-height: none;
 }
 
 .footprint-form .form-content h3 {
@@ -2559,27 +2559,70 @@ th.sortable.tablesorter-headerDesc,
 
 
 /* Search Gallery View */
+.close-overlay {
+    background-color: inherit;
+    position: absolute;
+    right: 2em;
+    top: 1em;
+    border: 2px solid white;
+}
+
+.close-overlay:hover {
+    background-color: #333f54;
+}
+
 input[name='gallery_view'] {
     visibility: hidden;
 }
 
 .gallery-container {
+    position: relative;
     margin: 0.5em;
     display: flex;
     flex-wrap: wrap;
     align-items: top;
+}
+
+.gallery-display {
+    display: none;
+    padding: 1em 3em;
+    background-color: #202836;
+    color: white;
+    z-index: 1000;
+    position: fixed;
+    top: 50%;
+    transform: translate(-1.5em, -50%);
+    height: max(60vh, 20em);
+    align-items: center;
     justify-content: center;
+    box-shadow: -1px 0 0 #202836;
+}
+
+.gallery-display a {
+    color: skyblue;
+}
+
+.gallery-display a:hover, .gallery-display a:focus {
+    color: #2e5367;
+}
+
+.gallery-display ul {
+    list-style-type: none;
+}
+
+.gallery-display p {
+    margin-bottom: 0;
 }
 
 .gallery-img {
-    max-height: 20em;
+    height: 20em;
 }
 
 .gallery-img a {
     outline: none;
 }
 
-.gallery-img:hover {
+.gallery-img img:hover {
     opacity: 75%;
 }
 
@@ -2587,24 +2630,21 @@ input[name='gallery_view'] {
     position: relative;
     left: 50%;
     top: 50%;
-    transform: translate(-50%);
+    transform: translate(-50%, -50%);
     min-width: 100%;
-    min-height: 20em;
-    max-width: 20em;
-}
-
-.gallery-img img:hover {
-    z-index: 1000;
+    height: 20em;
 }
 
 .gallery-img-container {
     overflow: hidden;
-    max-width: 100%;
+    width: 100%;
     max-height: 20em;
+    border: none;
+    padding: 0px;
 }
 
-.gallery-img-container:hover {
-    background-color: #75aecd;
+.gallery-img-container:focus {
+    border-bottom: 8px solid #4287f5;
 }
 
 .gallery-item {
@@ -2613,6 +2653,7 @@ input[name='gallery_view'] {
     width: 15em;
     overflow: hidden;
     border-radius: 1em;
+    padding: 0px;
 }
 
 .gallery-item p {
@@ -2622,6 +2663,12 @@ input[name='gallery_view'] {
 
 .gallery-item span {
     color: gray;
+}
+
+.image-display {
+    max-height: 100%;
+    max-width: 75%;
+    object-fit: contain;
 }
 
 .img-metadata {

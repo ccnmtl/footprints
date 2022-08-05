@@ -389,14 +389,24 @@
             {% endif %}
             {% flag "gallery_view" %}
             <div class="btn-group" data-toggle="button">
-                <label class="btn btn-white btn-sm toggle-view list {% if gallery_view != 'on' %}active{% endif %}">
+                <button class="btn btn-white btn-sm toggle-view list {% if gallery_view != 'on' %}active{% endif %}" 
+                    {% if gallery_view != 'on' %}
+                        alt="Currently in List View" tabindex="-1"
+                    {% else %}
+                        alt="Switch to List View"
+                    {% endif %}>
                     <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
                     <input type="radio" name="gallery_view" {% if gallery_view != 'on' %}checked{% endif %} value=""> List View
-                </label>
-                <label class="btn btn-white btn-sm toggle-view gallery {% if gallery_view == 'on' %}active{% endif %}">
+                </button>
+                <button class="btn btn-white btn-sm toggle-view gallery {% if gallery_view == 'on' %}active{% endif %}"
+                    {% if gallery_view == 'on' %}
+                        alt="Currently in Gallery View" tabindex="-1"
+                    {% else %}
+                        alt="Switch to Gallery View"
+                    {% endif %}>
                     <span class="glyphicon glyphicon-picture" aria-hidden="true"></span>
                     <input type="radio" name="gallery_view" {% if gallery_view == 'on' %}checked{% endif %}> Gallery View
-                </label>
+            </button>
             </div>
             {% endflag %}
         </div>
