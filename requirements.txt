@@ -97,7 +97,7 @@ certifi==2022.9.14  # for pysolr, sentry-sdk
 pysolr==3.9.0
 django-haystack==3.2.1
 requirements/src/django_audit_log-0.8.1-py2.py3-none-any.whl
-djangorestframework==3.13.1
+djangorestframework==3.14.0
 djangorestframework-jsonp==1.0.2
 Unidecode==1.3.2
 django-reversion==5.0.1
