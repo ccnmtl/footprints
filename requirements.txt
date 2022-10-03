@@ -63,7 +63,7 @@ celery>=4.4.7,<5.0.0
 django-celery-results==2.4.0
 
 billiard==3.6.4.0
-pytz==2022.2
+pytz==2022.4
 
 django-indexer==0.3.0
 django-templatetag-sugar==1.0
