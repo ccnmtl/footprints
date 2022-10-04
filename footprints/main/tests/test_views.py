@@ -1083,7 +1083,7 @@ class ContactUsViewTest(TestCase):
         self.assertEqual(mail.outbox[0].subject,
                          'Footprints Contact Us Request')
         self.assertEqual(mail.outbox[0].from_email,
-                         'footprints@mail.ctl.columbia.edu')
+                         'footprints-noreply@mail.ctl.columbia.edu')
         self.assertEqual(mail.outbox[0].to,
                          [settings.CONTACT_US_EMAIL])
 
