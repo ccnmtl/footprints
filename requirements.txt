@@ -10,7 +10,7 @@ psycopg2==2.9.3
 olefile==0.46
 
 versiontools==1.9.1
-statsd==3.3.0
+statsd==4.0.1
 pep8==1.7.1
 pyflakes==2.5.0
 mccabe==0.7.0
