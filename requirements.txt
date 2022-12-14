@@ -68,7 +68,7 @@ click-plugins==1.1.1
 django-celery-results==2.4.0
 wcwidth==0.2.5
 
-billiard==4.1.0
+billiard==3.6.4.0
 pytz==2022.6
 
 django-indexer==0.3.0
