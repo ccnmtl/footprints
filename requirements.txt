@@ -88,7 +88,7 @@ django-extensions==3.2.0
 django-stagingcontext==0.1.0
 django-ga-context==0.1.0
 django-impersonate==1.8.1
-django-registration-redux==2.11
+django-registration-redux==2.12
 django-markwhat==1.6.2
 gunicorn==20.1.0
 future==0.18.3
