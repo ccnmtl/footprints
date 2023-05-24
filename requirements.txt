@@ -1,5 +1,5 @@
 Django>=3.2.14,<4
-asgiref==3.6.0
+asgiref==3.7.1
 
 feedparser==6.0.8
 
