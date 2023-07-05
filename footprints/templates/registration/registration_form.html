@@ -35,6 +35,7 @@
     If you already have a username or password, but have forgotten either,
         <a href="{% url "password_reset" %}">reset them here</a>.
     </p></div>
+    <div><p>If you sign up for a Footprints account, you are agreeing to our <a href="/terms/" target="_blank">Terms and Conditions</a>.</p></div>
 
     {% if form.errors|length %}
         <div class="alert alert-danger">
@@ -110,5 +111,6 @@
 
     <input class="btn btn-primary btn-large right" type="submit" value="{% trans 'Sign up!' %}" />
 </form>
+
 
 {% endblock %}
