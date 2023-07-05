@@ -38,7 +38,7 @@
 
     {% if form.errors|length %}
         <div class="alert alert-danger">
-          Please correct errors
+            Something’s wrong with your account creation. Please correct the errors below.
           {% if form.non_field_errors %}
             <div>{{ form.non_field_errors}}</div>
           {% endif %}
@@ -99,7 +99,7 @@
         </div>
         {% if form.password1.errors or form.password2.errors %}
             <ul class="errorlist">
-                <li>Please enter your password twice.</li>
+                <li>Please create and confirm your password.</li>
             </ul>
         {% endif %}
     </div>
