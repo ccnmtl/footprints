@@ -35,10 +35,11 @@
     If you already have a username or password, but have forgotten either,
         <a href="{% url "password_reset" %}">reset them here</a>.
     </p></div>
+    <div><p>If you sign up for a Footprints account, you are agreeing to our <a href="/terms/" target="_blank">Terms and Conditions</a>.</p></div>
 
     {% if form.errors|length %}
         <div class="alert alert-danger">
-          Please correct errors
+            Something’s wrong with your account creation. Please correct the errors below.
           {% if form.non_field_errors %}
             <div>{{ form.non_field_errors}}</div>
           {% endif %}
@@ -99,7 +100,7 @@
         </div>
         {% if form.password1.errors or form.password2.errors %}
             <ul class="errorlist">
-                <li>Please enter your password twice.</li>
+                <li>Please create and confirm your password.</li>
             </ul>
         {% endif %}
     </div>
@@ -110,5 +111,6 @@
 
     <input class="btn btn-primary btn-large right" type="submit" value="{% trans 'Sign up!' %}" />
 </form>
+
 
 {% endblock %}
