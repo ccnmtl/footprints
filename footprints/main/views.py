@@ -319,7 +319,10 @@ class ExportFootprintSearch(BaseSearchView):
                 row.append('')
 
             # Book copy call number
-            row.append(smart_text(o.book_copy.call_number))
+            if o.book_copy.call_number:
+                row.append(smart_text(o.book_copy.call_number))
+            else:
+                row.append('')
 
             # Evidence type
             row.append(smart_text(o.medium))
