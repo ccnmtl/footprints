@@ -19,7 +19,7 @@ pycodestyle==2.10.0
 configparser==6.0.0
 importlib-metadata<6.9 # for flake8
 typing_extensions==4.7.0
-zipp==3.15.0  # for flake8
+zipp==3.16.0  # for flake8
 flake8==6.0.0
 tornado==6.3.2
 cssselect==1.2.0
