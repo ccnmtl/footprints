@@ -198,7 +198,8 @@ class ExportFootprintSearchTest(TestCase):
                    'Imprint Publication Date,Imprint Creation Date,'
                    'Footprint Percent Complete,Literary Work LOC,'
                    'Imprint Actor and Role,Imprint BHB Number,'
-                   'Imprint OCLC Number,Evidence Type,Evidence Location,'
+                   'Imprint OCLC Number,Book Copy Call Number,'
+                   'Evidence Type,Evidence Location,'
                    'Evidence Call Number,Evidence Details,')
 
         for r in Role.objects.for_footprint():
@@ -233,7 +234,7 @@ class ExportFootprintSearchTest(TestCase):
         row1 = [self.footprint1.identifier(),
                 'Empty Footprint', 'None', 'None', '', 'None', 'None',
                 '', 'None', self.footprint1.created_at.strftime('%m/%d/%Y'),
-                0, 'None', '', '', '', '', '', 'None', 'None']
+                0, 'None', '', '', '', '', '', '', 'None', 'None']
 
         row1 += interpolate_role_actors(Role.objects.all().for_footprint(),
                                         self.footprint1.actors())
@@ -258,6 +259,7 @@ class ExportFootprintSearchTest(TestCase):
                 actors,  # Imprint Actor and Role
                 '',  # Imprint BHB
                 '',  # Imprint OCLC Number
+                'B893.1BC',  # Book Copy Call Number
                 'Medium',  # Evidence Type
                 'Provenance',  # Evidence Location
                 'call number',  # Evidence Call Number

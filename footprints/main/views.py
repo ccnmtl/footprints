@@ -220,7 +220,8 @@ class ExportFootprintSearch(BaseSearchView):
                    'Imprint Publication Date', 'Imprint Creation Date',
                    'Footprint Percent Complete', 'Literary Work LOC',
                    'Imprint Actor and Role', 'Imprint BHB Number',
-                   'Imprint OCLC Number', 'Evidence Type', 'Evidence Location',
+                   'Imprint OCLC Number', 'Book Copy Call Number',
+                   'Evidence Type', 'Evidence Location',
                    'Evidence Call Number', 'Evidence Details']
         for r in Role.objects.for_footprint():
             role = 'Footprint Role ' + smart_text(r.name)\
@@ -314,6 +315,12 @@ class ExportFootprintSearch(BaseSearchView):
                 row.append(smart_text(o.book_copy
                                        .imprint.get_oclc_number()
                                        .identifier))
+            else:
+                row.append('')
+
+            # Book copy call number
+            if o.book_copy.call_number:
+                row.append(smart_text(o.book_copy.call_number))
             else:
                 row.append('')
 
