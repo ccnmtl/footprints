@@ -25,8 +25,8 @@ DIRECTION_CHOICES = (
 )
 
 PRECISION_CHOICES = (
-    ('contains', 'Contains'),
     ('exact', 'Exact'),
+    ('contains', 'Contains'),
     ('startswith', 'Starts with'),
     ('endswith', 'Ends with'),
 )
@@ -59,7 +59,7 @@ class FootprintSearchForm(ModelSearchForm):
     gallery_view = forms.BooleanField(required=False, initial=False)
 
     precision = forms.ChoiceField(
-        choices=PRECISION_CHOICES, initial='contains',
+        choices=PRECISION_CHOICES, initial='exact',
         required=True, widget=forms.HiddenInput())
 
     direction = forms.ChoiceField(
@@ -146,11 +146,11 @@ class FootprintSearchForm(ModelSearchForm):
     def handle_content(self, q, args):
         if q:
             q = q.strip()
-            precision = self.cleaned_data.get('precision', 'contains')
-            if precision == 'contains':
-                args.append(Q(content__fuzzy=q))
-            elif precision == 'exact':
+            precision = self.cleaned_data.get('precision', 'exact')
+            if precision == 'exact':
                 args.append(Q(content__content=q))
+            elif precision == 'contains':
+                args.append(Q(content__fuzzy=q))
             elif precision == 'startswith':
                 args.append(Q(content__startswith=q))
             elif precision == 'endswith':

@@ -83,7 +83,7 @@
         <div class="row tools search-level">
             <input type="hidden" name="sort_by" id="id_sort_by" value="{% if form.data.sort_by %}{{form.data.sort_by}}{% else %}ftitle{% endif %}">
             <input type="hidden" name="direction" id="id_direction" value="{% if form.data.direction %}{{form.data.direction}}{% else %}asc{% endif %}">
-            <input type="hidden" name="precision" id="id_precision" value="{% if form.data.precision %}{{form.data.precision}}{% else %}contains{% endif %}">
+            <input type="hidden" name="precision" id="id_precision" value="{% if form.data.precision %}{{form.data.precision}}{% else %}exact{% endif %}">
             {{form.page}}
             <div class="col-q">
                 <div class="form-group{% if form.q.errors %} has-error{% endif %}">
@@ -93,27 +93,27 @@
                             <button type="button" class="btn btn-gray dropdown-toggle" data-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false">
                                     <span class="search-precision-label">
-                                        {% if form.data.precision == "exact" %}
-                                            Matches
+                                        {% if form.data.precision == "contains" %}
+                                            Contains
                                         {% else %}{% if form.data.precision == "startswith" %}
                                             Starts with
                                         {% else %}{% if form.data.precision == "endswith" %}
                                             Ends with
                                         {% else %}
-                                            Contains
+                                            Matches
                                         {% endif %}{% endif %}{% endif %}
                                     </span> 
                                     <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a class="search-precision" href="#" data-precision="contains">
-                                        Contains
+                                    <a class="search-precision" href="#" data-precision="exact">
+                                        Matches
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="search-precision" href="#" data-precision="exact">
-                                        Matches
+                                    <a class="search-precision" href="#" data-precision="contains">
+                                        Contains
                                     </a>
                                 </li>
                                 <li>
