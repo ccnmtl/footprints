@@ -41,7 +41,11 @@
                                 </span>
                             <% } %>
                             <span>
-                                <%=current_owner.person.name%><% if (current_owner.alias) { %>  as <%=current_owner.alias%> <% } %>
+                                <%=current_owner.person.name%>
+                                <% if (current_owner.alias) { %>  as <%=current_owner.alias%> <% } %>
+                                <% if (current_owner.person.gender != gender_choices.UNASSIGNED) { %>
+                                    (<%=current_owner.person.gender%>) 
+                                <% } %>
                             </span> 
                         </dd>
                     <% } %>
@@ -102,7 +106,11 @@
                         </span>
                     <% } %>
                     <span>
-                        <%=imprint.work.actor[i].person.name%><% if (imprint.work.actor[i].alias) { %>  as <%=imprint.work.actor[i].alias%> <% } %>
+                        <%=imprint.work.actor[i].person.name%>
+                        <% if (imprint.work.actor[i].alias) { %>  as <%=imprint.work.actor[i].alias%> <% } %>
+                        <% if (imprint.work.actor[i].person.gender != gender_choices.UNASSIGNED) { %>
+                            (<%=imprint.work.actor[i].person.gender%>) 
+                        <% } %>
                     </span> 
                     <div class="pull-right">
                         <% if (can_edit_work) { %>
@@ -272,7 +280,11 @@
                         </span>
                     <% } %>
                     <span>
-                        <%=imprint.actor[i].person.name%><% if (imprint.actor[i].alias) { %>  as <%=imprint.actor[i].alias%> <% } %>
+                        <%=imprint.actor[i].person.name%>
+                        <% if (imprint.actor[i].alias) { %>  as <%=imprint.actor[i].alias%> <% } %>
+                        <% if (imprint.actor[i].person.gender != gender_choices.UNASSIGNED) { %>
+                            (<%=imprint.actor[i].person.gender%>) 
+                        <% } %>
                     </span> 
                     <div class="pull-right">
                         <% if (can_edit_imprint) { %>

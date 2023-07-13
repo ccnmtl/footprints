@@ -149,6 +149,7 @@
                     all_mediums:  [{% for medium in mediums %}
                                    {value: '{{medium}}', text: "{{medium}}"}{% if not forloop.last %},{% endif %}
                                    {% endfor %}, {value: "Other", text: "Other"}],
+                    gender_choices: JSON.parse('{{ gender_choices_json | escapejs }}'),
                     can_edit_footprint: {% if can_edit_footprint %}true{% else %}false{% endif %},
                     can_edit_copy: {% if can_edit_copy %}true{% else %}false{% endif %},
                     can_edit_imprint: {% if can_edit_imprint %}true{% else %}false{% endif %},

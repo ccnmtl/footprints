@@ -1,4 +1,6 @@
 from datetime import date
+from enum import Enum
+import json
 
 from audit_log.models.fields import LastUserField, CreatingUserField
 from django.contrib.gis.db.models.fields import PointField
@@ -484,15 +486,20 @@ class PersonManager(models.Manager):
         return person
 
 
-FEMALE = 'f'
-MALE = 'm'
-UNASSIGNED = 'u'
+class GENDER_CHOICES_ENUM(Enum):
+    FEMALE = 'f'
+    MALE = 'm'
+    UNASSIGNED = 'u'
 
-GENDER_CHOICES = (
-    (FEMALE, 'Female'),
-    (MALE, 'Male'),
-    (UNASSIGNED, 'Unassigned')
-)
+
+gender_choices_dict = {
+    gender.name: gender.value
+    for gender in GENDER_CHOICES_ENUM
+}
+GENDER_CHOICES_JSON = json.dumps(gender_choices_dict)
+GENDER_CHOICES = [
+    (gender.value, gender.name.capitalize()) for gender in GENDER_CHOICES_ENUM
+]
 
 
 class Person(models.Model):
@@ -509,8 +516,8 @@ class Person(models.Model):
                                       related_name="death_date",
                                       on_delete=models.CASCADE)
 
-    gender = models.CharField(
-        max_length=1, choices=GENDER_CHOICES, default=UNASSIGNED)
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES,
+                              default=GENDER_CHOICES_ENUM.UNASSIGNED.value)
 
     standardized_identifier = models.ForeignKey(StandardizedIdentification,
                                                 null=True, blank=True,

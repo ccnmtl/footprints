@@ -163,7 +163,13 @@
                         </a>
                     </span>
                 <% } %>
-                <span><%=actor[i].person.name%><% if (actor[i].alias) { %>  as <%=actor[i].alias%> <% } %></span> 
+                <span>
+                    <%=actor[i].person.name%>
+                    <% if (actor[i].alias) { %>  as <%=actor[i].alias%> <% } %>
+                    <% if (actor[i].person.gender != gender_choices.UNASSIGNED) { %>
+                        (<%=actor[i].person.gender%>) 
+                    <% } %>
+                </span> 
                 <div class="pull-right">
                     <% if (can_edit_footprint) { %>
                         <a href="javascript:void(0);" class="remove-related"
