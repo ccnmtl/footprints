@@ -250,7 +250,7 @@ class ExportFootprintSearch(BaseSearchView):
 
         for search_result in queryset:
             o = search_result.object
-            if o is None or type(o) != Footprint:
+            if o is None or type(o) != Footprint:  # noqa E721
                 # Solr has an indexed object that is not in the database
                 continue
 
