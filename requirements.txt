@@ -131,7 +131,7 @@ xlwt==1.3.0
 django-adminactions==2.1.0
 
 uritemplate==4.1.1
-jsonschema==4.18.0
+jsonschema==4.19.0
 inflection==0.5.1
 drf-spectacular==0.26.0
 
