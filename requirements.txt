@@ -3,7 +3,7 @@ asgiref==3.7.1
 
 feedparser==6.0.8
 
-Markdown==3.4.1
+Markdown==3.5
 
 smartypants==2.0.1
 psycopg2==2.9.3
