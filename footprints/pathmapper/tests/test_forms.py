@@ -2,7 +2,7 @@ from datetime import date
 
 from django.db.models.query_utils import Q
 from django.test.testcases import TestCase
-from django.utils.encoding import smart_text
+from django.utils.encoding import smart_str
 
 from footprints.main.tests.factories import PlaceFactory
 from footprints.pathmapper.forms import (
@@ -146,7 +146,7 @@ class ModelSearchFormExTest(TestCase):
 
         args = form.handle_imprint_location_title()
         self.assertEqual(
-            args[0], Q(imprint_location_title_exact__in=[smart_text(place)]))
+            args[0], Q(imprint_location_title_exact__in=[smart_str(place)]))
 
     def test_handle_footprint_location(self):
         form = ModelSearchFormEx()
@@ -166,7 +166,7 @@ class ModelSearchFormExTest(TestCase):
 
         args = form.handle_footprint_location_title()
         self.assertEqual(
-            args[0], Q(footprint_location_title_exact__in=[smart_text(place)]))
+            args[0], Q(footprint_location_title_exact__in=[smart_str(place)]))
 
     def test_handle_actor(self):
         form = ModelSearchFormEx()
