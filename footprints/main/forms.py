@@ -6,7 +6,7 @@ from django import forms
 from django.db.models.query_utils import Q
 from django.forms.fields import MultipleChoiceField
 from django.forms.models import ModelForm
-from django.utils.encoding import smart_text
+from django.utils.encoding import smart_str
 from haystack.forms import ModelSearchForm
 from registration.forms import RegistrationForm
 
@@ -324,7 +324,7 @@ class ExtendedDateForm(forms.Form):
         cleaned_data = super(ExtendedDateForm, self).clean()
         edt = self.get_extended_date()
 
-        display_format = smart_text(edt)
+        display_format = smart_str(edt)
         if 'invalid' in display_format or 'None' in display_format:
             self._errors['__all__'] = self.error_class([
                 'Please fill out all required fields'])

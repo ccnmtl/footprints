@@ -520,14 +520,14 @@ class ActorTest(TestCase):
         role2 = RoleFactory()
         actor2, created = Actor.objects.get_or_create_by_attributes(
             'Grace Hopper', None, role2, None, None)
-        self.assertNotEquals(actor, actor2)
+        self.assertNotEqual(actor, actor2)
         self.assertEqual(actor.person, actor2.person)
 
         # same viaf diff name results in same person, diff actor w/alias
         role2 = RoleFactory()
         actor2, created = Actor.objects.get_or_create_by_attributes(
             'Amazing Grace', viaf, role2, None, None)
-        self.assertNotEquals(actor, actor2)
+        self.assertNotEqual(actor, actor2)
         self.assertEqual(actor2.alias, 'Amazing Grace')
         self.assertEqual(actor.person, actor2.person)
 

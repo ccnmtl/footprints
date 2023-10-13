@@ -109,12 +109,12 @@ class AlternatePlaceNameViewsetTest(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         the_json = loads(response.content.decode('utf-8'))
-        self.assertEquals(len(the_json['results']), 3)
+        self.assertEqual(len(the_json['results']), 3)
 
         url = '/api/altname/?q=NYC&geonameId=1234'
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         the_json = loads(response.content.decode('utf-8'))
-        self.assertEquals(len(the_json['results']), 1)
-        self.assertEquals(
+        self.assertEqual(len(the_json['results']), 1)
+        self.assertEqual(
             the_json['results'][0]['id'], p1.id)

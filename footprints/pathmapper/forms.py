@@ -2,7 +2,7 @@ from datetime import date, datetime
 
 from django import forms
 from django.db.models.query_utils import Q
-from django.utils.encoding import smart_text
+from django.utils.encoding import smart_str
 from haystack.forms import ModelSearchForm
 
 from footprints.main.models import (
@@ -172,7 +172,7 @@ class ModelSearchFormEx(ModelSearchForm):
             # @todo - this glosses over place data integrity issues
             place = Place.objects.get(id=loc)
             args.append(
-                Q(imprint_location_title_exact__in=[smart_text(place)]))
+                Q(imprint_location_title_exact__in=[smart_str(place)]))
         return args
 
     def handle_footprint_location(self):
@@ -190,7 +190,7 @@ class ModelSearchFormEx(ModelSearchForm):
             # @todo - this glosses over place data integrity issues
             place = Place.objects.get(id=loc)
             args.append(
-                Q(footprint_location_title_exact__in=[smart_text(place)]))
+                Q(footprint_location_title_exact__in=[smart_str(place)]))
         return args
 
     def handle_actor(self):
