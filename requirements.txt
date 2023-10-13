@@ -6,7 +6,7 @@ feedparser==6.0.8
 Markdown==3.5
 
 smartypants==2.0.1
-psycopg2==2.9.3
+psycopg2==2.9.9
 olefile==0.46
 
 versiontools==1.9.1
