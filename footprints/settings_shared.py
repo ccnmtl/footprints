@@ -3,7 +3,7 @@
 import distro
 import os.path
 import sys
-from ccnmtlsettings.shared import common
+from ctlsettings.shared import common
 
 project = 'footprints'
 base = os.path.dirname(__file__)
@@ -99,19 +99,6 @@ PROJECT_APPS = [
 
 USE_TZ = True
 
-CAS_SERVER_URL = 'https://cas.columbia.edu/cas/'
-CAS_VERSION = '3'
-CAS_ADMIN_REDIRECT = False
-
-# Translate CUIT's CAS user attributes to the Django user model.
-# https://cuit.columbia.edu/content/cas-3-ticket-validation-response
-CAS_APPLY_ATTRIBUTES_TO_USER = True
-CAS_RENAME_ATTRIBUTES = {
-    'givenName': 'first_name',
-    'lastName': 'last_name',
-    'mail': 'email',
-}
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -143,20 +130,17 @@ TEMPLATES = [
 MIDDLEWARE += [  # noqa
     'django.middleware.csrf.CsrfViewMiddleware',
     'audit_log.middleware.UserLoggingMiddleware',
-    'reversion.middleware.RevisionMiddleware',
-    'django_cas_ng.middleware.CASMiddleware',
+    'reversion.middleware.RevisionMiddleware'
 ]
 
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'django_cas_ng.backends.CASBackend'
+    'django.contrib.auth.backends.ModelBackend'
 ]
 
 INSTALLED_APPS += [  # noqa
     'bootstrapform',
     'infranil',
     'django_extensions',
-    'django_cas_ng',
     'haystack',
     'footprints.main',
     'rest_framework',
@@ -169,9 +153,8 @@ INSTALLED_APPS += [  # noqa
     'adminactions',
     'drf_spectacular',
     'django_celery_results',
+    'waffle'
 ]
-
-INSTALLED_APPS.remove('djangowind') # noqa
 
 CONTACT_US_EMAIL = 'footprints@columbia.edu'
 

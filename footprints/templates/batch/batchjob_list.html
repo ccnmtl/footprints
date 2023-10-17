@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load compress %}
 
 {% block title %}Import{% endblock %}
 
@@ -12,9 +11,7 @@
 {% endblock %}
 
 {% block js %}
-    {% compress js %}
         <script src="{{STATIC_URL}}js/app/batchjob-list.js"></script>
-    {% endcompress %}
 
     <script type="text/javascript">
         var formErrors = false;

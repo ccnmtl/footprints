@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load compress %}
 {% load waffle_tags %}
 
 {% block title %}Search{% endblock %}
@@ -47,10 +46,8 @@
 {% endblock %}
 
 {% block js %}
-    {% compress js %}
-        <script src="{{STATIC_URL}}js/jquery-circle-progress/circle-progress.js"></script>
-        <script src="{{STATIC_URL}}js/app/footprint-search.js"></script>
-    {% endcompress %}
+    <script src="{{STATIC_URL}}js/jquery-circle-progress/circle-progress.js"></script>
+    <script src="{{STATIC_URL}}js/app/footprint-search.js"></script>
 
     <script type="text/javascript">
         jQuery(document).ready(function() {
