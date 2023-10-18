@@ -1,4 +1,3 @@
-{% load compress %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,12 +13,10 @@
   
     <!-- Bootstrap CSS: -->
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
-    {% compress css %}
         <!-- Application CSS: -->
         <link href="{{STATIC_URL}}css/main.css" rel="stylesheet">
         <link href="{{STATIC_URL}}css/custom-responsive.css" rel="stylesheet">
         <link href="{{STATIC_URL}}css/print-pathmapper.css" rel="stylesheet" media="print">
-    {% endcompress %}
     <link rel="shortcut icon" href="{{STATIC_URL}}img/favicon.ico" type="image/x-icon" /> 
   
     <script src="{{STATIC_URL}}jquery/js/jquery-1.10.1.min.js"></script>

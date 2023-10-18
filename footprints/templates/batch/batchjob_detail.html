@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% load batchrowtags %}
-{% load compress %}
 
 {% block title %}Import{% endblock %}
 
@@ -11,7 +10,6 @@
 {% endblock %}
 
 {% block js %}
-    {% compress js %}
         <script src="{{STATIC_URL}}js/app/batchjob-detail.js"></script>
         <script type="text/javascript">
             jQuery(document).ready(function() {
@@ -21,7 +19,6 @@
                 });
             });
         </script>
-    {% endcompress %}   
 {% endblock %}
 
 {% block content %}

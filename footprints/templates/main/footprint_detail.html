@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load compress %}
 {% load detailtags %}
 
 {% block title %}Details on {{footprint.title}}{% endblock %}
@@ -115,19 +114,17 @@
     <script src="{{STATIC_URL}}js/backbone-min.js"></script>
     <script src="{{STATIC_URL}}tinymce/tinymce.min.js"></script>
 
-    {% compress js %}
-        <script src="{{STATIC_URL}}js/lib/select2-4.0.10/js/select2.full.js"></script>
-        <script src="{{STATIC_URL}}jquery-ui-1.11.2/jquery-ui.js"></script>
-        <script src="{{STATIC_URL}}s3sign/js/s3upload.js"></script>
-        <script src="{{STATIC_URL}}bootstrap3-editable/js/bootstrap-editable.js"></script>
-        <script src="{{STATIC_URL}}js/xeditable/bootstrap-editable-actor.js"></script>
-        <script src="{{STATIC_URL}}js/xeditable/bootstrap-editable-digitalobject.js"></script>
-        <script src="{{STATIC_URL}}js/xeditable/bootstrap-editable-edtf.js"></script>
-        <script src="{{STATIC_URL}}js/xeditable/bootstrap-editable-identifier.js"></script>
-        <script src="{{STATIC_URL}}js/xeditable/bootstrap-editable-place.js"></script>
-        <script src="{{STATIC_URL}}js/xeditable/bootstrap-editable-title.js"></script>
-        <script src="{{STATIC_URL}}js/app/footprint-detail.js"></script>
-    {% endcompress %}
+    <script src="{{STATIC_URL}}js/lib/select2-4.0.10/js/select2.full.js"></script>
+    <script src="{{STATIC_URL}}jquery-ui-1.11.2/jquery-ui.js"></script>
+    <script src="{{STATIC_URL}}s3sign/js/s3upload.js"></script>
+    <script src="{{STATIC_URL}}bootstrap3-editable/js/bootstrap-editable.js"></script>
+    <script src="{{STATIC_URL}}js/xeditable/bootstrap-editable-actor.js"></script>
+    <script src="{{STATIC_URL}}js/xeditable/bootstrap-editable-digitalobject.js"></script>
+    <script src="{{STATIC_URL}}js/xeditable/bootstrap-editable-edtf.js"></script>
+    <script src="{{STATIC_URL}}js/xeditable/bootstrap-editable-identifier.js"></script>
+    <script src="{{STATIC_URL}}js/xeditable/bootstrap-editable-place.js"></script>
+    <script src="{{STATIC_URL}}js/xeditable/bootstrap-editable-title.js"></script>
+    <script src="{{STATIC_URL}}js/app/footprint-detail.js"></script>
 
     <script type="text/javascript">
         jQuery(document).ready(function() {
