@@ -133,10 +133,6 @@ MIDDLEWARE += [  # noqa
     'reversion.middleware.RevisionMiddleware'
 ]
 
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend'
-]
-
 INSTALLED_APPS += [  # noqa
     'bootstrapform',
     'infranil',
