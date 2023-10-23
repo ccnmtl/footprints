@@ -112,7 +112,7 @@ python-dateutil==2.8.2
 requirements/src/edtf-0.9.3ctl-py2.py3-none-any.whl
 
 django-storages==1.14.2
-ctlsettings==0.2.0
+ctlsettings @ git+https://github.com/ccnmtl/ctlsettings@main
 funcsigs==1.0.2
 pbr==5.11.0
 django-s3sign<=0.2.1
