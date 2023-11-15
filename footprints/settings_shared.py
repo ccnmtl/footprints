@@ -198,5 +198,3 @@ WIND_AFFIL_HANDLERS = [
 
 ACCOUNT_ACTIVATION_DAYS = 7  # One-week activation window
 REGISTRATION_AUTO_LOGIN = False  # Do not automatically log the user in.
-
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
