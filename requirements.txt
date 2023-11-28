@@ -97,7 +97,7 @@ s3transfer==0.8.0
 jmespath==1.0.0
 
 botocore>=1.15.0,<1.34.0
-boto3>=1.12.0,<1.30.0
+boto3>=1.12.0,<1.34.0
 
 django-infranil==1.1.0
 certifi==2023.11.17  # for pysolr, sentry-sdk
