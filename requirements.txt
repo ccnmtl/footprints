@@ -7,7 +7,7 @@ Markdown==3.5
 
 smartypants==2.0.1
 psycopg2==2.9.9
-olefile==0.46
+olefile==0.47
 
 versiontools==1.9.1
 statsd==4.0.1
