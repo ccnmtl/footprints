@@ -1,8 +1,5 @@
 from footprints.settings_shared import *  # noqa F403
 from ctlsettings.production import common
-from django.conf import settings
-import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
 
 locals().update(
     common(
@@ -27,12 +24,6 @@ DATABASES = {
 
 
 try:
-    from footprints.local_settings import *  # noqa F403
+    from footprints.local_settings import *  # noqa F403 F405
 except ImportError:
     pass
-
-if hasattr(settings, 'SENTRY_DSN'):
-    sentry_sdk.init(
-        dsn=SENTRY_DSN,  # noqa F405
-        integrations=[DjangoIntegration()],
-    )
