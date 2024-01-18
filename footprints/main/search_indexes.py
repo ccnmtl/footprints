@@ -1,6 +1,6 @@
 import re
 
-from django.utils.encoding import smart_text
+from django.utils.encoding import smart_str
 
 from django.db.models.query_utils import Q
 from footprints.main.models import WrittenWork, Footprint, Person, Place, \
@@ -60,7 +60,7 @@ class WrittenWorkIndex(SearchIndex, Indexable):
         return type(obj).__name__
 
     def prepare_sort_by(self, obj):
-        return format_sort_by(smart_text(obj), remove_articles=True)
+        return format_sort_by(smart_str(obj), remove_articles=True)
 
     def prepare_footprint_end_date(self, obj):
         return obj.footprints_end_date()
@@ -102,7 +102,7 @@ class WrittenWorkIndex(SearchIndex, Indexable):
 
     def prepare_actor_title(self, obj):
         # prepare all actors associated with this work
-        return [smart_text(actor) for actor in self._actors(obj)]
+        return [smart_str(actor) for actor in self._actors(obj)]
 
 
 class ImprintIndex(SearchIndex, Indexable):
@@ -151,7 +151,7 @@ class ImprintIndex(SearchIndex, Indexable):
 
     def prepare_imprint_location_title(self, obj):
         if obj.place:
-            return [smart_text(obj.place.canonical_place.canonical_name)]
+            return [smart_str(obj.place.canonical_place.canonical_name)]
         return []
 
     def prepare_footprint_location(self, obj):
@@ -166,7 +166,7 @@ class ImprintIndex(SearchIndex, Indexable):
         for f in obj.footprints():
             if f.place:
                 name = f.place.canonical_place.canonical_name
-                places.append(smart_text(name))
+                places.append(smart_str(name))
         return places
 
     def _actors(self, obj):
@@ -180,7 +180,7 @@ class ImprintIndex(SearchIndex, Indexable):
         return [actor.id for actor in self._actors(obj)]
 
     def prepare_actor_title(self, obj):
-        return [smart_text(actor) for actor in self._actors(obj)]
+        return [smart_str(actor) for actor in self._actors(obj)]
 
 
 class BookCopyIndex(SearchIndex, Indexable):
@@ -248,7 +248,7 @@ class BookCopyIndex(SearchIndex, Indexable):
 
     def prepare_imprint_location_title(self, obj):
         if obj.imprint.place:
-            name = smart_text(obj.imprint.place.canonical_place.canonical_name)
+            name = smart_str(obj.imprint.place.canonical_place.canonical_name)
             return [name]
         return []
 
@@ -263,7 +263,7 @@ class BookCopyIndex(SearchIndex, Indexable):
         places = []
         for f in obj.footprints():
             if f.place:
-                name = smart_text(f.place.canonical_place.canonical_name)
+                name = smart_str(f.place.canonical_place.canonical_name)
                 places.append(name)
         return places
 
@@ -283,7 +283,7 @@ class BookCopyIndex(SearchIndex, Indexable):
             Q(imprint=obj.imprint) |
             Q(footprint__in=footprints)).distinct()
 
-        return [smart_text(actor) for actor in qs]
+        return [smart_str(actor) for actor in qs]
 
     def prepare_censored(self, obj):
         return obj.has_censor()
@@ -358,7 +358,7 @@ class FootprintIndex(SearchIndex, Indexable):
 
     def prepare_flocation(self, obj):
         if obj.place:
-            return smart_text(obj.place)
+            return smart_str(obj.place)
 
         return ''
 
@@ -400,7 +400,7 @@ class FootprintIndex(SearchIndex, Indexable):
 
     def prepare_footprint_location_title(self, obj):
         if obj.place:
-            return [smart_text(obj.place.canonical_place.canonical_name)]
+            return [smart_str(obj.place.canonical_place.canonical_name)]
 
         return []
 
@@ -413,7 +413,7 @@ class FootprintIndex(SearchIndex, Indexable):
     def prepare_imprint_location_title(self, obj):
         if obj.book_copy.imprint.place:
             place = obj.book_copy.imprint.place
-            return [smart_text(place.canonical_place.canonical_name)]
+            return [smart_str(place.canonical_place.canonical_name)]
 
         return []
 
@@ -431,7 +431,7 @@ class FootprintIndex(SearchIndex, Indexable):
             Q(imprint=obj.book_copy.imprint) |
             Q(footprint=obj)).distinct()
 
-        return [smart_text(actor) for actor in qs]
+        return [smart_str(actor) for actor in qs]
 
     def prepare_has_image(self, obj):
         return obj.has_at_least_one_digital_object()
@@ -475,4 +475,4 @@ class PlaceIndex(SearchIndex, Indexable):
         return type(obj).__name__
 
     def prepare_sort_by(self, obj):
-        return format_sort_by(smart_text(obj), remove_articles=True)
+        return format_sort_by(smart_str(obj), remove_articles=True)

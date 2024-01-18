@@ -7,7 +7,7 @@ from django.db.models.signals import m2m_changed
 from django.template import loader
 from django.urls.base import reverse
 from django.utils import timezone
-from django.utils.encoding import smart_text
+from django.utils.encoding import smart_str
 from edtf import edtf_date
 from edtf.edtf import EDTF
 from past.builtins import basestring
@@ -102,7 +102,7 @@ class ExtendedDateManager(models.Manager):
         return ExtendedDate(edtf_format=dt)
 
     def create_from_string(self, date_str):
-        edtf = smart_text(EDTF.from_natural_text(date_str))
+        edtf = smart_str(EDTF.from_natural_text(date_str))
         return ExtendedDate.objects.create(edtf_format=edtf)
 
 
@@ -235,7 +235,7 @@ class ExtendedDate(models.Model):
         return self._validate_python_date(edtf.end_date_latest())
 
     def match_string(self, date_str):
-        return self.edtf_format == smart_text(EDTF.from_natural_text(date_str))
+        return self.edtf_format == smart_str(EDTF.from_natural_text(date_str))
 
 
 def fmt_uncertain(date_obj, result):
@@ -474,11 +474,11 @@ class PersonManager(models.Manager):
         # update birth date & death date
         if born and person.birth_date is None:
             person.birth_date = ExtendedDate.objects.create(
-                edtf_format=smart_text(EDTF.from_natural_text(born)))
+                edtf_format=smart_str(EDTF.from_natural_text(born)))
 
         if died and person.death_date is None:
             person.death_date = ExtendedDate.objects.create(
-                edtf_format=smart_text(EDTF.from_natural_text(died)))
+                edtf_format=smart_str(EDTF.from_natural_text(died)))
 
         person.save()
         return person
@@ -1056,7 +1056,7 @@ class BookCopy(models.Model):
         verbose_name_plural = "Book Copies"
 
     def __str__(self):
-        return "[%s] %s" % (self.id, smart_text(self.imprint))
+        return "[%s] %s" % (self.id, smart_str(self.imprint))
 
     def percent_complete(self):
         required = 3.0

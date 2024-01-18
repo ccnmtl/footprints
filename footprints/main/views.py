@@ -11,7 +11,7 @@ from django.http.response import HttpResponseRedirect, StreamingHttpResponse, \
 from django.shortcuts import get_object_or_404
 from django.template import loader
 from django.urls.base import reverse
-from django.utils.encoding import smart_text
+from django.utils.encoding import smart_str
 from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
@@ -224,13 +224,13 @@ class ExportFootprintSearch(BaseSearchView):
                    'Evidence Type', 'Evidence Location',
                    'Evidence Call Number', 'Evidence Details']
         for r in Role.objects.for_footprint():
-            role = 'Footprint Role ' + smart_text(r.name)\
+            role = 'Footprint Role ' + smart_str(r.name)\
                 + ' Actor'
             headers.append(role)
             headers.append(role + ' VIAF Number')
 
         for r in Role.objects.for_imprint():
-            role = 'Imprint Role: ' + smart_text(r.name) + ' Actor'
+            role = 'Imprint Role: ' + smart_str(r.name) + ' Actor'
             headers.append(role)
             headers.append(role + ' VIAF Number')
         return headers
@@ -261,29 +261,29 @@ class ExportFootprintSearch(BaseSearchView):
             # Footprint title
             row.append(o.title)
             # Footprint date
-            row.append(smart_text(o.associated_date))
+            row.append(smart_str(o.associated_date))
 
             # Footprint location
-            row.append(smart_text(o.place))
+            row.append(smart_str(o.place))
 
             # owners
             a = [owner.display_name() for owner in o.owners()]
-            row.append(smart_text('; '.join(a)))
+            row.append(smart_str('; '.join(a)))
 
             # Written work title
-            row.append(smart_text(o.book_copy.imprint.work.title))
+            row.append(smart_str(o.book_copy.imprint.work.title))
 
             # Imprint display_title
-            a = smart_text(o.book_copy.imprint.display_title())
+            a = smart_str(o.book_copy.imprint.display_title())
             row.append(a)
 
             # Imprint Printers
             a = [p.display_name()
                  for p in o.book_copy.imprint.printers()]
-            row.append(smart_text('; '.join(a)))
+            row.append(smart_str('; '.join(a)))
 
             # Imprint publication date
-            row.append(smart_text(o.book_copy.imprint.publication_date))
+            row.append(smart_str(o.book_copy.imprint.publication_date))
 
             # Imprint created at date
             row.append(o.created_at.strftime('%m/%d/%Y'))
@@ -294,47 +294,47 @@ class ExportFootprintSearch(BaseSearchView):
             # Literary work LOC
             loc_id = o.book_copy.imprint.work\
                 .get_library_of_congress_identifier()
-            loc_id = smart_text(loc_id)
+            loc_id = smart_str(loc_id)
             row.append(loc_id)
 
             # Imprint actor
-            actors = [smart_text(p) for p
+            actors = [smart_str(p) for p
                       in o.book_copy.imprint.actor.all()]
             row.append('; '.join(actors))
 
             # Imprint BHB
             if o.book_copy.imprint.has_bhb_number():
-                row.append(smart_text(o.book_copy
-                                       .imprint.get_bhb_number()
-                                       .identifier))
+                row.append(smart_str(o.book_copy
+                                     .imprint.get_bhb_number()
+                                     .identifier))
             else:
                 row.append('')
 
             # Imprint OCLC #
             if o.book_copy.imprint.has_oclc_number():
-                row.append(smart_text(o.book_copy
-                                       .imprint.get_oclc_number()
-                                       .identifier))
+                row.append(smart_str(o.book_copy
+                                     .imprint.get_oclc_number()
+                                     .identifier))
             else:
                 row.append('')
 
             # Book copy call number
             if o.book_copy.call_number:
-                row.append(smart_text(o.book_copy.call_number))
+                row.append(smart_str(o.book_copy.call_number))
             else:
                 row.append('')
 
             # Evidence type
-            row.append(smart_text(o.medium))
+            row.append(smart_str(o.medium))
 
             # Evidence location
-            row.append(smart_text(o.provenance))
+            row.append(smart_str(o.provenance))
 
             # Evidence source
-            row.append(smart_text(o.call_number))
+            row.append(smart_str(o.call_number))
 
             # Evidence details
-            row.append(smart_text(o.notes))
+            row.append(smart_str(o.notes))
 
             # Footprint Actors
             row.extend(self.get_footprint_actors_string(o))
@@ -612,7 +612,7 @@ class DisplayDateView(JSONResponseMixin, View):
         else:
             return self.render_to_json_response({
                 'success': True,
-                'display': smart_text(form.get_extended_date())
+                'display': smart_str(form.get_extended_date())
             })
 
 
