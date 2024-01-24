@@ -297,7 +297,7 @@
                         </div>
                     <% } else if (imprint.standardized_identifier[i].authority === 'Bibliography of the Hebrew Book') { %>
                         <div class="pull-left standard-identifier-logo">
-                            <a target="_blank" rel="noopener noreferrer" href="http://uli.nli.org.il/F/?func=direct&doc_number=<%=imprint.standardized_identifier[i].identifier%>&local_base=MBI01">
+                            <a target="_blank" rel="noopener noreferrer" href="http://olduli.nli.org.il/F/?func=direct&doc_number=<%=imprint.standardized_identifier[i].identifier%>&local_base=MBI01">
                             <img src="<%=static_url%>img/bhb.png" alt_text="Link to Bibliography of the Hebrew Book" />
                             </a>
                         </div>
@@ -317,6 +317,9 @@
                                 <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                             </a>
                         </div>
+                    <% } else if (imprint.standardized_identifier[i].authority === 'Bibliography of the Hebrew Book') { %>
+                        <%=imprint.standardized_identifier[i].identifier%>
+                        <p class="text-muted">The Bibliography of the Hebrew Book is currently in transition, so links may be out of date. Please be patient while we wait for this transition to be completed.</p>
                     <% } else { %>
                         <%=imprint.standardized_identifier[i].identifier%>
                     <% } %>
