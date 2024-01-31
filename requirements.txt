@@ -35,7 +35,7 @@ cryptography==42.0.0  # pyOpenSSL
 
 chardet==5.2.0
 idna==3.6
-urllib3==2.1.0  # sentry-sdk
+urllib3==2.2.0  # sentry-sdk
 
 requests==2.31.0
 logilab-common==2.0.0
