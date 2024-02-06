@@ -119,14 +119,15 @@ class FootprintSearchForm(ModelSearchForm):
             self._errors['pub_start_year'] = self.error_class([
                 "Start year must be less than end year"])
 
-        if (cleaned_data.get('search_level', False) and
-            not cleaned_data.get('q', None) and
-            not (cleaned_data.get('footprint_start_year', None) or
-                 cleaned_data.get('footprint_end_year', None)) and
-            not (cleaned_data.get('pub_start_year', None) or
-                 cleaned_data.get('pub_end_year', None))):
-            self._errors['q'] = self.error_class([
-                "Either a search term or year required"])
+       
+        # if (cleaned_data.get('search_level', False) and
+        #     not cleaned_data.get('q', None) and
+        #     not (cleaned_data.get('footprint_start_year', None) or
+        #         cleaned_data.get('footprint_end_year', None)) and
+        #     not (cleaned_data.get('pub_start_year', None) or
+        #         cleaned_data.get('pub_end_year', None))):
+        #     self._errors['q'] = self.error_class([
+        #         "Either a search term or year required"])
 
         return cleaned_data
 
