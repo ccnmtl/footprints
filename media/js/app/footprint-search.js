@@ -2,7 +2,6 @@
     window.FootprintListView = Backbone.View.extend({
         events: {
             'click th.sortable': 'clickSortable',
-            'click .btn-export': 'clickExport',
             'click .toggle-range': 'clickToggleRange',
             'click a.btn-paginate': 'nextOrPreviousPage',
             'keypress .tools input.page-number': 'specifyPage',
@@ -28,7 +27,7 @@
         },
         initialize: function(options) {
             _.bindAll(
-                this, 'clickSortable', 'clickExport', 'clickToggleRange',
+                this, 'clickSortable', 'clickToggleRange',
                 'nextOrPreviousPage', 'specifyPage', 'onKeydown',
                 'busy', 'matchHighlightedValue',
                 'applySingleFilter', 'submitForm', 'clearErrors',
@@ -88,10 +87,6 @@
         clickClear: function(evt) {
             this.busy('Clearing');
             window.location = this.baseUrl;
-        },
-        clickExport: function(evt) {
-            window.location =
-                '/export/footprints/' + window.location.search;
         },
         clickToggleRange: function(evt) {
             evt.preventDefault();

@@ -58,6 +58,12 @@
                 selectedSort: "{{form.data.sort_by}}",
                 query: "{{form.data.q}}",
             });
+            const exportBtn = document.getElementById('export-data');
+            let query = window.location.search;
+            if (query === '') {
+                query = '?sort_by=ftitle&direction=asc&precision=exact&page=1'
+            }
+            exportBtn.href = '/export/footprints/' + query;
         });
     </script>
 {% endblock %}
@@ -380,9 +386,10 @@
                 {{paginator.count}} footprints
             </div>
             {% if search_criteria and paginator.count < 5000 and paginator.count > 0 or request.user.is_superuser %}
-                <button class="btn btn-white btn-sm btn-export" type="button">
+                <a id="export-data" class="btn btn-white btn-sm btn-export" type="button"
+                    href="/export/footprints/?sort_by=ftitle&direction=asc&precision=exact&page=1">
                     <span class="glyphicon glyphicon-download-alt"></span> Export
-                </button>
+                </a>
             {% endif %}
             {% flag "gallery_view" %}
             <div class="btn-group" data-toggle="button">
