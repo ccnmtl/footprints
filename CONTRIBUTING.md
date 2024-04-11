@@ -18,12 +18,12 @@ propose changes to this document in a pull request.
  - [Further Info](#info)
 
 ## <a name="code-of-conduct"></a> Code of Conduct
-This project and everyone participating in it is governed by the [Footprints Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior via our [Contact Page](http://footprints.ccnmtl.columbia.edu/contact/).
+This project and everyone participating in it is governed by the [Footprints Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior via our [Contact Page](https://footprints.ctl.columbia.edu/contact/).
 
 ## <a name="question"></a> Got a Question or Problem?
 
 If you have questions about how to use Footprints, please contact us via 
-our [Contact Page](http://footprints.ccnmtl.columbia.edu/contact/).
+our [Contact Page](https://footprints.ctl.columbia.edu/contact/).
 
 ## <a name="issue"></a> Found an Issue?
 If you find a bug in the source code or a mistake in the documentation, you can help us by
@@ -35,7 +35,7 @@ If you're not sure how to write a bug report, here's a quick guide:
 (4 minutes!).
 
 **Note:** Please don't file an issue to ask a question, please contact us via 
-our [Contact Page](http://footprints.ccnmtl.columbia.edu/contact/) instead.
+our [Contact Page](https://footprints.ctl.columbia.edu/contact/) instead.
 
 ## <a name="start"></a> Getting Started
 
@@ -73,5 +73,5 @@ To ensure consistency throughout the source code, please keep these rules in min
 
 ## <a name="info"></a> Further Information
 For more information, see:
-* [Footprint's Web Site](https://footprints.ccnmtl.columbia.edu)
+* [Footprint's Web Site](https://footprints.ctl.columbia.edu)
 * [Footprints Wiki](https://github.com/ccnmtl/footprints/wiki)
