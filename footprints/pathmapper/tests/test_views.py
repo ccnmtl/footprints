@@ -161,7 +161,7 @@ class PathmapperEventViewSetTest(TestCase):
 
         viewset = PathmapperEventViewSet()
         sqs = viewset.get_book_copies(layer)
-        self.assertEquals(sqs.count(), 0)
+        self.assertEqual(sqs.count(), 0)
 
     def test_map_events(self):
         events = {}
@@ -171,7 +171,7 @@ class PathmapperEventViewSetTest(TestCase):
         viewset = PathmapperEventViewSet()
         viewset.map_events(counts, current_year, events)
 
-        self.assertEquals(events[1950], {'year': '1950-01-01', 'count': 3})
+        self.assertEqual(events[1950], {'year': '1950-01-01', 'count': 3})
         self.assertFalse('1970' in events)
         self.assertFalse('1' in events)
         self.assertFalse('2100' in events)

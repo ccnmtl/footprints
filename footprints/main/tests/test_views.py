@@ -7,7 +7,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.urls.base import reverse
-from django.utils.encoding import smart_text
+from django.utils.encoding import smart_str
 
 from footprints.main.forms import ContactUsForm
 from footprints.main.models import Footprint, Actor, Imprint, \
@@ -203,12 +203,12 @@ class ExportFootprintSearchTest(TestCase):
                    'Evidence Call Number,Evidence Details,')
 
         for r in Role.objects.for_footprint():
-            role = 'Footprint Role ' + smart_text(r.name) + ' Actor'
+            role = 'Footprint Role ' + smart_str(r.name) + ' Actor'
             headers += role + ','
             headers += (role + ' VIAF Number,')
 
         for r in Role.objects.for_imprint():
-            role = 'Imprint Role: ' + smart_text(r.name) + ' Actor'
+            role = 'Imprint Role: ' + smart_str(r.name) + ' Actor'
             headers += role + ','
             headers += (role + ' VIAF Number,')
 
@@ -227,7 +227,7 @@ class ExportFootprintSearchTest(TestCase):
         p = '; '.join(p)
 
         # Imprint Actors
-        actors = [smart_text(a)
+        actors = [smart_str(a)
                   for a in self.footprint2.book_copy.imprint.actor.all()]
         actors = '; '.join(actors)
 

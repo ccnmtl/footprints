@@ -2,7 +2,7 @@ from datetime import date
 
 from django.db.models.query_utils import Q
 from django.test.testcases import TestCase
-from django.utils.encoding import smart_text
+from django.utils.encoding import smart_str
 
 from footprints.main.tests.factories import PlaceFactory
 from footprints.pathmapper.forms import (
@@ -77,7 +77,7 @@ class ModelSearchFormExTest(TestCase):
         form = ModelSearchFormEx()
         fld = 'book_copy_id'
         q = form.format_footprint_year_query(fld, 1556, None, False)
-        self.assertEquals(
+        self.assertEqual(
             q,
             '{!join from=book_copy_id to=django_id}'
             'django_ct:"main.footprint" AND footprint_start_date:'
@@ -86,7 +86,7 @@ class ModelSearchFormExTest(TestCase):
             '1556-12-31T00:00:00Z]')
 
         q = form.format_footprint_year_query(fld, 1556, 1689, True)
-        self.assertEquals(
+        self.assertEqual(
             q,
             '{!join from=book_copy_id to=django_id}'
             'django_ct:"main.footprint" AND footprint_start_date:'
@@ -95,7 +95,7 @@ class ModelSearchFormExTest(TestCase):
             '1689-12-31T00:00:00Z]')
 
         q = form.format_footprint_year_query(fld, 1556, None, True)
-        self.assertEquals(
+        self.assertEqual(
             q,
             '{!join from=book_copy_id to=django_id}'
             'django_ct:"main.footprint" AND footprint_start_date:'
@@ -103,7 +103,7 @@ class ModelSearchFormExTest(TestCase):
             ' AND footprint_end_date:[1556-01-01T00:00:00Z TO *]')
 
         q = form.format_footprint_year_query(fld, None, 1556, True)
-        self.assertEquals(
+        self.assertEqual(
             q,
             '{!join from=book_copy_id to=django_id}'
             'django_ct:"main.footprint" AND footprint_start_date:'
@@ -146,7 +146,7 @@ class ModelSearchFormExTest(TestCase):
 
         args = form.handle_imprint_location_title()
         self.assertEqual(
-            args[0], Q(imprint_location_title_exact__in=[smart_text(place)]))
+            args[0], Q(imprint_location_title_exact__in=[smart_str(place)]))
 
     def test_handle_footprint_location(self):
         form = ModelSearchFormEx()
@@ -166,7 +166,7 @@ class ModelSearchFormExTest(TestCase):
 
         args = form.handle_footprint_location_title()
         self.assertEqual(
-            args[0], Q(footprint_location_title_exact__in=[smart_text(place)]))
+            args[0], Q(footprint_location_title_exact__in=[smart_str(place)]))
 
     def test_handle_actor(self):
         form = ModelSearchFormEx()

@@ -1,5 +1,5 @@
 import re
-from django.utils.encoding import smart_text
+from django.utils.encoding import smart_str
 from edtf.edtf import EDTF
 
 
@@ -8,7 +8,7 @@ def validate_date(value):
         return True
 
     try:
-        s = smart_text(EDTF.from_natural_text(value))
+        s = smart_str(EDTF.from_natural_text(value))
         return s != '' and 'invalid' not in s
     except OverflowError:
         return False

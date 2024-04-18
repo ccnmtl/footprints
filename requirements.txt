@@ -1,4 +1,6 @@
-Django>=3.2.20,<4
+Django>=4.2.11,<5
+psycopg[binary]==3.1.18
+
 asgiref==3.8.0
 
 feedparser==6.0.8
@@ -6,7 +8,6 @@ feedparser==6.0.8
 Markdown==3.6
 
 smartypants==2.0.1
-psycopg2==2.9.9
 olefile==0.47
 
 versiontools==1.9.1
@@ -89,7 +90,6 @@ django-stagingcontext==0.1.0
 django-ga-context==0.1.0
 django-impersonate==1.9.1
 django-registration-redux==2.13
-django-markwhat==1.6.2
 gunicorn==22.0.0
 future==1.0.0
 s3transfer==0.10.0
@@ -98,11 +98,11 @@ jmespath==1.0.0
 botocore>=1.15.0,<1.35.0
 boto3>=1.12.0,<1.35.0
 
-django-infranil==1.1.0
 certifi==2024.2.2  # for pysolr, sentry-sdk
+
 pysolr==3.9.0
 django-haystack==3.2.1
-requirements/src/django_audit_log-0.8.1-py2.py3-none-any.whl
+requirements/src/django_audit_log-0.8.2-py2.py3-none-any.whl
 djangorestframework==3.14.0
 djangorestframework-jsonp==1.0.2
 Unidecode==1.3.2
@@ -111,7 +111,7 @@ python-dateutil==2.9.0
 requirements/src/edtf-0.9.3ctl-py2.py3-none-any.whl
 
 django-storages==1.14.2
-ctlsettings==0.3.1
+ctlsettings==0.3.2
 funcsigs==1.0.2
 pbr==6.0.0
 django-s3sign<=0.2.1

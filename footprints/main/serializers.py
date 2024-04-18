@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
-from django.utils.encoding import smart_text
+from django.utils.encoding import smart_str
 from rest_framework import serializers
 from rest_framework.fields import CharField, ReadOnlyField
 from rest_framework.serializers import Serializer, HyperlinkedModelSerializer
@@ -134,7 +134,7 @@ class ActorSerializer(HyperlinkedModelSerializer):
         return Actor.objects.all()
 
     def get_display_title(self, obj):
-        return smart_text(obj)
+        return smart_str(obj)
 
     def to_internal_value(self, data):
         try:
@@ -219,13 +219,13 @@ class FootprintSerializer(HyperlinkedModelSerializer):
                   'created_by', 'last_modified_by')
 
     def get_work_title(self, obj):
-        return smart_text(obj.book_copy.imprint.work.title)
+        return smart_str(obj.book_copy.imprint.work.title)
 
     def get_imprint_title(self, obj):
-        return smart_text(obj.book_copy.imprint.title)
+        return smart_str(obj.book_copy.imprint.title)
 
     def get_book_copy_identifier(self, obj):
-        return smart_text(obj.book_copy.identifier())
+        return smart_str(obj.book_copy.identifier())
 
 
 class PathmapperImprintSerializer(HyperlinkedModelSerializer):

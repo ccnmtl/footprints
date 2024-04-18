@@ -2,7 +2,7 @@ import re
 
 from django.conf import settings
 from django.contrib.gis.geos.point import Point
-from django.utils.encoding import smart_text
+from django.utils.encoding import smart_str
 import requests
 from rest_framework.renderers import BrowsableAPIRenderer
 
@@ -48,10 +48,10 @@ def interpolate_role_actors(roles, actors):
                 # iteration, add the actor, else append a semicolon and the
                 # actor to the end of the actor string
                 if not actor_string:
-                    actor_string = smart_text(a)
+                    actor_string = smart_str(a)
                 else:
                     actor_string = '; '.join(
-                        [actor_string, smart_text(a)])
+                        [actor_string, smart_str(a)])
 
                 # If the VIAF String is empty, as it would be on the first
                 # iteration, add the VIAF number. Else append a semicolon

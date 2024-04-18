@@ -3,7 +3,7 @@ import io
 
 from django import forms
 from django.utils.encoding import (
-    DjangoUnicodeDecodeError, force_text, smart_text)
+    DjangoUnicodeDecodeError, force_str, smart_str)
 from footprints.batch.models import BatchRow
 
 
@@ -47,7 +47,7 @@ class CreateBatchJobForm(forms.Form):
     def validate_encoding(self, row):
         for col in row:
             try:
-                force_text(col)
+                force_str(col)
             except DjangoUnicodeDecodeError as e:
                 return False, e
 
@@ -93,7 +93,7 @@ class CreateBatchJobForm(forms.Form):
                 if not valid:
                     self._errors['csvfile'] = self.error_class([
                         self.INVALID_ENCODING.format(
-                            smart_text(e).encode('utf-8'))])
+                            smart_str(e).encode('utf-8'))])
                     break
 
         except csv.Error:
