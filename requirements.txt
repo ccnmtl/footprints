@@ -98,7 +98,7 @@ jmespath==1.0.0
 botocore>=1.15.0,<1.35.0
 boto3>=1.12.0,<1.35.0
 
-certifi==2024.2.2  # for pysolr, sentry-sdk
+certifi==2024.6.2  # for pysolr, sentry-sdk
 
 pysolr==3.9.0
 django-haystack==3.2.1
