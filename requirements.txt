@@ -101,7 +101,7 @@ boto3>=1.12.0,<1.35.0
 certifi==2024.6.2  # for pysolr, sentry-sdk
 
 pysolr==3.9.0
-django-haystack==3.2.1
+django-haystack==3.3.0
 requirements/src/django_audit_log-0.8.2-py2.py3-none-any.whl
 djangorestframework==3.14.0
 djangorestframework-jsonp==1.0.2
