@@ -29,7 +29,7 @@ from footprints.main.models import (
     Footprint, Actor, Person, Role, WrittenWork, Language,
     Place, Imprint, BookCopy, StandardizedIdentification,
     StandardizedIdentificationType, ExtendedDate, MEDIUM_CHOICES,
-    work_actor_changed, CanonicalPlace)
+    work_actor_changed, CanonicalPlace, GENDER_CHOICES_JSON)
 from footprints.main.serializers import NameSerializer
 from footprints.main.templatetags.moderation import moderation_footprints
 from footprints.main.utils import interpolate_role_actors, string_to_point
@@ -104,6 +104,7 @@ class FootprintDetailView(DetailView):
         context['identifier_types'] = \
             StandardizedIdentificationType.objects.all().order_by('name')
         context['mediums'] = MEDIUM_CHOICES
+        context['gender_choices_json'] = GENDER_CHOICES_JSON
         context.update(self.permissions(self.request.user, self.get_object()))
         return context
 

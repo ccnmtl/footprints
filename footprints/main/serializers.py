@@ -91,7 +91,7 @@ class PersonSerializer(HyperlinkedModelSerializer):
 
     class Meta:
         model = Person
-        fields = ('id', 'name', 'birth_date', 'death_date',
+        fields = ('id', 'name', 'birth_date', 'death_date', 'gender',
                   'standardized_identifier')
 
 
