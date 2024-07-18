@@ -25,6 +25,7 @@ SYS_PYTHON ?= python3
 PY_SENTINAL ?= $(VE)/sentinal
 WHEEL_VERSION ?= 0.43.0
 PIP_VERSION ?= 24.0
+SETUPTOOLS_VERSION ?= 70.3.0
 MAX_COMPLEXITY ?= 10
 INTERFACE ?= localhost
 RUNSERVER_PORT ?= 8000
@@ -40,7 +41,7 @@ $(PY_SENTINAL): $(REQUIREMENTS)
 	rm -rf $(VE)
 	$(SYS_PYTHON) -m venv $(VE)
 	$(PIP) install pip==$(PIP_VERSION)
-	$(PIP) install --upgrade setuptools
+	$(PIP) install setuptools==$(SETUPTOOLS_VERSION)
 	$(PIP) install wheel==$(WHEEL_VERSION)
 	$(PIP) install --no-deps --requirement $(REQUIREMENTS)
 	touch $@
