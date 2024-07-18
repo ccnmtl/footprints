@@ -99,6 +99,7 @@ botocore>=1.15.0,<1.35.0
 boto3>=1.12.0,<1.35.0
 
 certifi==2024.7.4  # for pysolr, sentry-sdk
+backports.tarfile==1.2.0  # needed by newer setuptools
 
 pysolr==3.9.0
 django-haystack==3.3.0
