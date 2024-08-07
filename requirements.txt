@@ -30,7 +30,7 @@ sure==2.0.0
 
 coverage==7.6.0
 pyasn1==0.6.0
-cffi==1.16.0 # cryptography
+cffi==1.17.0 # cryptography
 cryptography==43.0.0  # pyOpenSSL
 
 
