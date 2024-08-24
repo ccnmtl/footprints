@@ -1,7 +1,7 @@
 from django.conf import settings
+from footprints.settings_shared import *  # noqa F403
 from ctlsettings.staging import common, init_sentry
 
-from footprints.settings_shared import *  # noqa F403
 
 locals().update(
     common(
