@@ -13,18 +13,6 @@ locals().update(
     ))
 
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'footprints',
-        'HOST': '',
-        'PORT': 6432,
-        'USER': '',
-        'PASSWORD': '',
-    }
-}
-
-
 try:
     from footprints.local_settings import *  # noqa F403 F405
 except ImportError:
