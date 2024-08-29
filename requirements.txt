@@ -109,7 +109,7 @@ djangorestframework-jsonp==1.0.2
 Unidecode==1.3.2
 django-reversion==5.1.0
 python-dateutil==2.9.0
-requirements/src/edtf-0.9.3ctl-py2.py3-none-any.whl
+requirements/src/edtf-0.9.4-py3-none-any.whl
 
 django-storages==1.14.2
 ctlsettings==0.3.4
