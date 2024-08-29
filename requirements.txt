@@ -114,11 +114,11 @@ requirements/src/edtf-0.9.3ctl-py2.py3-none-any.whl
 django-storages==1.14.2
 ctlsettings==0.3.4
 funcsigs==1.0.2
-pbr==6.0.0
+pbr==6.1.0
 django-s3sign<=0.2.1
 django-smtp-ssl==1.0
 
-pbr==6.0.0
+pbr==6.1.0
 pyyaml==6.0.1
 stevedore>=1.20.0 # Apache-2.0
 bandit==1.7.0
