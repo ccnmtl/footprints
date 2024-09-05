@@ -49,7 +49,7 @@ astroid==3.2.0
 
 six==1.16.0
 text-unidecode==1.3
-Faker==28.1.0
+Faker==28.4.1
 factory_boy==3.3.0
 ldap3==2.9.1
 sqlparse==0.5.0
