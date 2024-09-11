@@ -57,6 +57,7 @@ class BatchJobUpdateView(LoggedInMixin, BatchAccessMixin, View):
         'Location [{}] lookup failed at the {} level [id={}]')
 
     def add_place(self, obj, geoname_id):
+        print('Adding place for {}'.format(geoname_id))
         obj.place = GeonameUtil().get_or_create_place(geoname_id)
         obj.save()
 
