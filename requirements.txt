@@ -101,7 +101,7 @@ boto3>=1.12.0,<1.36.0
 certifi==2024.8.30  # for pysolr, sentry-sdk
 backports.tarfile==1.2.0  # needed by newer setuptools
 
-pysolr==3.9.0
+pysolr==3.10.0
 django-haystack==3.3.0
 requirements/src/django_audit_log-0.8.2-py2.py3-none-any.whl
 djangorestframework==3.14.0
