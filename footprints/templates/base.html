@@ -233,6 +233,21 @@
     </div>
     {% endif %}
 
+    <script
+        src="https://js.sentry-cdn.com/e873d17503f64f29a39ef232ab60b9c7.min.js"
+        crossorigin="anonymous"></script>
+    <script>
+        window.sentryOnLoad = function() {
+            Sentry.init({
+                {% if STAGING_ENV %}
+                environment: 'staging'
+                {% else %}
+                environment: 'production'
+                {% endif %}
+            });
+        };
+    </script>
+
     </body>
 
 </html>
