@@ -22,6 +22,8 @@
         <link rel="shortcut icon" href="{{STATIC_URL}}img/favicon.ico" type="image/x-icon" />
         <link rel="canonical" href="{{request.build_absolute_uri}}">
 
+        {% include "ctlsettings/sentry_js.html" %}
+
         <script src="{{STATIC_URL}}jquery/js/jquery-1.10.1.min.js"></script>
         <script src="{{STATIC_URL}}tinymce/tinymce.min.js"></script>
 
@@ -232,22 +234,6 @@
     <a class="btn" href="{% url 'impersonate-stop' %}">stop</a>
     </div>
     {% endif %}
-
-    <script
-        src="https://js.sentry-cdn.com/e873d17503f64f29a39ef232ab60b9c7.min.js"
-        crossorigin="anonymous"></script>
-    <script>
-        window.sentryOnLoad = function() {
-            Sentry.init({
-                {% if STAGING_ENV %}
-                environment: 'staging'
-                {% else %}
-                environment: 'production'
-                {% endif %}
-            });
-        };
-    </script>
-
     </body>
 
 </html>
