@@ -58,12 +58,17 @@
                 selectedSort: "{{form.data.sort_by}}",
                 query: "{{form.data.q}}",
             });
-            const exportBtn = document.getElementById('export-data');
-            let query = window.location.search;
-            if (query === '') {
-                query = '?sort_by=ftitle&direction=asc&precision=exact&page=1'
+
+            let exportBtn = null;
+            exportBtn = document.getElementById('export-data');
+
+            if (exportBtn) {
+                let query = window.location.search;
+                if (query === '') {
+                    query = '?sort_by=ftitle&direction=asc&precision=exact&page=1';
+                }
+                exportBtn.href = '/export/footprints/' + query;
             }
-            exportBtn.href = '/export/footprints/' + query;
         });
     </script>
 {% endblock %}
