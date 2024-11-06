@@ -126,7 +126,7 @@ class GeonameUtil(object):
         results = requests.get(url)
 
         if results.status_code == 404:
-            raise ValueError(f"Geoname ID {gid} not found.")
+            raise ValueError(f'Geoname ID {gid} not found.')
 
         the_json = results.json()
 
