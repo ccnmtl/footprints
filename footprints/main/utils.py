@@ -124,6 +124,10 @@ class GeonameUtil(object):
                'username={}&type=json&geonameId={}').format(
                    settings.GEONAMES_KEY, gid)
         results = requests.get(url)
+
+        if results.status_code == 404:
+            raise ValueError(f"Geoname ID {gid} not found.")
+
         the_json = results.json()
 
         pt = Point(float(the_json['lng']), float(the_json['lat']))
