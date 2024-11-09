@@ -12,7 +12,8 @@ from footprints.main.models import Language, DigitalFormat, \
     CanonicalPlace
 from footprints.main.templatetags.moderation import \
     flag_empty_narrative, flag_percent_complete, flag_empty_call_number, \
-    flag_empty_bhb_number, moderation_flags, moderation_footprints
+    flag_empty_bhb_number, moderation_flags, moderation_footprints, \
+    flag_creator
 from footprints.main.tests.factories import RoleFactory, \
     ActorFactory, PlaceFactory, CollectionFactory, \
     WrittenWorkFactory, ImprintFactory, BookCopyFactory, FootprintFactory, \
@@ -624,8 +625,10 @@ class FootprintModerationTest(TestCase):
 
         # created by a new contributor
         grp = Group.objects.get(name='Creator')
+        self.assertIsNotNone(grp)
         creator = UserFactory(group=grp)
         f6 = FootprintFactory(created_by=creator)
+        self.assertTrue(f6.created_by.groups.filter(name='Creator').exists())
 
         qs = moderation_footprints()
         self.assertEqual(qs.count(), 4)
@@ -636,3 +639,11 @@ class FootprintModerationTest(TestCase):
         self.assertFalse(f4 in qs)
         self.assertFalse(f5 in qs)
         self.assertTrue(f6 in qs)
+
+        # retrieve by id to resolve qs annotation
+        # verify new_contributor value
+        f1 = qs.get(id=f1.id)
+        self.assertFalse(flag_creator(f1))
+
+        f6 = qs.get(id=f6.id)
+        self.assertTrue(flag_creator(f6))

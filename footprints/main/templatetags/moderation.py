@@ -1,6 +1,7 @@
 from django import template
 from django.db.models.query_utils import Q
-
+from django.db.models import Exists, OuterRef
+from django.contrib.auth.models import Group
 
 register = template.Library()
 
@@ -23,7 +24,7 @@ def flag_empty_bhb_number(fp):
 
 
 def flag_creator(fp):
-    return fp.created_by.groups.filter(name='Creator').exists()
+    return hasattr(fp, 'new_contributor') and fp.new_contributor
 
 
 @register.simple_tag
@@ -56,6 +57,7 @@ def moderation_flags(fp):
 
 def moderation_footprints():
     from footprints.main.models import Footprint, SLUG_BHB
+
     qs = Footprint.objects.exclude(verified=True).filter(
         Q(percent_complete__lt=50) |
         Q(narrative__isnull=True) |
@@ -63,7 +65,13 @@ def moderation_footprints():
         Q(medium='Bookseller/auction catalog (1850-present)',
           call_number__isnull=True) |
         ~Q(book_copy__imprint__standardized_identifier__identifier_type__slug=SLUG_BHB))  # noqa:251
+
+    group = Group.objects.get(name='Creator')
+    creators = group.user_set.filter(id=OuterRef('created_by__id'))
+
     return qs.select_related(
         'created_by', 'last_modified_by',
         'book_copy__imprint').prefetch_related(
-        'book_copy__imprint__standardized_identifier__identifier_type')
+        'book_copy__imprint__standardized_identifier__identifier_type').annotate( # noqa:251
+            new_contributor=Exists(creators)
+    )
