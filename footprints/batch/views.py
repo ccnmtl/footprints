@@ -92,6 +92,13 @@ class BatchJobUpdateView(LoggedInMixin, BatchAccessMixin, View):
             record.bhb_number, record.get_writtenwork_title(),
             record.imprint_title, record.publication_date)
 
+        if record.imprint_notes:
+            if imprint.notes:
+                imprint.notes += ' ' + record.imprint_notes
+            else:
+                imprint.notes = record.imprint_notes
+            imprint.save()
+
         if record.publication_location:
             self.add_place(imprint, record.publication_location)
 

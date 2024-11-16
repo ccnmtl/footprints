@@ -26,12 +26,13 @@ class BatchRowFactory(factory.django.DjangoModelFactory):
     writtenwork_author_birth_date = '1702'
     writtenwork_author_death_date = '1789'
 
-    # imprint publisher/printer information
+    # imprint publisher/printer/notes information
     publisher = 'Eliezer Soncino'
     publisher_viaf = '297361612'
     publication_location = None
     publication_date = '1542'
     book_copy_call_number = 'B893.1BC'
+    imprint_notes = 'Sample Notes'
 
     medium = 'Library Catalog/Union Catalog'
     medium_description = 'Description of the medium or evidence'
