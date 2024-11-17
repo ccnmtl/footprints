@@ -388,8 +388,12 @@ class ImprintTest(TestCase):
     def test_has_notes(self):
         imprint, created = Imprint.objects.get_or_create_by_attributes(
             '94677047', 'The Odyssey', 'The Odyssey, Edition 1',
-            'approximately 1984', 'Sample Notes')
+            'approximately 1984')
+        self.assertIsNone(imprint.notes)
 
+        imprint, created = Imprint.objects.get_or_create_by_attributes(
+            '94677048', 'The Odyssey', 'The Odyssey, Edition 1',
+            'approximately 1984', 'Sample Notes')
         self.assertEqual(imprint.notes, 'Sample Notes')
 
     def test_has_bhb_number(self):

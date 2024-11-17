@@ -799,7 +799,7 @@ class ImprintManager(models.Manager):
         self._fields = fields
 
     def get_or_create_by_attributes(self, bhb_number, work_title, title,
-                                    publication_date, imprint_notes=''):
+                                    publication_date, imprint_notes=None):
         created = False
 
         # get the imprint by BHB Number
