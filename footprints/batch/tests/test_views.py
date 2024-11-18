@@ -226,6 +226,16 @@ class BatchJobUpdateViewTest(TestCase):
         self.assertTrue(imprint.actor.filter(
             person__name=self.record1.publisher).exists())
 
+        self.assertEqual(imprint.notes, 'Sample Notes')
+
+    def test_get_or_create_imprint_with_existing_notes(self):
+        view = BatchJobUpdateView()
+        imprint = view.get_or_create_imprint(self.record1)
+        self.assertEqual(imprint.notes, 'Sample Notes')
+        imprint = view.get_or_create_imprint(self.record1)
+        imprint.refresh_from_db()
+        self.assertEqual(imprint.notes, 'Sample Notes Sample Notes')
+
     def test_get_or_create_copy(self):
         view = BatchJobUpdateView()
 

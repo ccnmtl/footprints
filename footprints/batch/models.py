@@ -50,7 +50,8 @@ class BatchRow(models.Model):
         'footprint_notes',
         'footprint_location',
         'footprint_date',
-        'footprint_narrative'
+        'footprint_narrative',
+        'imprint_notes'
     ]
 
     DATE_HELP_TEXT = (
@@ -103,7 +104,7 @@ class BatchRow(models.Model):
         null=True, blank=True, verbose_name='Literary Work Author Death Date',
         help_text=DATE_HELP_TEXT)
 
-    # imprint publisher/printer information
+    # imprint publisher/printer/notes information
     publisher = models.TextField(
         null=True, blank=True, verbose_name='Publisher')
     publisher_viaf = models.TextField(
@@ -115,6 +116,8 @@ class BatchRow(models.Model):
     publication_date = models.TextField(
         null=True, blank=True, help_text=DATE_HELP_TEXT,
         verbose_name='Publication Date')
+    imprint_notes = models.TextField(
+        null=True, blank=True, verbose_name='Imprint Notes')
 
     # book copy call number
     book_copy_call_number = models.CharField(

@@ -16,8 +16,8 @@ class CreateBatchJobForm(forms.Form):
         "translated correctly.<br /><br /> The full error is:<br />{}.")
 
     INVALID_HEADER_ROW = (
-            "The selected file has an invalid header element. "
-            "Column {} is \"{}\", rather than \"{}\".")
+        "The selected file has an invalid header element. "
+        "Column {} is \"{}\", rather than \"{}\".")
 
     VALID_HEADERS = [
         'Catalog Link', 'BHB number', 'Imprint Title', 'Literary Work Title',
@@ -31,7 +31,7 @@ class CreateBatchJobForm(forms.Form):
         'Footprint Actor VIAF ID', 'Footprint Actor Role',
         'Footprint Actor Begin Date', 'Footprint Actor End Date',
         'Footprint Notes', 'Footprint Location', 'Footprint Date',
-        'Footprint Narrative']
+        'Footprint Narrative', 'Imprint Notes']
 
     csvfile = forms.FileField(required=True)
 

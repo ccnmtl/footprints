@@ -799,7 +799,7 @@ class ImprintManager(models.Manager):
         self._fields = fields
 
     def get_or_create_by_attributes(self, bhb_number, work_title, title,
-                                    publication_date):
+                                    publication_date, imprint_notes=None):
         created = False
 
         # get the imprint by BHB Number
@@ -813,7 +813,8 @@ class ImprintManager(models.Manager):
             work, created = WrittenWork.objects.get_or_create(title=work_title)
 
             # always create the imprint if BHB is not found
-            imprint = Imprint.objects.create(title=title, work=work)
+            imprint = Imprint.objects.create(title=title, work=work,
+                                             notes=imprint_notes)
 
             # add identifier
             if bhb_number:
