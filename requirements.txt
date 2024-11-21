@@ -54,7 +54,7 @@ factory_boy==3.3.0
 ldap3==2.9.1
 sqlparse==0.5.0
 contextlib2==21.6.0
-rcssmin==1.1.0
+rcssmin==1.2.0
 rjsmin==1.2.0
 
 vine==5.1.0
