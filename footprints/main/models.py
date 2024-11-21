@@ -330,6 +330,7 @@ class DigitalObject(models.Model):
     file = models.FileField(upload_to="%Y/%m/%d/")
     url = models.TextField(blank=True)
     description = models.TextField(null=True, blank=True)
+    alt_text = models.TextField(null=True, blank=True)
 
     digital_format = models.ForeignKey(
         DigitalFormat, null=True, blank=True, on_delete=models.CASCADE)
@@ -348,6 +349,10 @@ class DigitalObject(models.Model):
 
     def __str__(self):
         return self.name
+
+    def format_alt_text(self):
+        return smart_str(self.alt_text) \
+            if self.alt_text else smart_str(self.name)
 
 
 class StandardizedIdentificationTypeQuerySet(models.query.QuerySet):

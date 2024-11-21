@@ -7,12 +7,14 @@ from django.urls.base import reverse
 from footprints.main.serializers import (
     StandardizedIdentificationTypeSerializer,
     StandardizedIdentificationSerializer, LanguageSerializer,
-    ExtendedDateSerializer, ActorSerializer)
+    ExtendedDateSerializer, ActorSerializer,
+    DigitalObjectSerializer)
 from footprints.main.tests.factories import (
     StandardizedIdentificationFactory,
     LanguageFactory, ExtendedDateFactory, ActorFactory,
     GroupFactory, ADD_CHANGE_PERMISSIONS,
-    UserFactory, FootprintFactory, CanonicalPlaceFactory, PlaceFactory)
+    UserFactory, FootprintFactory, CanonicalPlaceFactory, PlaceFactory,
+    DigitalObjectFactory)
 
 
 class SerializerTest(TestCase):
@@ -58,6 +60,14 @@ class SerializerTest(TestCase):
         self.assertEqual(qs.first(), a)
 
         self.assertEqual(serializer.to_internal_value(a.id), a)
+
+    def test_digital_object_serializer(self):
+        do = DigitalObjectFactory(
+            name='Footprint Image', alt_text='Censor Signature')
+        serializer = DigitalObjectSerializer()
+
+        repr = serializer.to_representation(do)
+        self.assertEqual(repr['alt_text'], 'Censor Signature')
 
 
 class FootprintViewsetTest(TestCase):

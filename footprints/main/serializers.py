@@ -118,7 +118,12 @@ class PlaceSerializer(HyperlinkedModelSerializer):
 class DigitalObjectSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = DigitalObject
-        fields = ('id', 'name', 'description', 'url')
+        fields = ('id', 'name', 'description', 'url', 'alt_text')
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['alt_text'] = instance.format_alt_text()
+        return representation
 
 
 class ActorSerializer(HyperlinkedModelSerializer):
@@ -311,4 +316,9 @@ class DigitalObjectExtendedSerializer(HyperlinkedModelSerializer):
 
     class Meta:
         model = DigitalObject
-        fields = ('id', 'name', 'description', 'url', 'footprints')
+        fields = ('id', 'name', 'description', 'url', 'footprints', 'alt_text')
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['alt_text'] = instance.format_alt_text()
+        return representation
