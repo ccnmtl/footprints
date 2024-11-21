@@ -65,6 +65,18 @@ class DigitalFormatTest(TestCase):
             DigitalFormat.objects.create(name='png')
 
 
+class DigitalObjectTest(TestCase):
+
+    def test_format_alt_text(self):
+        do = DigitalObjectFactory()
+        self.assertEqual(do.format_alt_text(), do.name)
+
+        s = 'Censor Signature'
+        do = DigitalObjectFactory(
+            name='Footprint Image', alt_text=s)
+        self.assertEqual(do.format_alt_text(), s)
+
+
 class StandardizedIdentificationTest(TestCase):
 
     def test_standardized_identification(self):

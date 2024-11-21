@@ -30,7 +30,8 @@
                                     <% for (var j=0; j < limit && i < digital_object.length; j++, i++) { %>
                                         <div class="col-sm-2">
                                             <div class="crop">
-                                                <img src="<%=digital_object[i].url%>" alt="Image"
+                                                <img src="<%=digital_object[i].url%>"
+                                                    alt="<%=digital_object[i].alt_text%>"
                                                     class="img-responsive" data-id="<%=digital_object[i].id%>" />
                                             </div>
                                             <% if (can_edit_footprint) { %>
@@ -159,7 +160,7 @@
                 <% if (actor[i].person.standardized_identifier) { %>
                     <span class="standard-identifier-logo">
                         <a href="https://viaf.org/viaf/<%=actor[i].person.standardized_identifier.identifier%>/">
-                            <img src="<%=static_url%>img/oclc.png" alt_text="Link to VIAF Record"/>
+                            <img src="<%=static_url%>img/oclc.png" alt="Link to VIAF Record"/>
                         </a>
                     </span>
                 <% } %>
