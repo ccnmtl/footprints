@@ -59,7 +59,7 @@ rjsmin==1.2.0
 
 vine==5.1.0
 amqp==5.3.1
-kombu==5.4.0
+kombu==5.4.2
 prompt-toolkit==3.0.32
 celery==5.4.0
 backports.zoneinfo;python_version<"3.9"  # celery
