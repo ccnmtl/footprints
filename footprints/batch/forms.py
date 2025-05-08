@@ -9,9 +9,10 @@ from footprints.batch.models import BatchRow
 
 class CreateBatchJobForm(forms.Form):
     INVALID_FILE_FORMAT = ("The selected file is not formatted properly. "
-                           "Please select a valid data file.")
+                           "Row {}: {} columns expected, {} columns found")
     INVALID_ENCODING = (
-        "The selected file is not encoded properly. Batch files must be "
+        "The selected file is not encoded properly. There is a mismatch at "
+        "Row {}, Col {}, Character {}.<br />Batch files must be "
         "encoded using the UTF-8 standard to ensure special characters are "
         "translated correctly.<br /><br /> The full error is:<br />{}.")
 
@@ -45,13 +46,19 @@ class CreateBatchJobForm(forms.Form):
         return len(row) == len(BatchRow.FIELD_MAPPING)
 
     def validate_encoding(self, row):
+        cell = 1
+        char = 1
         for col in row:
+            if col == ',':
+                cell += 1
+                char = 0
             try:
                 force_str(col)
             except DjangoUnicodeDecodeError as e:
-                return False, e
+                return False, e, cell, char
+            char += 1
 
-        return True, ''
+        return True, '', -1, -1
 
     def validate_header(self, row):
         try:
@@ -86,13 +93,15 @@ class CreateBatchJobForm(forms.Form):
 
                 if not self.validate_column_count(row):
                     self._errors['csvfile'] = self.error_class([
-                        self.INVALID_FILE_FORMAT])
+                        self.INVALID_FILE_FORMAT.format(
+                            idx, len(BatchRow.FIELD_MAPPING), len(row))])
                     break
 
-                valid, e = self.validate_encoding(row)
+                valid, e, cell, char = self.validate_encoding(row)
                 if not valid:
                     self._errors['csvfile'] = self.error_class([
                         self.INVALID_ENCODING.format(
+                            idx, cell, char,
                             smart_str(e).encode('utf-8'))])
                     break
 

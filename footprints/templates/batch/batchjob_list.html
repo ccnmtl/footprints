@@ -120,7 +120,23 @@
         </div>
         <div class="fp-qa">
             <h4><span class="qa">Q:</span> What is the file format?</h4>
-            <p><span class="qa">A:</span> Duis vitae tortor sed ante venenatis scelerisque. Mauris condimentum egestas enim in imperdiet. Praesent eget pellentesque mauris, id rutrum mauris.</p>
+            <p><span class="qa">A:</span> Footprints can ingest data in a .csv
+                format, encoded as UTF-8.
+                <ul>
+                    <li>
+                        Using the default Microsoft Excel export to .csv
+                        <strong>will not work</strong>
+                        as Excel exports with the ANSI character set.
+                    </li>
+                    <li>
+                        Instead, prepare your data in Google Sheets and
+                        export to .csv. Google Sheets handles special characters 
+                        properly.
+                        <a href="https://support.google.com/drive/answer/2423534?hl=en&co=GENIE.Platform=Desktop">
+                            Detailed Directions</a>
+                    </li>
+                </ul>
+            </p>
         </div>
         <div class="fp-qa">
             <h4><span class="qa">Q:</span> How are duplicates handled?</h4>
