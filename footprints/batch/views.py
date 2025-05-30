@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.db import transaction
 from django.http.response import HttpResponseRedirect
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.urls.base import reverse, reverse_lazy
 from django.views.generic.base import View
@@ -14,6 +15,8 @@ from footprints.main.models import Imprint, BookCopy, Footprint, \
     Role, ExtendedDate, Actor
 from footprints.mixins import (LoggedInMixin, BatchAccessMixin)
 from footprints.main.utils import GeonameUtil
+from datetime import datetime
+# from django.core.files.base import ContentFile
 
 
 class BatchJobListView(LoggedInMixin, BatchAccessMixin, FormView):
@@ -53,8 +56,8 @@ class BatchJobDetailView(LoggedInMixin, BatchAccessMixin, DetailView):
 
 class BatchJobUpdateView(LoggedInMixin, BatchAccessMixin, View):
 
-    INVALID_LOCATION = (
-        'Location [{}] lookup failed at the {} level [id={}]')
+    INVALID_LOCATION = "Location [{}] lookup failed at the {} level [id={}]"
+    errors = 0
 
     def add_place(self, obj, geoname_id):
         obj.place = GeonameUtil().get_or_create_place(geoname_id)
@@ -158,22 +161,52 @@ class BatchJobUpdateView(LoggedInMixin, BatchAccessMixin, View):
 
         n = 0
         for record in job.batchrow_set.all():
-            imprint = self.get_or_create_imprint(record)
-            copy = self.get_or_create_copy(
-                imprint, record.book_copy_call_number)
-            footprint = self.create_footprint(record, copy)
-            record.footprint = footprint
-            record.save()
+            try:
+                imprint = self.get_or_create_imprint(record)
+                copy = self.get_or_create_copy(imprint,
+                                               record.book_copy_call_number)
+                footprint = self.create_footprint(record, copy)
+                record.footprint = footprint
+                record.save()
+            except Exception as e:
+                self.errors += 1
+                job.errors += f'Row {n+1}, {e}\n'
             n += 1
 
-        job.processed = True
+        if self.errors > 0:
+            job.processed = False
+        else:
+            job.processed = True
+            job.errors = ''
         job.save()
 
-        msg = 'Batch job processed. {} footprints created'.format(n)
+        msg = "Batch job processed. {} footprints created".format(
+            n-self.errors)
         messages.add_message(self.request, messages.INFO, msg)
+        if self.errors:
+            msg = f'''The batch contained {self.errors} error
+                {'' if self.errors == 1 else 's'}, see the
+                downloadable error report.'''
+            messages.add_message(self.request, messages.ERROR, msg)
 
-        return HttpResponseRedirect(
-            reverse('batchjob-detail-view', kwargs={'pk': pk}))
+        return HttpResponseRedirect(reverse("batchjob-detail-view",
+                                            kwargs={"pk": pk}))
+
+
+class BatchErrorView(LoggedInMixin, BatchAccessMixin, View):
+    def post(self, *args, **kwargs):
+        pk = kwargs.get('pk', None)
+        job = get_object_or_404(BatchJob, pk=pk)
+        if job and len(job.errors) > 0:
+            response = HttpResponse(job.errors, content_type="text/csv")
+            response['Content-Disposition'
+                     ] = f'attachment; filename=errors_{datetime.now()}.csv'
+            return response
+
+        messages.add_message(self.request, messages.INFO,
+                             'Error List is empty')
+        return HttpResponseRedirect(reverse("batchjob-detail-view",
+                                            kwargs={"pk": pk}))
 
 
 class BatchJobDeleteView(LoggedInMixin, BatchAccessMixin, DeleteView):

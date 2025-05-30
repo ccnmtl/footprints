@@ -54,6 +54,14 @@
                     </dl>
                 </div>
                 <div class="col-md-2">
+                    <form action="{% url 'batchjob-error-view' object.id %}" method="post">
+                        {% csrf_token %}
+                        {% if object.errors %}
+                            <button id="process-error" type="submit" class="pull-right btn btn-alert" >Download Error List</button>
+                        {% else %}
+                            <button id="process-error" type="submit" class="pull-right btn btn-alert" >Download Error List</button>
+                        {% endif %}
+                    </form>
                     <form action="{% url 'batchjob-update-view' object.id %}" method="post">
                         {% csrf_token %}
                         {% if object.processed %}

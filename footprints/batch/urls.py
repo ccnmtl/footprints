@@ -2,7 +2,7 @@ from django.urls import path
 
 from footprints.batch.views import BatchJobDetailView, BatchJobListView, \
     BatchJobDeleteView, BatchRowUpdateView, BatchRowDeleteView, \
-    BatchJobUpdateView
+    BatchJobUpdateView, BatchErrorView
 
 
 urlpatterns = [
@@ -18,4 +18,6 @@ urlpatterns = [
          BatchRowUpdateView.as_view(), name='batchrow-update-view'),
     path('row/delete/<int:pk>/',
          BatchRowDeleteView.as_view(), name='batchrow-delete-view'),
+    path('job/error/<int:pk>/',
+         BatchErrorView.as_view(), name='batchjob-error-view'),
 ]
