@@ -14,6 +14,7 @@ class BatchJob(models.Model):
     processed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = CreatingUserField()
+    errors = ''
 
     def rows(self):
         return self.batchrow_set.all().order_by('id')

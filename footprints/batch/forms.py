@@ -9,11 +9,12 @@ from footprints.batch.models import BatchRow
 
 class CreateBatchJobForm(forms.Form):
     INVALID_FILE_FORMAT = ("The selected file is not formatted properly. "
-                           "Please select a valid data file.")
+                           "Row {}: {} columns expected, {} columns found")
     INVALID_ENCODING = (
-        "The selected file is not encoded properly. Batch files must be "
-        "encoded using the UTF-8 standard to ensure special characters are "
-        "translated correctly.<br /><br /> The full error is:<br />{}.")
+        "The selected file is not encoded properly. There is a mismatch at "
+        "Row {}.<br />Batch files must be encoded using the UTF-8 standard to "
+        "ensure special characters are translated correctly.<br /><br /> The "
+        "full error is:<br />{}.")
 
     INVALID_HEADER_ROW = (
         "The selected file has an invalid header element. "
@@ -86,13 +87,15 @@ class CreateBatchJobForm(forms.Form):
 
                 if not self.validate_column_count(row):
                     self._errors['csvfile'] = self.error_class([
-                        self.INVALID_FILE_FORMAT])
+                        self.INVALID_FILE_FORMAT.format(
+                            idx, len(BatchRow.FIELD_MAPPING), len(row))])
                     break
 
                 valid, e = self.validate_encoding(row)
                 if not valid:
                     self._errors['csvfile'] = self.error_class([
                         self.INVALID_ENCODING.format(
+                            idx,
                             smart_str(e).encode('utf-8'))])
                     break
 

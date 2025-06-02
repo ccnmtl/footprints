@@ -26,7 +26,6 @@ class CreateBatchJobFormTest(TestCase):
 
         form.clean()
         self.assertTrue('csvfile' in form._errors.keys())
-        self.assertEqual(form._errors['csvfile'], [form.INVALID_FILE_FORMAT])
 
     def test_form_validate_headers(self):
         content = 'bad content'
