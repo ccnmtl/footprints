@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.db import transaction
+from django.db import transaction, IntegrityError
 from django.http.response import HttpResponseRedirect
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
@@ -168,7 +168,7 @@ class BatchJobUpdateView(LoggedInMixin, BatchAccessMixin, View):
                 footprint = self.create_footprint(record, copy)
                 record.footprint = footprint
                 record.save()
-            except Exception as e:
+            except IntegrityError as e:
                 self.errors += 1
                 job.errors += f'Row {n+1}, {e}\n'
             n += 1
@@ -178,7 +178,8 @@ class BatchJobUpdateView(LoggedInMixin, BatchAccessMixin, View):
         else:
             job.processed = True
             job.errors = ''
-        job.save()
+        with transaction.atomic():
+            job.save()
 
         msg = "Batch job processed. {} footprints created".format(
             n-self.errors)
