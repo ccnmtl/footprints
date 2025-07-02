@@ -135,7 +135,7 @@ INSTALLED_APPS += [  # noqa
     'waffle'
 ]
 
-CONTACT_US_EMAIL = 'footprints@columbia.edu'
+CONTACT_US_EMAIL = 'ctl-dev@columbia.edu'
 
 LOGIN_REDIRECT_URL = "/"
 LOGIN_URL = '/'
