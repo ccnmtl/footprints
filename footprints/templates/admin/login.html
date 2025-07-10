@@ -1,7 +1,10 @@
 {% extends "admin/base_site.html" %}
 {% load i18n static %}
 
-{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/login.css" %}" />{% endblock %}
+{% block title %}{% if form.errors %}{% translate "Error:" %} {% endif %}{{ block.super }}{% endblock %}
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" href="{% static "admin/css/login.css" %}">
+{{ form.media }}
+{% endblock %}
 
 {% block bodyclass %}{{ block.super }} login{% endblock %}
 
@@ -9,42 +12,69 @@
 
 {% block nav-global %}{% endblock %}
 
+{% block nav-sidebar %}{% endblock %}
+
 {% block content_title %}{% endblock %}
 
-{% block breadcrumbs %}{% endblock %}
+{% block nav-breadcrumbs %}{% endblock %}
 
 {% block content %}
-{% if error_message %}
-<p class="errornote">{{ error_message }}</p>
+{% if form.errors and not form.non_field_errors %}
+<p class="errornote">
+{% blocktranslate count counter=form.errors.items|length %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktranslate %}
+</p>
 {% endif %}
+
+{% if form.non_field_errors %}
+{% for error in form.non_field_errors %}
+<p class="errornote">
+    {{ error }}
+</p>
+{% endfor %}
+{% endif %}
+
 <div id="content-main">
+
+{% if user.is_authenticated %}
+<p class="errornote">
+{% blocktranslate trimmed %}
+    You are authenticated as {{ username }}, but are not authorized to
+    access this page. Would you like to login to a different account?
+{% endblocktranslate %}
+</p>
+{% endif %}
+
 <form method="get" action="/cas/login">
-<input type="hidden" name="next" value="/admin/" />
-<p>If you have a Columbia UNI, you already have an account and can
-login through WIND with it</p>
-<input type="submit" value="Here" />
+    <input type="hidden" name="next" value="/admin/" />
+    <p>
+        If you have a Columbia UNI, you already have an account and can
+        log in through CAS with it <input type="submit" value="Here" />
+    </p>
 </form>
 
-{% if debug %}
-<p>otherwise: </p>
+<p>otherwise:</p>
+
 
 <form action="{{ app_path }}" method="post" id="login-form">{% csrf_token %}
   <div class="form-row">
-    <label for="id_username">{% translate 'Username:' %}</label> <input type="text" name="username" id="id_username" />
+    {{ form.username.errors }}
+    {{ form.username.label_tag }} {{ form.username }}
   </div>
   <div class="form-row">
-    <label for="id_password">{% translate 'Password:' %}</label> <input type="password" name="password" id="id_password" />
-    <input type="hidden" name="this_is_the_login_form" value="1" />
-    <input type="hidden" name="post_data" value="{{ post_data }}" /> {#<span class="help">{% translate 'Have you <a href="/password_reset/">forgotten your password</a>?' %}</span>#}
+    {{ form.password.errors }}
+    {{ form.password.label_tag }} {{ form.password }}
+    <input type="hidden" name="next" value="{{ next }}">
   </div>
+  {% url 'admin_password_reset' as password_reset_url %}
+  {% if password_reset_url %}
+  <div class="password-reset-link">
+    <a href="{{ password_reset_url }}">{% translate 'Forgotten your login credentials?' %}</a>
+  </div>
+  {% endif %}
   <div class="submit-row">
-    <label>&nbsp;</label><input type="submit" value="{% translate 'Log in' %}" />
+    <input type="submit" value="{% translate 'Log in' %}">
   </div>
 </form>
-{% endif %}
 
-<script type="text/javascript">
-document.getElementById('id_username').focus()
-</script>
 </div>
 {% endblock %}
