@@ -22,7 +22,7 @@ importlib-metadata<8.6 # for flake8
 typing_extensions==4.12.0
 zipp==3.20.0  # for flake8
 flake8==7.1.0
-tornado==6.4.2
+tornado==6.5
 cssselect==1.2.0
 lxml==5.3.0
 fuzzywuzzy==0.18.0
