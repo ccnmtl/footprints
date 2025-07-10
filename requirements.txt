@@ -13,7 +13,7 @@ packaging==24.2 # for django-haystack
 versiontools==1.9.1
 statsd==4.0.1
 pep8==1.7.1
-pyflakes==3.2.0
+pyflakes==3.4.0
 mccabe==0.7.0
 pyparsing==3.2.3
 pycodestyle==2.12.0
