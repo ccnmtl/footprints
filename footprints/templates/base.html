@@ -77,7 +77,14 @@
                     {% if request.user.is_anonymous %}
                     <li><a href="/accounts/login/?next=/" title="Log in" id="login-link"><span class="glyphicon glyphicon-user"></span> Log In</a></li>
                     {% else %}
-                    <li><a href="/accounts/logout/?next=/" title="Log out"><span class="glyphicon glyphicon-user"></span> Log Out</a></li>
+                    <li>
+                        <form action="{% url 'logout' %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-link logout-button" title="Log out">
+                                <span class="glyphicon glyphicon-user"></span> Log Out
+                            </button>
+                        </form>
+                    </li>
                     {% endif %}
                 </ul>
             </div>
@@ -204,9 +211,9 @@
 
         jQuery(document).ready(function() {
            // setup some ajax progress indicator
-           jQuery("html").bind("ajaxStart", function(){  
+           jQuery("html").bind("ajaxStart", function(){
               jQuery(this).addClass("busy");
-           }).bind("ajaxStop", function() {  
+           }).bind("ajaxStop", function() {
               jQuery(this).removeClass("busy");
            });
 

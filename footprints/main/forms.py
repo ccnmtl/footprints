@@ -136,7 +136,7 @@ class FootprintSearchForm(ModelSearchForm):
         return args
 
     def handle_creator(self, q, args):
-        pattern = 'creator:(\w+)'
+        pattern = r'creator:(\w+)'
         m = re.search(pattern, q)
         if m:
             args.append(Q(creator__contains=m.group(1)))
