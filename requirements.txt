@@ -1,5 +1,5 @@
 Django>=4.2.14,<5
-psycopg[binary]==3.2.5
+psycopg[binary]==3.2.9
 
 asgiref==3.9.1
 
