@@ -106,7 +106,7 @@ django-haystack==3.3.0
 requirements/src/django_audit_log-0.8.2-py2.py3-none-any.whl
 djangorestframework==3.16.0
 djangorestframework-jsonp==1.0.2
-Unidecode==1.3.2
+Unidecode==1.4.0
 django-reversion==5.1.0
 python-dateutil==2.9.0
 requirements/src/edtf-0.9.4-py3-none-any.whl
