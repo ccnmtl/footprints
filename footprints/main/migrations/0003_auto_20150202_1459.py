@@ -3,8 +3,8 @@ from __future__ import unicode_literals
 
 from django.db import migrations
 import datetime
+from datetime import timezone
 from django.db import models
-from django.utils.timezone import utc
 
 
 class Migration(migrations.Migration):
@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
             name='position',
             field=models.CharField(
                 default=datetime.datetime(2015, 2, 2, 19, 59, 0, 360275,
-                                          tzinfo=utc), max_length=42),
+                                          tzinfo=timezone.utc), max_length=42),
             preserve_default=False,
         ),
     ]

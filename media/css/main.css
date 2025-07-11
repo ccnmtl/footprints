@@ -100,7 +100,8 @@ a.brand-logo {
     margin-right: 4px;
     float: left;
 }
-.user-tools.navbar-nav>li>a {
+.user-tools.navbar-nav>li>a,
+.user-tools.navbar-nav>li>form>button.logout-button {
     padding: 8px;
     color: #d3c1a2;
     text-decoration: none;
@@ -769,7 +770,8 @@ ul.footer-logos li {
 	    margin-right: 0;
 	    margin-left: 8px;
 	}
-	.user-tools.navbar-nav>li>a {
+	.user-tools.navbar-nav>li>a,
+	.user-tools.navbar-nav>li>form>button.logout-button {
 	    padding: 8px;
 	    color: #d3c1a2;
 	    text-decoration: none;
