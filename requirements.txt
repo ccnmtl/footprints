@@ -63,7 +63,7 @@ kombu==5.5.4
 prompt-toolkit==3.0.32
 celery==5.5.3
 backports.zoneinfo;python_version<"3.9"  # celery
-click==8.1.3
+click==8.2.1
 click-didyoumean==0.3.0
 click-repl==0.3.0
 click-plugins==1.1.1
