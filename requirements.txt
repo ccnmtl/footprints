@@ -9,7 +9,7 @@ Markdown==3.7
 
 smartypants==2.0.1
 olefile==0.47
-packaging==24.2 # for django-haystack
+packaging==25.0 # for django-haystack
 versiontools==1.9.1
 statsd==4.0.1
 pep8==1.7.1
