@@ -53,26 +53,30 @@
                         <dd>{{object.created_at}}</dd>
                     </dl>
                 </div>
-                <div class="col-md-2">
-                    <form action="{% url 'batchjob-error-view' object.id %}" method="post">
-                        {% csrf_token %}
-                        {% if object.errors %}
-                            <button id="process-error" type="submit" class="pull-right btn btn-alert" >Download Error List</button>
-                        {% else %}
-                            <button id="process-error" type="submit" class="pull-right btn btn-alert" >Download Error List</button>
-                        {% endif %}
-                    </form>
-                    <form action="{% url 'batchjob-update-view' object.id %}" method="post">
-                        {% csrf_token %}
-                        {% if object.processed %}
-                            <button disabled="disabled" type="button" class="pull-right btn btn-primary">Processed</button>
-                        {% else %}
-                            <button id="process-job" type="button" class="pull-right btn btn-primary">Process</button>
-                        {% endif %}
-                    </form>
-                </div>
             </div>
         </div>
+    </div>
+    <div class="row">
+        <form action="{% url 'batchjob-error-view' object.id %}" method="post" >
+            {% csrf_token %}
+            <button id="delete-errors" type="submit" class="pull-right btn btn-danger"
+                    style="margin-right: 1em;">Remove Errors</button>
+        </form>
+        <form action="{% url 'batchjob-error-view' object.id %}" method="get" >
+            {% csrf_token %}
+            <button id="download-errors" type="submit" class="pull-right btn btn-warning" 
+                style="margin-right: 1em;">Download Errors</button>
+        </form>
+        <form action="{% url 'batchjob-update-view' object.id %}" method="post">
+            {% csrf_token %}
+            {% if object.processed %}
+                <button disabled="disabled" type="button" class="pull-right btn btn-primary"
+                    style="margin-right: 1em;">Processed</button>
+            {% else %}
+                <button id="process-job" type="button" class="pull-right btn btn-primary"
+                    style="margin-right: 1em;">Process</button>
+            {% endif %}
+        </form>
     </div>
     {% if messages %}
         {% for message in messages %}
