@@ -16,7 +16,6 @@ from footprints.main.models import Imprint, BookCopy, Footprint, \
 from footprints.mixins import (LoggedInMixin, BatchAccessMixin)
 from footprints.main.utils import GeonameUtil
 from datetime import datetime
-# from django.core.files.base import ContentFile
 
 
 class BatchJobListView(LoggedInMixin, BatchAccessMixin, FormView):
@@ -195,17 +194,67 @@ class BatchJobUpdateView(LoggedInMixin, BatchAccessMixin, View):
 
 
 class BatchErrorView(LoggedInMixin, BatchAccessMixin, View):
-    def post(self, *args, **kwargs):
+    def to_csv(self, arr):
+        err_csv = ','.join(BatchRow.FIELD_MAPPING) + '\n'
+        for item in arr:
+            row = []
+            for field in BatchRow.FIELD_MAPPING:
+                data = getattr(item, field)
+                if data:
+                    data = data.replace('"', '')
+                    row.append(f'"{data}"')
+                else:
+                    row.append('""')
+            err_csv += ','.join(row) + '\n'
+        return err_csv
+
+    def valid(self, row):
+        validation = [
+            'validate_catalog_url', 'validate_bhb_number',
+            'validate_writtenwork_author_viaf',
+            'validate_writtenwork_author_birth_date',
+            'validate_writtenwork_author_death_date',
+            'validate_publisher_viaf', 'validate_publication_date',
+            'validate_publication_location', 'validate_book_copy_call_number',
+            'validate_medium', 'validate_footprint_actor',
+            'validate_footprint_actor_viaf',
+            'validate_footprint_actor_birth_date',
+            'validate_footprint_actor_death_date',
+            'validate_footprint_date', 'validate_footprint_actor_role',
+            'validate_footprint_location']
+
+        for check in validation:
+            if not getattr(row, check)():
+                return False
+        return True
+
+    def get(self, *args, **kwargs):
         pk = kwargs.get('pk', None)
         job = get_object_or_404(BatchJob, pk=pk)
-        if job and len(job.errors) > 0:
-            response = HttpResponse(job.errors, content_type="text/csv")
+        error_list = []
+        rows = job.batchrow_set.all()
+        for row in rows:
+            if not self.valid(row) or row.check_imprint_integrity():
+                error_list.append(row)
+        if len(error_list) > 0:
+            response = HttpResponse(
+                self.to_csv(error_list), content_type="text/csv")
             response['Content-Disposition'
                      ] = f'attachment; filename=errors_{datetime.now()}.csv'
             return response
+        else:
+            messages.add_message(self.request, messages.INFO,
+                                 'No errors found.')
+        return HttpResponseRedirect(reverse("batchjob-detail-view",
+                                            kwargs={"pk": pk}))
 
-        messages.add_message(self.request, messages.INFO,
-                             'Error List is empty')
+    def post(self, *args, **kwargs):
+        pk = kwargs.get('pk', None)
+        job = get_object_or_404(BatchJob, pk=pk)
+        rows = job.batchrow_set.all()
+        for row in rows:
+            if not self.valid(row) or row.check_imprint_integrity():
+                row.delete()
         return HttpResponseRedirect(reverse("batchjob-detail-view",
                                             kwargs={"pk": pk}))
 
