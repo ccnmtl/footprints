@@ -5,7 +5,7 @@ asgiref==3.9.1
 
 feedparser==6.0.8
 
-Markdown==3.8.2
+Markdown==3.9
 
 smartypants==2.0.1
 olefile==0.47
