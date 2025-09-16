@@ -79,7 +79,7 @@ django-paging==0.2.5
 django-appconf==1.1.0
 django-statsd-mozilla==0.4.0
 raven==6.10.0
-sentry-sdk[django]==2.37.0
+sentry-sdk[django]==2.38.0
 django-bootstrap-form==3.4
 django-debug-toolbar==5.2.0
 django-waffle==5.0.0
