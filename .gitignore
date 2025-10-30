@@ -13,7 +13,6 @@ start_server.sh
 lettuce.db
 chromedriver.log
 ghostdriver.log
-.coverage
 media/CACHE
 reports
 node_modules
