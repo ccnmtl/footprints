@@ -131,7 +131,7 @@ django-adminactions==2.3.0
 uritemplate==4.2.0
 jsonschema==4.25.0
 inflection==0.5.1
-drf-spectacular==0.28.0
+drf-spectacular==0.29.0
 
 python-cas==1.6.0
 django-cas-ng==5.0.1
