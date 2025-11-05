@@ -114,12 +114,14 @@ TEMPLATES = [
 MIDDLEWARE += [  # noqa
     'django.middleware.csrf.CsrfViewMiddleware',
     'audit_log.middleware.UserLoggingMiddleware',
-    'reversion.middleware.RevisionMiddleware'
+    'reversion.middleware.RevisionMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 INSTALLED_APPS += [  # noqa
     'bootstrapform',
     'django_extensions',
+    'debug_toolbar',
     'haystack',
     'footprints.main',
     'rest_framework',
