@@ -133,5 +133,5 @@ jsonschema==4.25.0
 inflection==0.5.1
 drf-spectacular==0.29.0
 
-python-cas==1.6.0
+python-cas==1.7.1
 django-cas-ng==5.0.1
