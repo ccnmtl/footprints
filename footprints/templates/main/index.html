@@ -18,7 +18,7 @@
     "@type": "WebSite",
     "url": "{{request.build_absolute_uri}}",
     "name": "Footprints: Jewish Books Through Time and Place",
-    "image": "{% spaceless %}{{STATIC_URL}}img/footprints_opengraph.jpg{% endspaceless %}", 
+    "image": "{% spaceless %}{{STATIC_URL}}img/footprints_opengraph.jpg{% endspaceless %}",
     "about": "Footprints is a database that traces the history and movement of Jewish books since the inception of print.",
     "publisher": "Columbia University Center for Teaching and Learning",
     "keywords": "Hebrew books, Provenance, Jewish books, Jewish, Nazi-looted books, Hebrew Incunabula, Lost Jewish books, Footsteps, Sefarim, Sefer, Seforim, Old books, Ancient Jewish books"
@@ -102,6 +102,7 @@ Every literary work represents a moment in time and space where an idea was conc
                 <div class="home-trailer-container">
                     <div class="embed-responsive embed-responsive-16by9">
                     <iframe
+                        referrerpolicy="strict-origin-when-cross-origin"
                         src="https://www.youtube.com/embed/2qJPxzgPlzQ"
                         title="Footprints | Jewish Books Through Time and Place"
                         class="embed-responsive-item"
@@ -153,5 +154,5 @@ Every literary work represents a moment in time and space where an idea was conc
         </div> <!-- /.content -->
     </div> <!-- /.container-pl -->
 {% endblock %}
- 
+
 <!--endblock content -->
