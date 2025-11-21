@@ -91,7 +91,7 @@ django-impersonate==1.9.1
 django-registration-redux==2.13
 gunicorn==23.0.0
 future==1.0.0
-s3transfer==0.14.0
+s3transfer==0.15.0
 jmespath==1.0.0
 
 botocore>=1.15.0,<1.42.0
