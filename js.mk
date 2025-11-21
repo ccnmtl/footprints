@@ -26,10 +26,10 @@ ESLINT ?= $(NODE_MODULES)/.bin/eslint
 NPM_OPTS = --include=dev
 
 ifeq ($(ENVIRONMENT),production)
-	NPM_OPTS = --only=prod
+	NPM_OPTS = --omit=dev
 endif
 ifeq ($(ENVIRONMENT),staging)
-	NPM_OPTS = --only=prod
+	NPM_OPTS = --omit=dev
 endif
 
 $(JS_SENTINAL): package.json
