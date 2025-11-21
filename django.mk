@@ -1,23 +1,23 @@
 # VERSION=1.10.0
 
 # CHANGES:
-# 1.10.0 - 2025-10-16 - Removed coverage, updated 
-# 1.9.0              - Use coverage tool directly to generate coverage
-#                      reports.
-#                    - wheel and pip updates
-#                    - Use pre-compiled binary wheel for cryptography
-#                    - Remove Travis references
-# 1.8.0 - 2019-10-21 - Don't run flake8 on local_settings.py
-# 1.7.0 - 2018-05-31 - Now using python 3 by default
-#                    - Removed virtualenv.py in favor of python 3's
-#                      builtin venv capability.
-# 1.6.0 - 2017-09-05 - add bandit secure analysis configuration
-# 1.5.0 - 2017-08-24 - remove jshint/jscs in favor of eslint
-# 1.4.0 - 2017-06-06 - backout the switch to eslint. that's not really ready yet.
-# 1.3.0 - 2017-06-05 - pypi location is not needed anymore
-# 1.2.0 - 2016-12-15 - bump wheel version to 0.29
-# 1.1.0 - 2016-11-08 - run flake8 tests before unit tests
-# 1.0.1 - 2016-05-02 - Remove deprecated syncdb command from make install
+# 1.10.0 - 2025-10-16 - Removed coverage, updated dependencies.
+# 1.9.0               - Use coverage tool directly to generate coverage
+#                       reports.
+#                     - wheel and pip updates
+#                     - Use pre-compiled binary wheel for cryptography
+#                     - Remove Travis references
+# 1.8.0  - 2019-10-21 - Don't run flake8 on local_settings.py
+# 1.7.0  - 2018-05-31 - Now using python 3 by default
+#                     - Removed virtualenv.py in favor of python 3's
+#                       builtin venv capability.
+# 1.6.0  - 2017-09-05 - add bandit secure analysis configuration
+# 1.5.0  - 2017-08-24 - remove jshint/jscs in favor of eslint
+# 1.4.0  - 2017-06-06 - backout the switch to eslint. that's not really ready yet.
+# 1.3.0  - 2017-06-05 - pypi location is not needed anymore
+# 1.2.0  - 2016-12-15 - bump wheel version to 0.29
+# 1.1.0  - 2016-11-08 - run flake8 tests before unit tests
+# 1.0.1  - 2016-05-02 - Remove deprecated syncdb command from make install
 
 VE ?= ./ve
 MANAGE ?= ./manage.py
@@ -26,7 +26,7 @@ SYS_PYTHON ?= python3
 PY_SENTINAL ?= $(VE)/sentinal
 WHEEL_VERSION ?= 0.45.1
 PIP_VERSION ?= 25.3
-SETUPTOOLS_VERSION ?= 80.7.1
+SETUPTOOLS_VERSION ?= 80.9.0
 MAX_COMPLEXITY ?= 10
 INTERFACE ?= localhost
 RUNSERVER_PORT ?= 8000
@@ -75,7 +75,6 @@ clean:
 	rm -rf media/CACHE
 	rm -rf reports
 	rm -f celerybeat-schedule
-	rm -f .coverage
 	rm -rf node_modules
 	find . -name '*.pyc' -exec rm {} \;
 
