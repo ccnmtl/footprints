@@ -60,8 +60,8 @@ vine==5.1.0
 amqp==5.3.1
 kombu==5.6.0
 prompt-toolkit==3.0.32
-celery==5.5.3
-backports.zoneinfo;python_version<"3.9"  # celery
+celery==5.6.0
+tzlocal==5.3.1  # celery
 click==8.3.0
 click-didyoumean==0.3.0
 click-repl==0.3.0
