@@ -90,7 +90,7 @@ django-stagingcontext==0.1.0
 django-ga-context==0.1.0
 django-impersonate==1.9.1
 django-registration-redux==2.13
-gunicorn==23.0.0
+gunicorn==24.0.0
 future==1.0.0
 s3transfer==0.16.0
 jmespath==1.1.0
