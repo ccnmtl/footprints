@@ -44,7 +44,7 @@ wrapt==2.1.0
 
 pylint==4.0.0
 
-astroid==4.0.0
+astroid==4.1.0
 
 six==1.17.0
 text-unidecode==1.3
