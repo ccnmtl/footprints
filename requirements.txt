@@ -30,7 +30,7 @@ sure==3.0a2
 
 pyasn1==0.6.0
 cffi==2.0.0 # cryptography
-cryptography==46.0.1  # pyOpenSSL
+cryptography==46.0.5  # pyOpenSSL
 
 
 chardet==5.2.0
