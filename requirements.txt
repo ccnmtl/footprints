@@ -33,7 +33,7 @@ cffi==2.0.0 # cryptography
 cryptography==46.0.5  # pyOpenSSL
 
 
-chardet==5.2.0
+chardet==6.0.0.post1
 idna==3.11
 urllib3==2.6.3  # sentry-sdk
 
