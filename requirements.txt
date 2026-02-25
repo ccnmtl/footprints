@@ -121,7 +121,8 @@ django-smtp-ssl==1.0
 pbr==7.0.0
 pyyaml==6.0.1
 stevedore>=1.20.0 # Apache-2.0
-bandit==1.7.4
+bandit==1.8.6
+rich==14.0.0
 
 entrypoints==0.4
 distro==1.9.0
