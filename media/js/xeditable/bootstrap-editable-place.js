@@ -1,5 +1,3 @@
-/* eslint security/detect-object-injection: 0 */
-
 /**
 Place editable input.
 

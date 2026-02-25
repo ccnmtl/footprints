@@ -1,5 +1,4 @@
 /* global OverlappingMarkerSpiderfier */
-/* eslint security/detect-object-injection: 0 */
 
 (function() {
     window.ImprintView = Backbone.View.extend({
@@ -51,14 +50,12 @@
             streetViewControl: false
         },
         updateMarkerIcons: function() {
-            /* eslint-disable security/detect-object-injection */
             for (var key in this.markers) {
                 if (Object.prototype.hasOwnProperty.call(this.markers, key)) {
                     var icon = this.getIcon(this.markers[key].marker.dataId);
                     this.markers[key].marker.setIcon(icon);
                 }
             }
-            /* eslint-enable security/detect-object-injection */
 
             var markers = this.spiderfier.markersNearAnyOtherMarker();
             markers.forEach((m) => {
@@ -79,9 +76,7 @@
 
             this.spiderfier.addListener('click', function(marker, event) {
                 infowindow.setContent(marker.desc);
-                /* eslint-disable security/detect-non-literal-fs-filename */
                 infowindow.open(map, marker);
-                /* eslint-enable security/detect-non-literal-fs-filename */
 
                 var q = '[data-map-id="' + marker.dataId + '"]';
                 var $elt = self.$el.find(q).first();
@@ -219,7 +214,6 @@
                     });
                     this.bounds.extend(latlng);
 
-                    // eslint-disable-next-line security/detect-object-injection
                     this.markers[id] = {'marker': marker, 'content': content};
                 }
 
@@ -331,7 +325,6 @@
                 }
             }
 
-            /* eslint-disable security/detect-object-injection */
             var bounds = new google.maps.LatLngBounds();
             for (var key in this.markers) {
                 if (Object.prototype.hasOwnProperty.call(this.markers, key)) {
@@ -357,12 +350,9 @@
                 this.$el.find('.empty-map-message').hide();
                 this.activeBounds = bounds;
                 this.infowindow.setContent(this.markers[highlight].content);
-                /* eslint-disable security/detect-non-literal-fs-filename */
                 this.infowindow.open(
                     this.map, this.markers[highlight].marker);
-                /* eslint-enable security/detect-non-literal-fs-filename */
             }
-            /* eslint-enable security/detect-object-injection */
         },
         inView: function($elt) {
             var rect = $elt.get(0).getBoundingClientRect();

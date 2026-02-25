@@ -16,11 +16,9 @@
     window.FootprintBaseView = Backbone.View.extend({
         context: function() {
             var ctx = this.model.toJSON();
-            /* eslint-disable security/detect-object-injection */
             for (var attrname in this.baseContext) {
                 ctx[attrname] = this.baseContext[attrname];
             }
-            /* eslint-enable security/detect-object-injection */
             return ctx;
         },
         mapOptions: {
