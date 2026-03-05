@@ -16,7 +16,9 @@
     "url": "https://github.com/ccnmtl/footprints/issues"
   },
   "devDependencies": {
-    "eslint": "~9.39.0",
+    "@eslint/eslintrc": "^3.3.4",
+    "@eslint/js": "^10.0.1",
+    "eslint": "~10.0.2",
     "globals": "^17.0.0"
   }
 }
