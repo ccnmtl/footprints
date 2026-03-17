@@ -28,7 +28,7 @@ lxml==6.0.2
 fuzzywuzzy==0.18.0
 sure==3.0a2
 
-pyasn1==0.6.0
+pyasn1==0.6.3
 cffi==2.0.0 # cryptography
 cryptography==46.0.5  # pyOpenSSL
 
