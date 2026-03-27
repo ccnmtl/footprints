@@ -1,4 +1,4 @@
-Django>=5.2.4,<6
+Django>=5.2.4,<7
 psycopg[binary]==3.3.0
 
 asgiref==3.11.0
