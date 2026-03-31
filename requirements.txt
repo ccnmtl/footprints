@@ -112,7 +112,7 @@ python-dateutil==2.9.0
 requirements/src/edtf-0.9.4-py3-none-any.whl
 
 django-storages==1.14.5
-ctlsettings==0.4.3
+ctlsettings==0.4.6
 funcsigs==1.0.2
 pbr==7.0.0
 django-s3sign<=0.2.1
