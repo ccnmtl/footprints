@@ -48,7 +48,7 @@ a {
     width: calc(100% - 2.5rem);
     height: 50%;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-    z-index: 1;
+    z-index: 1000;
     transition-property: -webkit-transform,transform,opacity;
     transition-duration: 0.2s;
     transition-timing-function: cubic-bezier(0.0,0.0,0.2,1);
@@ -458,7 +458,7 @@ header .btn-priority-hi {
     background-color: #fff;
     height: 2.5rem;
     box-shadow: 0 1px 4px -1px rgba(0, 0, 0, 0.3);
-    z-index: 1;
+    z-index: 1000;
     font-size: 0rem;
     white-space: nowrap;
 }
@@ -632,6 +632,16 @@ header .btn-priority-hi {
 .btn-view.active {
     color: #97421b;
     background-color: #f8f5f4;
+}
+
+/* Map Marker */
+.pathmapper-marker-circle {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: rgba(203,141,120,0.5);
+    border: 1px solid #cb8d78;
+    box-sizing: border-box;
 }
 
 /* Table view */

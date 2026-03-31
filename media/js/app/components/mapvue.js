@@ -23,28 +23,19 @@ define(maplibs, function($, layermap, utils) {
             adjustIcon: function(place) {
                 const r = this.orderOfMagnitude(place.refs);
                 const d = r * 2;
-                let path =
-                    `M-${r},0a${r},${r} 0 1,0 ${r*2},0a${r},${r} 0 1,0 -${d},0`;
-                let icon = {
-                    strokeColor: '#cb8d78',
-                    strokeOpacity: 1,
-                    strokeWeight: 1,
-                    fillColor: '#cb8d78',
-                    fillOpacity: .5,
-                    anchor: new google.maps.Point(0,0),
-                    scale: 1,
-                    path: path
-                };
+                let icon = L.divIcon({
+                    className: 'pathmapper-marker',
+                    html: `<div class="pathmapper-marker-circle"></div>`,
+                    iconSize: [d, d],
+                    iconAnchor: [r, r]
+                });
                 if (place.marker) {
                     place.marker.setIcon(icon);
                 }
             },
             addMarker: function(placeId, latlng, placeTitle) {
-                let marker = new google.maps.Marker({
-                    position: latlng,
-                    title: placeTitle,
-                });
-                marker.addListener('click', () => {
+                let marker = L.marker(latlng, {title: placeTitle});
+                marker.on('click', () => {
                     this.$emit('input', this.places[placeId]);
                 });
                 return marker;
@@ -53,7 +44,7 @@ define(maplibs, function($, layermap, utils) {
                 const placeId = params.placeId;
                 if (!(placeId in this.places)) {
                     // Initialize a new place
-                    this.places[placeId] = {
+                    this.places[placeId] = {    
                         id: placeId,
                         title: params.placeTitle,
                         latlng: params.latlng,
@@ -77,9 +68,9 @@ define(maplibs, function($, layermap, utils) {
                         }
                     }
                     if (place.refs > 0) {
-                        place.marker.setMap(this.map);
+                        place.marker.addTo(this.map);
                     } else {
-                        place.marker.setMap(null);
+                        place.marker.remove();
                     }
                 }
 
@@ -99,7 +90,9 @@ define(maplibs, function($, layermap, utils) {
                         }
                     }
                     if (place.points.length === 0) {
-                        place.marker.setMap(null);
+                        if (this.map.hasLayer(place.marker)) {
+                            this.map.removeLayer(place.marker);
+                        }
                         delete place.marker;
                         delete this.places[key];
                     }
@@ -120,32 +113,32 @@ define(maplibs, function($, layermap, utils) {
             this.queue = new utils.AsyncQueue();
             this.bounds = null;
             this.zoom = 3;
-            this.center = new google.maps.LatLng(35.408632, -41.164887);
+            this.center = [35.408632, -41.164887];
             this.activePlace = null;
-            this.activeIcon = {
-                url: Footprints.staticUrl +
-                    'img/pathmapper-selected-location.svg',
-                scaledSize: new google.maps.Size(26, 35)
-            };
+            this.activeIcon = L.divIcon({
+                className: 'pathmapper-active-marker',
+                html: `<img src="${Footprints.staticUrl}img/pathmapper-selected-location.svg" style="width:26px;height:35px;">`,
+                iconAnchor: [13, 35]
+            });
         },
         mounted: function() {
             let elt = document.getElementById(this.mapName);
-            this.map = new google.maps.Map(elt, {
-                mapTypeControl: false,
-                clickableIcons: false,
+            this.map = L.map(elt, {
+                zoomControl: false,
                 zoom: this.zoom,
-                streetViewControl: false,
                 center: this.center,
-                fullscreenControlOptions: {
-                    position: google.maps.ControlPosition.RIGHT_BOTTOM,
-                },
-                mapTypeControlOptions: {
-                    mapTypeIds: ['styled_map'],
-                    ignoreHidden: true
-                }
+                attributionControl: false
             });
-            this.map.mapTypes.set('styled_map', utils.lightGrayStyle);
-            this.map.setMapTypeId('styled_map');
+
+            // Add the zoom control to the bottom right
+            L.control.zoom({
+                position: 'bottomright'
+            }).addTo(this.map);
+
+            L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
+                maxZoom: 20,
+                attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }).addTo(this.map);
 
             this.$watch('value', this.valueChanged);
         }
