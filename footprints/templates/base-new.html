@@ -216,7 +216,10 @@
             staticUrl: '{{STATIC_URL}}',
             debug: {% if debug %}'true'{% else %}'false'{% endif %},
             mapKey: '{{settings.GOOGLE_MAP_API}}',
-            baseUrl: '{{request.scheme}}://{{ request.get_host }}/'
+            tileServer: {
+                attribution: '{{settings.TILE_SERVER_ATTRIBUTION}}',
+                url: '{{settings.TILE_SERVER_URL}}'
+            }
         };
 
         jQuery(document).ready(function() {
