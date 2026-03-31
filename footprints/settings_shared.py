@@ -171,6 +171,10 @@ SPECTACULAR_SETTINGS = {
 
 GOOGLE_MAPS_REVERSE_GEOCODE = \
     'https://maps.googleapis.com/maps/api/geocode/json?address={},{}'
+TILE_SERVER_ATTRIBUTION = \
+    '&copy; OpenStreetMap contributors &copy; Stadia Maps'
+TILE_SERVER_URL = \
+    'https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}.png'
 
 AWS_STORAGE_BUCKET_NAME = "ccnmtl-footprints-static-dev"
 MEDIA_URL = 'https://%s.s3.amazonaws.com/uploads/' % AWS_STORAGE_BUCKET_NAME

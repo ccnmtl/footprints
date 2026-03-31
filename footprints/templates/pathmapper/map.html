@@ -3,9 +3,10 @@
 {% block title %}Pathmapper{% endblock %}
 
 {% block css %}
-<link href="{{STATIC_URL}}css/pathmapper-tool.css" rel="stylesheet">
-<link href="{{STATIC_URL}}js/lib/select2-4.0.10/css/select2.min.css" rel="stylesheet">
-<link href="{{STATIC_URL}}css/select2-custom.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link href="{{STATIC_URL}}css/pathmapper-tool.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}js/lib/select2-4.0.10/css/select2.min.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}css/select2-custom.css" rel="stylesheet">
 {% endblock %}
 
 {% block bodyclass %}pathmapper-tool{% endblock %}
@@ -94,6 +95,7 @@
         load.
     -->
     {{ layers|json_script:"layers" }}
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
     <script type="text/javascript"
         src="//maps.google.com/maps/api/js?key={{settings.GOOGLE_MAP_API}}&libraries=places"></script>
@@ -103,4 +105,5 @@
 
     <script data-main="{{STATIC_URL}}js/app/pathmapper.js"
         src="{{STATIC_URL}}js/lib/require/require.js"></script>
+
 {% endblock %}

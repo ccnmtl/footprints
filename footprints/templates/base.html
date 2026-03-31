@@ -206,7 +206,11 @@
             debug: {% if debug %}'true'{% else %}'false'{% endif %},
             mapKey: '{{settings.GOOGLE_MAP_API}}',
             baseUrl: '//{{ request.get_host }}/',
-            geonamesKey: '{{settings.GEONAMES_KEY}}'
+            geonamesKey: '{{settings.GEONAMES_KEY}}',
+            tileServer: {
+                attribution: '{{settings.TILE_SERVER_ATTRIBUTION}}',
+                url: '{{settings.TILE_SERVER_URL}}'
+            }
         };
 
         jQuery(document).ready(function() {

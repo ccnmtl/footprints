@@ -84,6 +84,8 @@
 {% block css %}
     <link href="{{STATIC_URL}}jquery-ui-1.11.2/jquery-ui.css" rel="stylesheet" />
     <link href="{{STATIC_URL}}bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 {% endblock %}
 
 {% block extrahead %}
@@ -110,6 +112,8 @@
 
 {% block js %}
     <script type="text/javascript" src="//maps.google.com/maps/api/js?key={{settings.GOOGLE_MAP_API}}&libraries=places"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="{{STATIC_URL}}js/underscore-min.js"></script>
     <script src="{{STATIC_URL}}js/backbone-min.js"></script>
     <script src="{{STATIC_URL}}tinymce/tinymce.min.js"></script>
