@@ -21,38 +21,36 @@
             }
             return ctx;
         },
-        mapOptions: {
-            zoom: 10,
-            draggable: false,
-            scrollwheel: false,
-            mapTypeId: google.maps.MapTypeId.ROADMAP,
-            zoomControl: true,
-            zoomControlOptions: {
-                style: google.maps.ZoomControlStyle.SMALL,
-                position: google.maps.ControlPosition.RIGHT_BOTTOM
-            },
-            mapTypeControl: false,
-            streetViewControl: false,
-            fullscreenControl: false,
-            controlSize: 28
-        },
         initializeMap: function() {
-            // Initialize display map
             this.mapElt = jQuery(this.el).find('.footprint-map')[0];
             if (this.mapElt) {
                 var lat = jQuery(this.mapElt).data('latitude');
                 var lng = jQuery(this.mapElt).data('longitude');
-                if (lat && lng) {
-                    var latlng = new google.maps.LatLng(lat, lng);
-                    this.mapOptions.center = latlng;
-                    this.map = new google.maps
-                        .Map(this.mapElt, this.mapOptions);
 
-                    this.marker = new google.maps.Marker({
-                        position: latlng,
-                        map: this.map,
-                        title: jQuery(this.mapElt).data('title')
-                    });
+                if (lat && lng) {
+                    var latlng = [lat, lng];
+
+                    // Create map
+                    this.map = L.map(this.mapElt, {
+                        zoom: 10,
+                        dragging: false,
+                        scrollWheelZoom: false,
+                        zoomControl: true
+                    }).setView(latlng, 10);
+
+                    // Stadia tile layer
+                    L.tileLayer(
+                        Footprints.tileServer.url,
+                        {
+                            maxZoom: 20,
+                            attribution: Footprints.tileServer.attribution
+                        }
+                    ).addTo(this.map);
+
+                    // Marker
+                    this.marker = L.marker(latlng)
+                        .addTo(this.map)
+                        .bindPopup(jQuery(this.mapElt).data('title') || '');
                 }
             }
         },

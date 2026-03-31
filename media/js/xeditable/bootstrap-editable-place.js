@@ -18,22 +18,12 @@ Place editable input.
         this.placeUrl = Footprints.baseUrl + 'api/altname';
 
         // Europe, @todo - allow this to be configurable
-        this.defaultLatLng = new google.maps.LatLng(
-            48.6908333333, 9.14055555556);
+        this.defaultLatLng = [48.6908333333, 9.14055555556];
 
         this.mapOptions = {
-            zoom: 3,
             center: this.defaultLatLng,
-            mapTypeId: google.maps.MapTypeId.ROADMAP,
-            zoomControl: true,
-            zoomControlOptions: {
-                style: google.maps.ZoomControlStyle.SMALL,
-                position: google.maps.ControlPosition.RIGHT_BOTTOM
-            },
-            mapTypeControl: false,
-            streetViewControl: false,
-            fullscreenControl: false,
-            controlSize: 28
+            zoom: 3,
+            zoomControl: true
         };
     };
 
@@ -72,27 +62,26 @@ Place editable input.
         onPlaceClear: function() {
             this.$altname.val(null).trigger('change');
             if (this.marker) {
-                this.marker.setMap(null);
+                this.mapInstance.removeLayer(this.marker);
+                this.marker = null;
             }
         },
         onPlaceChange: function() {
             const value = this.$geoname.select2('data')[0];
+            const latlng = [value.lat, value.lng];
 
-            let latlng = new google.maps.LatLng(value.lat, value.lng);
-
-            // Create a marker for the place.
+            // Remove previous marker
             if (this.marker) {
-                this.marker.setMap(null);
+                this.mapInstance.removeLayer(this.marker);
             }
-            this.marker = new google.maps.Marker({
-                map: this.mapInstance,
-                title: value.text,
-                position: latlng,
-                animation: google.maps.Animation.DROP
-            });
 
-            let bounds = new google.maps.LatLngBounds();
-            bounds.extend(latlng);
+            // Add new marker
+            this.marker = L.marker(latlng, {
+                title: value.text
+            }).addTo(this.mapInstance);
+
+            // Fit map bounds
+            const bounds = L.latLngBounds(latlng, latlng);
             this.mapInstance.fitBounds(bounds);
             this.mapInstance.setZoom(10);
 
@@ -111,9 +100,13 @@ Place editable input.
             this.mapContainer =
                 this.$tpl.find('.map-container')[0];
 
-            this.mapInstance = new google.maps.Map(
-                this.mapContainer,
-                this.mapOptions);
+            this.mapInstance = L.map(this.mapContainer, this.mapOptions);
+
+            // Stadia tiles
+            L.tileLayer(Footprints.tileServer.url, {
+                maxZoom: 20,
+                attribution: Footprints.tileServer.attribution
+            }).addTo(this.mapInstance);
 
             this.$geoname = this.$tpl.find('[name="geoname"]').first();
             this.$geoname.select2({
@@ -211,8 +204,8 @@ Place editable input.
             });
 
             setTimeout(() => {
-                google.maps.event.trigger(this.mapInstance, 'resize');
-                this.mapInstance.setCenter(this.defaultLatLng);
+                this.mapInstance.invalidateSize();
+                this.mapInstance.setView(this.defaultLatLng, this.mapOptions.zoom);
             }, 0);
         },
 
@@ -230,7 +223,7 @@ Place editable input.
 
            @method html2value(html)
         **/
-        html2value: function(html) {
+        html2value: function(html) { 
             return null;
         },
 
@@ -240,7 +233,7 @@ Place editable input.
 
            @method value2str(value)
         **/
-        value2str: function(value) {
+       value2str: function(value) {
             var str = '';
             if (value) {
                 var keys = Object.keys(value);
@@ -263,7 +256,7 @@ Place editable input.
               attribute. If you will always set value by javascript,
               no need to overwrite it
             */
-            return str;
+           return str;
         },
 
         /**
@@ -292,8 +285,9 @@ Place editable input.
             values.error = this.validate();
 
             if (this.marker !== undefined) {
-                values.latitude = this.marker.getPosition().lat();
-                values.longitude = this.marker.getPosition().lng();
+                const latlng = this.marker.getLatLng();
+                values.latitude = latlng.lat;
+                values.longitude = latlng.lng;
                 values.geoname = this.$geoname.select2('data')[0].text;
                 values.geonameId = this.$geoname.select2('data')[0].id;
 
@@ -315,7 +309,7 @@ Place editable input.
         **/
         value2submit: function(values) {
             return {
-                position: this.marker.getPosition().toUrlValue(),
+                position: this.marker.getLatLng().lat + ',' + this.marker.getLatLng().lng,
                 placeId: values.placeId,
                 placeName: values.placeName,
                 canonicalName: values.geoname,

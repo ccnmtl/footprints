@@ -1675,10 +1675,27 @@ body.affix-container {
     padding: 5px 5px;
 }
 
-.object-detail .imprint-map-container .imprint-map-key .legend img {
-    height: 18px;
-    width: auto;
-    margin-left: 10px;
+.object-detail .imprint-map-container .imprint-map-key .legend .imprint-label {
+    float: left;
+}
+
+.object-detail .imprint-map-container .imprint-map-key .legend .imprint-marker,
+.object-detail .imprint-map-container .imprint-map-key .legend .footprint-marker {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 0 2px rgba(0,0,0,0.5);
+    margin: 2px 5px 0 10px;
+    float: left;
+}
+
+.object-detail .imprint-map-container .imprint-map-key .legend .imprint-marker {
+    background-color: #5e98b7;
+}
+
+.object-detail .imprint-map-container .imprint-map-key .legend .footprint-marker {
+    background-color: #ffa881;
 }
 
 .object-detail .footprint-map {
