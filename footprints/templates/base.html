@@ -24,10 +24,13 @@
 
         {% include "ctlsettings/sentry_js.html" %}
 
-        <script src="{{STATIC_URL}}jquery/js/jquery-1.11.3.min.js"></script>
-        <script src="{{STATIC_URL}}tinymce/tinymce.min.js"></script>
+        <script src="{{STATIC_URL}}jquery/js/jquery-1.11.3.min.js"
+                crossorigin="anonymous"></script>
+        <script src="{{STATIC_URL}}tinymce/tinymce.min.js"
+                crossorigin="anonymous"></script>
 
-        <script src="{{STATIC_URL}}js/app/csrf-protection.js"></script>
+        <script src="{{STATIC_URL}}js/app/csrf-protection.js"
+                crossorigin="anonymous"></script>
         <link href="//fonts.googleapis.com/css?family=Asap:400,700,400italic" rel="stylesheet" type="text/css">
         <link href='//fonts.googleapis.com/css?family=Arvo:400,700' rel='stylesheet' type='text/css'>
 
@@ -196,11 +199,14 @@
     </div>
     {% endblock %}
 
-    <script src="{{STATIC_URL}}js/underscore-min.js"></script>
-    <script src="{{STATIC_URL}}js/backbone-min.js"></script>
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="{{STATIC_URL}}js/underscore-min.js"
+            crossorigin="anonymous"></script>
+    <script src="{{STATIC_URL}}js/backbone-min.js"
+            crossorigin="anonymous"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+            crossorigin="anonymous"></script>
 
-    <script type="text/javascript">
+    <script>
         const Footprints = {
             staticUrl: '{{STATIC_URL}}',
             debug: {% if debug %}'true'{% else %}'false'{% endif %},

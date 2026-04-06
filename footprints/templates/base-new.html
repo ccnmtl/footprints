@@ -25,9 +25,12 @@
 
         {% include "ctlsettings/sentry_js.html" %}
 
-        <script src="{{STATIC_URL}}jquery/js/jquery-3.4.1.min.js"></script>
-        <script src="{{STATIC_URL}}tinymce/tinymce.min.js"></script>
-        <script src="{{STATIC_URL}}js/app/csrf-protection.js"></script>
+        <script src="{{STATIC_URL}}jquery/js/jquery-3.4.1.min.js"
+                crossorigin="anonymous"></script>
+        <script src="{{STATIC_URL}}tinymce/tinymce.min.js"
+                crossorigin="anonymous"></script>
+        <script src="{{STATIC_URL}}js/app/csrf-protection.js"
+                crossorigin="anonymous"></script>
 
         <!-- Favicons -->
         <link rel="apple-touch-icon" href="{{STATIC_URL}}img/apple-touch-icon.jpg">
@@ -194,14 +197,17 @@
     </main>
 
 
-    <script src="{{STATIC_URL}}js/underscore-min.js"></script>
-    <script src="{{STATIC_URL}}js/backbone-min.js"></script>
+    <script src="{{STATIC_URL}}js/underscore-min.js"
+            crossorigin="anonymous"></script>
+    <script src="{{STATIC_URL}}js/backbone-min.js"
+            crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
     {% if request.user.is_anonymous %}
-        <script src="{{STATIC_URL}}js/app/login.js"></script>
+    <script src="{{STATIC_URL}}js/app/login.js"
+            crossorigin="anonymous"></script>
 
-        <script type="text/javascript"> 
+        <script> 
            jQuery(document).ready(function() {
               var loginView = new LocalLoginView({
                  el: jQuery("div#login-modal") 
