@@ -46,8 +46,10 @@
 {% endblock %}
 
 {% block js %}
-    <script src="{{STATIC_URL}}js/jquery-circle-progress/circle-progress.js"></script>
-    <script src="{{STATIC_URL}}js/app/footprint-search.js"></script>
+    <script src="{{STATIC_URL}}js/jquery-circle-progress/circle-progress.js"
+            crossorigin="anonymous"></script>
+    <script src="{{STATIC_URL}}js/app/footprint-search.js"
+            crossorigin="anonymous"></script>
 
     <script type="text/javascript">
         jQuery(document).ready(function() {
