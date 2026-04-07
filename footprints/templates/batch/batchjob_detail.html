@@ -10,7 +10,8 @@
 {% endblock %}
 
 {% block js %}
-        <script src="{{STATIC_URL}}js/app/batchjob-detail.js"></script>
+<script src="{{STATIC_URL}}js/app/batchjob-detail.js"
+        crossorigin="anonymous"></script>
         <script type="text/javascript">
             jQuery(document).ready(function() {
                 var view = new BatchJobDetailView({
