@@ -25,15 +25,15 @@
         {% include "ctlsettings/sentry_js.html" %}
 
         <script
-            src="https://code.jquery.com/jquery-3.7.1.min.js"
-            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
-            crossorigin="anonymous"></script>
+            src="https://code.jquery.com/jquery-1.11.3.min.js"
+            integrity="sha256-7LkWEzqTdpEfELxcZZlS6wAx5Ff13zZ83lYO2/ujj7g="
+            crossorigin="anonymous" />
 
         <!-- Fallback if CDN fails -->
         <script>
             if (!window.jQuery) {
                 document.write(
-                    '<script src="{{STATIC_URL}}jquery/js/jquery-3.7.1.min.js" ' +
+                    '<script src="{{STATIC_URL}}jquery/js/jquery-1.11.3.min.js" ' +
                         'crossorigin="anonymous"><\/script>'
                 );
             }
