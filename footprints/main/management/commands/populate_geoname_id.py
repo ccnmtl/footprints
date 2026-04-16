@@ -13,7 +13,7 @@ class Command(BaseCommand):
                      'featureClass=P&featureClass=A&'
                      'username={}&type=json&lat={}&lng={}').format(
                          settings.GEONAMES_KEY, lat, lng)
-        results = requests.get(nearbyUrl)
+        results = requests.get(nearbyUrl, timeout=30)
         the_json = results.json()
         if 'geonames' in the_json:
             return the_json['geonames'][0]
