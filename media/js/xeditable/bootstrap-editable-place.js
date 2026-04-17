@@ -75,12 +75,10 @@ Place editable input.
                 this.mapInstance.removeLayer(this.marker);
             }
 
-            // Add new marker
             this.marker = L.marker(latlng, {
                 title: value.text
             }).addTo(this.mapInstance);
 
-            // Fit map bounds
             const bounds = L.latLngBounds(latlng, latlng);
             this.mapInstance.fitBounds(bounds);
             this.mapInstance.setZoom(10);
@@ -102,7 +100,6 @@ Place editable input.
 
             this.mapInstance = L.map(this.mapContainer, this.mapOptions);
 
-            // Stadia tiles
             L.tileLayer(Footprints.tileServer.url, {
                 maxZoom: 20,
                 attribution: Footprints.tileServer.attribution

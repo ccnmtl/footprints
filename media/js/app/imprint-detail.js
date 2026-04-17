@@ -66,7 +66,7 @@
         },
         iconWithColor: function(color, multiple) {
             return L.divIcon({
-                className: "custom-marker",
+                className: 'custom-marker',
                 html: `
                             <div style="
                                 background-color: ${color};
