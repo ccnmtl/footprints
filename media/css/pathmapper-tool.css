@@ -1084,6 +1084,7 @@ header .btn-priority-hi {
         height: 8.8rem;
         width: calc(100% - 37rem);
         box-shadow: 0 1px 4px -1px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
     }
     .timeline-expanded {
         display: block !important;
