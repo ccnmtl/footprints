@@ -208,7 +208,7 @@
             baseUrl: '//{{ request.get_host }}/',
             geonamesKey: '{{settings.GEONAMES_KEY}}',
             tileServer: {
-                attribution: '{{settings.TILE_SERVER_ATTRIBUTION}}',
+                attribution: '{{settings.TILE_SERVER_ATTRIBUTION|safe}}',
                 url: '{{settings.TILE_SERVER_URL}}'
             }
         };

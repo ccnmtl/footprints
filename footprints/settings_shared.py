@@ -171,8 +171,12 @@ SPECTACULAR_SETTINGS = {
 
 GOOGLE_MAPS_REVERSE_GEOCODE = \
     'https://maps.googleapis.com/maps/api/geocode/json?address={},{}'
+
 TILE_SERVER_ATTRIBUTION = \
-    '&copy; OpenStreetMap contributors &copy; Stadia Maps'
+    '&copy; <a href="https://stadiamaps.com/" target="_blank">Stadia Maps</a>&nbsp;|&nbsp;' \
+    '&copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a>&nbsp;|&nbsp;' \
+    '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>'
+
 TILE_SERVER_URL = \
     'https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}.png'
 
