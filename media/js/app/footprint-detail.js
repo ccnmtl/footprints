@@ -35,14 +35,16 @@
                         zoom: 10,
                         dragging: false,
                         scrollWheelZoom: false,
-                        zoomControl: true
+                        zoomControl: false,
+                        doubleClickZoom: false,
+                        touchZoom: false,
+                        boxZoom: false,
                     }).setView(latlng, 10);
 
                     // Stadia tile layer
                     L.tileLayer(
                         Footprints.tileServer.url,
                         {
-                            maxZoom: 20,
                             attribution: Footprints.tileServer.attribution
                         }
                     ).addTo(this.map);
