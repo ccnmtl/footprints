@@ -1,5 +1,3 @@
-/* global OverlappingMarkerSpiderfier */
-
 (function() {
     window.ImprintView = Backbone.View.extend({
         events: {
@@ -10,17 +8,16 @@
             'click .share-link': 'onShareLink'
         },
         initialize: function(options) {
-            _.bindAll(this, 'initializeMap', 'attachInfoWindow', 'resize',
+            _.bindAll(this, 'initializeMap', 'resize',
                 'onClickBookCopy', 'onClickFootprint', 'onClickImprint',
-                'onClickWork', 'updateMarkerIcons', 'syncMap',
+                'onClickMarker', 'onClickWork', 'syncMap',
                 'onShareLink', 'clearState', 'setState',
                 'addHistory', 'popHistory');
 
             this.urlBase = options.urlBase;
 
-            this.footprintIcon = this.iconWithColor('ffa881');
-            this.imprintIcon = this.iconWithColor('5e98b7');
-            this.spiderIcon = this.iconWithColor('ff6e2d', true);
+            this.footprintIcon = this.iconWithColor('#ffa881');
+            this.imprintIcon = this.iconWithColor('#5e98b7');
 
             this.shareTemplate =
                 _.template(jQuery(options.shareTemplate).html());
@@ -33,35 +30,6 @@
             this.initializeMap(options);
             jQuery(this.el).find('[data-toggle="tooltip"]').tooltip();
         },
-        mapOptions: {
-            zoom: 10,
-            maxZoom: 10,
-            draggable: true,
-            scrollwheel: false,
-            navigationControl: false,
-            mapTypeControl: false,
-            scaleControl: false,
-            mapTypeId: google.maps.MapTypeId.ROADMAP,
-            zoomControl: true,
-            zoomControlOptions: {
-                style: google.maps.ZoomControlStyle.SMALL,
-                position: google.maps.ControlPosition.RIGHT_BOTTOM
-            },
-            streetViewControl: false
-        },
-        updateMarkerIcons: function() {
-            for (var key in this.markers) {
-                if (Object.prototype.hasOwnProperty.call(this.markers, key)) {
-                    var icon = this.getIcon(this.markers[key].marker.dataId);
-                    this.markers[key].marker.setIcon(icon);
-                }
-            }
-
-            var markers = this.spiderfier.markersNearAnyOtherMarker();
-            markers.forEach((m) => {
-                m.setIcon(this.spiderIcon);
-            });
-        },
         scrollToItem: function($elt) {
             var eltTop = $elt.offset().top - 150;
             var mapTop = jQuery('.foot').offset().top -
@@ -70,79 +38,6 @@
             jQuery('html, body').animate({
                 scrollTop: Math.min(eltTop, mapTop) + 'px'
             }, 900);
-        },
-        attachInfoWindow: function(infowindow, map, marker, content) {
-            var self = this;
-
-            this.spiderfier.addListener('click', function(marker, event) {
-                infowindow.setContent(marker.desc);
-                infowindow.open(map, marker);
-
-                var q = '[data-map-id="' + marker.dataId + '"]';
-                var $elt = self.$el.find(q).first();
-                jQuery(self.el).find('.infocus').removeClass('infocus');
-                self.setState(
-                    $elt.data('imprint-id'),
-                    $elt.data('copy-id'),
-                    $elt.data('footprint-id'),
-                    false /* sync map */);
-            });
-
-            this.spiderfier.addListener('spiderfy', function(markers) {
-                markers.forEach(function(m) {
-                    m.setIcon(self.getIcon(m.dataId));
-                });
-
-                infowindow.close();
-            });
-
-            this.spiderfier.addListener('unspiderfy', function(markers) {
-                markers.forEach(function(m) {
-                    m.setIcon(self.spiderIcon);
-                });
-            });
-
-            google.maps.event.addListener(map, 'click', function() {
-                infowindow.close();
-            });
-
-            // *
-            // http://en.marnoto.com/2014/09/
-            //     5-formas-de-personalizar-infowindow.html
-            // START INFOWINDOW CUSTOMIZE.
-            // The google.maps.event.addListener() event expects
-            // the creation of the infowindow HTML structure 'domready'
-            // and before the opening of the infowindow,
-            // defined styles are applied.
-            // *
-            google.maps.event.addListener(infowindow, 'domready', function() {
-                // Reference to the DIV that wraps the bottom of infowindow
-                var $iwOuter = jQuery('.gm-style-iw');
-
-                /* Since this div is in a position prior to .gm-div style-iw.
-                 * We use jQuery and create a iwBackground variable,
-                 * and took advantage of the existing reference .gm-style-iw
-                 * for the previous div with .prev().
-                */
-                var iwBackground = $iwOuter.prev();
-
-                // Removes background shadow DIV
-                iwBackground.children(':nth-child(2)')
-                    .css({'display': 'none'});
-
-                // Removes white background DIV
-                iwBackground.children(':nth-child(4)')
-                    .css({'display': 'none'});
-
-                // Changes the desired tail shadow color.
-                iwBackground.children(':nth-child(3)')
-                    .find('div').children()
-                    .css({'z-index': '1'});
-
-                // Reference to the div that groups the close button elements.
-                var iwCloseBtn = $iwOuter.next();
-                iwCloseBtn.css({top: '22px', right: '57px'});
-            });
         },
         getVisibleContentHeight: function() {
             // the more standards compliant browsers
@@ -170,92 +65,91 @@
                 this.footprintIcon : this.imprintIcon;
         },
         iconWithColor: function(color, multiple) {
-            var c = multiple ? '%2B' : '%E2%80%A2';
-            return 'https://chart.googleapis.com/chart?' +
-            'chst=d_map_pin_letter&chld=' + c + '|' + color;
+            return L.divIcon({
+                className: 'custom-marker',
+                html: `
+                            <div style="
+                                background-color: ${color};
+                                width: 16px;
+                                height: 16px;
+                                border-radius: 50%;
+                                border: 2px solid white;
+                                box-shadow: 0 0 2px rgba(0,0,0,0.5);
+                            "></div>
+                        `,
+                iconSize: [16, 16],
+                iconAnchor: [8, 8],
+            });
         },
         initializeMap: function(options) {
             var self = this;
-
-            // compile lat/longs
             var markers = jQuery(this.el).find('.map-marker');
             if (markers.length > 0) {
-                this.infowindow = new google.maps.InfoWindow({
-                    maxWidth: 350
-                });
 
                 this.resize();
 
                 var mapElt = jQuery(this.el).find('.imprint-map')[0];
-                this.map = new google.maps.Map(mapElt, this.mapOptions);
 
-                this.bounds = new google.maps.LatLngBounds();
-                this.spiderfier = new OverlappingMarkerSpiderfier(this.map, {
-                    keepSpiderfied: true,
-                    markersWontMove: true,
-                    markersWontHide: false});
+                this.map = L.map(mapElt);
+
+                L.tileLayer(
+                    Footprints.tileServer.url,
+                    {
+                        maxZoom: 20,
+                        detectRetina: true,
+                        attribution: Footprints.tileServer.attribution
+                    }
+                ).addTo(this.map);
+
+                this.bounds = L.latLngBounds();
+                this.clusterGroup = L.markerClusterGroup({
+                    spiderfyOnMaxZoom: true
+                });
+                this.map.addLayer(this.clusterGroup);
 
                 this.markers = {};
-                for (var i=0; i < markers.length; i++) {
+
+                for (var i = 0; i < markers.length; i++) {
                     var m = markers[i];
                     var id = jQuery(m).data('related');
                     var lat = jQuery(m).data('latitude');
                     var lng = jQuery(m).data('longitude');
-                    var latlng = new google.maps.LatLng(lat, lng);
+                    var latlng = [lat, lng];
 
                     var content = jQuery(m).html();
 
-                    var marker = new google.maps.Marker({
-                        position: latlng,
-                        map: this.map,
+                    var marker = L.marker(latlng, {
                         icon: this.getIcon(id),
-                        desc: content,
                         dataId: id
                     });
+
+                    marker.bindPopup(content);
+
+                    marker.on('click', this.onClickMarker);
+
                     this.bounds.extend(latlng);
 
-                    this.markers[id] = {'marker': marker, 'content': content};
+                    this.markers[id] = {
+                        marker: marker,
+                        content: content
+                    };
+                    this.clusterGroup.addLayer(marker);
                 }
 
                 this.map.fitBounds(this.bounds);
-                this.attachInfoWindow(this.infowindow, this.map);
 
-                google.maps.event.addListener(this.map, 'idle', function() {
+                this.map.whenReady(function() {
                     if (!self.mapLoaded) {
                         self.mapLoaded = true;
-                        self.projection = self.map.getProjection();
+
                         self.setState(
                             options.state.imprint,
                             options.state.copy,
                             options.state.footprint,
-                            true);
-                        self.updateMarkerIcons();
+                            true
+                        );
                     }
                 });
-
-                google.maps.event.addListener(this.map, 'zoom_changed',
-                    function() {
-                        if (self.mapLoaded) {
-                            self.updateMarkerIcons();
-                        }
-                    }
-                );
-
-                google.maps.event.addListener(
-                    this.map,
-                    'bounds_changed',
-                    function() {
-                        // An infowindow opening throws off the fitBounds
-                        // logic. Call fitBounds again when necessary
-                        if (self.mapLoaded && self.activeBounds) {
-                            self.map.fitBounds(self.activeBounds);
-                            delete self.activeBounds;
-
-                            self.map.setZoom(self.map.getZoom() - 1);
-                        }
-                    }
-                );
-
                 jQuery('.imprint-map-container').affix({
                     offset: {
                         top: jQuery('.imprint-map-container').offset().top,
@@ -263,6 +157,22 @@
                     }
                 });
             }
+        },
+        onClickMarker: function(evt) {
+            var m = evt.target;
+
+            // find corresponding list item
+            var q = '[data-map-id="' + m.options.dataId + '"]';
+            var $elt = this.$el.find(q).first();
+
+            jQuery(this.el).find('.infocus').removeClass('infocus');
+
+            this.setState(
+                $elt.data('imprint-id'),
+                $elt.data('copy-id'),
+                $elt.data('footprint-id'),
+                false // sync map
+            );
         },
         onClickWork: function(evt) {
             this.clearState();
@@ -325,17 +235,12 @@
                 }
             }
 
-            var bounds = new google.maps.LatLngBounds();
+            var bounds = L.latLngBounds();
             for (var key in this.markers) {
                 if (Object.prototype.hasOwnProperty.call(this.markers, key)) {
                     var mk = this.markers[key].marker;
                     if (subset.indexOf(key) > -1) {
-                        mk.setVisible(true);
-                        bounds.extend(mk.getPosition());
-                        this.spiderfier.addMarker(mk);
-                    } else {
-                        mk.setVisible(false);
-                        this.spiderfier.removeMarker(mk);
+                        bounds.extend(mk.getLatLng());
                     }
                 }
             }
@@ -349,9 +254,10 @@
             } else {
                 this.$el.find('.empty-map-message').hide();
                 this.activeBounds = bounds;
-                this.infowindow.setContent(this.markers[highlight].content);
-                this.infowindow.open(
-                    this.map, this.markers[highlight].marker);
+                this.popup = L.popup()
+                    .setLatLng(this.markers[highlight].marker.getLatLng())
+                    .setContent(this.markers[highlight].content)
+                    .openOn(this.map);
             }
         },
         inView: function($elt) {
@@ -388,8 +294,9 @@
             }
         },
         clearState: function() {
-            this.infowindow.close();
-            this.spiderfier.clearMarkers();
+            if (this.popup) {
+                this.map.closePopup(this.popup);
+            }
             jQuery(this.el).find('.infocus').removeClass('infocus');
         },
         popHistory: function(evt) {

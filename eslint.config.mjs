@@ -27,6 +27,7 @@ export default [...compat.extends("eslint:recommended"),
             Promise: true,
             MarkerClusterer: true,
             Highcharts: true,
+            L: true
         },
 
         ecmaVersion: 9,
