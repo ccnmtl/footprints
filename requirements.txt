@@ -34,7 +34,7 @@ cryptography==46.0.7  # pyOpenSSL
 
 
 chardet==7.4.0.post1
-idna==3.11
+idna==3.12
 urllib3==2.6.3  # sentry-sdk
 
 requests==2.33.0
