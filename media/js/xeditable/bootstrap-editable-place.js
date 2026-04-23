@@ -75,12 +75,10 @@ Place editable input.
                 this.mapInstance.removeLayer(this.marker);
             }
 
-            // Add new marker
             this.marker = L.marker(latlng, {
                 title: value.text
             }).addTo(this.mapInstance);
 
-            // Fit map bounds
             const bounds = L.latLngBounds(latlng, latlng);
             this.mapInstance.fitBounds(bounds);
             this.mapInstance.setZoom(10);
@@ -102,7 +100,6 @@ Place editable input.
 
             this.mapInstance = L.map(this.mapContainer, this.mapOptions);
 
-            // Stadia tiles
             L.tileLayer(Footprints.tileServer.url, {
                 maxZoom: 20,
                 attribution: Footprints.tileServer.attribution
@@ -205,7 +202,8 @@ Place editable input.
 
             setTimeout(() => {
                 this.mapInstance.invalidateSize();
-                this.mapInstance.setView(this.defaultLatLng, this.mapOptions.zoom);
+                this.mapInstance.setView(
+                    this.defaultLatLng, this.mapOptions.zoom);
             }, 0);
         },
 
@@ -223,7 +221,7 @@ Place editable input.
 
            @method html2value(html)
         **/
-        html2value: function(html) { 
+        html2value: function(html) {
             return null;
         },
 
@@ -233,7 +231,7 @@ Place editable input.
 
            @method value2str(value)
         **/
-       value2str: function(value) {
+        value2str: function(value) {
             var str = '';
             if (value) {
                 var keys = Object.keys(value);
@@ -256,7 +254,7 @@ Place editable input.
               attribute. If you will always set value by javascript,
               no need to overwrite it
             */
-           return str;
+            return str;
         },
 
         /**
@@ -309,7 +307,8 @@ Place editable input.
         **/
         value2submit: function(values) {
             return {
-                position: this.marker.getLatLng().lat + ',' + this.marker.getLatLng().lng,
+                position: this.marker.getLatLng().lat +
+                    ',' + this.marker.getLatLng().lng,
                 placeId: values.placeId,
                 placeName: values.placeName,
                 canonicalName: values.geoname,

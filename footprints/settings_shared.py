@@ -171,8 +171,12 @@ SPECTACULAR_SETTINGS = {
 
 GOOGLE_MAPS_REVERSE_GEOCODE = \
     'https://maps.googleapis.com/maps/api/geocode/json?address={},{}'
+
 TILE_SERVER_ATTRIBUTION = \
-    '&copy; OpenStreetMap contributors &copy; Stadia Maps'
+    '&copy; <a href="https://stadiamaps.com/" target="_blank">Stadia Maps</a>&nbsp;|&nbsp;' \
+    '&copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a>&nbsp;|&nbsp;' \
+    '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>'
+
 TILE_SERVER_URL = \
     'https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}.png'
 
@@ -189,4 +193,5 @@ ACCOUNT_ACTIVATION_DAYS = 7  # One-week activation window
 REGISTRATION_AUTO_LOGIN = False  # Do not automatically log the user in.
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
+SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
+

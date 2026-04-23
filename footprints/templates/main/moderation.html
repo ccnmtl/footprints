@@ -3,7 +3,8 @@
 {% block title %}Moderation{% endblock %}
 
 {% block js %}
-    <script src="{{STATIC_URL}}js/tablesorter/jquery.tablesorter.combined.min.js"></script>
+<script src="{{STATIC_URL}}js/tablesorter/jquery.tablesorter.combined.min.js"
+        crossorigin="anonymous"></script>
     <script>
         jQuery(document).ready(function () {
             jQuery('.table-moderation').bind('filterEnd', function(event, config) {

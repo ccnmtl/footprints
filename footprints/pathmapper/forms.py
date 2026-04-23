@@ -231,10 +231,16 @@ class ModelSearchFormEx(ModelSearchForm):
         self.clean_range('pub_range')
         self.clean_range('footprint_range')
 
-        if (cleaned_data.get('pub_start', None) and
-            cleaned_data.get('pub_end', None) and
-            cleaned_data['pub_start'] >
-                cleaned_data['pub_end']):
+        pub_start = cleaned_data.get('pub_start', None)
+        pub_end = cleaned_data.get('pub_end', None)
+
+        if (
+                pub_start is not None and
+                pub_end is not None and
+                type(pub_start) is int and
+                type(pub_end) is int and
+                pub_start > pub_end
+        ):
             self._errors['pub_start'] = self.error_class([
                 'Start year must be less than end year'])
 

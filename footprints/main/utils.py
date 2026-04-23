@@ -123,7 +123,7 @@ class GeonameUtil(object):
         url = ('https://secure.geonames.org/getJSON?'
                'username={}&type=json&geonameId={}').format(
                    settings.GEONAMES_KEY, gid)
-        results = requests.get(url)
+        results = requests.get(url, timeout=30)
 
         if results.status_code == 404:
             raise ValueError(f'Geoname ID {gid} not found.')

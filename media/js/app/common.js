@@ -8,7 +8,7 @@ if (Footprints.debug == 'true') {
 requirejs.config({
     baseUrl: Footprints.staticUrl,
     paths: {
-        'jquery': 'jquery/js/jquery-3.4.1.min',
+        'jquery': 'jquery/js/jquery-3.7.1.min',
         'layerListVue': 'js/app/components/layerlistvue',
         'layerFormVue': 'js/app/components/layerformvue',
         'layerMapVue': 'js/app/components/layermapvue',

@@ -66,7 +66,7 @@
         },
         iconWithColor: function(color, multiple) {
             return L.divIcon({
-                className: "custom-marker",
+                className: 'custom-marker',
                 html: `
                             <div style="
                                 background-color: ${color};
@@ -102,7 +102,9 @@
                 ).addTo(this.map);
 
                 this.bounds = L.latLngBounds();
-                this.clusterGroup = L.markerClusterGroup({ spiderfyOnMaxZoom: true });
+                this.clusterGroup = L.markerClusterGroup({
+                    spiderfyOnMaxZoom: true
+                });
                 this.map.addLayer(this.clusterGroup);
 
                 this.markers = {};
@@ -235,12 +237,12 @@
 
             var bounds = L.latLngBounds();
             for (var key in this.markers) {
-              if (Object.prototype.hasOwnProperty.call(this.markers, key)) {
-                var mk = this.markers[key].marker;
-                if (subset.indexOf(key) > -1) {
-                  bounds.extend(mk.getLatLng());
+                if (Object.prototype.hasOwnProperty.call(this.markers, key)) {
+                    var mk = this.markers[key].marker;
+                    if (subset.indexOf(key) > -1) {
+                        bounds.extend(mk.getLatLng());
+                    }
                 }
-              }
             }
 
             if (subset.length < 1) {
@@ -253,9 +255,9 @@
                 this.$el.find('.empty-map-message').hide();
                 this.activeBounds = bounds;
                 this.popup = L.popup()
-                  .setLatLng(this.markers[highlight].marker.getLatLng())
-                  .setContent(this.markers[highlight].content)
-                  .openOn(this.map);
+                    .setLatLng(this.markers[highlight].marker.getLatLng())
+                    .setContent(this.markers[highlight].content)
+                    .openOn(this.map);
             }
         },
         inView: function($elt) {

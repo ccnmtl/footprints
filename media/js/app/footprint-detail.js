@@ -30,24 +30,23 @@
                 if (lat && lng) {
                     var latlng = [lat, lng];
 
-                    // Create map
                     this.map = L.map(this.mapElt, {
                         zoom: 10,
                         dragging: false,
                         scrollWheelZoom: false,
-                        zoomControl: true
+                        zoomControl: false,
+                        doubleClickZoom: false,
+                        touchZoom: false,
+                        boxZoom: false,
                     }).setView(latlng, 10);
 
-                    // Stadia tile layer
                     L.tileLayer(
                         Footprints.tileServer.url,
                         {
-                            maxZoom: 20,
                             attribution: Footprints.tileServer.attribution
                         }
                     ).addTo(this.map);
 
-                    // Marker
                     this.marker = L.marker(latlng)
                         .addTo(this.map)
                         .bindPopup(jQuery(this.mapElt).data('title') || '');
