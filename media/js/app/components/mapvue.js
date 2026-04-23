@@ -44,7 +44,7 @@ define(maplibs, function($, layermap, utils) {
                 const placeId = params.placeId;
                 if (!(placeId in this.places)) {
                     // Initialize a new place
-                    this.places[placeId] = {    
+                    this.places[placeId] = {
                         id: placeId,
                         title: params.placeTitle,
                         latlng: params.latlng,
@@ -82,7 +82,6 @@ define(maplibs, function($, layermap, utils) {
             deleteLayer: function(layer) {
                 // Remove all points that are attached to the specified layer
                 // If the place no longer has references, hide it & delete it
-                // eslint-disable-next-line no-unused-vars
                 for (let [key, place] of Object.entries(this.places)) {
                     for (let i = place.points.length - 1; i >= 0; i--) {
                         if (place.points[i].layer.id === layer.id) {
@@ -117,7 +116,9 @@ define(maplibs, function($, layermap, utils) {
             this.activePlace = null;
             this.activeIcon = L.divIcon({
                 className: 'pathmapper-active-marker',
-                html: `<img src="${Footprints.staticUrl}img/pathmapper-selected-location.svg" style="width:26px;height:35px;">`,
+                html: '<img src="' + Footprints.staticUrl +
+                    'img/pathmapper-selected-location.svg"' +
+                    'style="width:26px;height:35px;">',
                 iconAnchor: [13, 35]
             });
         },
