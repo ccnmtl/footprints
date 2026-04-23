@@ -13,19 +13,19 @@ define(['jquery', 'utils'], function($, utils) {
                     'pathmapper/route/?page=' + pageNumber;
             },
             addLine: function(coords) {
-                return new google.maps.Polyline({
-                    path: coords,
-                    geodesic: true,
-                    strokeColor: '#cb8d78',
-                    strokeOpacity: .6,
-                    strokeWeight: 1
-                });
+                return L.polyline(coords, {
+                    color: '#cb8d78',
+                    opacity: 0.6,
+                    weight: 1
+                }).addTo(this.map);
             },
             addPoint: function(id, title, type, copy, footprint, latlng, dt) {
+                const ll = L.latLng(latlng.lat, latlng.lng);
+
                 this.$emit('add-point', {
                     placeId: id,
                     placeTitle: title,
-                    latlng: latlng,
+                    latlng: ll,
                     point: {
                         layer: {
                             'id': this.layer.id,
@@ -37,7 +37,7 @@ define(['jquery', 'utils'], function($, utils) {
                         sortBy: dt
                     }
                 });
-                return latlng;
+                return ll;
             },
             addImprint: function(bookcopy) {
                 const latlng = {
@@ -64,7 +64,7 @@ define(['jquery', 'utils'], function($, utils) {
             },
             clear: function() {
                 for (let route of this.lines) {
-                    route.setMap(null);
+                    route.remove();
                     route = null;
                 }
                 this.lines = [];
@@ -118,9 +118,12 @@ define(['jquery', 'utils'], function($, utils) {
                 if (oldVal === newVal) {
                     return;
                 }
-                const map = newVal ? this.map : null;
                 for (let route of this.lines) {
-                    route.setMap(map);
+                    if (newVal) {
+                        route.addTo(this.map);
+                    } else if (this.map.hasLayer(route)) {
+                        route.remove();
+                    }
                 }
                 this.$emit('update-layer',
                     {id: this.layer.id, visible: newVal});

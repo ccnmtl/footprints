@@ -108,7 +108,6 @@ requirejs(['./common'], function(common) {
                     // Setup CSRF configuration and busy states
                     utils.ajaxSetup();
 
-                    // eslint-disable-next-line
                     window.addEventListener('beforeunload', this.beforeUnload);
 
                     // Accessing through a permalink?

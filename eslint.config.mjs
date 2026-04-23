@@ -49,7 +49,7 @@ export default [...compat.extends("eslint:recommended"),
             args: "none",
         }],
 
-        quotes: ["error", "single"],
+        quotes: ["error", "single", { "allowTemplateLiterals": true }],
         semi: ["error", "always"],
 
         "max-len": [2, {
