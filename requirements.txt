@@ -34,7 +34,7 @@ cryptography==46.0.7  # pyOpenSSL
 
 
 chardet==7.4.0.post1
-idna==3.12
+idna==3.13
 urllib3==2.6.3  # sentry-sdk
 
 requests==2.33.0
@@ -96,9 +96,9 @@ s3transfer==0.16.0
 jmespath==1.1.0
 
 botocore>=1.41.6,<1.42.0
-boto3>=1.42.93,<1.43.0
+boto3>=1.42.95,<1.43.0
 
-certifi==2026.2.25  # for pysolr, sentry-sdk
+certifi==2026.4.22  # for pysolr, sentry-sdk
 backports.tarfile==1.2.0  # needed by newer setuptools
 
 pysolr==3.11.0
