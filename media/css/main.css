@@ -2403,6 +2403,30 @@ th.sortable.tablesorter-headerDesc,
 	position: relative;
 }
 
+.advanced-search-filter .filter-level:after, .advanced-search-filter .filter-level:before {
+	bottom: 100%;
+	right: 110px;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.advanced-search-filter .filter-level:after {
+	border-color: rgba(240, 240, 240, 0);
+	border-bottom-color: #f0f0f0;
+	border-width: 10px;
+	margin-right: 1px;
+}
+.advanced-search-filter .filter-level:before {
+	border-color: rgba(153, 153, 153, 0);
+	border-bottom-color: #999;
+	border-width: 11px;
+	margin-left: -11px;
+}
+
 .advanced-search-filter .col-q-field,
 .advanced-search-filter .col-q-error,
 .advanced-search-filter .col-q {
@@ -2491,30 +2515,6 @@ th.sortable.tablesorter-headerDesc,
     font-size: 14px;
     font-weight: 700;
     text-align: right;
-}
-
-.advanced-search-filter .filter-level:after, .advanced-search-filter .filter-level:before {
-	bottom: 100%;
-	right: 110px;
-	border: solid transparent;
-	content: " ";
-	height: 0;
-	width: 0;
-	position: absolute;
-	pointer-events: none;
-}
-
-.advanced-search-filter .filter-level:after {
-	border-color: rgba(240, 240, 240, 0);
-	border-bottom-color: #f0f0f0;
-	border-width: 10px;
-	margin-right: 1px;
-}
-.advanced-search-filter .filter-level:before {
-	border-color: rgba(153, 153, 153, 0);
-	border-bottom-color: #999;
-	border-width: 11px;
-	margin-left: -11px;
 }
 
 .advanced-search-filter .filter-level .start-year,
