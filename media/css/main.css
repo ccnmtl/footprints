@@ -2387,15 +2387,13 @@ th.sortable.tablesorter-headerDesc,
 
 .advanced-search-filter {
     background: #f0f0f0 url("../img/fp_section_bg.png") repeat;
-    padding: 10px 15px;
-    margin: 0 -15px;
+    padding: 10px;
 }
 
 .advanced-search-filter .search-level,
-.advanced-search-filter .error-level
-{
+.advanced-search-filter .error-level {
     position: relative;
-    margin: 0;
+    padding: 10px 20px;
 }
 
 .advanced-search-filter .filter-level {
@@ -2407,7 +2405,7 @@ th.sortable.tablesorter-headerDesc,
 
 .advanced-search-filter .filter-level:after, .advanced-search-filter .filter-level:before {
 	bottom: 100%;
-	right: 55px;
+	right: 110px;
 	border: solid transparent;
 	content: " ";
 	height: 0;
@@ -2433,7 +2431,8 @@ th.sortable.tablesorter-headerDesc,
 .advanced-search-filter .col-q-error,
 .advanced-search-filter .col-q {
     float: left;
-    width: 150px;
+    width: 200px;
+    margin-right: 15px;
 }
 
 .advanced-search-filter .col-fyear-field,
@@ -2442,7 +2441,23 @@ th.sortable.tablesorter-headerDesc,
 .advanced-search-filter .col-pub-year
 {
     float: left;
-    width: 200px;
+    width: 150px;
+    margin-right: 15px;
+    margin-bottom: 15px;
+}
+
+.advanced-search-filter .col-footprint-year input.start-year,
+.advanced-search-filter .col-footprint-year button.toggle-range,
+.advanced-search-filter .col-footprint-year input.end-year,
+.advanced-search-filter .col-pub-year input.start-year,
+.advanced-search-filter .col-pub-year button.toggle-range,
+.advanced-search-filter .col-pub-year input.end-year {
+    margin-bottom: 4px;
+}
+
+.advanced-search-filter .col-footprint-year .form-group,
+.advanced-search-filter .col-pub-year .form-group {
+    margin-bottom: 0px !important;
 }
 
 .advanced-search-filter .col-submit
@@ -2468,7 +2483,7 @@ th.sortable.tablesorter-headerDesc,
 }
 
 .advanced-search-filter .search-level button {
-    margin-top: 25px;
+
 }
 
 .advanced-search-filter .search-level button.btn-gray {
@@ -2480,12 +2495,6 @@ th.sortable.tablesorter-headerDesc,
 .advanced-search-filter .col-footprint-year .toggle-range {
     display: inline-block;
     vertical-align: middle;
-}
-
-.advanced-search-filter .search-level .toggle-range {
-    margin: 0 2px;
-    padding-top: 2px;
-    line-height: 32px;
 }
 
 .advanced-search-filter .toggle-range:before {
@@ -2500,14 +2509,12 @@ th.sortable.tablesorter-headerDesc,
     content: "\e083";
 }
 
-.advanced-search-filter .filter-marker {
-    margin-top: 30px;
-    float: right;
-    width: 130px;
-    vertical-align: bottom;
-    text-align: center;
+.filter-marker {
+    background: #f0f0f0 url("../img/fp_section_bg.png") repeat;
+    padding: 0 10px;
     font-size: 14px;
     font-weight: 700;
+    text-align: right;
 }
 
 .advanced-search-filter .filter-level .start-year,
@@ -2551,6 +2558,19 @@ th.sortable.tablesorter-headerDesc,
 
 .results-navigation {
     margin-top: 10px;
+}
+
+.btn-paginate {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.results-navigation button.toggle-view {
+    margin-top: 10px;
+}
+
+.results-navigation span.page-label {
+    display: none;
 }
 
 .total-results-count {
@@ -3173,8 +3193,6 @@ p.decoy {
     .advanced-search-filter .col-q-field,
     .advanced-search-filter .col-q-error,
     .advanced-search-filter .col-q {
-        padding-left: 15px;
-        padding-right: 15px;
         width: 200px;
     }
     .advanced-search-filter .col-fyear-field,
@@ -3190,11 +3208,25 @@ p.decoy {
     .advanced-search-filter .col-submit {
         padding-left: 0px;
         padding-right: 15px;
-        width: 369px;
+        width: 265px;
+        margin-top: 24px;
     }
 
     .object-detail.writtenwork .imprint-list-container dl dd {
         padding-left: 120px;
+    }
+
+    .btn-paginate {
+        margin-top: 0px;
+        margin-bottom: 10px;
+    }
+
+    .results-navigation button.toggle-view {
+        margin-top: 0px;
+    }
+
+    .results-navigation span.page-label {
+        display: inline;
     }
 }
 
@@ -3202,8 +3234,6 @@ p.decoy {
     .advanced-search-filter .col-q-field,
     .advanced-search-filter .col-q-error,
     .advanced-search-filter .col-q {
-        padding-left: 15px;
-        padding-right: 15px;
         width: 300px;
     }
     .advanced-search-filter .col-fyear-field,
@@ -3219,7 +3249,12 @@ p.decoy {
     .advanced-search-filter .col-submit {
         padding-left: 0px;
         padding-right: 15px;
-        width: 469px;
+        width: 360px;
+        margin-top: 24px;
+    }
+    .btn-paginate {
+        margin-top: 0px;
+        margin-bottom: 0px;
     }
 }
 
