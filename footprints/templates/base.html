@@ -222,7 +222,6 @@
         const Footprints = {
             staticUrl: '{{STATIC_URL}}',
             debug: {% if debug %}'true'{% else %}'false'{% endif %},
-            mapKey: '{{settings.GOOGLE_MAP_API}}',
             baseUrl: '//{{ request.get_host }}/',
             geonamesKey: '{{settings.GEONAMES_KEY}}',
             tileServer: {

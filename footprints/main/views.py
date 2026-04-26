@@ -43,7 +43,6 @@ def django_settings(request):
     return {
         'settings':
             {
-                'GOOGLE_MAP_API': getattr(settings, 'GOOGLE_MAP_API', ''),
                 'GEONAMES_KEY': getattr(settings, 'GEONAMES_KEY', ''),
                 'TILE_SERVER_ATTRIBUTION':
                     getattr(settings, 'TILE_SERVER_ATTRIBUTION', ''),

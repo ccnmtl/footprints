@@ -28,8 +28,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # Or send them to /dev/null
 #EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
 
-GOOGLE_MAP_API = '<your google map api'
-
 # This setting runs celery as an in-memory process
 CELERY_ALWAYS_EAGER = True
 BROKER_BACKEND = 'memory'
