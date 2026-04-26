@@ -17,7 +17,7 @@
         </a>
     </div>
     <div class="pull-right page-count">
-        Page <input data-base-url="{{base_url}}"
+        <span class="page-label">Page</span> <input data-base-url="{{base_url}}"
                 class="form-control page-number" type="text"
                 value="{{page_obj.number}}"> of <span class="max-page">{{paginator.num_pages}}</span>
         <p class="error-block small">
@@ -36,7 +36,7 @@
             {% else %}
                 href="#"
             {% endif %}>
-            <span class="glyphicon glyphicon-backward" aria-hidden="true"></span> Previous
+            <span class="glyphicon glyphicon-backward" aria-hidden="true"></span> Prev
         </a>
     </div>
 {% endif %}
