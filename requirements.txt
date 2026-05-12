@@ -37,7 +37,7 @@ chardet==7.4.0.post1
 idna==3.14
 urllib3==2.7.0  # sentry-sdk
 
-requests==2.33.0
+requests==2.34.0
 logilab-common==2.1.0
 lazy-object-proxy==1.12.0
 wrapt==2.1.0
