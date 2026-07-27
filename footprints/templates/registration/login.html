@@ -2,6 +2,19 @@
 
 {% block title %}Log in{% endblock %}
 
+{% block extrahead %}
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async
+        defer></script>
+{% endblock %}
+
+{% block js %}
+    <script>
+        function enableSubmit() {
+            document.getElementById("guest-submit").disabled = false;
+        }
+    </script>
+{% endblock %}
+
 {% block content %}
 <div class="row justify-content-md-center">
     <div class="col-md-auto text-center my-5">
@@ -41,9 +54,12 @@
             </div>
             <input id="guest-login" class="btn btn-primary" type="button" value="Guest Log In" {% if form.errors %}style="display: none"{% endif %}
                 onclick="jQuery('.login-local-form').show(); jQuery(this).hide(); return false;"/>
-            <input class="btn btn-primary login-local-form" type="submit" value="Log In" {% if not form.errors %}style="display: none;"{% endif %} />                        
+            <input class="btn btn-primary login-local-form" type="submit" value="Log In" {% if not form.errors %}style="display: none;"{% endif %}
+                id="guest-submit" disabled />                        
             <input type="hidden" name="next" value="{{ next|urlencode }}" />
             <p class="small pt-2"><a href="/accounts/password_reset/">Forgot Password?</a></p>
+            <div class="cf-turnstile mt-2" data-sitekey="{{ TURNSTILE_SITE_KEY }}"
+                data-callback="enableSubmit" ></div>
         </form>
 
         <hr class="seperator" />

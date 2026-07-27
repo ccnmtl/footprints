@@ -2,6 +2,11 @@
 {% load i18n static %}
 {% block title %}&mdash; Sign up for an account{% endblock %}
 
+{% block extrahead %}
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async
+        defer></script>
+{% endblock %}
+
 {% block css %}
 <style>
     .small {
@@ -24,6 +29,11 @@
             jQuery("#id_password1").attr("placeholder", "Password");
             jQuery("#id_password2").attr("placeholder", "Confirm Password");
         });
+    </script>
+    <script>
+        function enableSubmit() {
+            document.getElementById("guest-submit").classList.remove("disabled");
+        }
     </script>
 {% endblock %}
 
@@ -109,7 +119,13 @@
         <input type="text" name="decoy" value="" placeholder="Please leave blank" autofill="off" />
     </div>
 
-    <input class="btn btn-primary btn-large right" type="submit" value="{% trans 'Sign up!' %}" />
+    <div class="col-12" >
+        <div class="cf-turnstile right mt-2" data-sitekey="{{ TURNSTILE_SITE_KEY }}"
+            data-callback="enableSubmit" ></div>
+    </div>
+
+    <input class="btn btn-primary btn-large right disabled" type="submit" value="{% trans 'Sign up!' %}" 
+        id="guest-submit" />
 </form>
 
 
