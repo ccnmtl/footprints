@@ -32,6 +32,7 @@ from footprints.main.viewsets import (
 from footprints.pathmapper.views import (
     PathmapperView, BookCopySearchView, PathmapperTableView,
     PathmapperRouteView, PathmapperEventViewSet)
+from ctlsettings import views as ctl_views
 
 
 admin.autodiscover()
@@ -89,6 +90,8 @@ urlpatterns = [
     path('accounts/register/',
          RegistrationView.as_view(form_class=CustomRegistrationForm),
          name='registration_register'),
+    path('accounts/login', ctl_views.LoginAPIView.as_view()),
+
     path('accounts/', include('registration.backends.default.urls')),
 
     path('accounts/', include('django.contrib.auth.urls')),
