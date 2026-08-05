@@ -1,6 +1,6 @@
 from django.conf import settings
 from footprints.settings_shared import (  # noqa: F401
-    project, base, STATIC_ROOT, INSTALLED_APPS, AWS_REGION,
+    project, base, STATIC_ROOT, INSTALLED_APPS, MIDDLEWARE, AWS_REGION,
     HAYSTACK_CONNECTIONS
 )
 from ctlsettings.production import common, init_sentry
