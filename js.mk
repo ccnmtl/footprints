@@ -1,6 +1,7 @@
-# VERSION=1.3.1
+# VERSION=1.3.2
 
 # CHANGES:
+# 1.3.2 - Fix sentinal bug when node_modules is not created
 # 1.3.1 - conditionally install npm deps based on ENVIRONMENT var
 # 1.3.0 - restore eslint
 # 1.2.0 - restore jshint/jscs
@@ -35,7 +36,7 @@ endif
 $(JS_SENTINAL): package.json
 	rm -rf $(NODE_MODULES)
 	npm install $(NPM_OPTS)
-	touch $(JS_SENTINAL)
+	[ -d $(NODE_MODULES) ] && touch $(JS_SENTINAL) || true
 
 eslint: $(JS_SENTINAL)
 	$(ESLINT) $(JS_FILES)
