@@ -1,6 +1,6 @@
 from django.conf import settings
 from footprints.settings_shared import (
-    project, base, STATIC_ROOT, INSTALLED_APPS, SENTRY_DSN, AWS_REGION
+    project, base, STATIC_ROOT, INSTALLED_APPS, AWS_REGION
 )
 from ctlsettings.staging import common, init_sentry
 
