@@ -1,8 +1,5 @@
 from django.conf import settings
-from footprints.settings_shared import (  # noqa: F401
-    project, base, STATIC_ROOT, INSTALLED_APPS, MIDDLEWARE, AWS_REGION,
-    HAYSTACK_CONNECTIONS
-)
+from footprints.settings_shared import *  # noqa: F401, F403
 from ctlsettings.staging import common, init_sentry
 
 
@@ -17,8 +14,7 @@ locals().update(
 
 
 try:
-    from footprints.local_settings import (project, base, STATIC_ROOT,
-        INSTALLED_APPS)  # noqa F403 F405
+    from footprints.local_settings import *  # noqa F401
 except ImportError:
     pass
 
@@ -28,6 +24,6 @@ if hasattr(settings, 'SENTRY_DSN'):
 
 if hasattr(settings, 'AWS_REGION'):
     broker_transport_options = {
-        'region': AWS_REGION,
+        'region': AWS_REGION,  # noqa: F405
         'queue_name_prefix': 'footprints-stage-'
     }
