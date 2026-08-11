@@ -103,7 +103,7 @@ backports.tarfile==1.2.0  # needed by newer setuptools
 pysolr==3.11.0
 django-haystack==3.4.0
 requirements/src/django_audit_log-0.8.2-py2.py3-none-any.whl
-djangorestframework==3.17.0
+djangorestframework==3.18.0
 djangorestframework-jsonp==1.0.2
 Unidecode==1.4.0
 django-reversion==6.3.0
