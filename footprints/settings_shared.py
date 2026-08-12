@@ -34,14 +34,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 AWS_REGION = 'us-east-1'
 
-# Celery
-broker_url = 'sqs://'
-CELERY_BROKER_URL = broker_url
-broker_transport_options = {
-    'region': AWS_REGION,
-    'queue_name_prefix': 'footprints-shared-'
-}
-
 if ('test' in sys.argv or 'jenkins' in sys.argv or 'validate' in sys.argv
         or 'check' in sys.argv):
     DATABASES = {
