@@ -21,9 +21,3 @@ except ImportError:
 
 if hasattr(settings, 'SENTRY_DSN'):
     init_sentry(SENTRY_DSN)  # noqa F405
-
-if hasattr(settings, 'AWS_REGION'):
-    broker_transport_options = {
-        'region': AWS_REGION,  # noqa: F405
-        'queue_name_prefix': 'footprints-stage-'
-    }
