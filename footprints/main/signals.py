@@ -1,4 +1,6 @@
 # from django.conf import settings
+import logging
+
 from django.db.models import signals
 from django.db import connection, transaction
 from footprints.main.tasks import handle_haystack_signal
@@ -6,6 +8,9 @@ from haystack.exceptions import NotHandled
 from haystack.indexes import SearchIndex
 from haystack.signals import BaseSignalProcessor
 from haystack.utils import get_identifier
+
+
+logger = logging.getLogger(__name__)
 
 
 class FootprintsSignalProcessor(BaseSignalProcessor):
@@ -46,8 +51,19 @@ class FootprintsSignalProcessor(BaseSignalProcessor):
                     self.enqueue_task(action, get_identifier(instance))
 
     def enqueue_task(self, action, identifier):
-        func = lambda: handle_haystack_signal.apply_async(  # noqa: E731
-            (action, identifier))
+        def func():
+            try:
+                handle_haystack_signal.apply_async((action, identifier))
+            except Exception:
+                # A broker failure here surfaces as a bare kombu error
+                # with no indication of what was being indexed. Record
+                # the action and object, then re-raise: the index update
+                # is lost either way, so the failure should stay visible
+                # rather than being silently skipped.
+                logger.exception(
+                    'Unable to enqueue haystack %s for %s',
+                    action, identifier)
+                raise
 
         if hasattr(transaction, 'on_commit'):
             # Django 1.9 on_commit hook
