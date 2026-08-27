@@ -16,9 +16,6 @@
 
             this.urlBase = options.urlBase;
 
-            this.footprintIcon = this.iconWithColor('#ffa881');
-            this.imprintIcon = this.iconWithColor('#5e98b7');
-
             this.shareTemplate =
                 _.template(jQuery(options.shareTemplate).html());
 
@@ -64,7 +61,7 @@
             return dataId.indexOf('footprint') > -1 ?
                 this.footprintIcon : this.imprintIcon;
         },
-        iconWithColor: function(color, multiple) {
+        iconWithColor: function(color) {
             return L.divIcon({
                 className: 'custom-marker',
                 html: `
@@ -85,6 +82,14 @@
             var self = this;
             var markers = jQuery(this.el).find('.map-marker');
             if (markers.length > 0) {
+                if (typeof L === 'undefined') {
+                    console.error(
+                        'Leaflet is unavailable. Skipping the imprint map.');
+                    return;
+                }
+
+                this.footprintIcon = this.iconWithColor('#ffa881');
+                this.imprintIcon = this.iconWithColor('#5e98b7');
 
                 this.resize();
 
@@ -219,6 +224,10 @@
             return $parent;
         },
         syncMap: function($parent, activeId) {
+            if (!this.map) {
+                return;
+            }
+
             var subset = [];
             var highlight;
 
