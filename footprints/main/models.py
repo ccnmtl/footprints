@@ -3,6 +3,7 @@ from datetime import date
 from audit_log.models.fields import LastUserField, CreatingUserField
 from django.contrib.gis.db.models.fields import PointField
 from django.db import models
+from django.db.models import F
 from django.db.models.signals import m2m_changed
 from django.template import loader
 from django.urls.base import reverse
@@ -121,6 +122,10 @@ def append_approximate(dt, approximate):
 class ExtendedDate(models.Model):
     objects = ExtendedDateManager()
     edtf_format = models.CharField(max_length=256)
+
+    # Saved copy of the result of the start() method, in db format for
+    # faster sorting.
+    earliest_date = models.DateField(null=True, editable=False)
 
     month_names = {
         1: 'January', 2: 'February', 3: 'March', 4: 'April',
@@ -760,13 +765,14 @@ class WrittenWork(models.Model):
         return Footprint.objects.filter(book_copy__imprint__work=self).count()
 
     def imprints(self):
-        qs = self.imprint_set.all().select_related(
-            'publication_date', 'place').prefetch_related(
-                'bookcopy_set__footprint_set__place',
-                'bookcopy_set__footprint_set__associated_date')
-        lst = list(qs)
-        lst.sort(key=lambda obj: obj.sort_date())
-        return lst
+        return self.imprint_set.all().select_related(
+            'publication_date', 'place'
+        ).prefetch_related(
+            'bookcopy_set__footprint_set__place',
+            'bookcopy_set__footprint_set__associated_date'
+        ).order_by(
+            F('publication_date__earliest_date').asc(nulls_first=True)
+        )
 
     def get_library_of_congress_identifier(self):
         loc_type = StandardizedIdentificationType.objects.loc()
