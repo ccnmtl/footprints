@@ -2,6 +2,7 @@ import csv
 
 from django.apps import apps
 from django.conf import settings
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.syndication.views import Feed
 from django.core.mail import send_mail
 from django.core.exceptions import FieldDoesNotExist
@@ -368,7 +369,7 @@ class ExportFootprintSearch(BaseSearchView):
         return response
 
 
-class WrittenWorkDetailView(DetailView):
+class WrittenWorkDetailView(LoginRequiredMixin, DetailView):
 
     model = WrittenWork
 
