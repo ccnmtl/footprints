@@ -29,7 +29,7 @@ fuzzywuzzy==0.18.0
 sure==3.0a2
 
 pyasn1==0.6.4
-cffi==2.1.0 # cryptography
+cffi==2.1.1 # cryptography
 cryptography==50.0.0  # pyOpenSSL
 
 
