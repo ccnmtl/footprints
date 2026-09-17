@@ -113,11 +113,14 @@ TEMPLATES = [
     },
 ]
 
+MIDDLEWARE = [  # noqa
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+] + MIDDLEWARE
+
 MIDDLEWARE += [  # noqa
     'django.middleware.csrf.CsrfViewMiddleware',
     'audit_log.middleware.UserLoggingMiddleware',
     'reversion.middleware.RevisionMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 INSTALLED_APPS += [  # noqa
@@ -204,4 +207,3 @@ REGISTRATION_AUTO_LOGIN = False  # Do not automatically log the user in.
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
-
