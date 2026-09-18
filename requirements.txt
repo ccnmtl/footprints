@@ -49,7 +49,7 @@ factory_boy==3.3.0
 ldap3==2.9.1
 sqlparse==0.6.0
 contextlib2==21.6.0
-rcssmin==1.2.0
+rcssmin==1.2.2
 rjsmin==1.2.5
 
 vine==5.1.0
