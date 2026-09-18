@@ -131,4 +131,4 @@ inflection==0.5.1
 drf-spectacular==0.30.0
 
 python-cas==1.7.2
-django-cas-ng==5.1.0
+django-cas-ng==5.1.1
