@@ -110,7 +110,7 @@ django-storages==1.14.5
 ctlsettings==0.4.9
 funcsigs==1.0.2
 pbr==7.0.0
-django-s3sign<=0.2.1
+django-s3sign<=0.6.5
 django-smtp-ssl==1.0
 
 pbr==7.0.0
