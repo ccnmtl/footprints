@@ -53,7 +53,7 @@ rcssmin==1.2.2
 rjsmin==1.2.5
 
 vine==5.1.0
-amqp==5.3.1
+amqp==5.4.0
 kombu==5.6.2
 prompt-toolkit==3.0.53
 celery[sqs]==5.6.3
