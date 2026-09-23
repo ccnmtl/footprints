@@ -3,7 +3,7 @@ psycopg[binary]==3.3.5
 
 asgiref==3.12.1
 
-feedparser==6.0.8
+feedparser==6.0.14
 
 Markdown==3.10.3
 
