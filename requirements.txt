@@ -67,7 +67,7 @@ django-celery-results==2.6.0
 wcwidth==0.9.1
 
 billiard==4.3.0
-pytz==2026.4
+pytz==2026.5
 
 django-indexer==0.3.0
 django-templatetag-sugar==1.0
