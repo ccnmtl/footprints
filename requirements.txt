@@ -92,7 +92,7 @@ s3transfer==0.19.3
 jmespath==1.1.0
 
 botocore==1.43.114
-boto3==1.43.115
+boto3==1.43.118
 certifi==2026.10.19  # for pysolr, sentry-sdk
 backports.tarfile==1.2.0  # needed by newer setuptools
 
