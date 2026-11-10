@@ -56,7 +56,7 @@ vine==5.1.0
 amqp==5.4.2
 kombu==5.7.0
 prompt-toolkit==3.0.53
-celery[sqs]==5.6.3
+celery[sqs]==5.7.0
 tzlocal==5.4.5  # celery
 exceptiongroup==1.3.1  # celery
 click==8.5.1
